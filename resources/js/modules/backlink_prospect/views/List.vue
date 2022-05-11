@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,8 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i>
+                                {{ $t('message.backlink_prospect.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,19 +31,19 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Search Referring Domain</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_search_ref_domain') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name=""
                                            v-model="filterModel.referring_domain"
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.backlink_prospect.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>UR</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_ur') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -53,7 +54,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.backlink_prospect.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.ur">
@@ -63,7 +64,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>DR</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_dr') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -74,7 +75,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.backlink_prospect.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.dr">
@@ -84,7 +85,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Org Kw</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_org_kw') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -95,7 +96,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.backlink_prospect.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.org_kw">
@@ -105,7 +106,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Org Traffic</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_org_traffic') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -114,23 +115,24 @@
                                                 {{ buttonState.org_traffic }}
                                             </button>
                                         </div>
-                                        <input type="text"
-                                               class="form-control"
-                                               placeholder="Type here"
-                                               aria-label=""
-                                               aria-describedby="basic-addon1"
-                                               v-model="filterModel.org_traffic">
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            :placeholder="$t('message.backlink_prospect.type')"
+                                            aria-label=""
+                                            aria-describedby="basic-addon1"
+                                            v-model="filterModel.org_traffic">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Status</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_status') }}</label>
                                     <select class="form-control" v-model="filterModel.status">
-                                        <option value="">Choose Status</option>
-                                        <option v-for="option in status1" v-bind:value="option" :key="option">
-                                            {{ option }}
+                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
+                                        <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
+                                            {{ option.text }}
                                         </option>
                                     </select>
                                 </div>
@@ -138,11 +140,11 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Status URL Prospect</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_status_url_prospect') }}</label>
                                     <select class="form-control" v-model="filterModel.status">
-                                        <option value="">Choose Status</option>
-                                        <option v-for="option in status2" v-bind:value="option" :key="option">
-                                            {{ option }}
+                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
+                                        <option v-for="option in status2" v-bind:value="option.value" :key="option.value">
+                                            {{ option.text }}
                                         </option>
                                     </select>
                                 </div>
@@ -150,7 +152,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Date</label>
+                                    <label style="color: #333">{{ $t('message.backlink_prospect.filter_date') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -170,8 +172,12 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                                <button class="btn btn-default" @click="getBacklinkProspect(); excelExportData();">Search <i v-if="false" class="fa fa-refresh fa-spin"></i>
+                                <button class="btn btn-default" @click="clearSearch()">
+                                    {{ $t('message.backlink_prospect.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="getBacklinkProspect(); excelExportData();">
+                                    {{ $t('message.backlink_prospect.search') }}
+                                    <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
                             </div>
                         </div>
@@ -207,7 +213,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Backlinks Prospect</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.bp_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -224,7 +230,7 @@
                                                name="file">
                                         <div class="input-group-btn">
                                             <button
-                                                title="Upload CSV File"
+                                                :title="$t('message.backlink_prospect.bp_upload_csv')"
                                                 class="btn btn-primary btn-flat"
                                                 :disabled="btnUpload"
                                                 @click="submitUpload">
@@ -232,7 +238,7 @@
                                             </button>
 
                                             <button
-                                                title="Download CSV Template"
+                                                :title="$t('message.backlink_prospect.bp_download_csv')"
                                                 class="btn btn-primary btn-flat"
 
                                                 @click="downloadTemplate">
@@ -245,7 +251,7 @@
                                                 worksheet="My Worksheet"
                                                 name="backlink_prospect.xls">
                                                 <i class="fa fa-list"></i>
-                                                Export
+                                                {{ $t('message.backlink_prospect.bp_export') }}
 
                                             </export-excel>
 
@@ -269,27 +275,30 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="input-group mt-3">
-                                        <button class="btn btn-default mr-2"
-                                                @click="selectAll">{{
-                                                allSelected
-                                                    ?
-                                                    "Deselect"
-                                                    : "Select"
-                                                                   }} All
+                                        <button
+                                            class="btn btn-default mr-2"
+                                            @click="selectAll">
+                                            {{ allSelected ? $t('message.backlink_prospect.bp_deselect') : $t('message.backlink_prospect.bp_select') }}
+                                            {{ $t('message.backlink_prospect.all') }}
                                         </button>
 
                                         <div class="dropdown">
-                                            <button class="btn btn-default dropdown-toggle"
-                                                    type="button"
-                                                    id="dropdownMenuButton"
-                                                    data-toggle="dropdown"
-                                                    aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                Selected Action
+                                            <button
+                                                class="btn btn-default dropdown-toggle"
+                                                type="button"
+                                                id="dropdownMenuButton"
+                                                data-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false">
+                                                {{ $t('message.backlink_prospect.bp_selected_action') }}
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" @click="editData();">Edit</a>
-                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin">Delete</a>
+                                                <a class="dropdown-item" @click="editData();">
+                                                    {{ $t('message.backlink_prospect.edit') }}
+                                                </a>
+                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin">
+                                                    {{ $t('message.backlink_prospect.delete') }}
+                                                </a>
                                             </div>
                                         </div>
 
@@ -299,9 +308,10 @@
                         </table>
 
                         <span class="pagination-custom-footer-text">
-                            <b v-if="filterModel.paginate !== 'All'">Showing {{ backinkProspectList.from }} to {{
-                                    backinkProspectList.to
-                                                                     }} of {{ backinkProspectList.total }} entries.</b>
+                            <b v-if="filterModel.paginate !== 'All'">
+                                Showing {{ backinkProspectList.from }} to {{ backinkProspectList.to }}
+                                of {{ backinkProspectList.total }} entries.
+                            </b>
                             <b v-else>Showing {{ backinkProspectList.total }} entries.</b>
                         </span>
 
@@ -330,7 +340,7 @@
                             <template
                                 slot-scope="scope"
                                 slot="actionStatusProspect">
-                            {{ scope.row.prospect != null ? listStatusText[scope.row.prospect.status].text:'' }}
+                                {{ scope.row.prospect != null ? listStatusText[scope.row.prospect.status].text:'' }}
                             </template>
 
                             <template
@@ -339,15 +349,21 @@
                                 <div class="btn-group">
                                     <button
                                         data-toggle="modal"
-                                        @click="doUpdate(scope.row)" data-target="#modal-update-backlink_prospect" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                                        data-target="#modal-update-backlink_prospect"
+                                        :title="$t('message.backlink_prospect.edit')"
+                                        class="btn btn-default"
+
+                                        @click="doUpdate(scope.row)">
+
+                                        <i class="fa fa-fw fa-edit"></i>
+                                    </button>
 
                                     <button
                                         class="btn btn-default"
                                         title="Move to URL Prospect"
                                         @click="moveToUrlProspect(scope.row)"
                                         v-show="scope.row.status === 'To be contacted' || scope.row.status === 'Free Submission'"
-                                        :disabled="scope.row.is_moved === 1"
-                                    >
+                                        :disabled="scope.row.is_moved === 1">
                                         <i class="fa fa-fw fa-share"></i>
                                     </button>
 
@@ -356,10 +372,14 @@
 
                         </vue-virtual-table>
 
-                        <pagination v-if="backinkProspectList.data"
-                                    :data="backinkProspectList"
-                                    @pagination-change-page="getBacklinkProspect"
-                                    :limit="8"></pagination>
+                        <pagination
+                            v-if="backinkProspectList.data"
+                            :limit="8"
+                            :data="backinkProspectList"
+
+                            @pagination-change-page="getBacklinkProspect">
+
+                        </pagination>
 
                     </div>
                 </div>
@@ -372,7 +392,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Backlink Prospect</h5>
+                        <h5 class="modal-title">{{ $t('message.backlink_prospect.ebp_title') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -381,15 +401,15 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Referring Domain</label>
+                                    <label>{{ $t('message.backlink_prospect.t_ref_domain') }}</label>
                                     <input type="text" class="form-control" :disabled="true" v-model="updateModel.referring_domain">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Category</label>
+                                    <label>{{ $t('message.backlink_prospect.t_category') }}</label>
                                     <select class="form-control" v-model="updateModel.category">
-                                        <option value="">Choose Category</option>
+                                        <option value="">{{ $t('message.backlink_prospect.choose_category') }}</option>
                                         <option v-for="option in category" v-bind:value="option" :key="option">
                                             {{ option }}
                                         </option>
@@ -398,26 +418,30 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_status') }}</label>
                                     <select class="form-control" v-model="updateModel.status">
-                                        <option value="">Choose Status</option>
-                                        <option v-for="option in status1" v-bind:value="option" :key="option">
-                                            {{ option }}
+                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
+                                        <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
+                                            {{ option.text }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Note</label>
+                                    <label>{{ $t('message.backlink_prospect.t_note') }}</label>
                                     <textarea class="form-control" cols="30" rows="5" v-model="updateModel.note"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitUpdate">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            {{ $t('message.backlink_prospect.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdate">
+                            {{ $t('message.backlink_prospect.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -429,7 +453,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Multiple</h5>
+                        <h5 class="modal-title">{{ $t('message.backlink_prospect.em_title') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -438,9 +462,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Category</label>
+                                    <label>{{ $t('message.backlink_prospect.t_category') }}</label>
                                     <select class="form-control" v-model="editModel.category">
-                                        <option value="">Choose Category</option>
+                                        <option value="">{{ $t('message.backlink_prospect.choose_category') }}</option>
                                         <option v-for="option in category" v-bind:value="option" :key="option">
                                             {{ option }}
                                         </option>
@@ -450,11 +474,11 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label>{{ $t('message.backlink_prospect.filter_status') }}</label>
                                     <select class="form-control" v-model="editModel.status">
-                                        <option value="">Choose Status</option>
-                                        <option v-for="option in status1" v-bind:value="option" :key="option">
-                                            {{ option }}
+                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
+                                        <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
+                                            {{ option.text }}
                                         </option>
                                     </select>
                                 </div>
@@ -462,8 +486,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="saveMultiple">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            {{ $t('message.backlink_prospect.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="saveMultiple">
+                            {{ $t('message.backlink_prospect.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -519,24 +547,7 @@ export default {
                 'Forums',
                 'Free Submission',
             ],
-            status1: [
-                'New',
-                'Qualified',
-                'Unqualified',
-                'Hosting Expired',
-                'Free Submission',
-                'To be contacted',
-                'Contacted',
-                'Contacted Via Form',
-            ],
-            status2: [
-                'Contacted',
-                'Contacted Via Form',
-                'In-touched',
-                'Qualified',
-                'Refused',
-                'No Answer',
-            ],
+
             paginate : [
                 50,
                 150,
@@ -593,6 +604,8 @@ export default {
         },
 
         tableConfig() {
+            let self = this;
+
             return [
                 {
                     prop : '_index',
@@ -609,88 +622,158 @@ export default {
                 },
                 {
                     prop : 'referring_domain',
-                    name : 'Referring Domain',
+                    name : self.$t('message.backlink_prospect.t_ref_domain'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'ur',
-                    name : 'UR',
+                    name : self.$t('message.backlink_prospect.filter_ur'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'dr',
-                    name : 'DR',
+                    name : self.$t('message.backlink_prospect.filter_dr'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'backlinks',
-                    name : 'Backlinks',
+                    name : self.$t('message.backlink_prospect.t_backlinks'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'org_kw',
-                    name : 'Org Kw',
+                    name : self.$t('message.backlink_prospect.filter_org_kw'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'org_traffic',
-                    name : 'Org Traffic',
+                    name : self.$t('message.backlink_prospect.filter_org_traffic'),
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'ref_domain_ahref',
-                    name : 'Ref Domains',
+                    name : self.$t('message.backlink_prospect.t_ref_domains'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'category',
-                    name : 'Category',
+                    name : self.$t('message.backlink_prospect.t_category'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'status',
-                    name : 'Status',
+                    name : self.$t('message.backlink_prospect.filter_status'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Status URL prospect',
+                    name : self.$t('message.backlink_prospect.filter_status_url_prospect'),
                     sortable : true,
                     actionName : 'actionStatusProspect',
                     isHidden : false
                 },
                 {
                     prop : 'note',
-                    name : 'Note',
+                    name : self.$t('message.backlink_prospect.t_note'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'created_at',
-                    name : 'Date Uploaded',
+                    name : self.$t('message.backlink_prospect.t_date_uploaded'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Action',
+                    name : self.$t('message.backlink_prospect.t_action'),
                     actionName : 'actionButtons',
                     width : '150',
                     isHidden: false
+                },
+            ];
+        },
+
+        status1() {
+            let self = this;
+
+            return [
+                {
+                    text: self.$t('message.backlink_prospect.s_new'),
+                    value: 'New'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_qualified'),
+                    value: 'Qualified'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_unqualified'),
+                    value: 'Unqualified'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_hosting_expired'),
+                    value: 'Hosting Expired'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_free_sub'),
+                    value: 'Free Submission'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_to_be_contacted'),
+                    value: 'To be contacted'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_contacted'),
+                    value: 'Contacted'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_contacted_via_form'),
+                    value: 'Contacted Via Form'
+                },
+            ];
+        },
+
+        status2() {
+            let self = this;
+
+            return [
+                {
+                    text: self.$t('message.backlink_prospect.s_contacted'),
+                    value: 'Contacted',
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_contacted_via_form'),
+                    value: 'Contacted Via Form',
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_in_touched'),
+                    value: 'In-touched',
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_qualified'),
+                    value: 'Qualified',
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_refused'),
+                    value: 'Refused',
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_no_answer'),
+                    value: 'No Answer',
                 },
             ];
         }
@@ -751,13 +834,13 @@ export default {
             ];
             for(let i in this.status1) {
                 _prop = {
-                    "status": this.status1[i],
-                    "total": this.computeTotal(this.status1[i]),
+                    "status": this.status1[i].text,
+                    "total": this.computeTotal(this.status1[i].value),
                     "icon": icons[i],
                     "bg_color": bg_colors[i]
                 }
 
-                total.push(this.computeTotal(this.status1[i]))
+                total.push(this.computeTotal(this.status1[i].value))
                 _obj.push(_prop)
             }
 
@@ -773,7 +856,7 @@ export default {
             // total urls
 
             let temp_total = {
-                "status": "Total URLs",
+                "status": self.$t('message.backlink_prospect.s_total_urls'),
                 "total": self.backinkProspectListExport.total,
                 "icon": "fa fa-link",
                 "bg_color": "small-box bg-gradient-teal"
@@ -797,6 +880,8 @@ export default {
         },
 
         moveToUrlProspect(backlink_prospect) {
+            let self = this;
+
             axios.post('/api/backlink-prospect-move', {
                 id : backlink_prospect.id,
                 referring_domain: backlink_prospect.referring_domain
@@ -805,14 +890,14 @@ export default {
 
                 if(res.data) {
                     swal.fire(
-                        'Success',
-                        'Successfully moved in URL Prospect.',
+                        self.$t('message.backlink_prospect.alert_success'),
+                        self.$t('message.backlink_prospect.alert_moved_successfully'),
                         'success'
                     )
                 } else {
                     swal.fire(
-                        'Success',
-                        'Domain is Already exist and Match with the record',
+                        self.$t('message.backlink_prospect.alert_success'),
+                        self.$t('message.backlink_prospect.alert_domain_exists'),
                         'success'
                     )
                 }
@@ -823,12 +908,14 @@ export default {
         },
 
         submitUpdate() {
+            let self = this;
+
             axios.post('/api/backlink-prospect-update', this.updateModel)
                 .then((res) => {
                     if (res.data.success === true) {
                         swal.fire(
-                            'Uploaded!',
-                            'Successfully Uploaded.',
+                            self.$t('message.backlink_prospect.alert_uploaded'),
+                            self.$t('message.backlink_prospect.alert_uploaded_successfully'),
                             'success'
                         )
 
@@ -841,6 +928,8 @@ export default {
         },
 
         submitUpload() {
+            let self = this;
+
             this.formData = new FormData();
             this.formData.append('file', this.$refs.excel.files[0]);
 
@@ -849,8 +938,8 @@ export default {
 
                     if (res.data.success === true) {
                         swal.fire(
-                            'Uploaded!',
-                            'Successfully Uploaded.',
+                            self.$t('message.backlink_prospect.alert_uploaded'),
+                            self.$t('message.backlink_prospect.alert_uploaded_successfully'),
                             'success'
                         )
 
@@ -893,28 +982,32 @@ export default {
         },
 
         editData() {
+            let self = this;
+
             if( this.checkIds.length > 0 ) {
                 $('#modalEditMultipleProspect').modal({
                     show: true
                 });
             } else {
                 swal.fire(
-                    'Invalid',
-                    'Please select first',
+                    self.$t('message.backlink_prospect.alert_invalid'),
+                    self.$t('message.backlink_prospect.alert_please_select'),
                     'error'
                 )
             }
         },
 
         saveMultiple() {
+            let self = this;
+
             axios.post('/api/backlink-prospect-edit', {
                 ids : this.checkIds,
                 category: this.editModel.category,
                 status: this.editModel.status
             }).then((res) => {
                 swal.fire(
-                    'Success',
-                    'Successfully Updated.',
+                    self.$t('message.backlink_prospect.alert_success'),
+                    self.$t('message.backlink_prospect.alert_updated_successfully'),
                     'success'
                 )
 
@@ -988,14 +1081,15 @@ export default {
         },
 
         deleteData() {
+            let self = this;
 
             if( this.checkIds.length > 0 ) {
                 axios.post('/api/backlink-prospect-delete', {
                     ids : this.checkIds
                 }).then((res) => {
                     swal.fire(
-                        'Deleted',
-                        'Successfully Deleted.',
+                        self.$t('message.backlink_prospect.alert_deleted'),
+                        self.$t('message.backlink_prospect.alert_deleted_successfully'),
                         'success'
                     )
 
@@ -1005,8 +1099,8 @@ export default {
                 })
             } else {
                 swal.fire(
-                    'Invalid',
-                    'Please select first',
+                    self.$t('message.backlink_prospect.alert_invalid'),
+                    self.$t('message.backlink_prospect.alert_please_select'),
                     'error'
                 )
             }

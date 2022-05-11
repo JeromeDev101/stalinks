@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.overall_incomes.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,19 +23,20 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Search ID Backlink</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           name=""
-                                           v-model="filterModel.backlink_id"
-                                           aria-describedby="helpId"
-                                           placeholder="Type here">
+                                    <label>{{ $t('message.overall_incomes.filter_search_id_backlink') }}</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name=""
+                                        v-model="filterModel.backlink_id"
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.overall_incomes.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label for="">Date Completed</label>
+                                    <label>{{ $t('message.overall_incomes.filter_date_completed') }}</label>
 
                                     <date-range-picker
                                         v-model="filterModel.date_completed"
@@ -55,10 +56,12 @@
                         <div class="row mb-3">
                             <div class="col-md-2">
                                 <button class="btn btn-default" @click="clearSearch" :disabled="isSearchingLoading">
-                                    Clear
+                                    {{ $t('message.overall_incomes.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">Search
-                                    <i v-show="isSearchLoading" class="fa fa-refresh fa-spin"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearchingLoading">
+                                    {{ $t('message.overall_incomes.search') }}
+                                    <i v-show="isSearchLoading" class="fa fa-refresh fa-spin"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -70,7 +73,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Incomes</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.overall_incomes.i_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -93,27 +96,27 @@
 
                         <div class="d-flex justify-content-center">
                             <div v-if="user.role_id !== 11"  class="col">
-                                <h6>Seller Price: ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_seller_price') }}: ${{ listIncomesAdmin.seller_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div v-if="user.role_id !== 11"  class="col">
-                                <h6>Buyer Price: ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_buyer_price') }}: ${{ listIncomesAdmin.buyer_price_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Fee Charges: ${{ listIncomesAdmin.fee_charges_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_fee_charges') }}: ${{ listIncomesAdmin.fee_charges_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Content Charges: ${{ listIncomesAdmin.content_charges_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_content_charges') }}: ${{ listIncomesAdmin.content_charges_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Net Incomes: ${{ listIncomesAdmin.net_incomes_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_net_incomes') }}: ${{ listIncomesAdmin.net_incomes_sum.toFixed(2) }}</h6>
                             </div>
 
                             <div class="col">
-                                <h6>Affiliate Commission: ${{ listIncomesAdmin.affiliate_commission_sum.toFixed(2) }}</h6>
+                                <h6>{{ $t('message.overall_incomes.i_affiliate_commission') }}: ${{ listIncomesAdmin.affiliate_commission_sum.toFixed(2) }}</h6>
                             </div>
 
                         </div>
@@ -130,15 +133,19 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th v-show="tblOptIncomesAdmin.backlink_id">ID Backlink</th>
-                                    <th v-show="tblOptIncomesAdmin.live_date">Date Completed</th>
-                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">Seller Price</th>
-                                    <th v-if="user.role_id !== 11">Buyer Commission</th>
-                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.price">Buyer Price</th>
-                                    <th v-show="tblOptIncomesAdmin.fee_charges">Fee Charges</th>
-                                    <th v-show="tblOptIncomesAdmin.content_charges">Content Charges</th>
-                                    <th v-show="tblOptIncomesAdmin.net_incomes">Net Incomes</th>
-                                    <th v-show="tblOptIncomesAdmin.affiliate_commission">Affiliate Commission</th>
+                                    <th v-show="tblOptIncomesAdmin.backlink_id">{{ $t('message.overall_incomes.i_id_backlink') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.live_date">{{ $t('message.overall_incomes.filter_date_completed') }}</th>
+                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">
+                                        {{ $t('message.overall_incomes.i_seller_price') }}
+                                    </th>
+                                    <th v-if="user.role_id !== 11">{{ $t('message.overall_incomes.i_buyer_commission') }}</th>
+                                    <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.price">
+                                        {{ $t('message.overall_incomes.i_buyer_price') }}
+                                    </th>
+                                    <th v-show="tblOptIncomesAdmin.fee_charges">{{ $t('message.overall_incomes.i_fee_charges') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.content_charges">{{ $t('message.overall_incomes.i_content_charges') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.net_incomes">{{ $t('message.overall_incomes.i_net_incomes') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.affiliate_commission">{{ $t('message.overall_incomes.i_affiliate_commission') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -172,14 +179,14 @@
                                     <td v-show="tblOptIncomesAdmin.affiliate_commission">
                                         <span v-if="incomes_admin.user.user_type == null">
                                             <small>
-                                                <span class="badge badge-secondary">No Affiliate</span>
+                                                <span class="badge badge-secondary">{{ $t('message.overall_incomes.i_no_affiliate') }}</span>
                                             </small>
                                         </span>
 
                                         <span v-else>
                                             <span v-if="incomes_admin.user.user_type.affiliate_id == null">
                                                 <small>
-                                                    <span class="badge badge-secondary">No Affiliate</span>
+                                                    <span class="badge badge-secondary">{{ $t('message.overall_incomes.i_no_affiliate') }}</span>
                                                 </small>
                                             </span>
 
@@ -195,7 +202,7 @@
                                                 </span>
 
                                                 <small v-else>
-                                                    <span class="badge badge-danger">Inactive Affiliate</span>
+                                                    <span class="badge badge-danger">{{ $t('message.overall_incomes.i_inactive_affiliate') }}</span>
                                                 </small>
                                             </span>
                                         </span>
@@ -224,60 +231,100 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.overall_incomes.sd_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.backlink_id ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.backlink_id">ID Backlink</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.backlink_id ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.backlink_id">
+                                    {{ $t('message.overall_incomes.i_id_backlink') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.selling_price ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.selling_price">Selling Price</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.selling_price ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.selling_price">
+                                    {{ $t('message.overall_incomes.sd_selling_price') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.price ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.price">Price</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.price ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.price">
+                                    {{ $t('message.overall_incomes.sd_price') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.gross_income ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.gross_income">Gross Income</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.gross_income ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.gross_income">
+                                    {{ $t('message.overall_incomes.sd_gross_income') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.fee_charges ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.fee_charges">Fee Charges</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.fee_charges ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.fee_charges">
+                                    {{ $t('message.overall_incomes.i_fee_charges') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.content_charges ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.content_charges">Content Charges</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.content_charges ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.content_charges">
+                                    {{ $t('message.overall_incomes.i_content_charges') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.net_incomes ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.net_incomes">Net Incomes</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.net_incomes ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.net_incomes">
+                                    {{ $t('message.overall_incomes.i_net_incomes') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.live_date ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.live_date">Date Completed</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.live_date ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.live_date">
+                                    {{ $t('message.overall_incomes.filter_date_completed') }}
+                                </label>
                             </div>
                             <div class="checkbox col-md-6">
-                                <label><input type="checkbox"
-                                              :checked="tblOptIncomesAdmin.affiliate_commission ? 'checked':''"
-                                              v-model="tblOptIncomesAdmin.affiliate_commission">Affiliate Commission</label>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.affiliate_commission ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.affiliate_commission">
+                                    {{ $t('message.overall_incomes.i_affiliate_commission') }}
+                                </label>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.overall_incomes.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            {{ $t('message.overall_incomes.save') }}
+                        </button>
                     </div>
                 </div>
             </div>

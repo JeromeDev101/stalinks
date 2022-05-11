@@ -9,6 +9,18 @@ import writer_survey from './Survey/in/writer';
 // subscription
 import subscription from './Subscription/in/main';
 
+// admin article
+import admin_article from './AdminArticle/in/main';
+
+// writer validation
+import writer_validation from './WriterValidation/in/main';
+
+// backlink prospect
+import backlink_prospect from './BacklinkProspect/in/main';
+
+// overall incomes
+import overall_incomes from './OverallIncomes/in/main';
+
 // billing
 import seller_billing from './SellerBilling/in/main';
 import writer_billing from './WriterBilling/in/main';
@@ -99,6 +111,18 @@ export default {
 
         // subscription
         subscription,
+
+        // admin article
+        admin_article,
+
+        // writer validation
+        writer_validation,
+
+        // backlinks prospect
+        backlink_prospect,
+
+        // overall incomes
+        overall_incomes,
 
         // billing
         seller_billing,

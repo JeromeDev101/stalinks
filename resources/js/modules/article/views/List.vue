@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.admin_article.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,34 +23,34 @@
 
                             <div class="col-md-12 col-lg-2">
                                 <div class="form-group">
-                                    <label for="">Search ID article</label>
+                                    <label>{{ $t('message.admin_article.filter_id_article') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.search_article"
                                            name=""
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.admin_article.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search ID backlink</label>
+                                    <label>{{ $t('message.admin_article.filter_id_backlink') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.search_backlink"
                                            name=""
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.admin_article.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Language</label>
+                                    <label>{{ $t('message.admin_article.filter_language') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.language_id">
-                                        <option value="">Select Language</option>
-                                        <option value="none">None</option>
+                                        <option value="">{{ $t('message.admin_article.filter_select_language') }}</option>
+                                        <option value="none">{{ $t('message.admin_article.none') }}</option>
                                         <option v-for="option in listLanguages.data"
                                                 :value="option.id"
                                                 :key="option.id">
@@ -62,9 +62,9 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Writer</label>
+                                    <label>{{ $t('message.admin_article.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.writer">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.admin_article.all') }}</option>
                                         <option v-for="option in listWriter.data" v-bind:value="option.id">
                                             {{ option.username }}
                                         </option>
@@ -74,11 +74,11 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Date</label>
+                                    <label>{{ $t('message.admin_article.filter_date') }}</label>
                                     <div class="input-group">
                                         <select name="" class="form-control" v-model="filterModel.date_type">
-                                            <option value="Started">Started</option>
-                                            <option value="Completed">Completed</option>
+                                            <option value="Started">{{ $t('message.admin_article.filter_started') }}</option>
+                                            <option value="Completed">{{ $t('message.admin_article.filter_completed') }}</option>
                                         </select>
                                         <input type="date"
                                                class="form-control"
@@ -94,9 +94,11 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.admin_article.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.admin_article.search') }}
                                     <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i></button>
                             </div>
                         </div>
@@ -109,7 +111,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Articles</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.admin_article.aa_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -137,14 +139,14 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>ID Article</th>
-                                <th>ID Backlink</th>
-                                <th>Writer</th>
-                                <th>Language</th>
-                                <th>Date Start</th>
-                                <th>Date Completed</th>
-                                <th>Writer Price</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.admin_article.aa_id_article') }}</th>
+                                <th>{{ $t('message.admin_article.aa_id_backlink') }}</th>
+                                <th>{{ $t('message.admin_article.filter_writer') }}</th>
+                                <th>{{ $t('message.admin_article.filter_language') }}</th>
+                                <th>{{ $t('message.admin_article.aa_date_start') }}</th>
+                                <th>{{ $t('message.admin_article.aa_date_completed') }}</th>
+                                <th>{{ $t('message.admin_article.aa_writer_price') }}</th>
+                                <th>{{ $t('message.admin_article.aa_action') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -159,14 +161,14 @@
                                 <td>{{ article.isOurs == 1 ? computeWriterPrice(article) : '----' }}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
-                                        <button title="View Content"
+                                        <button :title="$t('message.admin_article.aa_view_content')"
                                                 @click="viewContent( article.backlink ,article.content, article)"
                                                 data-toggle="modal"
                                                 data-target="#modal-view-content"
                                                 class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
                                     </div>
                                     <div class="btn-group" v-if="user.isAdmin">
-                                        <button title="Delete"
+                                        <button :title="$t('message.admin_article.delete')"
                                                 @click="deleteArticle(article.id)"
                                                 class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
                                     </div>
@@ -189,20 +191,20 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Content</h5>
+                        <h5 class="modal-title">{{ $t('message.admin_article.vc_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Title</label>
+                                    <label>{{ $t('message.admin_article.vc_title_text') }}</label>
                                     <input type="text" class="form-control" v-model="viewModel.title" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Anchor Text</label>
+                                    <label>{{ $t('message.admin_article.vc_anchor_text') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="viewModel.anchor_text"
@@ -212,7 +214,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">URL Publisher</label>
+                                    <label>{{ $t('message.admin_article.vc_url_pub') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="viewModel.url_publisher"
@@ -222,28 +224,28 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Link to</label>
+                                    <label>{{ $t('message.admin_article.vc_link_to') }}</label>
                                     <input type="text" class="form-control" v-model="viewModel.link" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Seller</label>
+                                    <label>{{ $t('message.admin_article.vc_seller') }}</label>
                                     <input type="text" class="form-control" v-model="viewModel.seller" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="">Buyer</label>
+                                    <label>{{ $t('message.admin_article.vc_buyer') }}</label>
                                     <input type="text" class="form-control" v-model="viewModel.buyer" :disabled="true">
                                 </div>
                             </div>
 
                             <div class="col-md-6" v-show="showWriterPrice">
                                 <div class="form-group">
-                                    <label for="">Writer Price</label>
+                                    <label>{{ $t('message.admin_article.aa_writer_price') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="editModel.price"
@@ -258,7 +260,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.admin_article.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -408,32 +412,34 @@ export default {
         },
 
         deleteArticle(id) {
+            let self = this;
+
             swal.fire({
-                title : "Are you sure?",
-                text : "Do you want to delete these Article?",
+                title : self.$t('message.admin_article.alert_confirmation'),
+                text : self.$t('message.admin_article.alert_confirmation_delete'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, delete it!',
-                cancelButtonText : 'No, keep it'
+                confirmButtonText : self.$t('message.admin_article.delete_yes'),
+                cancelButtonText : self.$t('message.admin_article.no')
             })
-                .then((result) => {
-                    if (result.isConfirmed) {
+            .then((result) => {
+                if (result.isConfirmed) {
 
-                        axios.post('/api/delete-article', {
-                            id : id
+                    axios.post('/api/delete-article', {
+                        id : id
+                    })
+                        .then(response => {
+                            this.getListArticles();
+
+                            swal.fire(
+                                self.$t('message.admin_article.alert_deleted'),
+                                self.$t('message.admin_article.alert_deleted_successfully'),
+                                'success'
+                            )
                         })
-                            .then(response => {
-                                this.getListArticles();
 
-                                swal.fire(
-                                    'Deleted!',
-                                    'Article is already deleted.',
-                                    'success'
-                                )
-                            })
-
-                    }
-                });
+                }
+            });
         },
 
         clearSearch() {

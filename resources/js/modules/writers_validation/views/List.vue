@@ -16,7 +16,7 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
-                            <h3 class="card-title text-primary">Filter</h3>
+                            <h3 class="card-title text-primary">{{ $t('message.writer_validation.filter_title') }}</h3>
                             <div class="card-tools">
                             </div>
                         </div>
@@ -25,16 +25,16 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Anchor Text</label>
+                                        <label>{{ $t('message.writer_validation.filter_anchor_text') }}</label>
                                         <input type="text" class="form-control" v-model="filterModel.anchor_text">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Writer</label>
+                                        <label>{{ $t('message.writer_validation.filter_writer') }}</label>
                                         <select name="" class="form-control" v-model="filterModel.writer_id">
-                                            <option value="">All</option>
+                                            <option value="">{{ $t('message.writer_validation.all') }}</option>
                                             <option v-for="option in ListExtWriters.data" v-bind:value="option.id">
                                                 {{ option.username }}
                                             </option>
@@ -44,9 +44,9 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Status</label>
+                                        <label>{{ $t('message.writer_validation.filter_status') }}</label>
                                         <select name="" class="form-control" v-model="filterModel.status">
-                                            <option value="">All</option>
+                                            <option value="">{{ $t('message.writer_validation.all') }}</option>
                                             <option v-for="option in statusFilter" v-bind:value="option" :key="option">
                                                 {{ option }}
                                             </option>
@@ -56,7 +56,7 @@
 
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label>Topic</label>
+                                        <label>{{ $t('message.writer_validation.filter_topic') }}</label>
                                         <v-select
                                             class="style-chooser"
                                             v-model="filterModel.topic"
@@ -71,8 +71,12 @@
 
                             <div class="row mb-3">
                                 <div class="col-md-2">
-                                    <button class="btn btn-default" @click="clearSearch">Clear</button>
-                                    <button class="btn btn-default" @click="doSearch">Search <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
+                                    <button class="btn btn-default" @click="clearSearch">
+                                        {{ $t('message.writer_validation.clear') }}
+                                    </button>
+                                    <button class="btn btn-default" @click="doSearch">
+                                        {{ $t('message.writer_validation.search') }}
+                                        <i v-if="searchLoading" class="fa fa-refresh fa-spin"></i>
                                     </button>
                                 </div>
                             </div>
@@ -112,13 +116,13 @@
                                     style="font-size: 0.75rem; border-collapse: collapse">
                                     <thead>
                                         <tr class="label-primary">
-                                            <th>Writer</th>
-                                            <th>Attempt / Status</th>
-                                            <th>Action</th>
-                                            <th>Topic</th>
-                                            <th>Title</th>
-                                            <th>Anchor Text</th>
-                                            <th>Link To</th>
+                                            <th>{{ $t('message.writer_validation.filter_writer') }}</th>
+                                            <th>{{ $t('message.writer_validation.wv_attempt') }}</th>
+                                            <th>{{ $t('message.writer_validation.wv_action') }}</th>
+                                            <th>{{ $t('message.writer_validation.filter_topic') }}</th>
+                                            <th>{{ $t('message.writer_validation.wv_title') }}</th>
+                                            <th>{{ $t('message.writer_validation.filter_anchor_text') }}</th>
+                                            <th>{{ $t('message.writer_validation.wv_link_to') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,13 +136,13 @@
 
                                                     <td class="align-middle">
                                                         <span class="badge badge-secondary p-3 text-uppercase">
-                                                            1 - Not Yet Setup
+                                                            1 - {{ $t('message.writer_validation.wv_not_setup') }}
                                                         </span>
                                                     </td>
 
                                                     <td class="align-middle">
                                                         <button
-                                                            title="Create Exam"
+                                                            :title="$t('message.writer_validation.wv_create_exam')"
                                                             class="btn btn-success"
 
                                                             @click="doCreateExam(writer.id, writer.username, 1, writer.exam_duration)">
@@ -148,7 +152,7 @@
                                                     </td>
 
                                                     <td class="align-middle" colspan="4">
-                                                        Exam details empty - please setup an exam for the writer
+                                                        {{ $t('message.writer_validation.wv_exam_details_empty') }}
                                                     </td>
 
                                                     <td style="display: none !important;"></td>
@@ -178,7 +182,7 @@
 
                                                     <td :style="exam.attempt === 2 ? 'border: none !important;' : ''">
                                                         <button
-                                                            title="View Exam Details"
+                                                            :title="$t('message.writer_validation.wv_view_exam_details')"
                                                             class="btn btn-primary"
 
                                                             @click="doUpdate(exam)">
@@ -241,18 +245,18 @@
                                                         <span
                                                             v-if="writer.exam_duration > 0"
                                                             class="badge badge-secondary p-3 text-uppercase">
-                                                            {{ writer.exam_duration }} day(s) until second attempt exam
+                                                            {{ writer.exam_duration }} {{ $t('message.writer_validation.wv_days_attempt') }}
                                                         </span>
 
                                                         <span v-else class="badge badge-warning p-3 text-uppercase">
-                                                            Create 2nd attempt exam now
+                                                            {{ $t('message.writer_validation.wv_create_2nd_attempt_exam') }}
                                                         </span>
                                                     </td>
 
                                                     <td class="align-middle" style="border: none !important;">
                                                         <button
                                                             :disabled="writer.exam_duration > 0"
-                                                            title="Create Exam"
+                                                            :title="$t('message.writer_validation.wv_create_exam')"
                                                             class="btn btn-success"
 
                                                             @click="doCreateExam(writer.id, writer.username, 2, writer.exam_duration)">
@@ -267,7 +271,7 @@
                                                         style="border: none !important;"
                                                         :class="writer.exam_duration !== 0 ? 'text-secondary' : ''">
 
-                                                        Exam details empty - please setup an exam for the writer
+                                                        {{ $t('message.writer_validation.wv_exam_details_empty') }}
                                                     </td>
 
                                                     <td style="display: none !important; border: none !important;"></td>
@@ -296,7 +300,8 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Create {{ addExam.attempt === 1 ? '1st' : '2nd' }} Attempt Exam</h5>
+                            <h5 class="modal-title">
+                                {{ $t('message.writer_validation.ce_title') }} {{ addExam.attempt === 1 ? '1st' : '2nd' }} {{ $t('message.writer_validation.ce_attempt_exam') }}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -305,7 +310,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Writer</label>
+                                        <label>{{ $t('message.writer_validation.filter_writer') }}</label>
                                         <input type="text" class="form-control" :disabled="true" v-model="addExam.writer_name">
                                         <input type="hidden" class="form-control" v-model="addExam.writer_id">
                                     </div>
@@ -318,18 +323,18 @@
 <!--                                </div>-->
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Topic</label>
+                                        <label>{{ $t('message.writer_validation.filter_topic') }}</label>
                                         <v-select
                                             v-model="addExam.topic"
                                             multiple
-                                            placeholder="Select Topic"
+                                            :placeholder="$t('message.writer_validation.ce_select_topic')"
                                             :options="topicList"
                                             :searchable="false"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Topic Notes</label>
+                                        <label>{{ $t('message.writer_validation.ce_topic_notes') }}</label>
                                         <textarea v-model="addExam.topic_notes" class="form-control" rows="3">
 
                                         </textarea>
@@ -337,13 +342,13 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Anchor Text</label>
+                                        <label>{{ $t('message.writer_validation.filter_anchor_text') }}</label>
                                         <input type="text" class="form-control" v-model="addExam.anchor_text">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Link To</label>
+                                        <label>{{ $t('message.writer_validation.wv_link_to') }}</label>
                                         <input type="text" class="form-control" v-model="addExam.link_to">
                                     </div>
                                 </div>
@@ -356,8 +361,12 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success" @click="submitExam()">Create Exam</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                {{ $t('message.writer_validation.close') }}
+                            </button>
+                            <button type="button" class="btn btn-success" @click="submitExam()">
+                                {{ $t('message.writer_validation.wv_create_exam') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -369,7 +378,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Writer Examination Details</h5>
+                            <h5 class="modal-title">{{ $t('message.writer_validation.vc_title') }}</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -378,7 +387,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Status</label>
+                                        <label>{{ $t('message.writer_validation.filter_status') }}</label>
                                         <select name="" class="form-control" v-model="viewModel.status" disabled>
                                             <option v-for="option in status" v-bind:value="option" :key="option">
                                                 {{ option }}
@@ -388,19 +397,19 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Topic</label>
+                                        <label>{{ $t('message.writer_validation.filter_topic') }}</label>
                                         <v-select
                                             v-model="viewModel.topic"
                                             multiple
                                             :options="topicList"
                                             :searchable="false"
                                             :disabled=true
-                                            placeholder="Select Topic"/>
+                                            :placeholder="$t('message.writer_validation.ce_select_topic')"/>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Topic Notes</label>
+                                        <label>{{ $t('message.writer_validation.ce_topic_notes') }}</label>
                                         <textarea v-model="viewModel.topic_notes" class="form-control" rows="3" disabled>
 
                                         </textarea>
@@ -408,31 +417,31 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Title</label>
+                                        <label>{{ $t('message.writer_validation.wv_title') }}</label>
                                         <input type="text" class="form-control" v-model="viewModel.title" disabled>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Anchor Text</label>
+                                        <label>{{ $t('message.writer_validation.filter_anchor_text') }}</label>
                                         <input type="text" class="form-control" v-model="viewModel.anchor_text" :disabled="true">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Link To</label>
+                                        <label>{{ $t('message.writer_validation.wv_link_to') }}</label>
                                         <input type="text" class="form-control" v-model="viewModel.link_to" :disabled="true">
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Meta Description</label>
+                                        <label>{{ $t('message.writer_validation.vc_meta_desc') }}</label>
                                         <textarea class="form-control" cols="30" rows="5" v-model="viewModel.meta_description" disabled></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Content</label>
+                                        <label>{{ $t('message.writer_validation.vc_content') }}</label>
                                         <tiny-editor
                                             v-model="data2"
                                             ref="composeEditExam"
@@ -451,7 +460,8 @@
 
                                 @click="submitUpdate('approve')">
 
-                                <i class="fas fa-user-check"></i> Approve
+                                <i class="fas fa-user-check"></i>
+                                {{ $t('message.writer_validation.approve') }}
                             </button>
 
                             <button
@@ -461,10 +471,13 @@
 
                                 @click="submitUpdate('disapprove')">
 
-                                <i class="fas fa-user-times"></i> Disapprove
+                                <i class="fas fa-user-times"></i>
+                                {{ $t('message.writer_validation.disapprove') }}
                             </button>
 
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                {{ $t('message.writer_validation.close') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -479,17 +492,15 @@
             <div v-if="ExamUpdateFirst || ExamUpdateSecond" class="row">
                 <div class="col-12">
                     <div class="alert alert-info">
-                        <p><i class="fas fa-book"></i> <b>Instructions:</b></p>
-                        1. Write an article with at least <b>600 words</b>.<br/>
-                        2. Identify the keywords you have used in the article by using a <b>bold</b> character.<br/>
-                        3. Use the <b>anchor text</b> as <b>natural</b> as possible within your article and
-                        <b>hyperlink</b> it to the assigned website.<br/>
-                        4.	Create a creative title based on the topic(s) provided.<br/>
-                        5.	Write a meta description with 110-160 characters (The spaces are counted as character).<br/>
+                        <p><i class="fas fa-book"></i> <b>{{ $t('message.writer_validation.ew_instructions') }}</b></p>
+                        1. {{ $t('message.writer_validation.ew_600_words') }}.<br/>
+                        2. {{ $t('message.writer_validation.ew_keywords') }}.<br/>
+                        3. {{ $t('message.writer_validation.ew_anchor_text') }}.<br/>
+                        4. {{ $t('message.writer_validation.ew_creative_title') }}.<br/>
+                        5. {{ $t('message.writer_validation.ew_meta_desc') }}.<br/>
 
                         <br/>
-                        You will be given <b>2 attempts</b> for the writer's exam. If you have failed on the first attempt.
-                        no worries! we will give you a second attempt to take the exam after <b>3 weeks.</b>
+                        {{ $t('message.writer_validation.ew_2_attempts') }}
                     </div>
                 </div>
             </div>
@@ -498,7 +509,7 @@
                 <div class="alert alert-info">
                     <p class="mb-0">
                         <i class="fas fa-info-circle"></i>
-                        Please wait for the writer's exam to be created. We will notify you about this shortly. Thank you!
+                        {{ $t('message.writer_validation.ew_please_wait') }}
                     </p>
                 </div>
             </div>
@@ -509,7 +520,7 @@
                     <div class="col-sm-12">
                         <div class="card card-outline card-secondary">
                             <div class="card-header">
-                                <h3 class="card-title text-primary">Examination - 1st Attempt</h3>
+                                <h3 class="card-title text-primary">{{ $t('message.writer_validation.fam_title') }}</h3>
                                 <div class="card-tools">
                                 </div>
                             </div>
@@ -520,9 +531,9 @@
                                         <div class="alert alert-danger">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                First attempt examination result: Failed <br/> <br/>
+                                                {{ $t('message.writer_validation.fam_first_attempt_failed') }} <br/> <br/>
 
-                                                Remaining day(s) until second attempt: {{
+                                                {{ $t('message.writer_validation.fam_remaining_days') }} {{
                                                     user.exam_duration > 0 ? user.exam_duration : 0
                                                 }}
                                             </p>
@@ -535,8 +546,7 @@
                                         <div class="alert alert-warning">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                Your exam is now currently on checking. We will notify you shortly for
-                                                the result. Thank you for your cooperation!
+                                                {{ $t('message.writer_validation.fam_on_checking') }}
                                             </p>
                                         </div>
                                     </div>
@@ -544,17 +554,14 @@
                                     <div class="col-md-12" v-if="ExamUpdateFirst.status === 'Approved'">
                                         <div class="alert alert-success">
                                             <p class="mb-0"> <i class="fas fa-info-circle"></i>
-                                                <b>Congratulations!</b> you have passed the writer examination.
-                                                You can now go to the articles page and start writing articles for
-                                                our clients. Please re-login to update your account.
-                                                Thanks you for your cooperation!
+                                                {{ $t('message.writer_validation.fam_passed') }}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Title</label>
+                                            <label>{{ $t('message.writer_validation.wv_title') }}</label>
                                             <input
                                                 v-model="ExamUpdateFirst.title"
                                                 type="text"
@@ -563,19 +570,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Topic</label>
+                                            <label>{{ $t('message.writer_validation.filter_topic') }}</label>
                                             <v-select
                                                 v-model="ExamUpdateFirst.topic"
                                                 multiple
                                                 :options="topicList"
                                                 :searchable="false"
                                                 :disabled=true
-                                                placeholder="Select Topic"/>
+                                                :placeholder="$t('message.writer_validation.ce_select_topic')"/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Topic Notes</label>
+                                            <label>{{ $t('message.writer_validation.ce_topic_notes') }}</label>
                                             <textarea
                                                 v-model="ExamUpdateFirst.topic_notes"
                                                 disabled
@@ -587,7 +594,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Anchor Text</label>
+                                            <label>{{ $t('message.writer_validation.filter_anchor_text') }}</label>
                                             <input
                                                 v-model="ExamUpdateFirst.anchor_text"
                                                 type="text"
@@ -597,7 +604,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Link To</label>
+                                            <label>{{ $t('message.writer_validation.wv_link_to') }}</label>
                                             <input
                                                 v-model="ExamUpdateFirst.link_to"
                                                 type="text"
@@ -607,7 +614,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Meta Description</label>
+                                            <label>{{ $t('message.writer_validation.vc_meta_desc') }}</label>
                                             <textarea
                                                 v-model="ExamUpdateFirst.meta_description"
                                                 cols="30"
@@ -619,7 +626,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Content</label>
+                                            <label>{{ $t('message.writer_validation.vc_content') }}</label>
                                             <tiny-editor
                                                 v-model="data"
                                                 ref="composeEditExam2"
@@ -630,7 +637,9 @@
                                     </div>
 
                                     <div class="col-md-12 my-3" v-if="ExamUpdateFirst.status !== 'For Checking' && ExamUpdateFirst.status !== 'Approved'">
-                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(1)">Submit Exam</button>
+                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(1)">
+                                            {{ $t('message.writer_validation.fam_submit_exam') }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -645,7 +654,7 @@
                     <div class="col-12">
                         <div class="card card-outline card-secondary">
                             <div class="card-header">
-                                <h3 class="card-title text-primary">Examination - 2nd Attempt</h3>
+                                <h3 class="card-title text-primary">{{ $t('message.writer_validation.sae_title') }}</h3>
                                 <div class="card-tools">
                                 </div>
                             </div>
@@ -656,8 +665,7 @@
                                         <div class="alert alert-info">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                Please wait for the 2nd attempt exam to be created.
-                                                We will notify you about this shortly. Thank you!
+                                                {{ $t('message.writer_validation.sae_please_wait_second') }}
                                             </p>
                                         </div>
                                     </div>
@@ -668,13 +676,11 @@
                                         <div class="alert alert-danger">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                After careful evaluation of your second attempt exam. We regret to inform
-                                                you that you did not pass the writer's examination provided by our team.
+                                                {{ $t('message.writer_validation.sae_failed') }}
 
                                                 <br/> <br/>
 
-                                                We will now deactivate your writer's account. We wish you good luck
-                                                on your future endeavors. Thank you!
+                                                {{ $t('message.writer_validation.sae_deactivate') }}
                                             </p>
                                         </div>
                                     </div>
@@ -685,8 +691,7 @@
                                         <div class="alert alert-warning">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                Your exam is now currently on checking. We will notify you shortly for
-                                                the result. Thank you for your cooperation!
+                                                {{ $t('message.writer_validation.fam_on_checking') }}
                                             </p>
                                         </div>
                                     </div>
@@ -694,17 +699,14 @@
                                     <div class="col-md-12" v-if="ExamUpdateSecond.status === 'Approved'">
                                         <div class="alert alert-success">
                                             <p class="mb-0"> <i class="fas fa-info-circle"></i>
-                                                <b>Congratulations!</b> you have passed the writer examination.
-                                                You can now go to the articles page and start writing articles for
-                                                our clients. Please re-login to update your account.
-                                                Thanks you for your cooperation!
+                                                {{ $t('message.writer_validation.fam_passed') }}
                                             </p>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Title</label>
+                                            <label>{{ $t('message.writer_validation.wv_title') }}</label>
                                             <input
                                                 v-model="ExamUpdateSecond.title"
                                                 type="text"
@@ -713,19 +715,19 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Topic</label>
+                                            <label>{{ $t('message.writer_validation.filter_topic') }}</label>
                                             <v-select
                                                 v-model="ExamUpdateSecond.topic"
                                                 multiple
                                                 :options="topicList"
                                                 :searchable="false"
                                                 :disabled=true
-                                                placeholder="Select Topic"/>
+                                                :placeholder="$t('message.writer_validation.ce_select_topic')"/>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Topic Notes</label>
+                                            <label>{{ $t('message.writer_validation.ce_topic_notes') }}</label>
                                             <textarea
                                                 v-model="ExamUpdateSecond.topic_notes"
                                                 disabled
@@ -737,7 +739,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Anchor Text</label>
+                                            <label>{{ $t('message.writer_validation.filter_anchor_text') }}</label>
                                             <input
                                                 v-model="ExamUpdateSecond.anchor_text"
                                                 type="text"
@@ -747,7 +749,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Link To</label>
+                                            <label>{{ $t('message.writer_validation.wv_link_to') }}</label>
                                             <input
                                                 v-model="ExamUpdateSecond.link_to"
                                                 type="text"
@@ -757,7 +759,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Meta Description</label>
+                                            <label>{{ $t('message.writer_validation.vc_meta_desc') }}</label>
                                             <textarea
                                                 v-model="ExamUpdateSecond.meta_description"
                                                 class="form-control"
@@ -769,7 +771,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label>Content</label>
+                                            <label>{{ $t('message.writer_validation.vc_content') }}</label>
                                             <tiny-editor
                                                 v-model="dataSecond"
                                                 ref="composeEditExam2Two"
@@ -780,7 +782,9 @@
                                     </div>
 
                                     <div class="col-md-12 my-3" v-if="ExamUpdateSecond.status !== 'For Checking' && ExamUpdateSecond.status !== 'Approved'">
-                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(2)">Submit Exam</button>
+                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(2)">
+                                            {{ $t('message.writer_validation.fam_submit_exam') }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -927,13 +931,15 @@ export default {
     methods : {
 
         submitUpdate(mod) {
+            let self = this;
+
             swal.fire({
-                title : "Writer Exam Evaluation",
-                text : "Mark exam as " + mod + "?",
+                title : self.$t('message.writer_validation.alert_writer_exam_evaluation'),
+                text : self.$t('message.writer_validation.alert_mark') + mod + "?",
                 icon : mod === 'approve' ? 'success' : 'error',
                 showCancelButton : true,
-                confirmButtonText : 'Yes',
-                cancelButtonText : 'No'
+                confirmButtonText : self.$t('message.writer_validation.yes'),
+                cancelButtonText : self.$t('message.writer_validation.no')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -948,8 +954,8 @@ export default {
                             loader.hide();
 
                             swal.fire(
-                                'Success',
-                                'Successfully Updated.',
+                                self.$t('message.writer_validation.alert_success'),
+                                self.$t('message.writer_validation.alert_updated_successfully'),
                                 'success',
                             )
 
@@ -1025,7 +1031,7 @@ export default {
         },
 
         submitWriterExam(attempt) {
-
+            let self = this;
             let data = {};
 
             if (attempt === 1) {
@@ -1042,8 +1048,8 @@ export default {
 
             if(data.title === "" || data.title == null) {
                 swal.fire(
-                    'Note',
-                    'Please provide a title',
+                    self.$t('message.writer_validation.alert_note'),
+                    self.$t('message.writer_validation.alert_title'),
                     'error',
                 )
                 return false;
@@ -1051,8 +1057,8 @@ export default {
 
             if(data.meta_description === "" || data.meta_description == null) {
                 swal.fire(
-                    'Note',
-                    'Please provide a meta description',
+                    self.$t('message.writer_validation.alert_note'),
+                    self.$t('message.writer_validation.alert_meta_desc'),
                     'error',
                 )
                 return false;
@@ -1060,8 +1066,8 @@ export default {
 
             if(data.content === "" || data.content == null) {
                 swal.fire(
-                    'Note',
-                    'Please write Content to finish the Exam',
+                    self.$t('message.writer_validation.alert_note'),
+                    self.$t('message.writer_validation.alert_content'),
                     'error',
                 )
                 return false;
@@ -1069,8 +1075,8 @@ export default {
 
             if(data.num_words < 600) {
                 swal.fire(
-                    'Note',
-                    'Below 600 words are not',
+                    self.$t('message.writer_validation.alert_note'),
+                    self.$t('message.writer_validation.alert_600'),
                     'error',
                 )
                 return false;
@@ -1083,8 +1089,8 @@ export default {
                     loader.hide();
 
                     swal.fire(
-                        'Success',
-                        'Successfully Submitted.',
+                        self.$t('message.writer_validation.alert_success'),
+                        self.$t('message.writer_validation.alert_submitted_successfully'),
                         'success',
                     )
 
@@ -1160,13 +1166,14 @@ export default {
         },
 
         submitExam() {
+            let self = this;
             // if 2nd attempt, duration must be <= 0
             if (this.addExam.attempt === 2) {
                 if (this.addExam.duration > 0) {
                     swal.fire(
-                        'Error',
-                        'Writer is not yet eligible to take 2nd attempt exam. Try again after ' + this.addExam.duration
-                        + ' day(s)',
+                        self.$t('message.writer_validation.alert_error'),
+                        self.$t('message.writer_validation.alert_not_yet') + this.addExam.duration
+                        + self.$t('message.writer_validation.alert_days'),
                         'error',
                     )
 
@@ -1183,8 +1190,8 @@ export default {
                     this.getListExtWriters();
 
                     swal.fire(
-                        'Success',
-                        'Exam Successfully Created',
+                        self.$t('message.writer_validation.alert_success'),
+                        self.$t('message.writer_validation.alert_created_successfully'),
                         'success',
                     )
 
@@ -1201,7 +1208,7 @@ export default {
                     }
 
                     swal.fire(
-                        'Error',
+                        self.$t('message.writer_validation.alert_error'),
                         html,
                         'error',
                     )
