@@ -439,7 +439,13 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         // From Filter
         if (isset($input['from'])) {
-            $query->where('from', $input['from']);
+//            $query->where('from', $input['from']);
+
+            if (is_array($input['from'])) {
+                $query->whereIn('from', $input['from']);
+            } else {
+                $query->where('from', $input['from']);
+            }
         }
 
         // Status Filter

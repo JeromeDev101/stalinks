@@ -254,7 +254,11 @@ class ExtDomainController extends Controller
 
         // From Filter
         if (isset($input['from'])) {
-            $totals = $totals->where('from', $input['from']);
+            if (is_array($input['from'])) {
+                $totals = $totals->whereIn('from', $input['from']);
+            } else {
+                $totals = $totals->where('from', $input['from']);
+            }
         }
 
         // Status Filter
