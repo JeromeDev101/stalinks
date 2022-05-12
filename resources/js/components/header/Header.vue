@@ -527,7 +527,7 @@
                                     <p v-if="option.account_value != '' && option.account_value != null" class="text-center"><b>Account: </b>{{ option.account_value }}</p>
                                     <p v-if="option.email_value != '' && option.email_value != null" class="text-center"><b>Email: </b>{{ option.email_value }}</p>
                                     <p v-if="option.address_value != '' && option.address_value != null" class="text-center"><b>Address: </b>{{ option.address_value }}</p>
-                                    
+
                                 </div>
                             </div>
 
@@ -1326,7 +1326,7 @@ export default {
 
             if (this.user.role_id == 5) {
                 axios
-                    .get("api/wallet-credit")
+                    .get("/api/wallet-credit")
                     .then(function (res) {
                         let result = res.data;
                         if (typeof result === "object") {
