@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: 'Pilih Konfirmasi',
     uw_paid: 'Dibayar',
     uw_not_paid: 'Belum dibayar',
+    uw_refund_processing: 'Pemrosesan pengembalian dana',
+    uw_refunded: 'Dikembalikan',
 
     // alerts
     alert_success: 'Berhasil',

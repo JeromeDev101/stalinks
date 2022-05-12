@@ -71,6 +71,18 @@ export default {
     ea_note_long: "Akun Anda saat ini tidak dapat melihat basis harga. Anda tidak dapat memperbarui bidang 'adalah hargadasar  yang ditampilkan' dari akun sub pembeli Anda. Silakan hubungi administrator atau penanggung jawab.",
     ea_is_show_price_basis: 'Adalah Dasar Harga Pertunjukan',
 
+    // refund request
+    rr_title: 'Permintaan pengembalian dana',
+    rr_note: 'Catatan: Permintaan pengembalian dana hanya tersedia untuk kredit yang lebih besar dari nol.',
+    rr_refund: 'Pengembalian dana',
+    rr_amount: 'Jumlah',
+    rr_error_on_process: 'Maaf, Anda memiliki permintaan pengembalian dana yang sedang diproses.',
+    rr_error_payment_method: 'Silakan pilih metode pembayaran default',
+    rr_error_credits: 'Kredit harus lebih besar dari 0',
+    rr_error_amount: 'Jumlah tidak valid',
+    rr_error_credits_greater: 'Maaf, Anda tidak dapat mengembalikan dana lebih besar dari sisa kredit Anda.',
+    rr_refund_submitted: 'Permintaan pengembalian dana berhasil dikirim',
+
     // alerts
     alert_update: 'Diperbarui!',
     alert_success_update: 'Berhasil diperbarui',

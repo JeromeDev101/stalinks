@@ -323,8 +323,10 @@
         <div class="row mb-5" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
             <div class="col-sm-12 mx-3">
                 <hr/>
-                <button class="btn btn-lg btn-info" data-target="#modalRefundReq" data-toggle="modal" :disabled="!canRefund">Refund Request</button>
-                <small class="text-muted ml-5"><i>Note: Refund request is available only for credits greater than zero.</i></small>
+                <button class="btn btn-lg btn-info" data-target="#modalRefundReq" data-toggle="modal" :disabled="!canRefund">
+                    {{ $t('message.profile.rr_title') }}
+                </button>
+                <small class="text-muted ml-5"><i>{{ $t('message.profile.rr_note') }}</i></small>
                 <hr/>
             </div>
         </div>
@@ -494,7 +496,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Refund Request</h5>
+                        <h5 class="modal-title">{{ $t('message.profile.rr_title') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -503,7 +505,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Amount</label>
+                                    <label>{{ $t('message.profile.rr_amount') }}</label>
                                     <input type="number" class="form-control" v-model="refundModel.amount" placeholder="0.00">
                                 </div>
                             </div>
@@ -518,7 +520,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="submitRefund()">Refund</button>
+                        <button type="button" class="btn btn-primary" @click="submitRefund()">
+                            {{ $t('message.profile.rr_refund') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -846,6 +850,7 @@ export default {
         },
 
         submitRefund() {
+            let self = this;
             let wallet = JSON.parse(localStorage.getItem('wallet'))
             let credit = wallet.credit;
             let payment_id = 0;
@@ -853,7 +858,7 @@ export default {
             let loader = this.$loading.show();
 
             if(this.isWithonProcess) {
-                swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
+                swal.fire('Error', self.$t('message.profile.rr_error_on_process'), 'error');
                 loader.hide();
                 return false;
             }
@@ -867,25 +872,25 @@ export default {
             }
 
             if(payment_id == 0) {
-                swal.fire('Error', 'No selected default payment method', 'error');
+                swal.fire(self.$t('message.profile.alert_error'), self.$t('message.profile.rr_error_payment_method'), 'error');
                 loader.hide();
                 return false;
             }
 
             if(credit <= 0) {
-                swal.fire('Error', 'Credits must be greater than 0', 'error');
+                swal.fire(self.$t('message.profile.alert_error'), self.$t('message.profile.rr_error_credits'), 'error');
                 loader.hide();
                 return false;
             }
 
             if(this.refundModel.amount == "" || this.refundModel.amount <= 0) {
-                swal.fire('Error', 'Invalid amount', 'error');
+                swal.fire(self.$t('message.profile.alert_error'), self.$t('message.profile.rr_error_amount'), 'error');
                 loader.hide();
                 return false;
             }
 
             if(this.refundModel.amount > credit) {
-                swal.fire('Error', 'Sorry you can\'t refund greater than your remaining credits.', 'error');
+                swal.fire(self.$t('message.profile.alert_error'), self.$t('message.profile.rr_error_credits_greater'), 'error');
                 loader.hide();
                 return false;
             }
@@ -897,9 +902,9 @@ export default {
                     loader.hide();
 
                     if(res.data.success) {
-                        swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
+                        swal.fire(self.$t('message.profile.alert_error'), self.$t('message.profile.rr_error_on_process'), 'error');
                     } else {
-                        swal.fire('Done', 'Refund request successfully submitted', 'success');
+                        swal.fire('Done', self.$t('message.profile.rr_refund_submitted'), 'success');
 
                         this.refundModel.amount = '';
                         $("#modalRefundReq").modal('hide')

@@ -71,6 +71,18 @@ export default {
     ea_note_long: "現在、お客様のアカウントでは価格基準を表示することができません。補助バイヤーアカウントの\"価格基準を表示\"の更新はできません。管理人または担当者にご連絡ください。",
     ea_is_show_price_basis: '価格基準を表示する',
 
+    // refund request
+    rr_title: '払い戻しのリクエスト',
+    rr_note: '注：払い戻しリクエストは、ゼロより大きいクレジットに対してのみ利用できます。',
+    rr_refund: '返金',
+    rr_amount: '額',
+    rr_error_on_process: '申し訳ありませんが、処理中の払い戻しリクエストがあります。',
+    rr_error_payment_method: 'デフォルトのお支払い方法を選択してください',
+    rr_error_credits: 'クレジットは0より大きくなければなりません',
+    rr_error_amount: '金額が無効です',
+    rr_error_credits_greater: '申し訳ありませんが、残りのクレジットを超えて返金することはできません。',
+    rr_refund_submitted: '払い戻しリクエストが正常に送信されました',
+
     // alerts
     alert_update: '更新しました!',
     alert_success_update: 'アップロードに成功しました',

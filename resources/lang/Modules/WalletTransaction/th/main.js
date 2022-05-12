@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: 'เลือกการยืนยัน',
     uw_paid: 'จ่าย',
     uw_not_paid: 'ยังไม่ชำระเงิน',
+    uw_refund_processing: 'การดำเนินการคืนเงิน',
+    uw_refunded: 'คืนเงินแล้ว',
 
     // alerts
     alert_success: 'สำเร็จ',

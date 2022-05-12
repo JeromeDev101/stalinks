@@ -71,6 +71,18 @@ export default {
     ea_note_long: "Tài khoản của bạn hiện không thể xem giá niêm yết. Bạn không thể cập nhật ô 'là hiển thị giá niêm yết' trong tài khoản người mua phụ của mình. Vui lòng liên hệ với quản trị viên hoặc người phụ trách.",
     ea_is_show_price_basis: 'Đang hiển thị giá niêm yết',
 
+    // refund request
+    rr_title: 'Yêu cầu hoàn lại tiền',
+    rr_note: 'Lưu ý: Yêu cầu hoàn lại tiền chỉ có sẵn cho các khoản tín dụng lớn hơn 0.',
+    rr_refund: 'Đền bù',
+    rr_amount: 'Số lượng',
+    rr_error_on_process: 'Xin lỗi, bạn có một yêu cầu hoàn lại tiền đang được xử lý.',
+    rr_error_payment_method: 'Vui lòng chọn một phương thức thanh toán mặc định',
+    rr_error_credits: 'Tín dụng phải lớn hơn 0',
+    rr_error_amount: 'Số tiền không hợp lệ',
+    rr_error_credits_greater: 'Xin lỗi, bạn không thể hoàn trả nhiều hơn số tín dụng còn lại của bạn.',
+    rr_refund_submitted: 'Yêu cầu hoàn lại tiền đã được gửi thành công',
+
     // alerts
     alert_update: 'Đã cập nhật!',
     alert_success_update: 'Cập nhật thành công',

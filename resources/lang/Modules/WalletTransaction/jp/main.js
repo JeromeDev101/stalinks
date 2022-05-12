@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: '確定の選択',
     uw_paid: '支払い済み',
     uw_not_paid: '未払い',
+    uw_refund_processing: '払い戻し処理',
+    uw_refunded: '返金済み',
 
     // alerts
     alert_success: '成功しました',

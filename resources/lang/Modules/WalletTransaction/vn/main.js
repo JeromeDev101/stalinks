@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: 'Chọn xác nhận',
     uw_paid: 'Trả tiền',
     uw_not_paid: 'Không phải trả tiền',
+    uw_refund_processing: 'Xử lý hoàn lại tiền',
+    uw_refunded: 'Đã hoàn lại',
 
     // alerts
     alert_success: 'Thành công',

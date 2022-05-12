@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: 'Select Confirmation',
     uw_paid: 'Paid',
     uw_not_paid: 'Not Paid',
+    uw_refund_processing: 'Refund processing',
+    uw_refunded: 'Refunded',
 
     // alerts
     alert_success: 'Success',

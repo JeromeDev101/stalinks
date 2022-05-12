@@ -71,6 +71,18 @@ export default {
     ea_note_long: "Your account is currently not able to view price basis. You cannot update the 'is show price basis' field of your sub buyer account. Please contact an administrator or person in charge.",
     ea_is_show_price_basis: 'Is Show Price Basis',
 
+    // refund request
+    rr_title: 'Refund Request',
+    rr_note: 'Note: Refund request is available only for credits greater than zero.',
+    rr_refund: 'Refund',
+    rr_amount: 'Amount',
+    rr_error_on_process: 'Sorry, you have a on process refund request.',
+    rr_error_payment_method: 'Please select a default payment method',
+    rr_error_credits: 'Credits must be greater than 0',
+    rr_error_amount: 'Invalid amount',
+    rr_error_credits_greater: 'Sorry you can\'t refund greater than your remaining credits.',
+    rr_refund_submitted: 'Refund request successfully submitted',
+
     // alerts
     alert_update: 'Updated!',
     alert_success_update: 'Successfully Updated',

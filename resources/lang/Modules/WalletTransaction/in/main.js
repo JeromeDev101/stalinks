@@ -34,6 +34,8 @@ export default {
     uw_select_confirmation: 'पुष्टि का चयन करें',
     uw_paid: 'चुकाया गया',
     uw_not_paid: 'भुगतान नहीं',
+    uw_refund_processing: 'धनवापसी प्रसंस्करण',
+    uw_refunded: 'वापसी की गई है',
 
     // alerts
     alert_success: 'सफलता',
