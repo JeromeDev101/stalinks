@@ -666,8 +666,18 @@ class AccountController extends Controller
         //                         ->get();
 
         $total_purchased = Backlink::selectRaw('SUM(prices) as total_purchased')
-                                ->where('status', '!=', 'Canceled')
-                                ->where('status', '!=', 'To Be Validated')
+//                                ->where('status', '!=', 'Canceled')
+//                                ->where('status', '!=', 'To Be Validated')
+                                ->whereIn('status', [
+                                    'Live',
+                                    'Processing',
+                                    'Content In Writing',
+                                    'Content Done',
+                                    'Content sent',
+                                    'Live in Process',
+                                    'Issue',
+                                    'Pending'
+                                ])
                                 ->where(function($query) use ($sub_buyer_ids, $UserId){
                                     if(count($sub_buyer_ids) > 0) {
                                         return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(),$UserId));

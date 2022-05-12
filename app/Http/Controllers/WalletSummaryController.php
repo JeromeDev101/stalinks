@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\WalletTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -50,7 +51,7 @@ class WalletSummaryController extends Controller
             $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
             $user_buyers[$key]['order_cancel'] = $this->getTotalPurchase($user_buyer->id, 'order_cancel', $request->year, $request->month);
             $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
-            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
+            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month) - $this->getTotalRefunded($user_buyer->id);
             $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
 
         }
@@ -115,7 +116,8 @@ class WalletSummaryController extends Controller
                         'Content Done',
                         'Content sent',
                         'Live in Process',
-                        'Issue'
+                        'Issue',
+                        'Pending'
                     ]);
                 }
             })
@@ -136,5 +138,15 @@ class WalletSummaryController extends Controller
             ->get();
 
         return isset($total_paid[0]['total_paid']) ? floatval($total_paid[0]['total_paid']) : 0;
+    }
+
+    public function getTotalRefunded($user_id)
+    {
+        $total = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+            ->where('user_id', $user_id)
+            ->whereIn('admin_confirmation', ['Refunded'])
+            ->first();
+
+        return $total ? $total->amount_usd : 0;
     }
 }
