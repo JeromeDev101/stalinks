@@ -100,6 +100,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-user-seller')->get('wallet-user-seller', 'WalletTransactionController@getListSeller');
     Route::name('get-user-seller-team')->get('wallet-user-seller-team', 'WalletTransactionController@getListSellerTeam');
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
+    Route::name('refund-wallet')->post('refund-wallet', 'WalletTransactionController@refundWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
     Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
     Route::name('get-payment-image')->get('/payments/image', 'PaymentController@getPaymentTypeImageList');

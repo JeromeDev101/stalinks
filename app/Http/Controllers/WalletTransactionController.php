@@ -125,6 +125,23 @@ class WalletTransactionController extends Controller
         ];
     }
 
+    public function refundWallet(Request $request) {
+        $user_id = Auth::user()->id;
+
+        $data = [
+            'user_id' => $user_id,
+            'payment_via_id' => $request->payment_id,
+            'amount_usd' => $request->amount,
+            'date' => date('Y-m-d'),
+            'proof_doc' => '/',
+            'admin_confirmation' => 'Refund processing',
+        ];
+
+        WalletTransaction::create($data);
+
+        return response()->json(['success' => true], 200);
+    }
+
     public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
         $image = $request->file;
         $paymentType = $request->get('payment_type');

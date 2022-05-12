@@ -87,7 +87,7 @@
                                     <td><b>{{ $t('message.profile.p_type') }}</b></td>
                                     <td>{{ user.user_type ? user.user_type.type: '' }}</td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
+                                <tr v-if="currentUser.isOurs == 1 && (user.user_type != null && user.user_type.type == 'Writer')">
                                     <td><b>{{ $t('message.profile.p_pricing_type') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
@@ -101,7 +101,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1 && user.user_type.type == 'Writer'">
+                                <tr v-if="currentUser.isOurs == 1 && (user.user_type != null && user.user_type.type == 'Writer')">
                                     <td><b>{{ $t('message.profile.p_writer_price') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
@@ -320,6 +320,15 @@
             </div>
         </div>
 
+        <div class="row mb-5" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
+            <div class="col-sm-12 mx-3">
+                <hr/>
+                <button class="btn btn-lg btn-info" data-target="#modalRefundReq" data-toggle="modal" :disabled="!canRefund">Refund Request</button>
+                <small class="text-muted ml-5"><i>Note: Refund request is available only on for credits greater than zero.</i></small>
+                <hr/>
+            </div>
+        </div>
+
         <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id !== 11">
             <div class="col-sm-12">
                 <div class="box box-primary">
@@ -343,7 +352,7 @@
                         <div class="table-responsive">
 
                             <!-- payment for seller and writer -->
-                            <table class="table no-margin" v-if="user.user_type.type === 'Seller' || user.user_type.type === 'Writer'">
+                            <table class="table no-margin" v-if="user.user_type != null && (user.user_type.type === 'Seller' || user.user_type.type === 'Writer')">
                                 <tbody>
                                     <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
@@ -363,7 +372,7 @@
                             <!-- end of payment for seller and writer -->
 
                             <!-- payment for buyer -->
-                            <table class="table no-margin" v-if="user.user_type.type === 'Buyer'">
+                            <table class="table no-margin" v-if="user.user_type != null && user.user_type.type === 'Buyer'">
                                 <tbody>
                                     <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
                                         <td>
@@ -479,6 +488,42 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Modal Refund request -->
+        <div class="modal fade" id="modalRefundReq" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Refund Request</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="">Amount</label>
+                                    <input type="number" class="form-control" v-model="refundModel.amount" placeholder="0.00">
+                                </div>
+                            </div>
+                            <div class="col-sm-12" v-if="user.user_payment_types">
+                                <div class="form-group" v-for="type in user.user_payment_types" :key="type.id" v-if="type.is_default == 1">
+                                    <label v-for="option in paymentMethodList" :key="option.id" v-if="option.id === type.payment_id">
+                                        {{ option.type }}
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="0.00" :value="type.account" :disabled="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="submitRefund()">Refund</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Refund request -->
 
         <!-- Modal Edit Sub Account -->
         <div class="modal fade" id="modal-edit-sub-account" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
@@ -700,8 +745,11 @@ export default {
             CompanyName: true,
             countryList: [],
             country_id: '',
+            refundModel: {
+                amount: ''
+            },
             paymentMethodList: [],
-
+            canRefund: false,
             // affiliates
 
             affiliateBuyers: {
@@ -744,6 +792,7 @@ export default {
         this.getPublisherSummaryCountry();
         this.bindPayment();
         this.getListPaymentMethod();
+        this.checkCanRefund();
 
         // console.log(this.user)
 
@@ -755,7 +804,7 @@ export default {
 
         this.getListCountry();
 
-        // this.$root.$refs.AppHeader.liveGetWallet()
+        this.$root.$refs.AppHeader.liveGetWallet()
 
         this.getAffiliateBuyers();
     },
@@ -774,6 +823,58 @@ export default {
                 .then((res) => {
                     this.paymentMethodList = res.data.data
                 })
+        },
+
+        checkCanRefund() {
+            let wallet = JSON.parse(localStorage.getItem('wallet'))
+            let credit = wallet.credit;
+
+            if(credit <= 0) {
+                this.canRefund = false;
+            } else {
+                this.canRefund = true;
+            }
+        },
+
+        submitRefund() {
+            let wallet = JSON.parse(localStorage.getItem('wallet'))
+            let credit = wallet.credit;
+            let payment_id = 0;
+
+            if(this.user.user_payment_types) {
+                for(let i in this.user.user_payment_types) {
+                    if(this.user.user_payment_types[i].is_default === 1) {
+                        payment_id = this.user.user_payment_types[i].payment_id;
+                    }
+                }
+            }
+
+            if(payment_id == 0) {
+                swal.fire('Error', 'No selected default payment method', 'error');
+                return false;
+            }
+
+            // if(credit <= 0) {
+            //     swal.fire('Error', 'Can\'t process, due to low Credit left', 'error');
+            //     return false;
+            // }
+
+            if(this.refundModel.amount == "" || this.refundModel.amount <= 0) {
+                swal.fire('Error', 'Invalid Amount', 'error');
+                return false;
+            }
+
+            this.refundModel.payment_id = payment_id;
+
+            axios.post('/api/refund-wallet', this.refundModel)
+                .then((res) => {
+                    swal.fire('Done', 'Refund Request Successfully Submitted', 'success');
+
+                    this.refundModel.amount = '';
+                    $("#modalRefundReq").modal('hide')
+                })
+
+            console.log(this.user)
         },
 
         submitUpload() {

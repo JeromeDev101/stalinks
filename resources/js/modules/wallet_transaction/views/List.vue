@@ -141,7 +141,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button
-                                            v-if="wallet.invoice"
+                                            v-if="wallet.invoice && wallet.admin_confirmation != 'Refund processing'"
                                             :title="$t('message.wallet_transaction.wt_download_invoice')"
                                             @click="downloadInvoice(wallet.id)"
                                             class="btn btn-default">
@@ -149,7 +149,7 @@
                                         </button>
 
                                         <button
-                                            v-else
+                                            v-if="!wallet.invoice && wallet.admin_confirmation != 'Refund processing'"
                                             :title="$t('message.wallet_transaction.wt_proof_of_documents')"
                                             @click="doShow(wallet.proof_doc)"
                                             data-target="#modal-wallet-docs"
@@ -441,6 +441,8 @@
                                         <option value="">{{ $t('message.wallet_transaction.uw_select_confirmation') }}</option>
                                         <option value="Paid">{{ $t('message.wallet_transaction.uw_paid') }}</option>
                                         <option value="Not Paid">{{ $t('message.wallet_transaction.uw_not_paid') }}</option>
+                                        <option value="Refund processing">Refund processing</option>
+                                        <option value="Refunded">Refunded</option>
                                     </select>
 
                                     <span
