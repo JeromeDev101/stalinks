@@ -864,6 +864,11 @@ export default {
                 return false;
             }
 
+            if(this.refundModel.amount > credit) {
+                swal.fire('Error', 'Sorry you can\'t refund greater than your remaining credits.', 'error');
+                return false;
+            }
+
             this.refundModel.payment_id = payment_id;
 
             axios.post('/api/refund-wallet', this.refundModel)
