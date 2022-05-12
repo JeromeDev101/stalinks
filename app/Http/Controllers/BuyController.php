@@ -315,7 +315,12 @@ class BuyController extends Controller
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
             ->where('user_id', $user->id)
-            ->whereIn('admin_confirmation', ['Paid', 'Refunded'])
+            ->whereIn('admin_confirmation', ['Paid'])
+            ->get();
+
+        $wallet_transaction_refunded = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
+            ->where('user_id', $user->id)
+            ->whereIn('admin_confirmation', ['Refunded'])
             ->get();
 
         if (isset($wallet_transaction[0]['amount_usd'])) {
@@ -324,6 +329,10 @@ class BuyController extends Controller
             } else {
                 $credit = floatval($wallet_transaction[0]['amount_usd']);
             }
+        }
+
+        if( isset($wallet_transaction_refunded[0]['amount_usd']) ) {
+            $credit = $credit - floatval($wallet_transaction_refunded[0]['amount_usd']);
         }
         // End of Getting credit left
 

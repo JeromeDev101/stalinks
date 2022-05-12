@@ -249,7 +249,7 @@ class WalletTransactionController extends Controller
             $file_name = str_replace('/images/wallet_transaction/','',$wallet_transaction->proof_doc);
             $path = public_path()."/images/wallet_transaction/".$file_name;
 
-            if( file_exists($path) ){
+            if( file_exists($path) && $wallet_transaction->admin_confirmation != 'Refunded' && $wallet_transaction->admin_confirmation != 'Refund processing'){
                 unlink($path);
             }
         }
