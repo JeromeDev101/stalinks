@@ -750,6 +750,7 @@ export default {
             },
             paymentMethodList: [],
             canRefund: false,
+            isWithonProcess: false,
             // affiliates
 
             affiliateBuyers: {
@@ -793,6 +794,7 @@ export default {
         this.bindPayment();
         this.getListPaymentMethod();
         this.checkCanRefund();
+        this.checkOnProcessRefund();
 
         // console.log(this.user)
 
@@ -836,10 +838,22 @@ export default {
             }
         },
 
+        checkOnProcessRefund() {
+            axios.get('/api/check-on-process-refund')
+                .then((res) => {
+                    this.isWithonProcess = res.data.result;
+                })
+        },
+
         submitRefund() {
             let wallet = JSON.parse(localStorage.getItem('wallet'))
             let credit = wallet.credit;
             let payment_id = 0;
+
+            if(this.isWithonProcess) {
+                swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
+                return false;
+            }
 
             if(this.user.user_payment_types) {
                 for(let i in this.user.user_payment_types) {

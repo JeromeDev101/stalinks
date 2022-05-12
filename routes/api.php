@@ -102,6 +102,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('create-wallet')->post('add-wallet', 'WalletTransactionController@addWallet');
     Route::name('refund-wallet')->post('refund-wallet', 'WalletTransactionController@refundWallet');
     Route::name('update-wallet')->post('update-wallet', 'WalletTransactionController@updateWallet');
+    Route::name('check-on-process-refund')->get('check-on-process-refund', 'WalletTransactionController@checkOnProcessRefund');
     Route::name('get-user-buyer-with-wallet')->get('wallet-user-buyer-transactions', 'WalletTransactionController@getListBuyerWithWalletTransaction');
     Route::name('get-payment-image')->get('/payments/image', 'PaymentController@getPaymentTypeImageList');
 

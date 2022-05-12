@@ -142,6 +142,21 @@ class WalletTransactionController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+    public function checkOnProcessRefund() {
+        $user_id = Auth::user()->id;
+        $result = false;
+
+        $wallet_transaction = WalletTransaction::where('user_id', $user_id)
+                    ->where('admin_confirmation', 'Refund processing')
+                    ->count();
+
+        if($wallet_transaction > 0) {
+            $result = true;
+        }
+
+        return response()->json(['result'=>$result], 200);
+    }
+
     public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
         $image = $request->file;
         $paymentType = $request->get('payment_type');
