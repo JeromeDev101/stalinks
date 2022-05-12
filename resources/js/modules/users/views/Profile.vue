@@ -854,10 +854,10 @@ export default {
                 return false;
             }
 
-            // if(credit <= 0) {
-            //     swal.fire('Error', 'Can\'t process, due to low Credit left', 'error');
-            //     return false;
-            // }
+            if(credit <= 0) {
+                swal.fire('Error', 'Can\'t process, due to low Credit left', 'error');
+                return false;
+            }
 
             if(this.refundModel.amount == "" || this.refundModel.amount <= 0) {
                 swal.fire('Error', 'Invalid Amount', 'error');
