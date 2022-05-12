@@ -691,7 +691,7 @@ class AccountController extends Controller
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
-                    ->where('admin_confirmation', '!=', 'Not Paid')
+                    ->whereIn('admin_confirmation', ['Paid', 'Refunded'])
                     ->get();
 
         if( isset($wallet_transaction[0]['amount_usd']) ){
