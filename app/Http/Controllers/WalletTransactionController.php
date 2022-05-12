@@ -127,19 +127,28 @@ class WalletTransactionController extends Controller
 
     public function refundWallet(Request $request) {
         $user_id = Auth::user()->id;
+        $result = false;
 
-        $data = [
-            'user_id' => $user_id,
-            'payment_via_id' => $request->payment_id,
-            'amount_usd' => $request->amount,
-            'date' => date('Y-m-d'),
-            'proof_doc' => '/',
-            'admin_confirmation' => 'Refund processing',
-        ];
+        $wallet_transaction = WalletTransaction::where('user_id', $user_id)
+                    ->where('admin_confirmation', 'Refund processing')
+                    ->count();
 
-        WalletTransaction::create($data);
+        if($wallet_transaction > 0) {
+            $result = true;
+        } else {
+            $data = [
+                'user_id' => $user_id,
+                'payment_via_id' => $request->payment_id,
+                'amount_usd' => $request->amount,
+                'date' => date('Y-m-d'),
+                'proof_doc' => '/',
+                'admin_confirmation' => 'Refund processing',
+            ];
 
-        return response()->json(['success' => true], 200);
+            WalletTransaction::create($data);
+        }
+
+        return response()->json(['success' => $result], 200);
     }
 
     public function checkOnProcessRefund() {

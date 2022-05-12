@@ -887,10 +887,14 @@ export default {
 
             axios.post('/api/refund-wallet', this.refundModel)
                 .then((res) => {
-                    swal.fire('Done', 'Refund Request Successfully Submitted', 'success');
+                    if(res.data.success) {
+                        swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
+                    } else {
+                        swal.fire('Done', 'Refund Request Successfully Submitted', 'success');
 
-                    this.refundModel.amount = '';
-                    $("#modalRefundReq").modal('hide')
+                        this.refundModel.amount = '';
+                        $("#modalRefundReq").modal('hide')
+                    }
                 })
 
             console.log(this.user)
