@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddWalletEvent;
+use App\Events\RefundRequestProcessedEvent;
 use App\Services\InvoiceService;
 use Carbon\Carbon;
 use App\Http\Requests\WalletTransaction\AddWalletRequest;
@@ -145,7 +146,9 @@ class WalletTransactionController extends Controller
                 'admin_confirmation' => 'Refund processing',
             ];
 
-            WalletTransaction::create($data);
+            $wallet = WalletTransaction::create($data);
+
+            event(new RefundRequestProcessedEvent($wallet, 'request'));
         }
 
         return response()->json(['success' => $result], 200);
@@ -251,6 +254,12 @@ class WalletTransactionController extends Controller
 
             if( file_exists($path) && $wallet_transaction->admin_confirmation != 'Refunded' && $wallet_transaction->admin_confirmation != 'Refund processing'){
                 unlink($path);
+            }
+        }
+
+        if ($request->admin_confirmation != $wallet_transaction->admin_confirmation) {
+            if ($request->admin_confirmation === 'Refunded') {
+                event(new RefundRequestProcessedEvent($wallet_transaction, 'refund'));
             }
         }
 

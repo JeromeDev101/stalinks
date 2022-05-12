@@ -324,7 +324,7 @@
             <div class="col-sm-12 mx-3">
                 <hr/>
                 <button class="btn btn-lg btn-info" data-target="#modalRefundReq" data-toggle="modal" :disabled="!canRefund">Refund Request</button>
-                <small class="text-muted ml-5"><i>Note: Refund request is available only on for credits greater than zero.</i></small>
+                <small class="text-muted ml-5"><i>Note: Refund request is available only for credits greater than zero.</i></small>
                 <hr/>
             </div>
         </div>
@@ -488,7 +488,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal Refund request -->
         <div class="modal fade" id="modalRefundReq" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -503,7 +503,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="">Amount</label>
+                                    <label>Amount</label>
                                     <input type="number" class="form-control" v-model="refundModel.amount" placeholder="0.00">
                                 </div>
                             </div>
@@ -850,8 +850,11 @@ export default {
             let credit = wallet.credit;
             let payment_id = 0;
 
+            let loader = this.$loading.show();
+
             if(this.isWithonProcess) {
                 swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
+                loader.hide();
                 return false;
             }
 
@@ -865,21 +868,25 @@ export default {
 
             if(payment_id == 0) {
                 swal.fire('Error', 'No selected default payment method', 'error');
+                loader.hide();
                 return false;
             }
 
             if(credit <= 0) {
-                swal.fire('Error', 'Can\'t process, due to low Credit left', 'error');
+                swal.fire('Error', 'Credits must be greater than 0', 'error');
+                loader.hide();
                 return false;
             }
 
             if(this.refundModel.amount == "" || this.refundModel.amount <= 0) {
-                swal.fire('Error', 'Invalid Amount', 'error');
+                swal.fire('Error', 'Invalid amount', 'error');
+                loader.hide();
                 return false;
             }
 
             if(this.refundModel.amount > credit) {
                 swal.fire('Error', 'Sorry you can\'t refund greater than your remaining credits.', 'error');
+                loader.hide();
                 return false;
             }
 
@@ -887,10 +894,12 @@ export default {
 
             axios.post('/api/refund-wallet', this.refundModel)
                 .then((res) => {
+                    loader.hide();
+
                     if(res.data.success) {
                         swal.fire('Error', 'Sorry, you have a on process refund request.', 'error');
                     } else {
-                        swal.fire('Done', 'Refund Request Successfully Submitted', 'success');
+                        swal.fire('Done', 'Refund request successfully submitted', 'success');
 
                         this.refundModel.amount = '';
                         $("#modalRefundReq").modal('hide')

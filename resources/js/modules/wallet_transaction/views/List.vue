@@ -684,6 +684,8 @@ export default {
         },
 
         async submitUpdatePay() {
+            let loader = this.$loading.show();
+
             this.formDataEdit = new FormData();
             this.formDataEdit.append('file', this.$refs.proof_edit.files[0]);
             this.formDataEdit.append('id', this.editModel.id);
@@ -699,6 +701,8 @@ export default {
             if (this.messageForms.action == 'success') {
                 this.$refs.proof_edit.value = '';
                 this.getWalletTransactionList();
+
+                loader.hide();
             }
 
         },

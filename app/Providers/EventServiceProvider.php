@@ -12,6 +12,7 @@ use App\Events\BillingReuploadDocEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\BuyEvent;
 use App\Events\NewArticleEvent;
+use App\Events\RefundRequestProcessedEvent;
 use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
@@ -22,6 +23,7 @@ use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
 use App\Events\TeamInChargeUpdatedEvent;
 use App\Listeners\BillingReuploadDocListener;
+use App\Listeners\RefundRequestProcessedListener;
 use App\Listeners\SellerConfirmationListener;
 use App\Listeners\AddwalletListener;
 use App\Listeners\ArticleDoneListener;
@@ -148,6 +150,10 @@ class EventServiceProvider extends ServiceProvider
 
         BillingReuploadDocEvent::class => [
             BillingReuploadDocListener::class
+        ],
+
+        RefundRequestProcessedEvent::class => [
+            RefundRequestProcessedListener::class
         ],
     ];
 
