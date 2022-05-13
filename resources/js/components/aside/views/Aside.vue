@@ -435,8 +435,25 @@
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
+                    <li class="nav-item" v-if="
+                            user.isAdmin ||
+                                (user.isOurs == 0 &&
+                                    (isManager || isSeller || isQc))
+                        "
+                        :class="{
+                            active:
+                                $route.name == 'url-prospect',
+                            'menu-open':
+                                $route.name == 'url-prospect'
+                        }">
+                        <router-link :to="{ path: '/url-prospect' }" class="nav-link"
+                                        :class="{ active: $route.name == 'ExtDomain' }">
+                            <img src="../../../../images/search-domains.png"/>
+                            <p>{{ $t('message.sidebar.url_prospect') }}</p>
+                        </router-link>
+                    </li>
+
+                    <li class="nav-item" v-if="
                             user.isAdmin ||
                                 (user.isOurs == 0 &&
                                     (isManager || isSeller || isQc))
@@ -447,11 +464,9 @@
                                 $route.name == 'Starred' ||
                                 $route.name == 'Trash' ||
                                 $route.name == 'Inbox' ||
-                                $route.name == 'url-prospect' ||
                                 $route.name == 'mail-logs' ||
                                 $route.name == 'mail-template',
                             'menu-open':
-                                $route.name == 'url-prospect' ||
                                 $route.name == 'mail-logs' ||
                                 $route.name == 'mail-template' ||
                                 $route.name == 'Inbox' ||
@@ -459,39 +474,20 @@
                                 $route.name == 'Trash' ||
                                 $route.name == 'Starred'
                         }">
-                        <a href="#" class="nav-link">
-                            <img src="../../../../images/search-domains.png"/>
-                            <p>
-                                {{ $t('message.sidebar.search_domains') }}
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <router-link :to="{ path: '/url-prospect' }" class="nav-link"
-                                             :class="{ active: $route.name == 'ExtDomain' }">
-                                    <i class="fas fa-bars nav-icon"></i>
-                                    <p>{{ $t('message.sidebar.url_prospect') }}</p>
-                                </router-link>
-                            </li>
-
-                            <li class="nav-item">
-                                <router-link
-                                    class="nav-link"
-                                    :to="{ path: '/mails/inbox' }"
-                                    :class="{
-                                    active:
-                                        $route.name == 'Inbox' ||
-                                        $route.name == 'Sent' ||
-                                        $route.name == 'Starred' ||
-                                        $route.name == 'Trash'
-                                }"
-                                >
-                                    <i class="fas fa-envelope-open nav-icon"></i>
-                                    <p>{{ $t('message.sidebar.mails') }}</p>
-                                </router-link>
-                            </li>
-                        </ul>
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/mails/inbox' }"
+                            :class="{
+                            active:
+                                $route.name == 'Inbox' ||
+                                $route.name == 'Sent' ||
+                                $route.name == 'Starred' ||
+                                $route.name == 'Trash'
+                        }"
+                        >
+                            <img src="../../../../images/billing.png"/>
+                            <p>{{ $t('message.sidebar.mails') }}</p>
+                        </router-link>
                     </li>
 
                     <li class="nav-item" v-if="!isAffiliate">
