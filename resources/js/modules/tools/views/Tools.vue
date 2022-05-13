@@ -258,26 +258,43 @@
                             <div class="col-md-6">
                                 <label>Password</label>
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend" @click="showPassword()">
-                                        <span class="input-group-text bg-info">
+                                    <div class="input-group-prepend">
+                                        <button
+                                            type="button"
+                                            class="btn btn-info"
+
+                                            @click="showPassword()">
                                             <i class="fa fa-eye"></i>
-                                        </span>
+                                        </button>
                                     </div>
-                                    <input type="password" id="psswd" v-model="modelPassword" class="form-control" aria-label="Amount (to the nearest dollar)">
-                                    <div class="input-group-append" @click="copyPassword()" id="copyBtn">
-                                        <span class="input-group-text bg-success">
+
+                                    <input
+                                        v-model="modelPassword"
+                                        type="password"
+                                        ref="toolPassword"
+                                        class="form-control"
+                                        id="toolPasswordField"
+                                        aria-label="Amount (to the nearest dollar)"
+
+                                        @focus="$event.target.select()">
+
+                                    <div class="input-group-append">
+                                        <button
+                                            type="button"
+                                            class="btn btn-success"
+                                            @click="copyPassword()">
+
                                             <i class="fa fa-copy"></i>
-                                        </span>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <span
-                                        v-if="messageFormsTools.errors.password"
-                                        v-for="err in messageFormsTools.errors.password"
-                                        class="text-danger">
-
-                                            {{ err }}
-                                        </span>
+                                    v-if="messageFormsTools.errors.password"
+                                    v-for="err in messageFormsTools.errors.password"
+                                    class="text-danger">
+                                    {{ err }}
+                                </span>
                             </div>
 
                             <div class="col-md-12">
@@ -657,10 +674,11 @@
 
 <script>
 import {mapState} from 'vuex';
+import {copyPassword} from "../../../mixins/copyPassword";
 
 export default {
     props : [],
-
+    mixins: [copyPassword],
     data() {
         return {
 
@@ -787,27 +805,13 @@ export default {
     methods : {
 
         showPassword() {
-            let passwordField = document.querySelector('#psswd')
+            let passwordField = document.querySelector('#toolPasswordField')
             if (passwordField.getAttribute('type') === 'password') passwordField.setAttribute('type', 'text')
             else passwordField.setAttribute('type', 'password')
         },
 
-        copyPassword() {
-
-            var copyTextarea = document.querySelector('#psswd');
-            copyTextarea.focus();
-            copyTextarea.select();
-
-            try {
-                var successful = document.execCommand('copy');
-                var msg = successful ? 'successful' : 'unsuccessful';
-                console.log('Copying text command was ' + msg);
-            } catch (err) {
-                console.log('Oops, unable to copy');
-            }
-           
-
-            // swal.fire('Done', 'Copied Successfully', 'success');
+        copyPassword () {
+            this.copyPasswordText(this.modelPassword);
         },
 
         // queries
