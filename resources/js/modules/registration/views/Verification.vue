@@ -163,6 +163,13 @@
                                 </div>
 
                                 <div class="col-12 col-md-12 col-lg-6 col-xl-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.verification.l11') }}</label>
+                                        <input type="text" class="form-control" :placeholder="$t('message.verification.ph11')" v-model="regModel.facebook">
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-md-12 col-lg-12 col-xl-12">
                                     <div :class="{'form-group': true, 'has-error': errorMessage.hasOwnProperty('country_id')}">
                                         <label>{{ $t('message.verification.l9') }} <span class="text-danger">*</span></label>
                                         <select name="" class="form-control" v-model="regModel.country_id">
@@ -198,7 +205,7 @@
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">
 
-                                <h4 class="text-primary my-3">{{ $t('message.verification.sub2') }}</h4>
+                                <h4 class="text-primary my-3">{{ $t('message.verification.sub2') }} <span class="text-danger">*</span></h4>
                                 <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">
                                     {{ $t('message.verification.e11') }}
                                 </span>
@@ -210,7 +217,7 @@
                                 <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
                                     <tr>
                                         <td></td>
-                                        <td>{{ $t('message.verification.sub3') }}</td>
+                                        <td>{{ $t('message.verification.sub3') }} </td>
                                     </tr>
                                     <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                         <td>
@@ -303,6 +310,7 @@
                     company_type: 'Company',
                     company_name: '',
                     skype: '',
+                    facebook: '',
                     country_id: '',
                     paypal_account: '',
                     btc_account: '',

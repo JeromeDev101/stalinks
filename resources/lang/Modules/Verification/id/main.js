@@ -20,6 +20,8 @@ export default {
     b: 'Daftar',
     sub4: 'Pendaftaran berhasil!',
     sub5: 'Masuk ke Login',
+    l11: 'Facebook',
+    ph11: 'Enter your Facebook',
 
     // errors
     e7: 'Harap berikan Nama Perusahaan',

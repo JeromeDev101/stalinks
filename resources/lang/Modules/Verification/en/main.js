@@ -20,6 +20,8 @@ export default {
     b: 'Register',
     sub4: 'Successfully Registered!',
     sub5: 'Go to Login',
+    l11: 'Facebook',
+    ph11: 'Enter your Facebook',
 
     // errors
     e7: 'Please provide Company Name',

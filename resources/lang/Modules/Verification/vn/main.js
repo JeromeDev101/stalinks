@@ -20,6 +20,8 @@ export default {
     b: 'Đăng Ký',
     sub4: 'Đăng ký thành công!',
     sub5: 'Đi tới Đăng nhập',
+    l11: 'Facebook',
+    ph11: 'vào facebook của bạn',
 
     // errors
     e7: 'Vui lòng cung cấp Tên công ty',

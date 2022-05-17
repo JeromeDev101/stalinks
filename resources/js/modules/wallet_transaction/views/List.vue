@@ -410,6 +410,16 @@
                             </div>
 
                             <div class="col-md-12">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
+                                    <label></label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label>{{ $t('message.wallet_transaction.wt_proof_of_documents') }}</label>
                                     <input

@@ -55,7 +55,8 @@ class Registration extends Model
         'affiliate_code',
         'deposit_reminded_at',
         'survey_code',
-        'email_via_others'
+        'email_via_others',
+        'facebook'
     ];
 
     public function team_in_charge() {

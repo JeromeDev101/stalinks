@@ -20,6 +20,8 @@ export default {
     b: '登録',
     sub4: '登録に成功しました！',
     sub5: 'ログインに移動',
+    l11: 'Facebook',
+    ph11: 'Facebookを入力してください',
 
     // errors
     e7: '会社名を入力してください',
