@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
-                <h3 class="card-title text-primary">Orders</h3>
+                <h3 class="card-title text-primary">{{ $t('message.admin_dashboard.o_title') }}</h3>
                 <div class="card-tools">
                 </div>
             </div>
@@ -10,10 +10,8 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Date
-                                                    Range
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_date_range') }}</label>
+
                             <div class="input-group">
                                 <date-range-picker
                                     ref="order-picker"
@@ -31,22 +29,14 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Team In-Charge
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_team_in_charge') }}</label>
+
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        id=""
-                                        v-model="filterModel.orderTeam">
-                                    <option
-                                        value="0">All
+                                <select v-model="filterModel.orderTeam" class="form-control">
+                                    <option value="0">{{ $t('message.admin_dashboard.all') }}</option>
+                                    <option v-for="user in listSellerTeam.data" v-if="user.id != 0" :value="user.id">
+                                        {{ user.username }}
                                     </option>
-                                    <option
-                                        :value="user.id"
-                                        v-for="user
-                                            in
-                                            listSellerTeam.data" v-if="user.id != 0">{{ user.username }}</option>
                                 </select>
                             </div>
                         </div>
@@ -54,33 +44,34 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Action</label>
+                            <label>{{ $t('message.admin_dashboard.action') }}</label>
+
                             <br>
-                            <button
-                                class="btn btn-default col-md-6"
-                                @click="filterOrder">
-                                Filter</button>
-                            <button
-                                class="btn btn-default" @click="clearOrdersFilter">Clear</button>
+                            <button class="btn btn-default col-md-6" @click="filterOrder">
+                                {{ $t('message.admin_dashboard.filter') }}
+                            </button>
+                            <button class="btn btn-default" @click="clearOrdersFilter">
+                                {{ $t('message.admin_dashboard.clear') }}
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-2">
-                        <h5>Year: {{
-                                displayModel.orderYear
-                            }}</h5>
-                        <h5>Team In-Charge: {{
-                                teamInCharge
-                            }}</h5>
+                        <h5>{{ $t('message.admin_dashboard.o_year') }}: {{ displayModel.orderYear }}</h5>
+                        <h5>{{ $t('message.admin_dashboard.o_team_in_charge') }}: {{ teamInCharge }}</h5>
                     </div>
                 </div>
 
                 <div class="small">
-                    <apexchart type="bar" height="350"
-                               :options="orderChartOptions"
-                               :series="ordersData"></apexchart>
+                    <apexchart
+                        type="bar"
+                        height="350"
+                        :options="orderChartOptions"
+                        :series="ordersData">
+
+                    </apexchart>
                 </div>
             </div>
         </div>

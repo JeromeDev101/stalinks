@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Get Alexa External Domain</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.get_alexa.ga_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -22,67 +22,90 @@
                         <div class="row alexa-get-row">
                             <div class="col-md-3 col-lg-2">
                                 <div class="input-group input-group-sm">
-                                    <label>Country: </label>
+                                    <label>{{ $t('message.get_alexa.ga_country') }}: </label>
+
                                     <select v-model="filterModel2.country_id" class="form-control pull-right">
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
                                     </select>
-                                    <span v-if="messageForms.errors.country_id" v-for="err in messageForms.errors.country_id" class="text-danger">{{ err }}</span>
+
+                                    <span
+                                        v-if="messageForms.errors.country_id"
+                                        v-for="err in messageForms.errors.country_id"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
 
                             <div class="col-md-3 col-lg-2">
                                 <div class="input-group input-group-sm">
-                                    <label>Start: </label>
-                                    <input type="text" v-model="filterModel2.start"  class="form-control pull-right" placeholder="Start">
+                                    <label>{{ $t('message.get_alexa.ga_start') }}: </label>
+
+                                    <input
+                                        v-model="filterModel2.start"
+                                        type="text"
+                                        :placeholder="$t('message.get_alexa.ga_start')"
+                                        class="form-control pull-right">
                                 </div>
                             </div>
 
                             <div class="col-md-3 col-lg-2">
                                 <div class="input-group input-group-sm">
-                                    <label>Count: </label>
-                                    <input type="text" v-model="filterModel2.count"  class="form-control pull-right" placeholder="Count">
+                                    <label>{{ $t('message.get_alexa.ga_count') }}: </label>
+
+                                    <input
+                                        v-model="filterModel2.count"
+                                        type="text"
+                                        :placeholder="$t('message.get_alexa.ga_count')"
+                                        class="form-control pull-right">
                                 </div>
                             </div>
 
                             <div class="col-md-3 col-lg-2">
                                 <button @click="doGetAlexaRank" type="submit" class="btn btn-default">
-                                    <i class="fa fa-refresh fa-spin" v-if="isLoadingTable"></i><i v-if="!isLoadingTable" class="fa fa-search"></i>
+                                    <i v-if="isLoadingTable" class="fa fa-refresh fa-spin"></i>
+                                    <i v-if="!isLoadingTable" class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
 
                         <table class="table table-hover table-bordered table-striped rlink-table">
                             <tbody>
-                            <tr class="label-primary">
-                                <th>#</th>
-                                <th>Country</th>
-                                <th>Domain</th>
-                                <th>Emails</th>
-                                <th>Facebook</th>
-                                <th>Rank</th>
-                                <th>Status</th>
-                            </tr>
-                            <tr v-for="(ext, index) in listAlexa.extDomains" :key="index">
-                                <td class="center-content">{{ index + 1 }}</td>
-                                <td>{{ ext.country.name }}</td>
-                                <td><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
-                                <td style="max-width: 200px">
-                                    <ol v-if="ext.email != '' && ext.email != null" class="pl-15">
-                                        <li v-for="item in ext.email.split('|')" key="item">{{ item }}</li>
-                                    </ol>
-                                </td>
-                                <td style="max-width: 200px" >
-                                    <ol v-if="ext.facebook != '' && ext.facebook != null" class="pl-15">
-                                        <li v-for="item in ext.facebook.split('|')" key="item">
-                                            <a target="_blank" :href="item">{{ item }}<br/></a>
-                                        </li>
-                                    </ol>
-                                </td>
-                                <td>{{ ext.alexa_rank }}</td>
-                                <td><span :class="['badge', 'badge-' + listStatusText[ext.status].label]">{{ listStatusText[ext.status].text }}</span></td>
-                            </tr>
+                                <tr class="label-primary">
+                                    <th>#</th>
+                                    <th>{{ $t('message.get_alexa.ga_country') }}</th>
+                                    <th>{{ $t('message.get_alexa.ga_domain') }}</th>
+                                    <th>{{ $t('message.get_alexa.ga_emails') }}</th>
+                                    <th>{{ $t('message.get_alexa.ga_facebook') }}</th>
+                                    <th>{{ $t('message.get_alexa.ga_rank') }}</th>
+                                    <th>{{ $t('message.get_alexa.ga_status') }}</th>
+                                </tr>
+
+                                <tr v-for="(ext, index) in listAlexa.extDomains" :key="index">
+                                    <td class="center-content">{{ index + 1 }}</td>
+                                    <td>{{ ext.country.name }}</td>
+                                    <td><a :href="'http://' + ext.domain" target="_blank">{{ ext.domain }}</a></td>
+                                    <td style="max-width: 200px">
+                                        <ol v-if="ext.email != '' && ext.email != null" class="pl-15">
+                                            <li v-for="item in ext.email.split('|')" key="item">{{ item }}</li>
+                                        </ol>
+                                    </td>
+                                    <td style="max-width: 200px" >
+                                        <ol v-if="ext.facebook != '' && ext.facebook != null" class="pl-15">
+                                            <li v-for="item in ext.facebook.split('|')" key="item">
+                                                <a target="_blank" :href="item">{{ item }}<br/></a>
+                                            </li>
+                                        </ol>
+                                    </td>
+                                    <td>{{ ext.alexa_rank }}</td>
+                                    <td>
+                                        <span :class="['badge', 'badge-' + listStatusText[ext.status].label]">
+                                            {{ listStatusText[ext.status].text }}
+                                        </span>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -140,9 +163,11 @@
             },
 
             async getAlexaRank(params) {
+                let self = this;
+
                 swal.fire({
-                    title: "Getting Alexa...",
-                    text: "Please wait",
+                    title: self.$t('message.get_alexa.alert_get_alexa'),
+                    text: self.$t('message.get_alexa.alert_please_wait'),
                     timerProgressBar: true,
                     showConfirmButton: false,
                     allowOutsideClick: false,
@@ -168,7 +193,7 @@
                 if(this.listAlexa.status == false) {
                     swal.fire({
                         icon: 'error',
-                        title: 'The limit number of Top site in this country is '+this.listAlexa.total+'.',
+                        title: self.$t('message.get_alexa.alert_limit') + this.listAlexa.total+'.',
                         showConfirmButton: true,
                     })
                 } else if(this.listAlexa.status == true){

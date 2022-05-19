@@ -26,7 +26,7 @@
 
                                 @change="">
 
-                            <label class="custom-control-label" :for="'switch' + tog.id">{{ tog.label }}</label>
+                            <label class="custom-control-label" :for="'switch' + tog.id">{{ toggleText[index] }}</label>
                         </div>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
             <div v-if="toggle.buyer.active" class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Buyer Surveys</h4>
+                        <h4>{{ this.$t('message.survey_dashboard.t_buyer') }}</h4>
                     </div>
 
                     <div class="card-body">
@@ -44,7 +44,7 @@
                             <div class="col-sm-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header d-flex align-items-center">
-                                        <h3 class="card-title text-primary mr-3">Buyer Survey Set A</h3>
+                                        <h3 class="card-title text-primary mr-3">{{ this.$t('message.survey_dashboard.bs_title_a') }}</h3>
 
 <!--                                        <button-->
 <!--                                            data-toggle="modal"-->
@@ -256,7 +256,7 @@
                             <div class="col-sm-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title text-primary">Buyer Survey Set B</h3>
+                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.bs_title_b') }}</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -306,7 +306,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 2: {{ buyerSetBQuestions[1].question }}
+                                                                {{ buyerSetBQuestions[1].question }}
                                                             </span>
 
                                                             <button
@@ -341,7 +341,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 3: {{ buyerSetBQuestions[2].question }}
+                                                                {{ buyerSetBQuestions[2].question }}
                                                             </span>
 
                                                             <button
@@ -376,7 +376,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 4: {{ buyerSetBQuestions[3].question }}
+                                                                {{ buyerSetBQuestions[3].question }}
                                                             </span>
 
                                                             <button
@@ -411,7 +411,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 4: {{ buyerSetBQuestions[4].question }}
+                                                                {{ buyerSetBQuestions[4].question }}
                                                             </span>
 
                                                             <button
@@ -452,7 +452,7 @@
             <div v-if="toggle.seller.active" class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Seller Surveys</h4>
+                        <h4>{{ this.$t('message.survey_dashboard.t_seller') }}</h4>
                     </div>
 
                     <div class="card-body">
@@ -460,7 +460,7 @@
                             <div class="col-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title text-primary">Seller Survey Set A</h3>
+                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.ss_title_a') }}</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -476,7 +476,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 1: {{ sellerSetAQuestions[0].question }}
+                                                                {{ sellerSetAQuestions[0].question }}
                                                             </span>
 
                                                             <button
@@ -511,7 +511,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 2: {{ sellerSetAQuestions[1].question }}
+                                                                {{ sellerSetAQuestions[1].question }}
                                                             </span>
 
                                                             <button
@@ -546,7 +546,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 3: {{ sellerSetAQuestions[2].question }}
+                                                                {{ sellerSetAQuestions[2].question }}
                                                             </span>
 
                                                             <button
@@ -581,7 +581,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 4: {{ sellerSetAQuestions[3].question }}
+                                                                {{ sellerSetAQuestions[3].question }}
                                                             </span>
 
                                                             <button
@@ -616,7 +616,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 5: {{ sellerSetAQuestions[4].question }}
+                                                                {{ sellerSetAQuestions[4].question }}
                                                             </span>
 
                                                             <button
@@ -651,7 +651,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 6: {{ sellerSetAQuestions[5].question }}
+                                                                {{ sellerSetAQuestions[5].question }}
                                                             </span>
 
                                                             <button
@@ -691,7 +691,7 @@
             <div v-if="toggle.writer.active" class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Writer Surveys</h4>
+                        <h4>{{ this.$t('message.survey_dashboard.t_writer') }}</h4>
                     </div>
 
                     <div class="card-body">
@@ -699,7 +699,7 @@
                             <div class="col-12">
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header">
-                                        <h3 class="card-title text-primary">Writer Survey Set A</h3>
+                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.ws_title_a') }}</h3>
                                         <div class="card-tools">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
@@ -715,7 +715,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 1: {{ writerSetAQuestions[0].question }}
+                                                                {{ writerSetAQuestions[0].question }}
                                                             </span>
 
                                                             <button
@@ -750,7 +750,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 2: {{ writerSetAQuestions[1].question }}
+                                                                {{ writerSetAQuestions[1].question }}
                                                             </span>
 
                                                             <button
@@ -785,7 +785,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 3: {{ writerSetAQuestions[2].question }}
+                                                                {{ writerSetAQuestions[2].question }}
                                                             </span>
 
                                                             <button
@@ -820,7 +820,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 4: {{ writerSetAQuestions[3].question }}
+                                                                {{ writerSetAQuestions[3].question }}
                                                             </span>
 
                                                             <button
@@ -855,7 +855,7 @@
                                                     <div class="card-header">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <span class="font-weight-bold">
-                                                                Question 5: {{ writerSetAQuestions[4].question }}
+                                                                {{ writerSetAQuestions[4].question }}
                                                             </span>
 
                                                             <button
@@ -908,7 +908,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title text-primary">Buyer Survey A Questions</h5>
+                        <h5 class="modal-title text-primary">{{ this.$t('message.survey_dashboard.bq_title') }}</h5>
                     </div>
 
                     <div class="modal-body">
@@ -937,7 +937,9 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ this.$t('message.survey_dashboard.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -966,7 +968,8 @@
                         <div class="row px-3">
                             <div class="card col-12">
                                 <div class="card-body">
-                                    <strong>Question:</strong> {{ surveyQuestionFullDetails.question }}
+                                    <strong>{{ this.$t('message.survey_dashboard.bq_question') }}:</strong>
+                                    {{ surveyQuestionFullDetails.question }}
                                 </div>
                             </div>
                         </div>
@@ -1004,7 +1007,7 @@
                                     :data=sortDataForExport(surveyQuestionFullDetailsData.data.data,surveyQuestionFullDetails.number)>
 
                                     <i class="fa fa-list"></i>
-                                    Export
+                                    {{ this.$t('message.survey_dashboard.export_text') }}
 
                                 </export-excel>
                             </div>
@@ -1017,11 +1020,11 @@
                                     class="table table-hover table-bordered table-striped rlink-table">
                                     <thead>
                                     <tr>
-                                        <th>User</th>
-                                        <th>Answer</th>
-                                        <th>Additional</th>
-                                        <th>Overall Comment</th>
-                                        <th>Date</th>
+                                        <th>{{ this.$t('message.survey_dashboard.t_user') }}</th>
+                                        <th>{{ this.$t('message.survey_dashboard.t_answer') }}</th>
+                                        <th>{{ this.$t('message.survey_dashboard.t_additional') }}</th>
+                                        <th>{{ this.$t('message.survey_dashboard.t_overall_comment') }}</th>
+                                        <th>{{ this.$t('message.survey_dashboard.t_date') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -1079,7 +1082,9 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ this.$t('message.survey_dashboard.close') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1102,28 +1107,28 @@ export default {
     data() {
         return {
             surveys: {},
+            surveyQuestionFullDetailsData: {
+                data: {}
+            },
+
             toggle: {
-               buyer: {
-                   id: 'buyer',
-                   active: true,
-                   label: 'Buyer surveys'
-               },
+                buyer: {
+                    id: 'buyer',
+                    active: true,
+                    label: this.$t('message.survey_dashboard.t_buyer')
+                },
 
                 seller: {
                     id: 'seller',
                     active: true,
-                    label: 'Seller surveys'
+                    label: this.$t('message.survey_dashboard.t_seller')
                 },
 
                 writer: {
                     id: 'writer',
                     active: true,
-                    label: 'Writer surveys'
+                    label: this.$t('message.survey_dashboard.t_writer')
                 }
-            },
-
-            surveyQuestionFullDetailsData: {
-                data: {}
             },
 
             surveyQuestionFullDetails: {
@@ -1222,105 +1227,121 @@ export default {
 
             writerSetASixChartOptions: {},
             writerSetASixData: [],
+        }
+    },
 
-            // survey questions
+    computed: {
+        toggleText () {
+            return {
+                buyer: this.$t('message.survey_dashboard.t_buyer'),
+                seller: this.$t('message.survey_dashboard.t_seller'),
+                writer: this.$t('message.survey_dashboard.t_writer')
+            }
+        },
 
-            buyerSetAQuestions: [
+        buyerSetAQuestions () {
+            return [
                 {
                     number: 'one',
-                    question: 'Do you find using our system efficient?'
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_1')
                 },
                 {
                     number: 'two',
-                    question: 'Does our system provide the URLs that you are looking for?'
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_2')
                 },
                 {
                     number: 'three',
-                    question: 'Do you find our HELP page easy to follow?'
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_3')
                 },
                 {
                     number: 'four',
-                    question: 'Do you find our payment methods too complicated for you?'
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_4')
                 },
                 {
                     number: 'five',
-                    question: 'Are you satisfied with the service that we provide right now?'
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_5')
                 },
-            ],
+            ];
+        },
 
-            buyerSetBQuestions: [
+        buyerSetBQuestions () {
+            return [
                 {
                     number: 'one',
-                    question: 'In your opinion, what is the most important thing to have in desk management?'
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_1')
                 },
                 {
                     number: 'two',
-                    question: 'From 1-6, how would you rate our tools?'
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_2')
                 },
                 {
                     number: 'three',
-                    question: 'From 1-10, how well do you understand Stalinks and what can we do to help you?'
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_3')
                 },
                 {
                     number: 'four',
-                    question: 'What would you like to see in Stalinks?'
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_4')
                 },
                 {
                     number: 'five',
-                    question: 'How would you rate our team interaction with you?'
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_5')
                 },
-            ],
+            ];
+        },
 
-            sellerSetAQuestions: [
+        sellerSetAQuestions () {
+            return [
                 {
                     number: 'one',
-                    question: 'Do you think our system is efficient for you to sell your guest posts?'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_1')
                 },
                 {
                     number: 'two',
-                    question: 'Are you satisfied with our CS Team service?'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_2')
                 },
                 {
                     number: 'three',
-                    question: 'Do you have any problems using our payment methods?'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_3')
                 },
                 {
                     number: 'four',
-                    question: 'Do you find our platform helpful to you in getting orders easily?'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_4')
                 },
                 {
                     number: 'five',
-                    question: 'Based on your most recent experience, please rate your satisfaction by using our service.'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_5')
                 },
                 {
                     number: 'six',
-                    question: ' Please rate if you would recommend us and our services to your connections.'
+                    question: this.$t('message.seller_survey.seller_survey_a_q_6')
                 },
-            ],
+            ];
+        },
 
-            writerSetAQuestions: [
+        writerSetAQuestions () {
+            return [
                 {
                     number: 'one',
-                    question: 'Do you think our system is efficient to use?'
+                    question: this.$t('message.writer_survey.writer_survey_a_q_1')
                 },
                 {
                     number: 'two',
-                    question: 'Are you satisfied with the services that we already provide?'
+                    question: this.$t('message.writer_survey.writer_survey_a_q_2')
                 },
                 {
                     number: 'three',
-                    question: 'Do you find any difficulties in writing article contents?'
+                    question: this.$t('message.writer_survey.writer_survey_a_q_3')
                 },
                 {
                     number: 'four',
-                    question: 'Based on your most recent experience, please rate your satisfaction by using our services.'
+                    question: this.$t('message.writer_survey.writer_survey_a_q_4')
                 },
                 {
                     number: 'five',
-                    question: 'Please rate if you would recommend us and our services to your connections.'
+                    question: this.$t('message.writer_survey.writer_survey_a_q_5')
                 },
-            ],
-        }
+            ];
+        },
     },
 
     mounted() {

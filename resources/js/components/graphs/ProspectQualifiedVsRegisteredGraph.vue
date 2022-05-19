@@ -2,8 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
-                <h3 class="card-title text-primary">Url Prospect Qualified Vs Registered
-                </h3>
+                <h3 class="card-title text-primary">{{ $t('message.admin_dashboard.upqr_title') }}</h3>
                 <div class="card-tools">
                 </div>
             </div>
@@ -11,20 +10,12 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Scope
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.sv_scope') }}</label>
+
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        v-model="filterModel.prospectQualifiedRegistered.scope"
-                                >
-                                    <option
-                                        value="monthly">
-                                        Monthly</option>
-                                    <option
-                                        value="team">
-                                        Team</option>
+                                <select v-model="filterModel.prospectQualifiedRegistered.scope" class="form-control">
+                                    <option value="monthly">{{ $t('message.admin_dashboard.uss_monthly') }}</option>
+                                    <option value="team">{{ $t('message.admin_dashboard.uss_team') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -32,10 +23,8 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Date
-                                                    Range
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_date_range') }}</label>
+
                             <div class="input-group">
                                 <date-range-picker
                                     ref="picker"
@@ -53,22 +42,27 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Action</label>
+                            <label>{{ $t('message.admin_dashboard.action') }}</label>
+
                             <br>
-                            <button
-                                class="btn btn-default col-md-6"
-                                @click="filterProspectQualifiedRegistered">
-                                Filter</button>
-                            <button
-                                class="btn btn-default" @click="clearProspectQualifiedRegistered">Clear</button>
+                            <button class="btn btn-default col-md-6" @click="filterProspectQualifiedRegistered">
+                                {{ $t('message.admin_dashboard.filter') }}
+                            </button>
+                            <button class="btn btn-default" @click="clearProspectQualifiedRegistered">
+                                {{ $t('message.admin_dashboard.clear') }}
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="small">
-                    <apexchart type="bar" height="350"
-                               :options="prospectQualifiedRegisteredOptions"
-                               :series="prospectQualifiedRegisteredData"></apexchart>
+                    <apexchart
+                        type="bar"
+                        height="350"
+                        :options="prospectQualifiedRegisteredOptions"
+                        :series="prospectQualifiedRegisteredData">
+
+                    </apexchart>
                 </div>
             </div>
         </div>

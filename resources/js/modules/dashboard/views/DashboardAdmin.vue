@@ -4,41 +4,66 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Admin Dashboard</h1>
+                        <h1 class="m-0">{{ $t('message.admin_dashboard.ad_title') }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
 
         <div class="row">
-            <orders-graph :list-seller-team="listSellerTeam"
-                          :date-ranges="dateRanges"
-                          v-if="user.isAdmin || isQc"></orders-graph>
+            <orders-graph
+                :list-seller-team="listSellerTeam"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isQc">
 
-            <seller-valid-graph :list-seller-team="listSellerTeam"
-                                :date-ranges="dateRanges"
-                                v-if="user.isAdmin || isQc || isCs"></seller-valid-graph>
+            </orders-graph>
 
-            <url-valid-graph :date-ranges="dateRanges" v-if="user.isAdmin || isQc"></url-valid-graph>
+            <seller-valid-graph
+                :list-seller-team="listSellerTeam"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isQc || isCs">
 
-            <url-valid-price-graph :list-seller-team="listSellerTeam"
-                                   :date-ranges="dateRanges"
-                                   v-if="user.isAdmin || isCs"></url-valid-price-graph>
+            </seller-valid-graph>
 
-            <url-seller-statistics-graph :list-seller-team="listSellerTeam"
-                                         :date-ranges="dateRanges"
-                                         v-if="user.isAdmin || isCs"></url-seller-statistics-graph>
+            <url-valid-graph
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isQc">
 
-            <prospect-qualified-vs-registered-graph :date-ranges="dateRanges"
-                                                    v-if="user.isAdmin || isCs"></prospect-qualified-vs-registered-graph>
+            </url-valid-graph>
 
-            <buyer-valid-graph :list-team-in-charge="listIncharge"
-                               :date-ranges="dateRanges"
-                               v-if="user.isAdmin || isQc || isCs"></buyer-valid-graph>
+            <url-valid-price-graph
+                :list-seller-team="listSellerTeam"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isCs">
 
-            <writer-valid-graph :list-team-in-charge="listIncharge"
-                                :date-ranges="dateRanges"
-                                v-if="user.isAdmin || isQc || isCs"></writer-valid-graph>
+            </url-valid-price-graph>
+
+            <url-seller-statistics-graph
+                :list-seller-team="listSellerTeam"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isCs">
+
+            </url-seller-statistics-graph>
+
+            <prospect-qualified-vs-registered-graph
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isCs">
+
+            </prospect-qualified-vs-registered-graph>
+
+            <buyer-valid-graph
+                :list-team-in-charge="listIncharge"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isQc || isCs">
+
+            </buyer-valid-graph>
+
+            <writer-valid-graph
+                :list-team-in-charge="listIncharge"
+                :date-ranges="dateRanges"
+                v-if="user.isAdmin || isQc || isCs">
+
+            </writer-valid-graph>
         </div>
     </div>
 </template>

@@ -2,7 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
-                <h3 class="card-title text-primary">URLs Validation</h3>
+                <h3 class="card-title text-primary">{{ $t('message.admin_dashboard.uv_title') }}</h3>
                 <div class="card-tools">
                 </div>
             </div>
@@ -11,10 +11,8 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Date
-                                                    Range
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_date_range') }}</label>
+
                             <div class="input-group">
                                 <date-range-picker
                                     ref="picker"
@@ -32,24 +30,27 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Action</label>
+                            <label>{{ $t('message.admin_dashboard.action') }}</label>
+
                             <br>
-                            <button
-                                class="btn btn-default col-md-6"
-                                @click="filterUrlValid">
-                                Filter
+                            <button class="btn btn-default col-md-6" @click="filterUrlValid">
+                                {{ $t('message.admin_dashboard.filter') }}
                             </button>
-                            <button
-                                class="btn btn-default" @click="clearUrlValidFilter">Clear
+                            <button class="btn btn-default" @click="clearUrlValidFilter">
+                                {{ $t('message.admin_dashboard.clear') }}
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="small">
-                    <apexchart type="bar" height="350"
-                               :options="urlValidChartOptions"
-                               :series="urlValidData"></apexchart>
+                    <apexchart
+                        type="bar"
+                        height="350"
+                        :options="urlValidChartOptions"
+                        :series="urlValidData">
+
+                    </apexchart>
                 </div>
             </div>
         </div>

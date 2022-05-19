@@ -9,6 +9,21 @@ import writer_survey from './Survey/en/writer';
 // subscription
 import subscription from './Subscription/en/main';
 
+// admin dashboard
+import admin_dashboard from './AdminDashboard/en/main';
+
+// get alexa
+import get_alexa from './GetAlexa/en/main';
+
+// generate list
+import generate_list from './GenerateList/en/main';
+
+// registration accounts
+import registration_accounts from './RegistrationAccounts/en/main';
+
+// survey dashboard
+import survey_dashboard from './AdminSurvey/en/main';
+
 // admin article
 import admin_article from './AdminArticle/en/main';
 
@@ -111,6 +126,21 @@ export default {
 
         // subscription
         subscription,
+
+        // admin dashboard
+        admin_dashboard,
+
+        // get alexa
+        get_alexa,
+
+        // generate list
+        generate_list,
+
+        // registration_accounts
+        registration_accounts,
+
+        // survey dashboard
+        survey_dashboard,
 
         // admin article
         admin_article,

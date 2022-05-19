@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.generate_list.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.generate_list.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,13 +30,13 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Search URL</label>
+                                    <label>{{ $t('message.generate_list.filter_search_url') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name=""
                                            v-model="filterModel.url"
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.generate_list.type')">
                                 </div>
                             </div>
 
@@ -53,7 +53,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.generate_list.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.ur">
@@ -74,7 +74,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.generate_list.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.dr">
@@ -84,7 +84,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Org Kw</label>
+                                    <label>{{ $t('message.generate_list.filter_org_kw') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -95,7 +95,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.generate_list.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.org_kw">
@@ -105,7 +105,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Org Traffic</label>
+                                    <label>{{ $t('message.generate_list.filter_org_traffic') }}</label>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button class="btn btn-outline-secondary"
@@ -116,7 +116,7 @@
                                         </div>
                                         <input type="text"
                                                class="form-control"
-                                               placeholder="Type here"
+                                               :placeholder="$t('message.generate_list.type')"
                                                aria-label=""
                                                aria-describedby="basic-addon1"
                                                v-model="filterModel.org_traffic">
@@ -126,12 +126,12 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Code</label>
+                                    <label>{{ $t('message.generate_list.filter_code') }}</label>
 
                                     <v-select
                                         v-model="filterModel.code"
                                         multiple
-                                        placeholder="All"
+                                        :placeholder="$t('message.generate_list.all')"
                                         :options="listCode"
                                         :searchable="false"
                                     />
@@ -142,9 +142,12 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                                <button class="btn btn-default" @click="getGenerateList()">Search <i v-if="false"
-                                                                                                     class="fa fa-refresh fa-spin"></i>
+                                <button class="btn btn-default" @click="clearSearch()">
+                                    {{ $t('message.generate_list.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="getGenerateList()">
+                                    {{ $t('message.generate_list.search') }}
+                                    <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
                             </div>
                         </div>
@@ -157,7 +160,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Generate List</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.generate_list.gl_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -174,7 +177,7 @@
                                                name="file">
                                         <div class="input-group-btn">
                                             <button
-                                                title="Upload CSV File"
+                                                :title="$t('message.generate_list.gl_upload_csv')"
                                                 class="btn btn-primary btn-flat"
                                                 :disabled="btnUpload"
                                                 @click="submitUpload">
@@ -182,7 +185,7 @@
                                             </button>
 
                                             <button
-                                                title="Download CSV Template"
+                                                :title="$t('message.generate_list.gl_download_csv')"
                                                 class="btn btn-primary btn-flat"
 
                                                 @click="downloadTemplate">
@@ -195,7 +198,7 @@
                                                 worksheet="My Worksheet"
                                                 name="generate_list.xls">
                                                 <i class="fa fa-list"></i>
-                                                Export
+                                                {{ $t('message.generate_list.gl_export') }}
 
                                             </export-excel>
 
@@ -205,7 +208,8 @@
                                 <td class="text-right">
                                     <button class="btn btn-success"
                                             data-toggle="modal"
-                                            data-target="#modalAddUrlGenerateList">Add URL
+                                            data-target="#modalAddUrlGenerateList">
+                                        {{ $t('message.generate_list.gl_add_url') }}
                                     </button>
                                 </td>
                                 <td width="100px">
@@ -225,13 +229,8 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="input-group mt-3">
-                                        <button class="btn btn-default mr-2"
-                                                @click="selectAll">{{
-                                                allSelected
-                                                    ?
-                                                    "Deselect"
-                                                    : "Select"
-                                                                   }} All
+                                        <button class="btn btn-default mr-2" @click="selectAll">
+                                            {{ allSelected ? $t('message.generate_list.gl_deselect') : $t('message.generate_list.gl_select') }} {{ $t('message.generate_list.all') }}
                                         </button>
 
                                         <div class="dropdown">
@@ -241,12 +240,12 @@
                                                     data-toggle="dropdown"
                                                     aria-haspopup="true"
                                                     aria-expanded="false">
-                                                Selected Action
+                                                {{ $t('message.generate_list.gl_selected_action') }}
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" @click="deleteData();">Delete</a>
-                                                <a class="dropdown-item" @click="getAhref()">Get Ahref</a>
-                                                <a class="dropdown-item" @click="computePrice()">Compute Price</a>
+                                                <a class="dropdown-item" @click="deleteData();">{{ $t('message.generate_list.gl_delete') }}</a>
+                                                <a class="dropdown-item" @click="getAhref()">{{ $t('message.generate_list.gl_get_ahref') }}</a>
+                                                <a class="dropdown-item" @click="computePrice()">{{ $t('message.generate_list.gl_compute_price') }}</a>
                                             </div>
                                         </div>
 
@@ -256,9 +255,9 @@
                         </table>
 
                         <span class="pagination-custom-footer-text">
-                            <b v-if="filterModel.paginate !== 'All'">Showing {{ generateList.from }} to {{
-                                    generateList.to
-                                                                     }} of {{ generateList.total }} entries.</b>
+                            <b v-if="filterModel.paginate !== 'All'">
+                                Showing {{ generateList.from }} to {{ generateList.to }} of {{ generateList.total }} entries.
+                            </b>
                             <b v-else>Showing {{ generateList.total }} entries.</b>
                         </span>
 
@@ -304,10 +303,14 @@
                             </template>
                         </vue-virtual-table>
 
-                        <pagination v-if="generateList.data"
-                                    :data="generateList"
-                                    @pagination-change-page="getGenerateList"
-                                    :limit="8"></pagination>
+                        <pagination
+                            v-if="generateList.data"
+                            :limit="8"
+                            :data="generateList"
+
+                            @pagination-change-page="getGenerateList">
+
+                        </pagination>
                     </div>
                 </div>
             </div>
@@ -318,22 +321,28 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add URL</h5>
+                        <h5 class="modal-title">{{ $t('message.generate_list.au_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>URL</label>
+                                    <label>{{ $t('message.generate_list.au_url') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.url" placeholder="" required>
-                                    <small class="form-text text-danger" v-show="errorMessage.url">Please Fill up first the URL</small>
+                                    <small class="form-text text-danger" v-show="errorMessage.url">
+                                        {{ $t('message.generate_list.au_url_error') }}
+                                    </small>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" @click="errorMessage.url = false">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitAdd">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" @click="errorMessage.url = false">
+                            {{ $t('message.generate_list.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitAdd">
+                            {{ $t('message.generate_list.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -435,6 +444,7 @@ export default {
         }),
 
         tableConfig() {
+            let self = this;
             return [
                 {
                     prop : '_index',
@@ -451,7 +461,7 @@ export default {
                 },
                 {
                     prop : 'url',
-                    name : 'URL',
+                    name : self.$t('message.generate_list.t_url'),
                     // width: 200,
                     sortable : true,
                     isHidden : false
@@ -472,14 +482,14 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Value 1',
+                    name : self.$t('message.generate_list.t_value1'),
                     actionName : 'value1Data',
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'code_1',
-                    name : 'Code 1',
+                    name : self.$t('message.generate_list.t_code1'),
                     width : 50,
                     sortable : true,
                     isHidden : false,
@@ -487,28 +497,28 @@ export default {
                 },
                 {
                     prop : 'backlinks',
-                    name : 'Backlinks',
+                    name : self.$t('message.generate_list.t_backlinks'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'ref_domain',
-                    name : 'Ref Domains',
+                    name : self.$t('message.generate_list.t_ref_domains'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : 'Value 2',
+                    name : self.$t('message.generate_list.t_value2'),
                     actionName : 'value2Data',
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'code_2',
-                    name : 'Code 2',
+                    name : self.$t('message.generate_list.t_code2'),
                     width : 50,
                     sortable : true,
                     isHidden : false,
@@ -516,14 +526,14 @@ export default {
                 },
                 {
                     prop : 'org_kw',
-                    name : 'Org Kw',
+                    name : self.$t('message.generate_list.filter_org_kw'),
                     width : 100,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'code_3',
-                    name : 'Code 3',
+                    name : self.$t('message.generate_list.t_code3'),
                     width : 50,
                     sortable : true,
                     isHidden : false,
@@ -531,14 +541,14 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : 'Org Traffic',
+                    name : self.$t('message.generate_list.filter_org_traffic'),
                     actionName : 'orgTrafficData',
                     width : 100,
                     isHidden : false
                 },
                 {
                     prop : 'code_4',
-                    name : 'Code 4',
+                    name : self.$t('message.generate_list.t_code4'),
                     width : 50,
                     sortable : true,
                     isHidden : false,
@@ -546,14 +556,14 @@ export default {
                 },
                 {
                     prop : 'code_comb',
-                    name : 'Code Comb',
+                    name : self.$t('message.generate_list.t_code_comb'),
                     width : 80,
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'price',
-                    name : 'Price',
+                    name : self.$t('message.generate_list.t_price'),
                     prefix : '$',
                     width : 100,
                     sortable : true,
@@ -575,31 +585,32 @@ export default {
         },
 
         submitAdd() {
+            let self = this;
             if (this.addModel.url == '') {
                 this.errorMessage.url = true
                 return false;
             }
-            -
-                axios.post('/api/generate-list-add-url', this.addModel)
-                    .then((res) => {
-                        if (res.data.success === true) {
-                            swal.fire(
-                                'Saved!',
-                                'Successfully Updated.',
-                                'success'
-                            )
-                        } else {
-                            swal.fire(
-                                'Error',
-                                'URL is already exist',
-                                'error'
-                            )
-                        }
 
-                        this.errorMessage.url = false
-                        this.addModel.url = ''
-                        this.getGenerateList()
-                    })
+            axios.post('/api/generate-list-add-url', this.addModel)
+                .then((res) => {
+                    if (res.data.success === true) {
+                        swal.fire(
+                            self.$t('message.generate_list.alert_saved'),
+                            self.$t('message.generate_list.alert_updated_successfully'),
+                            'success'
+                        )
+                    } else {
+                        swal.fire(
+                            self.$t('message.generate_list.alert_error'),
+                            self.$t('message.generate_list.alert_url_exists'),
+                            'error'
+                        )
+                    }
+
+                    this.errorMessage.url = false
+                    this.addModel.url = ''
+                    this.getGenerateList()
+                })
         },
 
         getGenerateList(page = 1) {
@@ -627,6 +638,7 @@ export default {
         },
 
         submitUpload() {
+            let self = this;
             this.formData = new FormData();
             this.formData.append('file', this.$refs.excel.files[0]);
 
@@ -635,8 +647,8 @@ export default {
 
                     if (res.data.success === true) {
                         swal.fire(
-                            'Uploaded!',
-                            'Successfully Uploaded.',
+                            self.$t('message.generate_list.alert_uploaded'),
+                            self.$t('message.generate_list.alert_uploaded_successfully'),
                             'success'
                         )
 
@@ -653,13 +665,13 @@ export default {
         },
 
         deleteData() {
-
+            let self = this;
             axios.post('/api/generate-list-delete', {
                 ids : this.checkIds
             }).then((res) => {
                 swal.fire(
-                    'Deleted',
-                    'Successfully Deleted.',
+                    self.$t('message.generate_list.alert_deleted'),
+                    self.$t('message.generate_list.alert_deleted_successfully'),
                     'success'
                 )
 
@@ -704,10 +716,10 @@ export default {
         },
 
         getAhref() {
-
+            let self = this;
             swal.fire({
-                title : "Getting Ahrefs...",
-                text : "Please wait",
+                title : self.$t('message.generate_list.alert_getting_ahrefs'),
+                text : self.$t('message.generate_list.alert_please_wait'),
                 timerProgressBar : true,
                 showConfirmButton : false,
                 allowOutsideClick : false,
@@ -721,8 +733,8 @@ export default {
             }).then((res) => {
 
                 swal.fire(
-                    'Success',
-                    'Successfully Updated Ahref.',
+                    self.$t('message.generate_list.alert_success'),
+                    self.$t('message.generate_list.alert_updated_ahref'),
                     'success'
                 )
 
@@ -733,10 +745,10 @@ export default {
         },
 
         computePrice() {
-
+            let self = this;
             swal.fire({
-                title : "Computing Price...",
-                text : "Please wait",
+                title : self.$t('message.generate_list.alert_computing_price'),
+                text : self.$t('message.generate_list.alert_please_wait'),
                 timerProgressBar : true,
                 showConfirmButton : false,
                 allowOutsideClick : false,
@@ -750,8 +762,8 @@ export default {
             }).then((res) => {
 
                 swal.fire(
-                    'Success',
-                    'Successfully Computed.',
+                    self.$t('message.generate_list.alert_success'),
+                    self.$t('message.generate_list.alert_computed_successfully'),
                     'success'
                 )
 

@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.registration_accounts.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button
                                 type="button"
@@ -24,7 +24,7 @@
                                 data-target="#collapseFilterRegistration"
                                 aria-controls="collapseFilterRegistration">
 
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.registration_accounts.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -32,45 +32,45 @@
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Search Name, Email & Username</label>
+                                    <label>{{ $t('message.registration_accounts.filter_search') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            v-model="filterModel.search"
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.registration_accounts.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Status</label>
+                                    <label>{{ $t('message.registration_accounts.filter_status') }}</label>
                                     <select class="form-control" v-model="filterModel.status">
-                                        <option value="">Select Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_status') }}</option>
+                                        <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
+                                        <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Account type</label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_type') }}</label>
                                     <select class="form-control" v-model="filterModel.type">
-                                        <option value="">Select Type</option>
-                                        <option value="seller">Seller</option>
-                                        <option value="buyer">Buyer</option>
-                                        <option value="writer">Writer</option>
-                                        <option value="affiliate">Affiliate</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
+                                        <option value="seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                        <option value="buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                        <option value="writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                        <option value="affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.country">
-                                        <option value="">Select Country</option>
-                                        <option value="none">None</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_country') }}</option>
+                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
                                         <option v-for="option in listCountryAll.data"
                                                 :value="option.id"
                                                 :key="option.id">
@@ -82,10 +82,10 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Language</label>
+                                    <label>{{ $t('message.registration_accounts.filter_lang') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.language_id">
-                                        <option value="">Select Language</option>
-                                        <option value="none">None</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_lang') }}</option>
+                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
                                         <option v-for="option in listLanguages.data"
                                                 :value="option.id"
                                                 :key="option.id">
@@ -97,32 +97,32 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Commission</label>
+                                    <label>{{ $t('message.registration_accounts.filter_commission') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.commission">
-                                        <option value="">Select Answer</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_answer') }}</option>
+                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Credit Authorization</label>
+                                    <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
                                     <select class="form-control" name="" v-model="filterModel.credit_auth">
-                                        <option value="">Select Credit Authorization</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_credit_auth') }}</option>
+                                        <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="No">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
                                 <div class="form-group">
-                                    <label>Team In-charge</label>
+                                    <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
                                     <select class="form-control" v-model="filterModel.team_in_charge">
-                                        <option value="">All</option>
-                                        <option value="none">None</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
                                         <option v-for="option in listIncharge.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -132,9 +132,9 @@
 
                             <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
                                 <div class="form-group">
-                                    <label>Affiliate</label>
+                                    <label>{{ $t('message.registration_accounts.filter_affiliate') }}</label>
                                     <select class="form-control" v-model="filterModel.affiliate">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
                                         <option v-for="option in listAffiliate.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -144,52 +144,52 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Company Type</label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_type') }}</label>
                                     <select class="form-control" v-model="filterModel.company_type">
-                                        <option value="">All</option>
-                                        <option value="1">Freelancer</option>
-                                        <option value="0">Company</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="1">{{ $t('message.registration_accounts.filter_freelance') }}</option>
+                                        <option value="0">{{ $t('message.registration_accounts.filter_company') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Company Name</label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_name') }}</label>
                                     <input
                                         v-model="filterModel.company_name"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Type here">
+                                        :placeholder="$t('message.registration_accounts.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Company URL</label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
                                     <input
                                         v-model="filterModel.company_url"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Type here">
+                                        :placeholder="$t('message.registration_accounts.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Account Validation</label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_validation') }}</label>
                                     <select class="form-control" v-model="filterModel.account_validation">
-                                        <option value="">All</option>
-                                        <option value="valid">Valid</option>
-                                        <option value="invalid">Invalid</option>
-                                        <option value="processing">Processing</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                        <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                        <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Date of Registration</label>
+                                    <label>{{ $t('message.registration_accounts.filter_date_reg') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             v-model="filterModel.created_at"
@@ -207,35 +207,33 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Account Verified</label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_verified') }}</label>
                                     <select class="form-control"
                                             v-model="filterModel.account_verification">
-                                        <option value="">All</option>
-                                        <option value="Yes">Yes
-                                        </option>
-                                        <option value="No">No
-                                        </option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="No">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Sub Account</label>
+                                    <label>{{ $t('message.registration_accounts.filter_sub_account') }}</label>
                                     <select class="form-control" v-model="filterModel.is_sub_account">
-                                        <option value="">All</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="1">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="0">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Payment Info</label>
+                                    <label>{{ $t('message.registration_accounts.filter_payment_info') }}</label>
 
                                     <select class="form-control" v-model="filterModel.payment_info">
-                                        <option value="">Default</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_default') }}</option>
                                         <option v-for="(option, index) in paymentMethodList" v-bind:value="option.id" :key="index">
                                             {{ option.type }}
                                         </option>
@@ -245,11 +243,11 @@
 
                             <div class="col-md-3" v-if="user.role_id == 8 || user.isAdmin">
                                 <div class="form-group">
-                                    <label>Buyer Transaction</label>
+                                    <label>{{ $t('message.registration_accounts.filter_buyer_trans') }}</label>
                                     <select class="form-control" v-model="filterModel.buyer_transaction">
-                                        <option value="">All</option>
-                                        <option value="with">With</option>
-                                        <option value="none">Without</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                        <option value="with">{{ $t('message.registration_accounts.filter_with') }}</option>
+                                        <option value="none">{{ $t('message.registration_accounts.filter_without') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -257,11 +255,13 @@
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">Clear
+                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                    {{ $t('message.registration_accounts.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">Search <i
-                                    class="fa fa-refresh fa-spin"
-                                    v-if="isSearchLoading"></i></button>
+                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                    {{ $t('message.registration_accounts.search') }}
+                                    <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -273,7 +273,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Registration Accounts</h3>
+                        <h3 class="card-title">{{ $t('message.registration_accounts.ra_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -286,12 +286,12 @@
                                             class="btn btn-default"
                                             @click="selectAll">
 
-                                            {{ !allSelected ? 'Select All' : 'Deselect All' }}
+                                            {{ !allSelected ? $t('message.registration_accounts.ra_select_all') : $t('message.registration_accounts.ra_deselect_all') }}
                                         </button>
 
                                         <button
                                             type="submit"
-                                            title="Send Email"
+                                            :title="$t('message.registration_accounts.ra_send_email')"
                                             class="btn btn-default"
                                             :disabled="isDisabledAction"
 
@@ -302,7 +302,7 @@
 
                                         <button
                                             type="submit"
-                                            title="Update multiple in charges"
+                                            :title="$t('message.registration_accounts.ra_update_multiple_in_charge')"
                                             class="btn btn-default"
                                             :disabled="isDisabledAction"
 
@@ -314,7 +314,7 @@
                                         <button
                                             v-if="user.role_id == 8 || user.isAdmin"
                                             type="button"
-                                            title="Send multiple validation email"
+                                            :title="$t('message.registration_accounts.ra_send_multiple_validation_email')"
                                             class="btn btn-default"
                                             :disabled="isDisabledAction"
 
@@ -326,7 +326,7 @@
                                         <button
                                             v-if="user.role_id == 8 || user.isAdmin"
                                             type="button"
-                                            title="Send multiple deposit email"
+                                            :title="$t('message.registration_accounts.ra_send_multiple_deposit_email')"
                                             class="btn btn-default"
                                             :disabled="isDisabledAction"
 
@@ -368,15 +368,15 @@
 
                                     @click="clearMessageform">
 
-                                    Register
+                                    {{ $t('message.registration_accounts.ra_register') }}
                                 </button>
                             </div>
                         </div>
 
                         <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
-                        <b>Showing {{ listAccount.from }} to {{ listAccount.to }} of {{
-                                listAccount.total
-                           }} entries.</b>
+                        <b>
+                            Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.
+                        </b>
                     </span>
 
                         <div class="table-responsive">
@@ -385,28 +385,70 @@
                                     <tr class="label-primary">
                                         <th>#</th>
                                         <th></th>
-                                        <th>Action</th>
-                                        <th v-show="tblAccountsOpt.user_id">User ID</th>
-                                        <th v-show="tblAccountsOpt.date_registered">Date Reg</th>
-                                        <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">Payment Info</th>
-                                        <th v-show="tblAccountsOpt.email && user.isAdmin">Email</th>
-                                        <th v-show="tblAccountsOpt.in_charge">In-charge</th>
-                                        <th v-show="tblAccountsOpt.affiliate">Affiliate</th>
-                                        <th v-show="tblAccountsOpt.username">Username</th>
-                                        <th v-show="tblAccountsOpt.name">Name</th>
-                                        <th v-show="tblAccountsOpt.country">Country</th>
-                                        <th v-show="tblAccountsOpt.language">Language</th>
-                                        <th v-show="tblAccountsOpt.company_type">Company Type</th>
-                                        <th v-show="tblAccountsOpt.company_name">Company Name</th>
-                                        <th v-show="tblAccountsOpt.company_url">Company URL</th>
-                                        <th v-show="tblAccountsOpt.type">Type</th>
-                                        <th v-show="tblAccountsOpt.sub_account">Sub Account</th>
-                                        <th v-show="tblAccountsOpt.under_of_main_buyer">Under of Main Buyer</th>
-                                        <th v-show="tblAccountsOpt.account_validation">Account Validation</th>
-                                        <th v-show="tblAccountsOpt.is_show_price_basis">Show Price Basis</th>
-                                        <th v-show="tblAccountsOpt.credit_authorization">Credit Auth</th>
-                                        <th v-show="tblAccountsOpt.commission">Commission</th>
-                                        <th v-show="tblAccountsOpt.status">Status</th>
+                                        <th>{{ $t('message.registration_accounts.ra_action') }}</th>
+                                        <th v-show="tblAccountsOpt.user_id">
+                                            {{ $t('message.registration_accounts.ra_user_id') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.date_registered">
+                                            {{ $t('message.registration_accounts.ra_date_reg') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.payment_account_email && user.isAdmin">
+                                            {{ $t('message.registration_accounts.ra_payment_info') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.email && user.isAdmin">
+                                            {{ $t('message.registration_accounts.ra_email') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.in_charge">
+                                            {{ $t('message.registration_accounts.ra_in_charge') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.affiliate">
+                                            {{ $t('message.registration_accounts.ra_affiliate') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.username">
+                                            {{ $t('message.registration_accounts.ra_username') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.name">
+                                            {{ $t('message.registration_accounts.ra_name') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.country">
+                                            {{ $t('message.registration_accounts.filter_country') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.language">
+                                            {{ $t('message.registration_accounts.filter_lang') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.company_type">
+                                            {{ $t('message.registration_accounts.filter_company_type') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.company_name">
+                                            {{ $t('message.registration_accounts.filter_company_name') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.company_url">
+                                            {{ $t('message.registration_accounts.filter_company_url') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.type">
+                                            {{ $t('message.registration_accounts.ra_type') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.sub_account">
+                                            {{ $t('message.registration_accounts.filter_sub_account') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.under_of_main_buyer">
+                                            {{ $t('message.registration_accounts.ra_under_main_buyer') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.account_validation">
+                                            {{ $t('message.registration_accounts.filter_account_validation') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.is_show_price_basis">
+                                            {{ $t('message.registration_accounts.ra_show_price_basis') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.credit_authorization">
+                                            {{ $t('message.registration_accounts.ra_credit_auth') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.commission">
+                                            {{ $t('message.registration_accounts.filter_commission') }}
+                                        </th>
+                                        <th v-show="tblAccountsOpt.status">
+                                            {{ $t('message.registration_accounts.filter_status') }}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -441,7 +483,7 @@
 
                                                 <button
                                                     type="button"
-                                                    title="Send Email"
+                                                    :title="$t('message.registration_accounts.ra_send_email')"
                                                     data-toggle="modal"
                                                     class="btn btn-default"
 
@@ -457,7 +499,7 @@
                                                     || account.verification_code !== null"
                                                     type="button"
                                                     class="btn btn-default"
-                                                    title="Send Validation Email"
+                                                    :title="$t('message.registration_accounts.ra_send_validation_email')"
 
                                                     @click="sendValidationEmail(account)">
 
@@ -473,7 +515,7 @@
                                                     || account.user.wallet_transactions_count !== 0"
                                                     type="button"
                                                     class="btn btn-default"
-                                                    title="Send Add Credit Offer Email"
+                                                    :title="$t('message.registration_accounts.ra_send_credit_email')"
 
                                                     @click="sendDepositEmail(account)">
 
@@ -501,7 +543,7 @@
                                                 v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
                                                 class="badge badge-danger">
 
-                                                Inactive
+                                                {{ $t('message.registration_accounts.filter_inactive') }}
                                             </span>
                                         </td>
                                         <td v-show="tblAccountsOpt.affiliate">
@@ -517,7 +559,7 @@
                                                 v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
                                                 class="badge badge-danger">
 
-                                                Inactive
+                                                {{ $t('message.registration_accounts.filter_inactive') }}
                                             </span>
                                         </td>
                                         <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
@@ -549,11 +591,11 @@
                                                     <span
                                                         v-if="account.user.wallet_transactions_count"
                                                         class="badge badge-success">
-                                                        With Transaction
+                                                        {{ $t('message.registration_accounts.ra_with_trans') }}
                                                     </span>
 
                                                     <span v-else class="badge badge-danger">
-                                                        No Transaction
+                                                        {{ $t('message.registration_accounts.ra_no_trans') }}
                                                     </span>
                                                 </span>
                                             </div>
@@ -561,7 +603,7 @@
                                             <div v-if="(user.role_id == 8 || user.isAdmin) && account.type == 'Buyer'">
                                                 <span v-if="account.email_via_others === 'deposit_email'">
                                                     <span class="badge badge-warning">
-                                                        Deposit Email Sent
+                                                        {{ $t('message.registration_accounts.ra_deposit_email_sent') }}
 
                                                         <span>
                                                             {{
@@ -592,7 +634,7 @@
 
                                             <span v-if="account.account_validation === 'processing' && account.email_via === 'validation_email'">
                                                 <span class="badge badge-warning">
-                                                    Validation Email Sent
+                                                    {{ $t('message.registration_accounts.ra_validation_email_sent') }}
 
                                                     <span>
                                                         {{
@@ -619,9 +661,13 @@
                             </table>
                         </div>
 
-                        <pagination :data="listAccount"
-                                    @pagination-change-page="getAccountList"
-                                    :limit="8"></pagination>
+                        <pagination
+                            :limit="8"
+                            :data="listAccount"
+
+                            @pagination-change-page="getAccountList">
+
+                        </pagination>
                     </div>
                 </div>
             </div>
@@ -632,7 +678,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Registration</h5>
+                        <h5 class="modal-title">{{ $t('message.registration_accounts.r_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -640,18 +686,18 @@
                         </span>
                     </div>
                     <div class="modal-body">
-                        <h4 class="text-primary">Account Information</h4>
+                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
                         <hr/>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Account Type <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountModel.type" @change="checkTeamIncharge('add')">
-                                        <option value="">Select Type</option>
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                        <option value="Affiliate">Affiliate</option>
+                                        <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
+                                        <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                        <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                        <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                        <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -659,7 +705,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Username <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
@@ -667,7 +713,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Name <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -675,7 +721,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Email <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
@@ -683,7 +729,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Phone</label>
+                                    <label>{{ $t('message.registration_accounts.r_phone') }}</label>
                                     <input type="text" class="form-control" v-model="accountModel.phone" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
@@ -691,7 +737,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Skype</label>
+                                    <label>{{ $t('message.registration_accounts.r_skype') }}</label>
                                     <input type="text" class="form-control" v-model="accountModel.skype">
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
@@ -699,7 +745,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Password <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.r_password') }} <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" v-model="accountModel.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -707,7 +753,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Confirm Password <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.r_confirm_password') }} <span class="text-danger">*</span></label>
                                     <input type="password" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -715,17 +761,17 @@
 
                             <div class="col-md-12" >
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
+                                        <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
+                                        <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-sm-12" v-show="addCompanyName">
                                 <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountModel.company_name">
                                     <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -733,7 +779,7 @@
 
                             <div class="col-sm-12" v-show="addCompanyName">
                                 <div class="form-group">
-                                    <label>Company URL</label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
                                     <input type="text" class="form-control" v-model="accountModel.company_url">
                                     <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
                                 </div>
@@ -741,9 +787,9 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
                                     <select class="form-control" v-model="accountModel.country_id">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -753,7 +799,14 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Language</label> <small><i class="text-danger">(Required if Writer)</i></small>
+                                    <label>
+                                        {{ $t('message.registration_accounts.filter_lang') }}
+                                    </label>
+                                    <small>
+                                        <i class="text-danger">
+                                            {{ $t('message.registration_accounts.r_required_writer') }}
+                                        </i>
+                                    </small>
                                     <v-select
                                         multiple
                                         v-model="accountModel.language_id"
@@ -761,22 +814,24 @@
                                         :options="listLanguages.data"
                                         :reduce="name => name.id"
                                         :searchable="true"
-                                        placeholder="Select Language"/>
+                                        :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
 
-                                        <span class="text-danger" v-if="isErrorLang">Required to select Langauge</span>
+                                        <span class="text-danger" v-if="isErrorLang">
+                                            {{ $t('message.registration_accounts.r_required_lang') }}
+                                        </span>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Address</label>
+                                    <label>{{ $t('message.registration_accounts.r_address') }}</label>
                                     <textarea class="form-control" v-model="accountModel.address"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Info</label>
+                                    <label>{{ $t('message.registration_accounts.r_info') }}</label>
                                     <textarea class="form-control" v-model="accountModel.info"></textarea>
                                 </div>
                             </div>
@@ -786,17 +841,17 @@
                         <hr v-show="addDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
                         <div v-show="addDisplayWriterPrice" class="alert alert-info">
-                            <p><b>Reminder: </b> Pay Per Words (PPW) is only maximum of 600 words. If exceeded still the same price.</p>
+                            <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
                         </div>
                         <hr v-show="addDisplayWriterPrice"/>
 
                         <div class="row" v-show="addDisplayWriterPrice">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Pricing type</label>
+                                    <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
                                     <select class="form-control" v-model="accountModel.rate_type">
-                                        <option value="ppw">Pay Per Words (PPW)</option>
-                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                        <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
+                                        <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -806,14 +861,20 @@
 
                         <div v-if="accountModel.type !== 'Affiliate'">
                             <hr/>
-                            <h4 class="text-primary">Payment Information</h4>
-                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please select default payment type</span>
-                            <span v-if="validate_error_type" class="text-danger">Please input the selected default payment type</span>
+                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_payment_info') }}</h4>
+                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">
+                                {{ $t('message.registration_accounts.r_select_default') }}
+                            </span>
+                            <span v-if="validate_error_type" class="text-danger">
+                                {{ $t('message.registration_accounts.r_input_selected') }}
+                            </span>
 
                             <!-- empty account type -->
                             <table class="table" v-if="accountModel.type == ''">
                                 <tr>
-                                    <td class="text-center text-danger">Please select Account type First</td>
+                                    <td class="text-center text-danger">
+                                        {{ $t('message.registration_accounts.r_select_account') }}
+                                    </td>
                                 </tr>
                             </table>
 
@@ -821,12 +882,12 @@
                             <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
                                 <tr>
                                     <td></td>
-                                    <td>Default</td>
+                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
                                 </tr>
                                 <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
                                     <td>
                                         <div class="form-group">
-                                            <label>{{ payment_method.type }} Account</label>
+                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
                                         </div>
                                     </td>
@@ -841,12 +902,12 @@
                             <table class="table" v-if="accountModel.type === 'Buyer'">
                                 <tr>
                                     <td></td>
-                                    <td>Default</td>
+                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
                                 </tr>
                                 <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
                                     <td>
                                         <div class="form-group">
-                                            <label>{{ payment_method.type }} Account</label>
+                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
                                         </div>
                                     </td>
@@ -859,7 +920,7 @@
                         </div>
 
                         <hr/>
-                        <h4 class="text-primary">Internal Information</h4>
+                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
                         <hr/>
 
                         <div class="row">
@@ -878,9 +939,9 @@
 
                             <div class="col-sm-6" v-if="isTeamSeller">
                                 <div class="form-group">
-                                    <label>Team In-charge</label>
+                                    <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
                                     <select class="form-control" v-model="accountModel.team_in_charge">
-                                        <option value="">Select Team In-charge</option>
+                                        <option value="">{{ $t('message.registration_accounts.r_select_in_charge') }}</option>
                                         <option v-for="option in listTeamIncharge" v-bind:value="option.id">
                                             {{ option.username == null || option.username == '' ? option.name:option.username}}
                                         </option>
@@ -889,21 +950,21 @@
                             </div>
 
                             <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
-                                <label>Account Validation <span class="text-danger">*</span></label>
+                                <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
                                 <select class="form-control" name="" v-model="accountModel.account_validation">
-                                    <option value="" disabled>Select Account Validation</option>
-                                    <option value="valid">Valid</option>
-                                    <option value="invalid">Invalid</option>
-                                    <option value="processing">Processing</option>
+                                    <option value="" disabled>{{ $t('message.registration_accounts.r_select_account_validation') }}</option>
+                                    <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                    <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                    <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
                                 </select>
                                 <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
                             </div>
 
                             <div class="col-sm-6" v-if="accountModel.type == 'Buyer' && user.isAdmin">
                                 <div class="form-group">
-                                    <label>Affiliates</label>
+                                    <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
                                     <select class="form-control" v-model="accountModel.affiliate">
-                                        <option value="">None</option>
+                                        <option value="">{{ $t('message.registration_accounts.none') }}</option>
                                         <option v-for="option in listAffiliate.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -919,20 +980,24 @@
                                     type="checkbox"
                                     v-model="btnTermsAndConditions"
                                     @change="isDisableSubmit =  !isDisableSubmit">
-                                I've read and accept the
+                                {{ $t('message.registration_accounts.r_ive_read') }}
 
                                 <a
                                     href="#"
                                     data-toggle="modal"
                                     data-target="#modalTermsAndCondition">
-                                    Terms and Condition
+                                    {{ $t('message.registration_accounts.r_terms') }}
                                 </a>
                             </p>
                         </div>
 
                         <div>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                {{ $t('message.registration_accounts.close') }}
+                            </button>
+                            <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">
+                                {{ $t('message.registration_accounts.save') }}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -945,7 +1010,7 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Setting Default</h4>
+                        <h4 class="modal-title">{{ $t('message.registration_accounts.sd_title') }}</h4>
                     </div>
 
                     <div class="modal-body relative">
@@ -974,7 +1039,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Send email</h4>
+                        <h4 class="modal-title">{{ $t('message.registration_accounts.se_title') }}</h4>
                     </div>
 
                     <div class="modal-body relative">
@@ -984,10 +1049,10 @@
                                     <div class="col-md-6">
                                         <div v-if="user.isAdmin">
                                             <div class="form-group">
-                                                <label>Login As:</label>
+                                                <label>{{ $t('message.registration_accounts.se_login') }}</label>
 
                                                 <select class="form-control" v-model="user.work_mail">
-                                                    <option value="all">All</option>
+                                                    <option value="all">{{ $t('message.registration_accounts.all') }}</option>
                                                     <option v-for="option in adminAccessOptions" v-bind:value="option.work_mail">
                                                         [{{ option.role.name }}] {{ option.work_mail }}
                                                     </option>
@@ -1035,7 +1100,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label style="color: #333">Language</label>
+                                        <label style="color: #333">{{ $t('message.registration_accounts.filter_lang') }}</label>
                                         <div>
                                             <select
                                                 v-model="mailInfo.country.id"
@@ -1052,7 +1117,7 @@
 
                                     <div class="col-md-6">
                                         <div  class="form-group">
-                                            <label style="color: #333">Select template {{ mailInfo.country.name }}</label>
+                                            <label style="color: #333">{{ $t('message.registration_accounts.se_select_template') }} {{ mailInfo.country.name }}</label>
                                             <div>
                                                 <select
                                                     v-model="mailInfo.tpl"
@@ -1074,7 +1139,7 @@
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.registration_accounts.ra_email') }}</label>
 
                                     <vue-tags-input
                                         v-model="email_to"
@@ -1100,7 +1165,7 @@
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
-                                    <label style="color: #333">Title</label>
+                                    <label style="color: #333">{{ $t('message.registration_accounts.se_title_text') }}</label>
 
                                     <input type="text" v-model="modelMail.title" class="form-control" value="" required="required">
 
@@ -1116,7 +1181,7 @@
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
-                                    <label style="color: #333">Content</label>
+                                    <label style="color: #333">{{ $t('message.registration_accounts.se_content') }}</label>
 
                                     <!--                                    <textarea-->
                                     <!--                                        v-model="modelMail.content"-->
@@ -1142,7 +1207,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Attachment</label>
+                                    <label style="color: #333">{{ $t('message.registration_accounts.se_attachment') }}</label>
                                     <input
                                         multiple
                                         type="file"
@@ -1155,7 +1220,9 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" @click="modalCloser()">Close</button>
+                        <button type="button" class="btn btn-default pull-left" @click="modalCloser()">
+                            {{ $t('message.registration_accounts.close') }}
+                        </button>
 
                         <button
                             type="button"
@@ -1164,7 +1231,7 @@
 
                             @click="submitSendMail">
 
-                            Send
+                            {{ $t('message.registration_accounts.send') }}
                         </button>
                     </div>
                 </div>
@@ -1177,7 +1244,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Account</h5>
+                        <h5 class="modal-title">{{ $t('message.registration_accounts.ur_title') }}</h5>
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
@@ -1186,40 +1253,42 @@
                     </div>
                     <div class="modal-body">
 
-                        <h4 class="text-primary">Account Information</h4>
+                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
                         <hr/>
 
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="alert alert-warning" v-show="!isVerified">
                                     <p>
-                                        This account is not yet verified. Please click 'Verified Account' to proceed.
-                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">Verified Account</button>
+                                        {{ $t('message.registration_accounts.ur_account_not_verified') }}
+                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">
+                                            {{ $t('message.registration_accounts.ur_verify') }}
+                                        </button>
                                     </p>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Account Type <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
-                                        <option value="Seller">Seller</option>
-                                        <option value="Buyer">Buyer</option>
-                                        <option value="Writer">Writer</option>
-                                        <option value="Affiliate">Affiliate</option>
+                                        <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                        <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                        <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                        <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Username <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Name <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1227,7 +1296,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Email <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1235,7 +1304,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Phone</label>
+                                    <label>{{ $t('message.registration_accounts.r_phone') }}</label>
                                     <input type="text" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1243,7 +1312,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Skype</label>
+                                    <label>{{ $t('message.registration_accounts.r_skype') }}</label>
                                     <input type="text" class="form-control" v-model="accountUpdate.skype">
                                     <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1251,7 +1320,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Password</label>
+                                    <label>{{ $t('message.registration_accounts.r_password') }}</label>
                                     <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1259,7 +1328,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Confirm Password</label>
+                                    <label>{{ $t('message.registration_accounts.r_confirm_password') }}</label>
                                     <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
                                     <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1267,17 +1336,17 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Company Type <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
                                     <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
-                                        <option value="Company">Company</option>
-                                        <option value="Freelancer">Freelancer</option>
+                                        <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
+                                        <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-sm-12" v-show="updateCompanyName">
                                 <div class="form-group">
-                                    <label>Company Name <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="accountUpdate.company_name">
                                     <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1285,7 +1354,7 @@
 
                             <div class="col-sm-12" v-show="updateCompanyName">
                                 <div class="form-group">
-                                    <label>Company URL</label>
+                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
                                     <input type="text" class="form-control" v-model="accountUpdate.company_url">
                                     <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1293,7 +1362,7 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Country</label>
+                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
                                     <select class="form-control" v-model="accountUpdate.country_id">
                                         <option v-for="option in listCountryAll.data" v-bind:value="option.id">
                                             {{ option.name }}
@@ -1304,7 +1373,12 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Language</label> <small><i class="text-danger">* Required if writer</i></small>
+                                    <label>
+                                        {{ $t('message.registration_accounts.filter_lang') }}
+                                    </label>
+                                    <small>
+                                        <i class="text-danger">* {{ $t('message.registration_accounts.r_required_writer') }}</i>
+                                    </small>
                                     <v-select
                                         multiple
                                         v-model="accountUpdate.language_id"
@@ -1312,7 +1386,7 @@
                                         :options="listLanguages.data"
                                         :reduce="name => name.id"
                                         :searchable="true"
-                                        placeholder="Select Language"/>
+                                        :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
 
                                     <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1320,14 +1394,14 @@
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Address</label>
+                                    <label>{{ $t('message.registration_accounts.r_address') }}</label>
                                     <textarea class="form-control" v-model="accountUpdate.address"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Info</label>
+                                    <label>{{ $t('message.registration_accounts.r_info') }}</label>
                                     <textarea class="form-control" v-model="accountUpdate.info"></textarea>
                                 </div>
                             </div>
@@ -1337,17 +1411,17 @@
                         <hr v-show="updateDisplayWriterPrice"/>
                         <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
                         <div v-show="updateDisplayWriterPrice" class="alert alert-info">
-                            <p><b>Reminder: </b> Pay Per Words (PPW) is only maximum of 600 words. If exceeded still the same price.</p>
+                            <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
                         </div>
                         <hr v-show="updateDisplayWriterPrice"/>
 
                         <div class="row" v-show="updateDisplayWriterPrice">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Pricing type</label>
+                                    <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
                                     <select class="form-control" v-model="accountUpdate.rate_type">
-                                        <option value="ppw">Pay Per Words (PPW)</option>
-                                        <option value="ppa">Pay Per Article (PPA)</option>
+                                        <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
+                                        <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1358,20 +1432,26 @@
                         <div v-if="accountUpdate.type !== 'Affiliate'">
                             <hr v-if="accountUpdate.is_sub_account === 0"/>
 
-                            <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">Payment Information</h4>
-                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">Please provide one payment type</span>
-                            <span v-if="validate_error_type_update" class="text-danger">Please input the selected default payment type</span>
+                            <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">
+                                {{ $t('message.registration_accounts.r_payment_info') }}
+                            </h4>
+                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">
+                                {{ $t('message.registration_accounts.r_select_default') }}
+                            </span>
+                            <span v-if="validate_error_type_update" class="text-danger">
+                                {{ $t('message.registration_accounts.r_input_selected') }}
+                            </span>
 
                             <!-- payment for seller and writer -->
                             <table class="table" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
                                 <tr>
                                     <td></td>
-                                    <td>Default</td>
+                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
                                 </tr>
                                 <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
                                     <td>
                                         <div class="form-group">
-                                            <label>{{ payment_method.type }} Account</label>
+                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                         </div>
                                     </td>
@@ -1386,12 +1466,12 @@
                             <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
                                 <tr>
                                     <td></td>
-                                    <td>Default</td>
+                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
                                 </tr>
                                 <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
                                     <td>
                                         <div class="form-group">
-                                            <label>{{ payment_method.type }} Account</label>
+                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                         </div>
                                     </td>
@@ -1404,17 +1484,17 @@
                         </div>
 
                         <hr/>
-                        <h4 class="text-primary">Internal Information</h4>
+                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
                         <hr/>
 
                         <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Is show Price Basis <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.ur_is_show_price_basis') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis" :disabled="!user.isAdmin">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.is_show_price_basis" v-for="err in messageForms.errors.is_show_price_basis" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1422,29 +1502,29 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Status</label>
+                                    <label>{{ $t('message.registration_accounts.filter_status') }}</label>
 
                                     <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
+                                        <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
                                     </select>
 
                                     <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
-                                        Account validation is 'invalid'. Status will be automatically set to 'inactive'.
+                                        {{ $t('message.registration_accounts.ur_account_invalid') }}
                                     </small>
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
-                                <label>Credit Authorization</label>
+                                <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
                                 <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="!user.isAdmin">
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
+                                    <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                    <option value="No">{{ $t('message.registration_accounts.no') }}</option>
                                 </select>
                             </div>
 
                             <div class="col-sm-6">
-                                <label>Team In-charge</label>
+                                <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
                                 <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
                                     <option value="">N/A</option>
                                     <option v-for="option in listTeamIncharge" v-bind:value="option.id">
@@ -1455,21 +1535,21 @@
 
                             <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
                                 <div class="form-group">
-                                    <label>Account Validation <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.account_validation">
-                                        <option value="valid">Valid</option>
-                                        <option value="invalid">Invalid</option>
-                                        <option value="processing">Processing</option>
+                                        <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                        <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                        <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label>Commission <span class="text-danger">*</span></label>
+                                    <label>{{ $t('message.registration_accounts.filter_commission') }} <span class="text-danger">*</span></label>
                                     <select class="form-control" name="" v-model="accountUpdate.commission" :disabled="!user.isAdmin">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
                                 </div>
@@ -1477,9 +1557,9 @@
 
                             <div class="col-sm-6" v-if="accountUpdate.type == 'Buyer' && user.isAdmin">
                                 <div class="form-group">
-                                    <label>Affiliates</label>
+                                    <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
                                     <select class="form-control" v-model="accountUpdate.affiliate">
-                                        <option value="">None</option>
+                                        <option value="">{{ $t('message.registration_accounts.none') }}</option>
                                         <option v-for="option in listAffiliate.data" v-bind:value="option.id">
                                             {{ option.username == null ? option.name : option.username }}
                                         </option>
@@ -1490,8 +1570,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.registration_accounts.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.registration_accounts.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1510,7 +1594,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update In Charge</h5>
+                        <h5 class="modal-title">{{ $t('message.registration_accounts.uc_title') }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -1541,8 +1625,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleInCharge()">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.registration_accounts.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdateMultipleInCharge()">
+                            {{ $t('message.registration_accounts.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1858,15 +1946,17 @@ export default {
         },
 
         saveMessageAsDraft(data) {
+            let self = this;
             axios.post('/api/mail/save-draft', data).then((response) => {
                 swal.fire({
-                    title: 'Message saved as draft!',
+                    title: self.$t('message.registration_accounts.alert_save_draft'),
                     icon: 'success'
                 });
             });
         },
 
         sendDepositEmail (account) {
+            let self = this;
             let accounts = [];
 
             if (this.checkUserWorkMail()) {
@@ -1893,8 +1983,8 @@ export default {
                                     } else {
 
                                         swal.fire(
-                                            'Invalid',
-                                            'Account should not have any wallet transaction',
+                                            self.$t('message.registration_accounts.alert_invalid'),
+                                            self.$t('message.registration_accounts.alert_no_wallet'),
                                             'error'
                                         )
 
@@ -1903,8 +1993,8 @@ export default {
                                 } else {
 
                                     swal.fire(
-                                        'Invalid',
-                                        'Account type should be buyer',
+                                        self.$t('message.registration_accounts.alert_invalid'),
+                                        self.$t('message.registration_accounts.alert_type_buyer'),
                                         'error'
                                     )
 
@@ -1913,8 +2003,8 @@ export default {
                             } else {
 
                                 swal.fire(
-                                    'Invalid',
-                                    'A deposit email was already sent for this account',
+                                    self.$t('message.registration_accounts.alert_invalid'),
+                                    self.$t('message.registration_accounts.alert_deposit_sent'),
                                     'error'
                                 )
 
@@ -1923,8 +2013,8 @@ export default {
                         } else {
 
                             swal.fire(
-                                'Invalid',
-                                'The account should be valid',
+                                self.$t('message.registration_accounts.alert_invalid'),
+                                self.$t('message.registration_accounts.alert_should_valid'),
                                 'error'
                             )
 
@@ -1933,8 +2023,8 @@ export default {
                     } else {
 
                         swal.fire(
-                            'Invalid',
-                            'The account is not verified',
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_account_not_verified'),
                             'error'
                         )
 
@@ -1943,7 +2033,11 @@ export default {
 
             } else {
 
-                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_work_mail_not_set'),
+                    'error'
+                );
 
             }
         },
@@ -1995,54 +2089,87 @@ export default {
 
                                         } else {
 
-                                            swal.fire('Invalid', 'Selected accounts must be buyers without wallet transaction', 'error');
+                                            swal.fire(
+                                                self.$t('message.registration_accounts.alert_invalid'),
+                                                self.$t('message.registration_accounts.alert_buyers_without_wallet'),
+                                                'error'
+                                            );
 
                                         }
 
                                     } else {
 
-                                        swal.fire('Invalid', 'Selected accounts must be buyer', 'error');
+                                        swal.fire(
+                                            self.$t('message.registration_accounts.alert_invalid'),
+                                            self.$t('message.registration_accounts.alert_selected_buyer'),
+                                            'error'
+                                        );
 
                                     }
 
                                 } else {
 
-                                    swal.fire('Invalid', 'Deposit email was already sent on some of the selected accounts', 'error');
+                                    swal.fire(
+                                        self.$t('message.registration_accounts.alert_invalid'),
+                                        self.$t('message.registration_accounts.alert_selected_deposit_sent'),
+                                        'error'
+                                    );
 
                                 }
 
                             } else {
 
-                                swal.fire('Invalid', 'Selected accounts must be valid', 'error');
+                                swal.fire(
+                                    self.$t('message.registration_accounts.alert_invalid'),
+                                    self.$t('message.registration_accounts.alert_selected_should_valid'),
+                                    'error'
+                                );
 
                             }
 
                         } else {
 
-                            swal.fire('Invalid', 'Selected accounts must be verified', 'error');
+                            swal.fire(
+                                self.$t('message.registration_accounts.alert_invalid'),
+                                self.$t('message.registration_accounts.alert_selected_not_verified'),
+                                'error'
+                            );
 
                         }
 
                     } else {
 
-                        swal.fire('Invalid', 'Maximum selected account is 10', 'error');
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_maximum_10'),
+                            'error'
+                        );
 
                     }
 
                 } else {
 
-                    swal.fire('Invalid', 'Selection is empty', 'error');
+                    swal.fire(
+                        self.$t('message.registration_accounts.alert_invalid'),
+                        self.$t('message.registration_accounts.alert_selection_empty'),
+                        'error'
+                    );
 
                 }
 
             } else {
 
-                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_work_mail_not_set'),
+                    'error'
+                );
 
             }
         },
 
         sendValidationEmail (account) {
+            let self = this;
             let accounts = [];
 
             if (this.checkUserWorkMail()) {
@@ -2065,8 +2192,8 @@ export default {
                             } else {
 
                                 swal.fire(
-                                    'Invalid',
-                                    'Account status should be processing',
+                                    self.$t('message.registration_accounts.alert_invalid'),
+                                    self.$t('message.registration_accounts.alert_account_should_processing'),
                                     'error'
                                 )
 
@@ -2075,8 +2202,8 @@ export default {
                         } else {
 
                             swal.fire(
-                                'Invalid',
-                                'A validation email was already sent for this account',
+                                self.$t('message.registration_accounts.alert_invalid'),
+                                self.$t('message.registration_accounts.alert_validation_already_sent'),
                                 'error'
                             )
 
@@ -2085,8 +2212,8 @@ export default {
                     } else {
 
                         swal.fire(
-                            'Invalid',
-                            'The account is not verified',
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_not_verified'),
                             'error'
                         )
 
@@ -2095,7 +2222,11 @@ export default {
 
             } else {
 
-                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_work_mail_not_set'),
+                    'error'
+                );
 
             }
         },
@@ -2137,38 +2268,63 @@ export default {
 
                                 } else {
 
-                                    swal.fire('Invalid', 'Selected accounts must be under processing', 'error');
+                                    swal.fire(
+                                        self.$t('message.registration_accounts.alert_invalid'),
+                                        self.$t('message.registration_accounts.alert_selected_processing'),
+                                        'error'
+                                    );
 
                                 }
 
                             } else {
-                                swal.fire('Invalid', 'Validation email was already sent on some of the selected accounts', 'error');
+                                swal.fire(
+                                    self.$t('message.registration_accounts.alert_invalid'),
+                                    self.$t('message.registration_accounts.alert_selected_validation_sent'),
+                                    'error'
+                                );
                             }
 
                         } else {
-                            swal.fire('Invalid', 'Selected accounts must be verified', 'error');
+                            swal.fire(
+                                self.$t('message.registration_accounts.alert_invalid'),
+                                self.$t('message.registration_accounts.alert_selected_must_be_verified'),
+                                'error'
+                            );
                         }
 
                     } else {
 
-                        swal.fire('Invalid', 'Maximum selected account is 10', 'error');
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_maximum_10'),
+                            'error'
+                        );
 
                     }
 
                 } else {
 
-                    swal.fire('Invalid', 'Selection is empty', 'error');
+                    swal.fire(
+                        self.$t('message.registration_accounts.alert_invalid'),
+                        self.$t('message.registration_accounts.alert_selection_empty'),
+                        'error'
+                    );
 
                 }
 
             } else {
 
-                swal.fire('Invalid', 'Work mail not set. Contact the administrator to set work mail', 'error');
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_work_mail_not_set'),
+                    'error'
+                );
 
             }
         },
 
         sendValidationEmailFunction (accounts) {
+            let self = this;
             let loader = this.$loading.show();
 
             axios.post('/api/mail/send-validation-email', {
@@ -2179,8 +2335,8 @@ export default {
                 this.getAccountList();
 
                 swal.fire(
-                    'Success',
-                    'Validation email successfully sent!',
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_validation_sent'),
                     'success'
                 )
             }).catch((err) => {
@@ -2190,6 +2346,7 @@ export default {
         },
 
         sendDepositEmailFunction (accounts) {
+            let self = this;
             console.log(accounts)
 
             let loader = this.$loading.show();
@@ -2202,8 +2359,8 @@ export default {
                 this.getAccountList();
 
                 swal.fire(
-                    'Success',
-                    'Deposit email successfully sent!',
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_deposit_sent_successfully'),
                     'success'
                 )
             }).catch((err) => {
@@ -2217,17 +2374,18 @@ export default {
         },
 
         modalCloser() {
+            let self = this;
             if (this.modelMail.title || this.modelMail.content) {
 
                 swal.fire({
-                    title : "Save as Draft?",
-                    text : "Save email contents as draft?",
+                    title : self.$t('message.registration_accounts.alert_save_as_draft'),
+                    text : self.$t('message.registration_accounts.alert_save_draft_note'),
                     icon : "question",
                     showCloseButton: true,
                     showCancelButton: true,
                     showConfirmButton: true,
-                    cancelButtonText: 'No',
-                    confirmButtonText: 'Yes',
+                    cancelButtonText: self.$t('message.registration_accounts.no'),
+                    confirmButtonText: self.$t('message.registration_accounts.yes'),
                     cancelButtonColor: 'red',
                     confirmButtonColor: 'green',
                 })
@@ -2297,6 +2455,7 @@ export default {
         },
 
         doSendEmail(data) {
+            let self = this;
             this.registrationEmails = [];
             let emails = [];
 
@@ -2305,9 +2464,17 @@ export default {
                 if (data === null) {
 
                     if (this.checkIds.length === 0) {
-                        swal.fire('Invalid', 'Selection is empty.', 'error');
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_selection_empty'),
+                            'error'
+                        );
                     } else if (this.checkIds.length > 10) {
-                        swal.fire('Invalid', 'Only 10 recipients per email is allowed', 'error')
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_invalid'),
+                            self.$t('message.registration_accounts.alert_10_recipients'),
+                            'error'
+                        )
                     } else {
                         this.checkIds.forEach(function (item) {
                             if (item.email !== "" || item.email != null) {
@@ -2339,8 +2506,8 @@ export default {
                 }
             } else {
                 swal.fire(
-                    'Error',
-                    'Please setup your work mail first.',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_work_mail'),
                     'error'
                 )
             }
@@ -2384,6 +2551,7 @@ export default {
         },
 
         async submitSendMail() {
+            let self = this;
             this.allowSending = false;
 
             // create form data
@@ -2433,8 +2601,8 @@ export default {
                 $("#modal-email-registration").modal('hide')
 
                 await swal.fire(
-                    'Success',
-                    'Email successfully sent',
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_email_sent'),
                     'success'
                 )
                 this.allowSending = true;
@@ -2450,8 +2618,8 @@ export default {
                 this.clearMessageFormMail()
             } else {
                 await swal.fire(
-                    'Error',
-                    'There are some errors while sending the email',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_send_email'),
                     'error'
                 )
                 this.allowSending = true;
@@ -2483,7 +2651,7 @@ export default {
         },
 
         async verifiedAccount() {
-
+            let self = this;
             this.isPopupLoading = true;
             await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
 
@@ -2493,14 +2661,14 @@ export default {
                 this.getAccountList();
 
                 swal.fire(
-                    'Success',
-                    'Account Successfully Verified!',
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_account_verified'),
                     'success'
                 );
             } else {
                 swal.fire(
-                    'Error',
-                    'Account Not Verified!',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_account_not_verified_error'),
                     'error'
                 );
             }
@@ -2587,12 +2755,17 @@ export default {
                 $(element).modal('show')
 
             } else {
-                swal.fire('Invalid', 'Selected items must have the same account type', 'error');
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_selected_same_type'),
+                    'error'
+                );
             }
 
         },
 
         submitUpdateMultipleInCharge() {
+            let self = this;
             let ids = [];
             let user_ids = [];
             for (let index in this.checkIds) {
@@ -2614,8 +2787,8 @@ export default {
                     $(element).modal('hide')
 
                     swal.fire(
-                        'Success',
-                        'Updated Successfully',
+                        self.$t('message.registration_accounts.alert_success'),
+                        self.$t('message.registration_accounts.alert_updated_successfully'),
                         'success'
                     )
 
@@ -2644,6 +2817,7 @@ export default {
         },
 
         async submitAdd() {
+            let self = this;
             let id_payment_type = this.accountModel.id_payment_type;
 
             if(!this.accountModel.add_method_payment_type[id_payment_type] && this.accountModel.type !== 'Affiliate') {
@@ -2657,8 +2831,8 @@ export default {
             if(this.accountModel.language_id == "" && this.accountModel.type == "Writer") {
 
                 swal.fire(
-                    'Invalid',
-                    'Please fill up the missing fields!',
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    self.$t('message.registration_accounts.alert_fill_up'),
                     'error'
                 );
 
@@ -2677,8 +2851,8 @@ export default {
                 });
 
                 swal.fire(
-                    'Saved',
-                    'Successfully Added!',
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_added_successfully'),
                     'success'
                 );
 
@@ -2710,8 +2884,8 @@ export default {
                 };
             } else {
                 await swal.fire(
-                    'Error',
-                    'There were some errors while saving the data.',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_saving'),
                     'error'
                 );
             }
@@ -2721,12 +2895,12 @@ export default {
             let self = this
 
             swal.fire({
-                title : "Update Account",
-                html : "Are you sure that you want to update the information?",
+                title : self.$t('message.registration_accounts.ur_title'),
+                html : self.$t('message.registration_accounts.alert_confirm_update'),
                 icon : "question",
                 showCancelButton : true,
-                confirmButtonText : 'Yes',
-                cancelButtonText : 'No'
+                confirmButtonText : self.$t('message.registration_accounts.yes'),
+                cancelButtonText : self.$t('message.registration_accounts.no')
             })
             .then((result) => {
                 if (result.isConfirmed) {
@@ -2736,6 +2910,7 @@ export default {
         },
 
         async saveUpdate() {
+            let self = this;
             let loader = this.$loading.show();
 
             let id_payment_type = this.accountUpdate.id_payment_type;
@@ -2749,8 +2924,8 @@ export default {
                 loader.hide();
 
                 swal.fire(
-                    'Error',
-                    'There are some errors while updating the account!',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_update'),
                     'error'
                 );
 
@@ -2765,8 +2940,8 @@ export default {
 
             if (this.messageForms.action === 'updated_account') {
                 swal.fire(
-                    'Updated',
-                    'Successfully Updated!',
+                    self.$t('message.registration_accounts.alert_updated'),
+                    self.$t('message.registration_accounts.alert_successfully_updated'),
                     'success'
                 );
 
@@ -2779,8 +2954,8 @@ export default {
                 loader.hide();
             } else {
                 swal.fire(
-                    'Error',
-                    'There are some errors while updating the account!',
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_update'),
                     'error'
                 );
 

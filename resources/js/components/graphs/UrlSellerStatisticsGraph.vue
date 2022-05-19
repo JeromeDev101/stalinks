@@ -2,8 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
-                <h3 class="card-title text-primary">URL Seller Statistics
-                </h3>
+                <h3 class="card-title text-primary">{{ $t('message.admin_dashboard.uss_title') }}</h3>
                 <div class="card-tools">
                 </div>
             </div>
@@ -11,26 +10,14 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Scope
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.sv_scope') }}</label>
+
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        v-model="filterModel.urlSellerStatistics.scope"
-                                >
-                                    <option
-                                        value="daily">
-                                        Daily</option>
-                                    <option
-                                        value="weekly">
-                                        Weekly</option>
-                                    <option
-                                        value="monthly">
-                                        Monthly</option>
-                                    <option
-                                        value="team">
-                                        Team</option>
+                                <select v-model="filterModel.urlSellerStatistics.scope" class="form-control">
+                                    <option value="daily">{{ $t('message.admin_dashboard.uss_daily') }}</option>
+                                    <option value="weekly">{{ $t('message.admin_dashboard.uss_weekly') }}</option>
+                                    <option value="monthly">{{ $t('message.admin_dashboard.uss_monthly') }}</option>
+                                    <option value="team">{{ $t('message.admin_dashboard.uss_team') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -59,7 +46,8 @@
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="">Date Range</label>
+                            <label>{{ $t('message.admin_dashboard.o_date_range') }}</label>
+
                             <div class="input-group mb-3" style="flex-wrap: unset !important;">
                                 <div class="input-group-prepend">
                                     <button
@@ -88,22 +76,14 @@
                     <div class="col-md-2"
                          v-if="this.filterModel.urlSellerStatistics.scope !== 'team'">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Team In-Charge
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_team_in_charge') }}</label>
+
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        id=""
-                                        v-model="filterModel.urlSellerStatistics.team_in_charge">
-                                    <option
-                                        value="0">All
+                                <select v-model="filterModel.urlSellerStatistics.team_in_charge" class="form-control">
+                                    <option value="0">{{ $t('message.admin_dashboard.all') }}</option>
+                                    <option :value="user.id" v-for="user in listSellerTeam.data" v-if="user.id !== 0">
+                                        {{ user.username }}
                                     </option>
-                                    <option
-                                        :value="user.id"
-                                        v-for="user
-                                            in
-                                            listSellerTeam.data" v-if="user.id !== 0">{{ user.username }}</option>
                                 </select>
                             </div>
                         </div>
@@ -111,22 +91,27 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Action</label>
+                            <label>{{ $t('message.admin_dashboard.action') }}</label>
+
                             <br>
-                            <button
-                                class="btn btn-default col-md-6"
-                                @click="filterUrlSellerStatistics">
-                                Filter</button>
-                            <button
-                                class="btn btn-default" @click="clearUrlSellerStatisticsFilter">Clear</button>
+                            <button class="btn btn-default col-md-6" @click="filterUrlSellerStatistics">
+                                {{ $t('message.admin_dashboard.filter') }}
+                            </button>
+                            <button class="btn btn-default" @click="clearUrlSellerStatisticsFilter">
+                                {{ $t('message.admin_dashboard.clear') }}
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="small">
-                    <apexchart type="line" height="350"
-                               :options="urlSellerStatisticsChartOptions"
-                               :series="urlSellerStatisticsData"></apexchart>
+                    <apexchart
+                        type="line"
+                        height="350"
+                        :options="urlSellerStatisticsChartOptions"
+                        :series="urlSellerStatisticsData">
+
+                    </apexchart>
                 </div>
             </div>
         </div>

@@ -2,8 +2,7 @@
     <div class="col-sm-12">
         <div class="card card-outline card-secondary">
             <div class="card-header">
-                <h3 class="card-title text-primary">URL Valid Price
-                </h3>
+                <h3 class="card-title text-primary">{{ $t('message.admin_dashboard.uvp_title') }}</h3>
                 <div class="card-tools">
                 </div>
             </div>
@@ -11,20 +10,12 @@
                 <div class="row">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Scope
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.sv_scope') }}</label>
+
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        v-model="filterModel.urlValidPrice.scope"
-                                >
-                                    <option
-                                        value="global">Global</option>
-                                    <option
-                                        value="team">
-                                        Team
-                                        In-Charge</option>
+                                <select v-model="filterModel.urlValidPrice.scope" class="form-control">
+                                    <option value="global">{{ $t('message.admin_dashboard.sv_global') }}</option>
+                                    <option value="team">{{ $t('message.admin_dashboard.o_team_in_charge') }}</option>
                                 </select>
                             </div>
                         </div>
@@ -32,10 +23,8 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Date
-                                                    Range
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_date_range') }}</label>
+
                             <div class="input-group">
                                 <date-range-picker
                                     ref="picker"
@@ -54,22 +43,13 @@
                     <div class="col-md-2"
                          v-if="filterModel.urlValidPrice.scope === 'global'">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Team In-Charge
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.o_team_in_charge') }}</label>
                             <div class="input-group">
-                                <select name=""
-                                        class="form-control"
-                                        id=""
-                                        v-model="filterModel.urlValidPrice.team_in_charge">
-                                    <option
-                                        value="0">All
+                                <select class="form-control" v-model="filterModel.urlValidPrice.team_in_charge">
+                                    <option value="0">{{ $t('message.admin_dashboard.all') }}</option>
+                                    <option :value="user.id" v-for="user in listSellerTeam.data" v-if="user.id !== 0">
+                                        {{ user.username }}
                                     </option>
-                                    <option
-                                        :value="user.id"
-                                        v-for="user
-                                            in
-                                            listSellerTeam.data" v-if="user.id !== 0">{{ user.username }}</option>
                                 </select>
                             </div>
                         </div>
@@ -77,13 +57,12 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label
-                                style="color: #333">Show Numbers
-                            </label>
+                            <label style="color: #333">{{ $t('message.admin_dashboard.sv_show_number') }}</label>
+
                             <v-select
                                 v-model="filterModel.show_numbers"
                                 multiple
-                                placeholder="All"
+                                :placeholder="$t('message.admin_dashboard.all')"
                                 :searchable="true"
                                 :options="seriesList"
                                 :reduce="series => series.index"/>
@@ -92,35 +71,40 @@
 
                     <div class="col-md-2">
                         <div class="form-group">
-                            <label for="">Action</label>
+                            <label>{{ $t('message.admin_dashboard.action') }}</label>
+
                             <br>
-                            <button
-                                class="btn btn-default col-md-6"
-                                @click="filterUrlValidPrice">
-                                Filter</button>
-                            <button
-                                class="btn btn-default" @click="clearUrlValidPriceFilter">Clear</button>
+                            <button class="btn btn-default col-md-6" @click="filterUrlValidPrice">
+                                {{ $t('message.admin_dashboard.filter') }}
+                            </button>
+                            <button class="btn btn-default" @click="clearUrlValidPriceFilter">
+                                {{ $t('message.admin_dashboard.clear') }}
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-1">
-                        <h6 class="mb-2">Total: {{ total }}</h6>
+                        <h6 class="mb-2">{{ $t('message.admin_dashboard.sv_total') }}: {{ total }}</h6>
                     </div>
                     <div class="col-sm-1">
-                        <h6 class="mb-2">Valid: {{ valid }}</h6>
+                        <h6 class="mb-2">{{ $t('message.admin_dashboard.sv_valid') }}: {{ valid }}</h6>
                     </div>
                     <div class="col-sm-2">
-                        <h6 class="mb-2">Good Price: {{ good_price }}</h6>
+                        <h6 class="mb-2">{{ $t('message.admin_dashboard.uvp_good_price') }}: {{ good_price }}</h6>
                     </div>
                 </div>
 
                 <div class="small">
-                    <apexchart type="bar" height="350"
-                               ref="chart"
-                               :options="urlValidOption"
-                               :series="urlValidPriceData"></apexchart>
+                    <apexchart
+                        type="bar"
+                        height="350"
+                        ref="chart"
+                        :options="urlValidOption"
+                        :series="urlValidPriceData">
+
+                    </apexchart>
                 </div>
             </div>
         </div>
@@ -155,22 +139,6 @@ export default {
                 },
                 show_numbers: []
             },
-            seriesList: [{
-                index : 0,
-                label : 'Upload'
-            },{
-                index : 1,
-                label : 'Valid'
-            },{
-                index : 2,
-                label : 'Quality Price'
-            },{
-                index : 3,
-                label : 'GP'
-            },{
-                index : 4,
-                label : 'UV'
-            }],
             urlValidPriceData : [],
             urlValidOption: {}
         };
@@ -187,6 +155,25 @@ export default {
 
         good_price() {
             return __.sum(_.pluck(this.rawData, 'quality_price'));
+        },
+
+        seriesList () {
+            return [{
+                index : 0,
+                label : this.$t('message.admin_dashboard.uvp_upload')
+            },{
+                index : 1,
+                label : this.$t('message.admin_dashboard.sv_valid')
+            },{
+                index : 2,
+                label : this.$t('message.admin_dashboard.uvp_quality_price')
+            },{
+                index : 3,
+                label : 'GP'
+            },{
+                index : 4,
+                label : 'UV'
+            }]
         }
     },
 
