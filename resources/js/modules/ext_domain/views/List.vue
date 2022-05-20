@@ -333,7 +333,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-2">
                                 <div class="input-group input-group-sm">
                                     <div class="btn-group">
                                         <button
@@ -410,8 +410,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="d-flex flex-column align-items-end">
+                            <div class="col-md-6 mt-2">
+                                <div class="d-flex flex-row-reverse">
                                     <Sort
                                         ref="sortComponent"
                                         :sorted="isSorted"
@@ -421,6 +421,22 @@
                                         @submitSort="sortSubmit"
                                         @updateOptions="updateSortOptions">
                                     </Sort>
+
+                                    <export-excel
+                                        ref="exportButton"
+                                        class="btn btn-primary mr-2"
+                                        :data=listExt.data
+                                        worksheet="My Worksheet"
+                                        name="url_prospect.xls">
+                                        <i class="fa fa-list"></i>
+                                        {{ $t('message.backlink_prospect.bp_export') }}
+
+                                    </export-excel>
+
+<!--                                    <button class="btn btn-primary mr-2" @click="exportFilteredData()">-->
+<!--                                        <i class="fa fa-list"></i>-->
+<!--                                        {{ $t('message.backlink_prospect.bp_export') }}-->
+<!--                                    </button>-->
                                 </div>
                             </div>
                         </div>
@@ -2242,6 +2258,8 @@ export default {
             },
 
             extListTotals: [],
+
+            extListExportFilteredData: [],
         };
     },
     async created() {
@@ -4099,7 +4117,35 @@ export default {
             ];
 
             this.downloadCsvTemplate(headers, 'url_prospect_csv_template');
-        }
+        },
+
+        // use this function for export when the users need all the data in db
+        // change the data prop of export-excel to extListExportFilteredData
+        // show the other export button to use this function
+        exportFilteredData () {
+            let self = this;
+            let loader = this.$loading.show();
+
+            // change the format of date
+            self.filterModel.alexa_date_upload = self.formatFilterDates(self.filterModel.alexa_date_upload)
+
+            axios.post('/api/ext/export-filtered', this.filterModel)
+            .then((res) => {
+                self.extListExportFilteredData = res.data
+
+                this.$nextTick(() => {
+                    if (self.extListExportFilteredData) {
+                        this.$refs.exportButton.$el.click();
+                    }
+                });
+
+                loader.hide();
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+            })
+        },
     },
 }
 </script>

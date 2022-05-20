@@ -870,4 +870,126 @@ class ExtDomainController extends Controller
 
         return response()->json(['success' => true],200);
     }
+
+    /**
+     * Export all filtered data from db
+     * USE THIS IF THE USER WANTS TO EXPORT ALL THE DATA FILTERED AT ONCE
+     *
+     */
+    public function exportFiltered (Request $request) {
+        $input = $request->all();
+
+        $items = ExtDomain::select('domain', 'email');
+
+        // Employee Filter
+        if (isset($input['employee_id']) && !empty($input['employee_id'])) {
+            if (is_array($input['employee_id'])) {
+                $items = $items->where(function ($q) use ($input) {
+                    foreach ($input['employee_id'] as $name) {
+                        if ($name == 'N/A') {
+                            $q->orWhere('user_id', null);
+                        } else {
+                            $user = User::where('username', 'like', '%' . $name . '%')->first();
+
+                            $q->orWhere('user_id', $user->id);
+                        }
+                    }
+                });
+            }
+        }
+
+        // Email Filter
+        if (isset($input['email'])) {
+            $items = $items->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
+        }
+
+        // Country Filter
+        if (isset($input['country_id']) && $input['country_id'] != '0') {
+            if (is_array($input['country_id'])) {
+                $countryIds = Country::whereIn('name', $input['country_id'])->get()->pluck('id');
+                $items = $items->whereIn('country_id', $countryIds);
+            } else {
+                $countryId = Country::where('name', $input['country_id'])->first()->id;
+                $items = $items->where('country_id', $countryId);
+            }
+        }
+
+        // Email Required filter
+        if (isset($input['required_email']) && $input['required_email'] > 0) {
+            $items = $items->where('ext_domains.email', '!=', '');
+        }
+
+        // Domain Filter
+        if (isset($input['domain'])) {
+            $items = $items->where('domain', 'like', '%' . $input['domain'] . '%');
+        }
+
+        // From Filter
+        if (isset($input['from'])) {
+//            $items = $items->where('from', $input['from']);
+
+            if (is_array($input['from'])) {
+                $items = $items->whereIn('from', $input['from']);
+            } else {
+                $items = $items->where('from', $input['from']);
+            }
+        }
+
+        // Status Filter
+        if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
+            if (is_array($input['status'])) {
+                $items = $items->whereIn('ext_domains.status', $input['status']);
+            } else {
+                $items = $items->where('ext_domains.status', $input['status']);
+            }
+        }
+
+        // Alexa Rank Filter
+        if (isset($input['alexa_rank_from']) && !empty($input['alexa_rank_from']) && isset($input['alexa_rank_to']) && !empty($input['alexa_rank_to']) ) {
+            $items = $items->whereBetween('alexa_rank',[$input['alexa_rank_from'], $input['alexa_rank_to']]);
+        }
+
+        // Domain Zone
+        if (isset($input['domain_zone']) && !empty($input['domain_zone'])) {
+            if (is_array($input['domain_zone'])) {
+
+                $regs = implode(",", $input['domain_zone']);
+                $regs = str_replace('.', '', $regs);
+                $regs = explode(",", $regs);
+
+                $items = $items->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','')"), $regs);
+
+            } else {
+
+                $regs = str_replace('.', '', $input['domain_zone']);
+
+                $items = $items->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','') = '$regs'");
+            }
+        }
+
+        // Date upload filter
+        if (!is_array($input['alexa_date_upload'])) {
+            $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
+        }
+
+        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
+            $items = $items->whereDate('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+            $items = $items->whereDate('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+        }
+
+        if (isset($input['adv_sort']) && !empty($input['adv_sort'])) {
+            foreach ($input['adv_sort'] as &$sort) {
+                $sort = \GuzzleHttp\json_decode($sort);
+                $items = $items->orderByRaw("$sort->column $sort->sort");
+            }
+        }
+
+        $output = [];
+
+        $items->chunk(10000, function($results) use (&$output) {
+            $output = array_merge($output, $results->map->only(['domain', 'email'])->toArray());
+        });
+
+        return $output;
+    }
 }
