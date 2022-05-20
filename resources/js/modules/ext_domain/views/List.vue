@@ -426,6 +426,7 @@
                                         ref="exportButton"
                                         class="btn btn-primary mr-2"
                                         :data=listExt.data
+                                        :fields="data_filed"
                                         worksheet="My Worksheet"
                                         name="url_prospect.xls">
                                         <i class="fa fa-list"></i>
@@ -2260,6 +2261,11 @@ export default {
             extListTotals: [],
 
             extListExportFilteredData: [],
+
+            data_filed: {
+                'URL': 'domain',
+                'Email': 'email',
+            }
         };
     },
     async created() {
