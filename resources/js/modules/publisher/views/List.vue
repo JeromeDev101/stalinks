@@ -1345,8 +1345,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">{{ $t('message.publisher.me_title') }} (Selected: {{checkIds.length}} items)</h4>
-                        <div class="modal-load overlay float-right">
-                        </div>
                     </div>
                     <div class="modal-body">
                         <div class="row">
