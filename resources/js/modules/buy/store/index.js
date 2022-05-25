@@ -33,6 +33,7 @@ const state = {
         code_price: true,
         price_basis: true,
         ratio: false,
+        is_https: false,
     },
 }
 

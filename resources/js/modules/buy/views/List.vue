@@ -995,6 +995,14 @@
                                     {{ user.role_id == 5 ? $t('message.list_backlinks.t_prices') : $t('message.list_backlinks.t_price') }}
                                 </label>
                             </div>
+                            <div class="checkbox col-md-6">
+                                <label><input
+                                    type="checkbox"
+                                    :checked="tblBuyOptions.is_https ? 'checked':''"
+                                    v-model="tblBuyOptions.is_https">
+                                    Https
+                                </label>
+                            </div>
                             <div class="checkbox col-md-6" v-if="user.isAdmin">
                                 <label><input
                                     type="checkbox"
@@ -1021,7 +1029,7 @@
                             </div>
                             <div
                                 class="checkbox col-md-6"
-                                v-show="user.role_id != 5 && user.isOurs != 1">
+                                v-show="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <label><input type="checkbox"
                                               :checked="tblBuyOptions.code_price ? 'checked':''"
                                               v-model="tblBuyOptions.code_price">
@@ -1364,7 +1372,7 @@ export default {
                     name: self.$t('message.list_backlinks.t_https'),
                     sort: '',
                     column: 'is_https',
-                    hidden: false
+                    hidden: !this.tblBuyOptions.is_https
                 },
                 {
                     name: self.$t('message.list_backlinks.filter_ur'),
@@ -1436,7 +1444,7 @@ export default {
                     name: self.$t('message.list_backlinks.t_code_price'),
                     sort: '',
                     column: 'code_price',
-                    hidden: !this.tblBuyOptions.code_price
+                    hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_price
                 },
                 {
                     name: self.$t('message.list_backlinks.filter_price_basis'),
@@ -1517,7 +1525,7 @@ export default {
                     name : this.$t('message.list_backlinks.t_https'),
                     // sortable : true,
                     width : 200,
-                    isHidden : false
+                    isHidden : !this.tblBuyOptions.is_https
                 },
                 {
                     prop : 'ur',
@@ -1606,7 +1614,7 @@ export default {
                     // sortable : true,
                     prefix : '$ ',
                     width : 120,
-                    isHidden : !this.tblBuyOptions.code_price
+                    isHidden : !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.code_price
                 },
                 {
                     prop : 'price_basis',
