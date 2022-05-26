@@ -421,7 +421,7 @@ class AccountController extends Controller
             'country_id' => 'required',
             'language_id' => 'required_if:type,==,Writer',
             // 'rate_type' => 'required_if:type,==,Writer',
-//            'id_payment_type' => 'required',
+            
             'company_name' => 'required_if:company_type,==,Company',
             // 'paypal_account' => 'required_if:id_payment_type,==,1',
             // 'btc_account' => 'required_if:id_payment_type,==,3',
@@ -431,7 +431,13 @@ class AccountController extends Controller
         $input['verification_code'] = null;
         $input['is_freelance'] = $request->company_type == 'Freelancer' ? 1:0;
 
-
+        // validation of sellers and writer ofr payment info
+        if($input['type'] === 'Writer' || $input['type'] === 'Seller') {
+            $request->validate([
+                'payment_type' => 'required',
+                'id_payment_type' => 'required',
+            ]);
+        }
 
         $registration = Registration::where('email', $request->email)->first();
 

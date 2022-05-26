@@ -205,13 +205,25 @@
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">
 
-                                <h4 class="text-primary my-3">{{ $t('message.verification.sub2') }} <span class="text-danger">*</span></h4>
-                                <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">
-                                    {{ $t('message.verification.e11') }}
-                                </span>
-                                <span v-if="validate_error_type" class="text-danger">
-                                    {{ $t('message.verification.e12') }}
-                                </span>
+                                <div class="col-md-12">
+                                    <h4 class="text-primary my-3">
+                                        {{ $t('message.verification.sub2') }} 
+                                        <span class="text-danger" v-show="regModel.type != 'Buyer'">*</span>
+                                    </h4>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <span v-show="errorMessage.hasOwnProperty('payment_type')" class="text-danger">
+                                        {{ $t('message.verification.e11') }}
+                                    </span>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">
+                                        {{ $t('message.verification.e12') }}
+                                    </span>
+                                </div>
+                                
 
                                 <!-- payment for seller and writer -->
                                 <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
