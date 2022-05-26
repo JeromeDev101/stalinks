@@ -79,6 +79,11 @@ class LogController extends Controller
         return response()->json($data);
     }
 
+    public function getAllUsers(Request $request) {
+        $data = User::where('status', 'active')->orderBy('username', 'asc')->get();
+        return response()->json($data);
+    }
+
     public function getMailList(Request $request)
     {
         $input     = $request->all();

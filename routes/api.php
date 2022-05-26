@@ -268,6 +268,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('update-user-permission')->put('/update-user-permission', 'UserController@editPermissions');
         Route::name('update-user-int-permission')->put('/update-user-int-permission', 'UserController@editIntPermissions');
         Route::name('get-logs')->get('/logs', 'LogController@getList');
+        Route::name('get-all-users')->get('/all-users', 'LogController@getAllUsers');
         Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
         Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
         Route::name('add-country')->post('/countries', 'CountryController@store');

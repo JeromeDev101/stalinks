@@ -219,6 +219,7 @@ export default {
             isPopupLoading : false,
             actionMeta : [],
             months : [],
+            listUser: [],
 
             tablePages: Constants.LOG_PAGES
         };
@@ -243,6 +244,7 @@ export default {
             }
         });
         this.getRolesList();
+        this.getAllUsers()
     },
 
     watch : {
@@ -263,8 +265,7 @@ export default {
             listAction : state => state.storeLog.listAction,
             messageForms : state => state.storeLog.messageForms,
             listLogs : state => state.storeLog.listLogs,
-            counter : state => state.storeLog.counter,
-            listUser : state => state.storeUser.listUser
+            counter : state => state.storeLog.counter
         }),
 
         listPages() {
@@ -303,6 +304,13 @@ export default {
             }
 
             this.getLogsList();
+        },
+
+        getAllUsers() {
+            axios.get('/api/admin/all-users')
+                .then((res) => {
+                    this.listUser = res;
+                })
         },
 
         tableData(itemTable) {
