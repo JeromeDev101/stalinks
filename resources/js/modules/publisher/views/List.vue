@@ -672,7 +672,7 @@
                                 slot="urlData">
                                 <!--                            {{ replaceCharacters(scope.row.url) }}-->
 
-                                <a :href="'//' + scope.row.url" target="_blank">
+                                <a :href="(scope.row.is_https == 'yes' ? 'https://':'http://') + scope.row.url" target="_blank">
                                     {{ scope.row.url }}
                                 </a>
                             </template>
