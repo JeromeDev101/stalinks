@@ -537,6 +537,15 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12" v-if="modelBaclink.status === 'Canceled'">
+                                <div class="form-group">
+                                    <div>
+                                        <label>Note (Issue/Cancelled)</label>
+                                        <textarea type="date" v-model="modelBaclink.reason_detailed" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6" v-if="withArticle">
                                 <div class="form-group">
                                     <div>
@@ -1208,6 +1217,7 @@
                 this.modelBaclink.user_id = that.user_id
                 this.modelBaclink.date_process = that.date_process
                 this.modelBaclink.url_advertiser = that.url_advertiser
+                this.modelBaclink.reason_detailed = that.reason_detailed
 
                 this.modelBaclink.seller = that.publisher == null ? 'N/A'
                     : (that.publisher.user == null
