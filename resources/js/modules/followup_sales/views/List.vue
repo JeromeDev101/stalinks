@@ -266,7 +266,7 @@
                                             </button>
 
                                             <button
-                                                v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1)"
+                                                v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1) || (user.role_id === 8 && user.isOurs === 1)"
                                                 :disabled="sales.status !== 'Pending'"
                                                 data-toggle="modal"
                                                 data-target="#modal-approve-pending"
