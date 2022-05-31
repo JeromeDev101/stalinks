@@ -367,6 +367,14 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" v-model="billing.payment_type[payment_method.id]">
+
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['payment_type.'+ payment_method.id]"
+                                                class="text-danger">
+
+                                                {{ err }}
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -387,6 +395,13 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" v-model="billing.payment_type[payment_method.id]">
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['payment_type.'+ payment_method.id]"
+                                                class="text-danger">
+
+                                                {{ err }}
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>

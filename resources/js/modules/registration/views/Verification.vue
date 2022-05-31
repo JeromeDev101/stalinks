@@ -207,23 +207,23 @@
 
                                 <div class="col-md-12">
                                     <h4 class="text-primary my-3">
-                                        {{ $t('message.verification.sub2') }} 
+                                        {{ $t('message.verification.sub2') }}
                                         <span class="text-danger" v-show="regModel.type != 'Buyer'">*</span>
                                     </h4>
                                 </div>
-                                
+
                                 <div class="col-md-12">
                                     <span v-show="errorMessage.hasOwnProperty('payment_type')" class="text-danger">
                                         {{ $t('message.verification.e11') }}
                                     </span>
                                 </div>
-                                
+
                                 <div class="col-md-12">
                                     <span v-show="errorMessage.hasOwnProperty('id_payment_type')" class="text-danger">
                                         {{ $t('message.verification.e12') }}
                                     </span>
                                 </div>
-                                
+
 
                                 <!-- payment for seller and writer -->
                                 <table class="table" v-if="regModel.type === 'Seller' || regModel.type === 'Writer'">
@@ -237,6 +237,14 @@
                                                 <label>{{ payment_method.type }} {{ $t('message.verification.account') }}</label>
                                                 <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
                                             </div>
+
+                                            <span
+                                                v-if="errorMessage.hasOwnProperty('payment_type.'+ payment_method.id)"
+                                                v-for="err in errorMessage['payment_type.'+ payment_method.id]"
+                                                class="text-danger">
+
+                                                {{ err }}
+                                            </span>
                                         </td>
                                         <td style="width: 50px;vertical-align:middle;" class="text-center">
                                             <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="regModel.id_payment_type">
@@ -257,6 +265,14 @@
                                                 <label>{{ payment_method.type }} {{ $t('message.verification.account') }}</label>
                                                 <input type="text" class="form-control" v-model="regModel.payment_type[payment_method.id]">
                                             </div>
+
+                                            <span
+                                                v-if="errorMessage.hasOwnProperty('payment_type.'+ payment_method.id)"
+                                                v-for="err in errorMessage['payment_type.'+ payment_method.id]"
+                                                class="text-danger">
+
+                                                {{ err }}
+                                            </span>
                                         </td>
                                         <td style="width: 50px;vertical-align:middle;" class="text-center">
                                             <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="regModel.id_payment_type">
@@ -431,6 +447,7 @@
             },
 
             submitRegister() {
+                let self = this;
                 let id_payment_type = this.regModel.id_payment_type;
 
                 if (this.regModel.payment_type[id_payment_type]) {
@@ -451,6 +468,12 @@
                         this.formSetPassword = false;
                     })
                     .catch(err => {
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_error'),
+                            self.$t('message.registration_accounts.alert_error_update'),
+                            'error'
+                        );
+
                         if(err.response.status == 422) {
                             this.errorMessage = err.response.data.errors;
                         }

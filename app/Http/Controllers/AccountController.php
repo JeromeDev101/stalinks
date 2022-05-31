@@ -118,6 +118,16 @@ class AccountController extends Controller
             // Insert users payments types
             $insert_input_users_payment_type = [];
             if(is_array($request->add_method_payment_type)) {
+
+                // validate payment info
+                if (isset($request->add_method_payment_type) && $request->add_method_payment_type && $user) {
+                    $request->validate([
+                        'add_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                    ], [
+                        'add_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+                    ]);
+                }
+
                 foreach($request->add_method_payment_type as $key => $types) {
                     if($types != '') {
                         array_push($insert_input_users_payment_type, [
@@ -337,6 +347,17 @@ class AccountController extends Controller
 
         }
 
+        $user = User::where('email', $request->email)->first();
+
+        // validate payment info
+        if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
+            $request->validate([
+                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+            ], [
+                'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+            ]);
+        }
+
         $data = $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
         return response()->json($response);
@@ -421,7 +442,7 @@ class AccountController extends Controller
             'country_id' => 'required',
             'language_id' => 'required_if:type,==,Writer',
             // 'rate_type' => 'required_if:type,==,Writer',
-            
+
             'company_name' => 'required_if:company_type,==,Company',
             // 'paypal_account' => 'required_if:id_payment_type,==,1',
             // 'btc_account' => 'required_if:id_payment_type,==,3',
@@ -449,57 +470,76 @@ class AccountController extends Controller
             $input['language_id'] = json_encode($input['language_id']);
         }
 
-        $registration->update($input);
+        // DB transaction
+        DB::beginTransaction();
 
-        $role_id = 6; //default seller
-        if( $registration->type == 'Seller' ){
-            $role_id = 6;
-        }
+            $registration->update($input);
 
-        if( $registration->type == 'Buyer' ){
-            $role_id = 5;
-        }
+            $role_id = 6; //default seller
+            if( $registration->type == 'Seller' ){
+                $role_id = 6;
+            }
 
-        if( $registration->type == 'Writer' ){
-            $role_id = 4;
-        }
+            if( $registration->type == 'Buyer' ){
+                $role_id = 5;
+            }
 
-        if( $registration->type == 'Affiliate' ){
-            $role_id = 11;
-        }
+            if( $registration->type == 'Writer' ){
+                $role_id = 4;
+            }
 
+            if( $registration->type == 'Affiliate' ){
+                $role_id = 11;
+            }
 
-        // duplicate the record in Users Table
-        $data['username'] = $registration->username;
-        $data['name'] = $registration->name;
-        $data['email'] = $registration->email;
-        $data['phone'] = $registration->phone;
-        $data['avatar'] = '/images/noavatar.jpg';
-        $data['role_id'] = $role_id;
-        $data['type'] = 0;
-        $data['isOurs'] = 1;
-        $data['password'] = $registration->password;
-        $data['id_payment_type'] = $registration->id_payment_type;
-        $user = User::create($data);
+            // duplicate the record in Users Table
+            $data['username'] = $registration->username;
+            $data['name'] = $registration->name;
+            $data['email'] = $registration->email;
+            $data['phone'] = $registration->phone;
+            $data['avatar'] = '/images/noavatar.jpg';
+            $data['role_id'] = $role_id;
+            $data['type'] = 0;
+            $data['isOurs'] = 1;
+            $data['password'] = $registration->password;
+            $data['id_payment_type'] = $registration->id_payment_type;
+            $user = User::create($data);
 
-        // Insert users payments types
-        $insert_input_users_payment_type = [];
-        if(is_array($request->payment_type)) {
-            foreach($request->payment_type as $key => $types) {
-                if($types != '') {
-                    array_push($insert_input_users_payment_type, [
-                        'user_id' => $user['id'],
-                        'payment_id' => $key,
-                        'account' => $types,
-                        'is_default' => $key == $request->id_payment_type ? 1:0,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]);
+            // validate payment info
+            if (isset($request->payment_type) && $request->payment_type && $user) {
+                $request->validate([
+                    'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                ], [
+                    'payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+                ]);
+            }
+
+            // Insert users payments types
+            $insert_input_users_payment_type = [];
+            if(is_array($request->payment_type)) {
+                foreach($request->payment_type as $key => $types) {
+                    if($types != '') {
+                        array_push($insert_input_users_payment_type, [
+                            'user_id' => $user['id'],
+                            'payment_id' => $key,
+                            'account' => $types,
+                            'is_default' => $key == $request->id_payment_type ? 1:0,
+                            'created_at' => Carbon::now(),
+                            'updated_at' => Carbon::now()
+                        ]);
+                    }
                 }
             }
-        }
 
-        UsersPaymentType::insert($insert_input_users_payment_type);
+            if (count($insert_input_users_payment_type)) {
+                UsersPaymentType::insert($insert_input_users_payment_type);
+            }
+
+        if($user && $registration) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
 
         return response()->json(['success' => true], 200);
     }

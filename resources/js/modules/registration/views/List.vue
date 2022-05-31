@@ -890,6 +890,14 @@
                                             <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
                                         </div>
+
+                                        <span
+                                            v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
+                                            v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
+                                            class="text-danger">
+
+                                            {{ err }}
+                                        </span>
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
@@ -910,6 +918,14 @@
                                             <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
                                         </div>
+
+                                        <span
+                                            v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
+                                            v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
+                                            class="text-danger">
+
+                                            {{ err }}
+                                        </span>
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
@@ -1454,6 +1470,14 @@
                                             <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                         </div>
+
+                                        <span
+                                            v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
+                                            v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
+                                            class="text-danger">
+
+                                            {{ err }}
+                                        </span>
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
@@ -1474,6 +1498,14 @@
                                             <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
                                             <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                         </div>
+
+                                        <span
+                                            v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
+                                            v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
+                                            class="text-danger">
+
+                                            {{ err }}
+                                        </span>
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
@@ -3023,10 +3055,12 @@ export default {
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
             this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
 
-            // console.log(that)
+            console.log(that)
 
             if(typeof account.user != "undefined" && account.user){
                 if(account.user.user_payment_types.length > 0) {
+                    this.accountUpdate.update_method_payment_type = [];
+
                     for(let index in account.user.user_payment_types) {
                         var payment_id = account.user.user_payment_types[index].payment_id;
 
