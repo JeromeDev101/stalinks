@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.role.filter_title') }}</h3>
                         <div class="card-tools" style="float: left!important;">
                             <button class="btn btn-primary ml-5"
                                     type="button"
@@ -22,7 +22,7 @@
                                     data-target="#collapseExample"
                                     aria-expanded="false"
                                     aria-controls="collapseExample">
-                                <i class="fa fa-plus"></i> Show Filter
+                                <i class="fa fa-plus"></i> {{ $t('message.role.filter_show') }}
                             </button>
                         </div>
                     </div>
@@ -30,22 +30,26 @@
                         <div class="row">
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>Search Role</label>
+                                    <label>{{ $t('message.role.filter_search_role') }}</label>
                                     <input type="text"
                                            class="form-control"
                                            name=""
                                            v-model="filterModel.name"
                                            aria-describedby="helpId"
-                                           placeholder="Type here">
+                                           :placeholder="$t('message.role.type')">
                                 </div>
                             </div>
-            
+
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch()">Clear</button>
-                                <button class="btn btn-default" @click="getRoleList()">Search <i v-if="false" class="fa fa-refresh fa-spin"></i>
+                                <button class="btn btn-default" @click="clearSearch()">
+                                    {{ $t('message.role.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="getRoleList()">
+                                    {{ $t('message.role.search') }}
+                                    <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
                             </div>
                         </div>
@@ -54,14 +58,16 @@
             </div>
         </div>
 
-        <div class="row">     
+        <div class="row">
 
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Roles</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.role.r_title') }}</h3>
                         <div class="card-tools">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#modal-add-role">Add Role</button>
+                            <button class="btn btn-success" data-toggle="modal" data-target="#modal-add-role">
+                                {{ $t('message.role.r_add_role') }}
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -77,11 +83,10 @@
                                 </option>
                             </select>
                         </div>
-                        
+
                         <span class="pagination-custom-footer-text">
-                            <b v-if="filterModel.paginate !== 'All'">Showing {{ roleList.from }} to {{
-                                    roleList.to
-                                                                     }} of {{ roleList.total }} entries.</b>
+                            <b v-if="filterModel.paginate !== 'All'">
+                                Showing {{ roleList.from }} to {{ roleList.to }} of {{ roleList.total }} entries.</b>
                             <b v-else>Showing {{ roleList.total }} entries.</b>
                         </span>
 
@@ -99,8 +104,13 @@
                                 <div class="btn-group">
                                     <button
                                         data-toggle="modal"
-                                        @click="doUpdate(scope.row)" data-target="#modal-update-role-list" title="Edit" class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
-                                    <button class="btn btn-default" title="Delete" @click="doDelete(scope.row.id)">
+                                        @click="doUpdate(scope.row)"
+                                        data-target="#modal-update-role-list"
+                                        :title="$t('message.role.ar_edit_role')"
+                                        class="btn btn-default">
+                                        <i class="fa fa-fw fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-default" :title="$t('message.system_logs.delete')" @click="doDelete(scope.row.id)">
                                         <i class="fa fa-fw fa-trash"></i>
                                     </button>
                                 </div>
@@ -117,13 +127,13 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Modal -->
         <div class="modal fade" id="modal-add-role" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Role</h5>
+                        <h5 class="modal-title">{{ $t('message.role.r_add_role') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -132,33 +142,37 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Name</label>
+                                    <label>{{ $t('message.role.ar_name') }}</label>
                                     <input type="text" class="form-control" v-model="addModel.name">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Description</label>
+                                    <label>{{ $t('message.role.r_desc') }}</label>
                                     <textarea class="form-control" cols="30" rows="5" v-model="addModel.description"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitAdd">Save</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            {{ $t('message.role.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitAdd">
+                            {{ $t('message.role.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        
+
         <!-- Modal Edit Role -->
         <div class="modal fade" id="modal-update-role-list" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Role</h5>
+                        <h5 class="modal-title">{{ $t('message.role.ar_edit_role') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -167,21 +181,25 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Name</label>
+                                    <label>{{ $t('message.role.ar_name') }}</label>
                                     <input type="text" class="form-control" v-model="updateModel.name">
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="">Description</label>
+                                    <label>{{ $t('message.role.r_desc') }}</label>
                                     <textarea class="form-control" cols="30" rows="5" v-model="updateModel.description"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" @click="submitUpdate">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            {{ $t('message.role.close') }}
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="submitUpdate">
+                            {{ $t('message.role.update') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -237,6 +255,7 @@ export default {
         }),
 
         tableConfig() {
+            let self = this;
             return [
                 {
                     prop : '_index',
@@ -246,20 +265,20 @@ export default {
                 },
                 {
                     prop : 'name',
-                    name : 'Role Name',
+                    name : self.$t('message.role.r_role_name'),
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : 'description',
-                    name : 'Description',
+                    name : self.$t('message.role.r_desc'),
                     sortable : true,
                     isHidden : false
                 },
-                
+
                 {
                     prop : '_action',
-                    name : 'Action',
+                    name : self.$t('message.teams.t_action'),
                     actionName : 'actionButtons',
                     width : '150',
                     isHidden: false
@@ -271,12 +290,13 @@ export default {
     methods : {
 
         submitUpdate() {
+            let self = this;
             axios.post('/api/roles-update', this.updateModel)
                 .then((res) => {
                     if (res.data.success === true) {
                         swal.fire(
-                            'Uploaded!',
-                            'Successfully Updated.',
+                            self.$t('message.role.alert_updated'),
+                            self.$t('message.role.alert_updated_successfully'),
                             'success'
                         )
 
@@ -289,10 +309,11 @@ export default {
         },
 
         submitAdd() {
+            let self = this;
             if(this.addModel.name == '' || this.addModel.description == '') {
                 swal.fire(
-                    'Invalid!',
-                    'Please complete all the fields.',
+                    self.$t('message.role.alert_invalid'),
+                    self.$t('message.role.alert_complete_fields'),
                     'error'
                 )
 
@@ -303,8 +324,8 @@ export default {
             .then((res) => {
                 if (res.data.success === true) {
                     swal.fire(
-                        'Uploaded!',
-                        'Successfully Saved.',
+                        self.$t('message.role.alert_saved'),
+                        self.$t('message.role.alert_saved_successfully'),
                         'success'
                     )
 
@@ -356,12 +377,13 @@ export default {
         },
 
         doDelete(id) {
+            let self = this;
             axios.post('/api/roles-delete', {id})
                 .then((res) => {
                     if (res.data.success === true) {
                         swal.fire(
-                            'Uploaded!',
-                            'Successfully Deleted.',
+                            self.$t('message.role.alert_deleted'),
+                            self.$t('message.role.alert_deleted_successfully'),
                             'success'
                         )
 

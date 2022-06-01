@@ -1,0 +1,34 @@
+export default {
+    // filter
+    filter_title: 'Filter',
+    filter_show: 'Tampilkan Filter',
+    filter_search_role: 'Cari Peranan',
+
+    // roles
+    r_title: 'Peranan',
+    r_add_role: 'Tambahkan Peran',
+    r_role_name: 'Nama peran',
+    r_desc: 'Keterangan',
+
+    // add role
+    ar_name: 'Nama',
+    ar_edit_role: 'Sunting Peran',
+
+    // alerts
+    alert_updated: 'Diperbarui!',
+    alert_updated_successfully: 'Successfully Updated!',
+    alert_invalid: 'Tidak sah!',
+    alert_complete_fields: 'Harap lengkapi semua bagian.',
+    alert_saved: 'Disimpan!',
+    alert_saved_successfully: 'Berhasil Disimpan.',
+    alert_deleted: 'Dihapus!',
+    alert_deleted_successfully: 'Berhasil Dihapus.',
+
+    // others
+    type: 'Ketik di sini',
+    clear: 'Bersihkan',
+    search: 'Telusuri',
+    close: 'Menutup',
+    save: 'Menyimpan',
+    update: 'Memperbarui',
+}

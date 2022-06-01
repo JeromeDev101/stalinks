@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.tools.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -22,48 +22,48 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Tool</label>
+                                    <label>{{ $t('message.tools.filter_tool') }}</label>
 
                                     <input
                                         v-model="filterModel.name"
                                         type="text"
-                                        placeholder="Search Tool Name"
+                                        :placeholder="$t('message.tools.filter_search_tool')"
                                         class="form-control pull-right">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>URL</label>
+                                    <label>{{ $t('message.tools.filter_url') }}</label>
 
                                     <input
                                         v-model="filterModel.url"
                                         type="text"
-                                        placeholder="Search URL"
+                                        :placeholder="$t('message.tools.filter_search_url')"
                                         class="form-control pull-right">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Username</label>
+                                    <label>{{ $t('message.tools.filter_username') }}</label>
 
                                     <input
                                         v-model="filterModel.username"
                                         type="text"
-                                        placeholder="Search Username"
+                                        :placeholder="$t('message.tools.filter_search_username')"
                                         class="form-control pull-right">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Details</label>
+                                    <label>{{ $t('message.tools.filter_details') }}</label>
 
                                     <input
                                         v-model="filterModel.details"
                                         type="text"
-                                        placeholder="Search Details"
+                                        :placeholder="$t('message.tools.filter_search_details')"
                                         class="form-control pull-right">
                                 </div>
                             </div>
@@ -71,9 +71,12 @@
 
                         <div class="row my-3">
                             <div class="col-md-4">
-                                <button class="btn btn-default" @click="clearFilter">Clear</button>
+                                <button class="btn btn-default" @click="clearFilter">
+                                    {{ $t('message.tools.clear') }}
+                                </button>
 
-                                <button class="btn btn-default" @click="filterToolList">Search
+                                <button class="btn btn-default" @click="filterToolList">
+                                    {{ $t('message.tools.search') }}
                                     <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i>
                                 </button>
                             </div>
@@ -87,7 +90,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Tools</h3>
+                        <h3 class="card-title">{{ $t('message.tools.t_title') }}</h3>
                         <div class="card-tools">
                             <button
                                 class="btn btn-success btn-tool"
@@ -121,12 +124,12 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#ID</th>
-                                <th>Tool</th>
-                                <th>URL</th>
-                                <th>Username</th>
-                                <th>Password</th>
-                                <th>Details</th>
-                                <th>Action</th>
+                                <th>{{ $t('message.tools.filter_tool') }}</th>
+                                <th>{{ $t('message.tools.filter_url') }}</th>
+                                <th>{{ $t('message.tools.filter_username') }}</th>
+                                <th>{{ $t('message.tools.t_password') }}</th>
+                                <th>{{ $t('message.tools.filter_details') }}</th>
+                                <th>{{ $t('message.tools.t_action') }}</th>
                             </tr>
                             </thead>
 
@@ -146,7 +149,9 @@
                                         <i :ref="'eyes' + index" class="fa fa-eye" @click="togglePassword(index)"></i>
                                     </span>
 
-                                    <span :ref="'badge' + index" class="badge badge-secondary">hidden</span>
+                                    <span :ref="'badge' + index" class="badge badge-secondary">
+                                        {{ $t('message.tools.t_hidden') }}
+                                    </span>
 
                                     <span :ref="'pass' + index" style="display: none">{{ tool.password }}</span>
                                 </td>
@@ -157,7 +162,7 @@
                                     <div class="text-center">
                                         <button
                                             type="button"
-                                            title="Edit Tool"
+                                            :title="$t('message.tools.t_edit_tool')"
                                             class="btn btn-default"
 
                                             @click="updateTool(tool); modalOpener('update')">
@@ -167,7 +172,7 @@
 
                                         <button
                                             type="button"
-                                            title="Delete Tool"
+                                            :title="$t('message.tools.t_delete_tool')"
                                             class="btn btn-default"
 
                                             @click="deleteTool(tool.id)">
@@ -190,7 +195,7 @@
                 <div class="modal-content">
 
                     <div class="modal-header">
-                        <h4 class="modal-title">{{ modalMode === 'add' ? 'Add' : 'Update' }} Tool</h4>
+                        <h4 class="modal-title">{{ modalMode === 'add' ? $t('message.tools.au_add') : $t('message.tools.update') }} Tool</h4>
                     </div>
 
                     <div class="modal-body relative">
@@ -198,12 +203,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.name}">
-                                    <label>Tool</label>
+                                    <label>{{ $t('message.tools.filter_tool') }}</label>
                                     <input
                                         v-model="modelName"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Tool Name">
+                                        :placeholder="$t('message.tools.au_enter_tool_name')">
 
                                     <span
                                         v-if="messageFormsTools.errors.name"
@@ -217,12 +222,12 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.url}">
-                                    <label>URL</label>
+                                    <label>{{ $t('message.tools.filter_url') }}</label>
                                     <input
                                         v-model="modelUrl"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Url">
+                                        :placeholder="$t('message.tools.au_enter_url')">
 
                                     <span
                                         v-if="messageFormsTools.errors.url"
@@ -238,12 +243,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.username}">
-                                    <label>Username</label>
+                                    <label>{{ $t('message.tools.filter_username') }}</label>
                                     <input
                                         v-model="modelUsername"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Username">
+                                        :placeholder="$t('message.tools.au_enter_username')">
 
                                     <span
                                         v-if="messageFormsTools.errors.username"
@@ -256,7 +261,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label>Password</label>
+                                <label>{{ $t('message.tools.t_password') }}</label>
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <button
@@ -299,7 +304,7 @@
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.details}">
-                                    <label>Details</label>
+                                    <label>{{ $t('message.tools.filter_details') }}</label>
                                     <textarea
                                         v-model="modelDetails"
                                         rows="5"
@@ -321,7 +326,9 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.tools.close') }}
+                        </button>
 
                         <button
                             v-if="modalMode === 'add'"
@@ -330,7 +337,7 @@
 
                             @click="submitAddTool">
 
-                            Save
+                            {{ $t('message.tools.save') }}
                         </button>
 
                         <button
@@ -340,7 +347,7 @@
 
                             @click="submitUpdateTool">
 
-                            Update
+                            {{ $t('message.tools.update') }}
                         </button>
                     </div>
 
@@ -843,16 +850,16 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Success!',
-                    'Tool has been added.',
+                    self.$t('message.tools.alert_success'),
+                    self.$t('message.tools.alert_tool_added'),
                     'success'
                 )
             } else {
                 loader.hide();
 
                 await swal.fire(
-                    'Error!',
-                    'There were some errors while adding the tool.',
+                    self.$t('message.tools.alert_error'),
+                    self.$t('message.tools.alert_add_error'),
                     'error'
                 )
             }
@@ -875,29 +882,30 @@ export default {
                 loader.hide();
 
                 await swal.fire(
-                    'Success!',
-                    'Tool has been updated.',
+                    self.$t('message.tools.alert_success'),
+                    self.$t('message.tools.alert_tool_updated'),
                     'success'
                 )
             } else {
                 loader.hide();
 
                 await swal.fire(
-                    'Error!',
-                    'There were some errors while updating the tool.',
+                    self.$t('message.tools.alert_error'),
+                    self.$t('message.tools.alert_update_error'),
                     'error'
                 )
             }
         },
 
         deleteTool(id) {
+            let self = this;
             swal.fire({
-                title : "Delete Tool",
-                text : "Do you want to delete this tool?",
+                title : self.$t('message.tools.alert_delete_tool'),
+                text : self.$t('message.tools.alert_delete_confirm'),
                 icon : "warning",
                 showCancelButton : true,
-                confirmButtonText : 'Yes, delete it!',
-                cancelButtonText : 'No, keep it'
+                confirmButtonText : self.$t('message.tools.yes_delete'),
+                cancelButtonText : self.$t('message.tools.no_delete')
             })
                 .then((result) => {
                     if (result.isConfirmed) {
@@ -907,8 +915,8 @@ export default {
                                 this.getToolList();
 
                                 swal.fire(
-                                    'Deleted!',
-                                    'Tool deleted.',
+                                    self.$t('message.tools.alert_deleted'),
+                                    self.$t('message.tools.alert_deleted_tool'),
                                     'success'
                                 )
                             })

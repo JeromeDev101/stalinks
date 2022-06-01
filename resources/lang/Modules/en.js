@@ -9,6 +9,14 @@ import writer_survey from './Survey/en/writer';
 // subscription
 import subscription from './Subscription/en/main';
 
+// management pages
+import role from './Role/en/main';
+import module_page from './Module/en/main';
+import tools from './Tools/en/main';
+import mail_logs from './MailLogs/en/main';
+import system_logs from './Logs/en/main';
+import teams from './Teams/en/main';
+
 // admin dashboard
 import admin_dashboard from './AdminDashboard/en/main';
 
@@ -126,6 +134,14 @@ export default {
 
         // subscription
         subscription,
+
+        // management pages
+        role,
+        module_page,
+        tools,
+        mail_logs ,
+        system_logs,
+        teams,
 
         // admin dashboard
         admin_dashboard,

@@ -13,8 +13,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    <strong>Reminder: </strong> Some statuses like OPENED, DELIVERED, REJECTED and REPORTED are only updated since July 2021.
-                                                Mailgun only retains our email status for only 5 days.
+                    {{ $t('message.mail_logs.reminder') }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -30,9 +29,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Total mails">
+                                :title="$t('message.mail_logs.tn_total')">
                             </i>
-                            Total Mail
+                            {{ $t('message.mail_logs.t_total') }}
                         </p>
                     </div>
                     <div class="icon">
@@ -53,9 +52,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Total emails sent from our system">
+                                :title="$t('message.mail_logs.tn_total_mail_sent')">
                             </i>
-                            Total Mail Sent
+                            {{ $t('message.mail_logs.t_total_mail_sent') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.sent) }}%)
@@ -77,9 +76,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Total emails sent from our system today">
+                                :title="$t('message.mail_logs.tn_total_mail_today')">
                             </i>
-                            Total Mail Today
+                            {{ $t('message.mail_logs.t_total_mail_today') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.sent_today) }}%)
@@ -101,9 +100,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Mailgun rejected the request to send/forward the email">
+                                :title="$t('message.mail_logs.tn_total_mail_rejected')">
                             </i>
-                            Total Mail Rejected
+                            {{ $t('message.mail_logs.t_total_mail_rejected') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.rejected) }}%)
@@ -125,9 +124,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Mailgun could not deliver the email to the recipient email server">
+                                :title="$t('message.mail_logs.tn_total_mail_failed')">
                             </i>
-                            Total Mail Failed
+                            {{ $t('message.mail_logs.t_total_mail_failed') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.failed) }}%)
@@ -149,9 +148,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="The email recipient clicked on the spam complaint button within their email client">
+                                :title="$t('message.mail_logs.tn_total_mail_reported')">
                             </i>
-                            Total Mail Reported
+                            {{ $t('message.mail_logs.t_total_mail_reported') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.reported) }}%)
@@ -173,9 +172,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Mailgun sent the email and it was accepted by the recipient email server.">
+                                :title="$t('message.mail_logs.tn_total_mail_delivered')">
                             </i>
-                            Total Mail Delivered
+                            {{ $t('message.mail_logs.t_total_mail_delivered') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.delivered) }}%)
@@ -197,9 +196,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="The email recipient opened the email">
+                                :title="$t('message.mail_logs.tn_total_mail_opened')">
                             </i>
-                            Total Mail Opened
+                            {{ $t('message.mail_logs.t_total_mail_opened') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.opened) }}%)
@@ -221,9 +220,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Emails sent from inbox, sent, starred and trash tabs in mail">
+                                :title="$t('message.mail_logs.tn_total_inbox')">
                             </i>
-                            From Inbox
+                            {{ $t('message.mail_logs.t_total_inbox') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.inbox) }}%)
@@ -245,9 +244,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Emails sent from drafts">
+                                :title="$t('message.mail_logs.tn_total_drafts')">
                             </i>
-                            From Drafts
+                            {{ $t('message.mail_logs.t_total_drafts') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.drafts) }}%)
@@ -269,9 +268,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Emails sent from URL prospect">
+                                :title="$t('message.mail_logs.tn_total_prospect')">
                             </i>
-                            From URL Prospect
+                            {{ $t('message.mail_logs.t_total_prospect') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.prospect) }}%)
@@ -293,9 +292,9 @@
                                 class="fa fa-question-circle"
                                 data-toggle="tooltip"
                                 data-placement="top"
-                                title="Emails sent from registration accounts">
+                                :title="$t('message.mail_logs.tn_total_registration')">
                             </i>
-                            From Registration
+                            {{ $t('message.mail_logs.t_total_registration') }}
 
                             <span>
                                 ({{ calculatePercentage(listLogsTotals.registration) }}%)
@@ -313,7 +312,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.mail_logs.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -321,9 +320,9 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Sender</label>
+                                    <label>{{ $t('message.mail_logs.filter_sender') }}</label>
                                     <select class="form-control" v-model="filterModel.user_email">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.mail_logs.all') }}</option>
                                         <option v-for="option in listUserEmail" v-bind:value="option.work_mail">
                                             {{ option.work_mail }}
                                         </option>
@@ -333,36 +332,36 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Recipient (to)</label>
+                                    <label>{{ $t('message.mail_logs.filter_recipient') }}</label>
                                     <input type="text" class="form-control" v-model="filterModel.recipient">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Subject</label>
+                                    <label>{{ $t('message.mail_logs.filter_subject') }}</label>
                                     <input type="text" class="form-control" v-model="filterModel.subject">
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Status</label>
+                                    <label>{{ $t('message.mail_logs.filter_status') }}</label>
                                     <select class="form-control" v-model="filterModel.status">
-                                        <option value="">All</option>
-                                        <option value="0">Sent</option>
-                                        <option value="500">Rejected</option>
-                                        <option value="552">Failed</option>
-                                        <option value="250">Delivered</option>
-                                        <option value="260">Opened</option>
-                                        <option value="570">Reported</option>
+                                        <option value="">{{ $t('message.mail_logs.all') }}</option>
+                                        <option value="0">{{ $t('message.mail_logs.filter_sent') }}</option>
+                                        <option value="500">{{ $t('message.mail_logs.filter_rejected') }}</option>
+                                        <option value="552">{{ $t('message.mail_logs.filter_failed') }}</option>
+                                        <option value="250">{{ $t('message.mail_logs.filter_delivered') }}</option>
+                                        <option value="260">{{ $t('message.mail_logs.filter_opened') }}</option>
+                                        <option value="570">{{ $t('message.mail_logs.filter_reported') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Date</label>
+                                    <label>{{ $t('message.mail_logs.filter_date') }}</label>
                                     <!--                                    <input type="date" class="form-control" v-model="filterModel.date">-->
 
                                     <date-range-picker
@@ -379,22 +378,27 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>From</label>
+                                    <label>{{ $t('message.mail_logs.filter_from') }}</label>
                                     <select class="form-control" v-model="filterModel.from_page">
-                                        <option value="">All</option>
-                                        <option value="none">N/A (past data)</option>
-                                        <option value="inbox">Inbox</option>
-                                        <option value="drafts">Drafts</option>
-                                        <option value="prospect">URL Prospect</option>
-                                        <option value="registration">Registration Account</option>
+                                        <option value="">{{ $t('message.mail_logs.all') }}</option>
+                                        <option value="none">{{ $t('message.mail_logs.filter_na') }}</option>
+                                        <option value="inbox">{{ $t('message.mail_logs.filter_inbox') }}</option>
+                                        <option value="drafts">{{ $t('message.mail_logs.filter_drafts') }}</option>
+                                        <option value="prospect">{{ $t('message.mail_logs.filter_url_prospect') }}</option>
+                                        <option value="registration">{{ $t('message.mail_logs.filter_registration_accounts') }}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <button class="btn btn-default" @click="clearSearch">Clear</button>
-                                <button class="btn btn-default" @click="doSearch">Search <i v-show="false" class="fa fa-refresh fa-spin" ></i></button>
+                                <button class="btn btn-default" @click="clearSearch">
+                                    {{ $t('message.mail_logs.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="doSearch">
+                                    {{ $t('message.mail_logs.search') }}
+                                    <i v-show="false" class="fa fa-refresh fa-spin" ></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -406,7 +410,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Mail Logs</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.mail_logs.ml_title') }}</h3>
                         <div class="card-tools">
 <!--                            <button class="btn btn-primary" @click="getStatus">-->
 <!--                                <i class="fas fa-sync"></i>-->
@@ -424,14 +428,14 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Action</th>
-                                    <th>Sender</th>
-                                    <th>Subject</th>
-                                    <th>To</th>
-                                    <th>Bcc</th>
-                                    <th>Status</th>
-                                    <th>From</th>
-                                    <th>Date</th>
+                                    <th>{{ $t('message.mail_logs.ml_action') }}</th>
+                                    <th>{{ $t('message.mail_logs.filter_sender') }}</th>
+                                    <th>{{ $t('message.mail_logs.filter_subject') }}</th>
+                                    <th>{{ $t('message.mail_logs.ml_to') }}</th>
+                                    <th>{{ $t('message.mail_logs.ml_bcc') }}</th>
+                                    <th>{{ $t('message.mail_logs.filter_status') }}</th>
+                                    <th>{{ $t('message.mail_logs.filter_from') }}</th>
+                                    <th>{{ $t('message.mail_logs.filter_date') }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -481,7 +485,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">
-                            Email Content
+                            {{ $t('message.mail_logs.ec_title') }}
                         </h4>
                     </div>
 
@@ -568,7 +572,7 @@
                             data-dismiss="modal"
 
                             @click="modalCloser()">
-                            Close
+                            {{ $t('message.mail_logs.close') }}
                         </button>
                     </div>
                 </div>
@@ -862,6 +866,7 @@ export default {
             },
 
             getStatus() {
+                let self = this;
                 let loader = this.$loading.show();
                 axios.get('/api/mail/status')
                     .then((res) => {
@@ -871,8 +876,8 @@ export default {
                         loader.hide();
 
                         swal.fire(
-                            'Updated!',
-                            'Mail logs status successfully updated.',
+                            self.$t('message.mail_logs.alert_updated'),
+                            self.$t('message.mail_logs.alert_updated_successfully'),
                             'success'
                         )
                     })

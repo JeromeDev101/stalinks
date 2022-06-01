@@ -14,7 +14,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Filter</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.teams.filter_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -23,29 +23,29 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Search Username</label>
+                                    <label for="">{{ $t('message.teams.filter_search_username') }}</label>
                                     <input type="text"
                                            v-model="filterModel.name_temp"
                                            class="form-control pull-right"
-                                           placeholder="Search Username">
+                                           :placeholder="$t('message.teams.filter_search_username')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Email</label>
+                                    <label for="">{{ $t('message.teams.filter_email') }}</label>
                                     <input type="text"
                                            v-model="filterModel.email_temp"
                                            class="form-control pull-right"
-                                           placeholder="Search Email">
+                                           :placeholder="$t('message.teams.filter_search_email')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Role</label>
+                                    <label for="">{{ $t('message.teams.filter_role') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.role">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.teams.all') }}</option>
                                         <option v-for="option in roleList" v-bind:value="option.id">
                                             {{ option.name }}
                                         </option>
@@ -55,20 +55,20 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Status</label>
+                                    <label for="">{{ $t('message.teams.filter_status') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.status">
-                                        <option value="">All</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="">{{ $t('message.teams.all') }}</option>
+                                        <option value="active">{{ $t('message.teams.active') }}</option>
+                                        <option value="inactive">{{ $t('message.teams.inactive') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label for="">Type</label>
+                                    <label for="">{{ $t('message.teams.filter_type') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.type">
-                                        <option value="">All</option>
+                                        <option value="">{{ $t('message.teams.all') }}</option>
                                         <option v-for="(option, key) in userTypeList" v-bind:value="key">
                                             {{ option }}
                                         </option>
@@ -80,8 +80,11 @@
 
                         <div class="row my-3">
                             <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch">Clear</button>
-                                <button class="btn btn-default" @click="doSearchList">Search
+                                <button class="btn btn-default" @click="clearSearch">
+                                    {{ $t('message.teams.clear') }}
+                                </button>
+                                <button class="btn btn-default" @click="doSearchList">
+                                    {{ $t('message.teams.search') }}
                                     <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i></button>
                             </div>
                         </div>
@@ -94,7 +97,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Team</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.teams.t_title') }}</h3>
                         <div class="card-tools">
                             <button @click="doAddUser"
                                     data-toggle="modal"
@@ -117,14 +120,14 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Work mail</th>
-                                    <th>Skype</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Type</th>
-                                    <th>Action</th>
+                                    <th>{{ $t('message.teams.t_username') }}</th>
+                                    <th>{{ $t('message.teams.t_email') }}</th>
+                                    <th>{{ $t('message.teams.t_work_mail') }}</th>
+                                    <th>{{ $t('message.teams.t_skype') }}</th>
+                                    <th>{{ $t('message.teams.filter_role') }}</th>
+                                    <th>{{ $t('message.teams.filter_status') }}</th>
+                                    <th>{{ $t('message.teams.filter_type') }}</th>
+                                    <th>{{ $t('message.teams.t_action') }}</th>
                                 </tr>
 
                                 <!-- <tr>
@@ -180,22 +183,33 @@
                                     <td>{{ userTypeList[user.type] }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <button class="btn btn-default"
-                                                    @click="doUpdateUser(user)"
-                                                    data-toggle="modal"
-                                                    data-target="#modal-update"
-                                                    title="Edit User Information"><i class="fa fa-fw fa-edit"></i></button>
+                                            <button
+                                                data-toggle="modal"
+                                                data-target="#modal-update"
+                                                class="btn btn-default"
+                                                :title="$t('message.teams.t_edit_user')"
+
+                                                @click="doUpdateUser(user)">
+
+                                                <i class="fa fa-fw fa-edit"></i>
+                                            </button>
                                             <!-- <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button> -->
-                                            <button class="btn btn-default"
-                                                    @click="doUpdatePermissionExt(user)"
-                                                    data-toggle="modal"
-                                                    data-target="#modal-permission-ext"
-                                                    title="Edit Country ExtDomain"><i class="fas fa-eye-dropper"></i>
+                                            <button
+                                                data-toggle="modal"
+                                                data-target="#modal-permission-ext"
+                                                class="btn btn-default"
+                                                :title="$t('message.teams.t_edit_country')"
+
+                                                @click="doUpdatePermissionExt(user)">
+
+                                                <i class="fas fa-eye-dropper"></i>
                                             </button>
                                             <!-- <button class="btn btn-default" @click="doUpdateInternalPermission(user)" data-toggle="modal" data-target="#modal-int-permission" title="Edit Permission IntDomain"><i class="fa fa-fw fa-anchor"></i></button> -->
-                                            <router-link class="btn btn-default"
-                                                         title="View detail"
-                                                         :to="{ path: `/profile/${user.id}` }"><i class="fa fa-fw fa-eye"></i>
+                                            <router-link
+                                                class="btn btn-default"
+                                                title="View detail"
+                                                :to="{ path: `/profile/${user.id}` }">
+                                                <i class="fa fa-fw fa-eye"></i>
                                             </router-link>
                                         </div>
                                     </td>
@@ -223,7 +237,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Add Employee</h4>
+                        <h4 class="modal-title">{{ $t('message.teams.ae_title') }}</h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="" autocomplete="off">
@@ -231,13 +245,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.username}"
                                      class="form-group">
-                                    <label style="color: #333">Username</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_username') }}</label>
                                     <input type="text"
                                            v-model="userModel.username"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Username">
+                                           :placeholder="$t('message.teams.ae_enter_username')">
                                     <span v-if="messageForms.errors.username"
                                           v-for="err in messageForms.errors.username"
                                           class="text-danger">{{ err }}</span>
@@ -247,13 +261,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}"
                                      class="form-group">
-                                    <label style="color: #333">Name</label>
+                                    <label style="color: #333">{{ $t('message.teams.ae_name') }}</label>
                                     <input type="text"
                                            v-model="userModel.name"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Name">
+                                           :placeholder="$t('message.teams.ae_enter_name')">
                                     <span v-if="messageForms.errors.name"
                                           v-for="err in messageForms.errors.name"
                                           class="text-danger">{{ err }}</span>
@@ -263,13 +277,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}"
                                      class="form-group">
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_email') }}</label>
                                     <input type="text"
                                            v-model="userModel.email"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Email">
+                                           :placeholder="$t('message.teams.ae_enter_email')">
                                     <span v-if="messageForms.errors.email"
                                           v-for="err in messageForms.errors.email"
                                           class="text-danger">{{ err }}</span>
@@ -287,13 +301,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}"
                                      class="form-group">
-                                    <label style="color: #333">Skype</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_skype') }}</label>
                                     <input type="text"
                                            v-model="userModel.skype"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Skype">
+                                           :placeholder="$t('message.teams.ae_enter_skype')">
                                     <span v-if="messageForms.errors.skype"
                                           v-for="err in messageForms.errors.skype"
                                           class="text-danger">{{ err }}</span>
@@ -303,14 +317,14 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.password}"
                                      class="form-group">
-                                    <label style="color: #333">Password</label>
+                                    <label style="color: #333">{{ $t('message.teams.ae_password') }}</label>
                                     <input autocomplete="off"
                                            type="password"
                                            v-model="userModel.password"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Password">
+                                           :placeholder="$t('message.teams.ae_enter_password')">
                                     <span v-if="messageForms.errors.password"
                                           v-for="err in messageForms.errors.password"
                                           class="text-danger">{{ err }}</span>
@@ -320,14 +334,14 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}"
                                      class="form-group">
-                                    <label style="color: #333">Confirm Password</label>
+                                    <label style="color: #333">{{ $t('message.teams.ae_confirm_password') }}</label>
                                     <input autocomplete="off"
                                            type="password"
                                            v-model="userModel.c_password"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Confirm Password">
+                                           :placeholder="$t('message.teams.ae_confirm_password')">
                                     <span v-if="messageForms.errors.c_password"
                                           v-for="err in messageForms.errors.c_password"
                                           class="text-danger">{{ err }}</span>
@@ -337,10 +351,10 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.role_id}"
                                      class="form-group">
-                                    <label style="color: #333">Role</label>
+                                    <label style="color: #333">{{ $t('message.teams.filter_role') }}</label>
                                     <div>
                                         <select v-model="userModel.role_id" class="form-control pull-right">
-                                            <option value="0">-- Select Role --</option>
+                                            <option value="0">{{ $t('message.teams.ae_select_role') }}</option>
                                             <option v-for="option in roleList" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -355,7 +369,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.type}"
                                      class="form-group">
-                                    <label style="color: #333">Type</label>
+                                    <label style="color: #333">{{ $t('message.teams.filter_type') }}</label>
                                     <div>
                                         <select v-model="userModel.type" class="form-control pull-right">
                                             <option v-for="(option, key) in userTypeList" v-bind:value="key">
@@ -375,13 +389,13 @@
                                     <div class="col-md-6">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.work_mail}"
                                              class="form-group">
-                                            <label style="color: #333">Work mail</label>
+                                            <label style="color: #333">{{ $t('message.teams.t_work_mail') }}</label>
                                             <input type="text"
                                                    v-model="userModel.work_mail"
                                                    class="form-control"
                                                    value=""
                                                    required="required"
-                                                   placeholder="Enter Work Mail">
+                                                   :placeholder="$t('message.teams.ae_enter_work_mail')">
                                             <span v-if="messageForms.errors.work_mail"
                                                   v-for="err in messageForms.errors.work_mail"
                                                   class="text-danger">{{ err }}</span>
@@ -391,13 +405,13 @@
                                     <div class="col-md-6">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.work_mail_pass}"
                                              class="form-group">
-                                            <label style="color: #333">Work mail password</label>
+                                            <label style="color: #333">{{ $t('message.teams.ae_work_mail_pass') }}</label>
                                             <input type="text"
                                                    v-model="userModel.work_mail_pass"
                                                    class="form-control"
                                                    value=""
                                                    required="required"
-                                                   placeholder="Enter Work Mail Password">
+                                                   :placeholder="$t('message.teams.ae_enter_work_mail_pass')">
                                             <span v-if="messageForms.errors.work_mail_pass"
                                                   v-for="err in messageForms.errors.work_mail_pass"
                                                   class="text-danger">{{ err }}</span>
@@ -410,8 +424,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.teams.close') }}
+                        </button>
+                        <button type="button" @click="submitAdd" class="btn btn-primary">
+                            {{ $t('message.teams.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -425,7 +443,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Update User <b>{{ userUpdate.name }}</b></h4>
+                        <h4 class="modal-title">{{ $t('message.teams.us_title') }} <b>{{ userUpdate.name }}</b></h4>
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="" autocomplete="off">
@@ -433,13 +451,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.username}"
                                      class="form-group">
-                                    <label style="color: #333">Username</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_username') }}</label>
                                     <input type="text"
                                            v-model="userUpdate.username"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Username">
+                                           :placeholder="$t('message.teams.ae_enter_username')">
                                     <span v-if="messageForms.errors.username"
                                           v-for="err in messageForms.errors.username"
                                           class="text-danger">{{ err }}</span>
@@ -449,13 +467,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.name}"
                                      class="form-group">
-                                    <label style="color: #333">Name</label>
+                                    <label style="color: #333">{{ $t('message.teams.ae_name') }}</label>
                                     <input type="text"
                                            v-model="userUpdate.name"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Name">
+                                           :placeholder="$t('message.teams.ae_enter_name')">
                                     <span v-if="messageForms.errors.name"
                                           v-for="err in messageForms.errors.name"
                                           class="text-danger">{{ err }}</span>
@@ -465,13 +483,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email}"
                                      class="form-group">
-                                    <label style="color: #333">Email</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_email') }}</label>
                                     <input type="text"
                                            v-model="userUpdate.email"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Email">
+                                           :placeholder="$t('message.teams.ae_enter_email')">
                                     <span v-if="messageForms.errors.email"
                                           v-for="err in messageForms.errors.email"
                                           class="text-danger">{{ err }}</span>
@@ -489,18 +507,18 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.skype}"
                                      class="form-group">
-                                    <label style="color: #333">Skype</label>
+                                    <label style="color: #333">{{ $t('message.teams.t_skype') }}</label>
                                     <input autocomplete="off"
                                            type="text"
                                            v-model="userUpdate.skype"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Skype">
+                                           :placeholder="$t('message.teams.ae_enter_skype')">
                                     <span
                                         v-if="messageForms.errors.skype"
                                         class="text-danger">
-                                        The skype field is required.
+                                        {{ $t('message.teams.us_skype_error') }}
                                     </span>
                                 </div>
                             </div>
@@ -508,14 +526,14 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.password}"
                                      class="form-group">
-                                    <label style="color: #333">New Password</label>
+                                    <label style="color: #333">{{ $t('message.teams.us_new_password') }}</label>
                                     <input autocomplete="off"
                                            type="password"
                                            v-model="userUpdate.password"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Enter Password">
+                                           :placeholder="$t('message.teams.ae_enter_password')">
                                     <span v-if="messageForms.errors.password"
                                           v-for="err in messageForms.errors.password"
                                           class="text-danger">{{ err }}</span>
@@ -525,13 +543,13 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.c_password}"
                                      class="form-group">
-                                    <label style="color: #333">Confirm New Password</label>
+                                    <label style="color: #333">{{ $t('message.teams.us_confirm_new_password') }}</label>
                                     <input type="password"
                                            v-model="userUpdate.c_password"
                                            class="form-control"
                                            value=""
                                            required="required"
-                                           placeholder="Confirm Password">
+                                           :placeholder="$t('message.teams.ae_confirm_password')">
                                     <span v-if="messageForms.errors.c_password"
                                           v-for="err in messageForms.errors.c_password"
                                           class="text-danger">{{ err }}</span>
@@ -541,10 +559,10 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.role_id}"
                                      class="form-group">
-                                    <label style="color: #333">Role</label>
+                                    <label style="color: #333">{{ $t('message.teams.filter_role') }}</label>
                                     <div>
                                         <select v-model="userUpdate.role_id" class="form-control pull-right">
-                                            <option value="0">-- Select Role --</option>
+                                            <option value="0">{{ $t('message.teams.ae_select_role') }}</option>
                                             <option v-for="option in roleList" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -559,7 +577,7 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.type}"
                                      class="form-group">
-                                    <label style="color: #333">Type</label>
+                                    <label style="color: #333">{{ $t('message.teams.filter_type') }}</label>
                                     <div>
                                         <select v-model="userUpdate.type" class="form-control pull-right">
                                             <option v-for="(option, key) in userTypeList" v-bind:value="key">
@@ -575,12 +593,12 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Work Host mail</label>
+                                    <label style="color: #333">{{ $t('message.teams.us_work_host_mail') }}</label>
                                     <input type="text"
                                            v-model="userUpdate.host_mail"
                                            class="form-control"
                                            required
-                                           placeholder="Enter SMTP mail">
+                                           :placeholder="$t('message.teams.us_enter_smtp')">
                                 </div>
                             </div>
 
@@ -589,13 +607,13 @@
                                     <div class="col-md-6">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.work_mail}"
                                              class="form-group">
-                                            <label style="color: #333">Work mail</label>
+                                            <label style="color: #333">{{ $t('message.teams.t_work_mail') }}</label>
                                             <input type="text"
                                                    v-model="userUpdate.work_mail"
                                                    class="form-control"
                                                    value=""
                                                    required="required"
-                                                   placeholder="Enter Work Mail">
+                                                   :placeholder="$t('message.teams.ae_enter_work_mail')">
                                             <span v-if="messageForms.errors.work_mail"
                                                   v-for="err in messageForms.errors.work_mail"
                                                   class="text-danger">{{ err }}</span>
@@ -605,13 +623,13 @@
                                     <div class="col-md-6">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.work_mail_pass}"
                                              class="form-group">
-                                            <label style="color: #333">Work mail Password</label>
+                                            <label style="color: #333">{{ $t('message.teams.ae_work_mail_pass') }}</label>
                                             <input type="text"
                                                    v-model="userUpdate.work_mail_pass"
                                                    class="form-control"
                                                    value=""
                                                    required="required"
-                                                   placeholder="Enter Work Mail Password">
+                                                   :placeholder="$t('message.teams.ae_enter_work_mail_pass')">
                                             <span v-if="messageForms.errors.work_mail_pass"
                                                   v-for="err in messageForms.errors.work_mail_pass"
                                                   class="text-danger">{{ err }}</span>
@@ -632,10 +650,10 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label style="color: #333">Status</label>
+                                            <label style="color: #333">{{ $t('message.teams.filter_status') }}</label>
                                             <select name="" id="" class="form-control" v-model="userUpdate.status">
-                                                <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
+                                                <option value="active">{{ $t('message.teams.active') }}</option>
+                                                <option value="inactive">{{ $t('message.teams.inactive') }}</option>
                                             </select>
                                         </div>
                                     </div>
@@ -658,8 +676,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.teams.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                            {{ $t('message.teams.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -673,8 +695,10 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Set Countries IntDomain for <b>{{ userCountryUpdate.name }}</b>
-                                                ({{ listCountryUpdate.total }})</h4>
+                        <h4 class="modal-title">
+                            {{ $t('message.teams.scid_title') }} <b>{{ userCountryUpdate.name }}</b>
+                            ({{ listCountryUpdate.total }})
+                        </h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="row">
@@ -682,7 +706,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}">
                                     <div>
                                         <select v-model="countryListAddId" class="form-control pull-right">
-                                            <option value="0">-- Select Country --</option>
+                                            <option value="0">{{ $t('message.teams.scid_select_country') }}</option>
                                             <option v-for="option in countryList.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -696,7 +720,9 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <button class="btn btn-success" @click="doAddCountryForUser">Add</button>
+                                    <button class="btn btn-success" @click="doAddCountryForUser">
+                                        {{ $t('message.teams.add') }}
+                                    </button>
                                 </div>
                             </div>
 
@@ -706,9 +732,9 @@
                                         <tbody>
                                         <tr class="label-primary">
                                             <th>#</th>
-                                            <th>Country</th>
-                                            <th>Code</th>
-                                            <th>Action</th>
+                                            <th>{{ $t('message.teams.scid_country') }}</th>
+                                            <th>{{ $t('message.teams.scid_code') }}</th>
+                                            <th>{{ $t('message.teams.t_action') }}</th>
                                         </tr>
 
                                         <tr v-for="(item, index) in listCountryUpdate.data" :key="index">
@@ -717,9 +743,13 @@
                                             <td> {{ item.code }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <button @click="doRemovePermission(item)"
-                                                            class="btn btn-default"
-                                                            title="Remove"><i class="fa fa-fw fa-times"></i></button>
+                                                    <button
+                                                        title="Remove"
+                                                        class="btn btn-default"
+                                                        @click="doRemovePermission(item)">
+
+                                                        <i class="fa fa-fw fa-times"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -731,8 +761,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdatePermission" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.teams.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdatePermission" class="btn btn-primary">
+                            {{ $t('message.teams.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -746,8 +780,10 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Set Countries ExtDomain for <b>{{ userCountryUpdate.name }}</b>
-                                                ({{ listCountryUpdate.total }})</h4>
+                        <h4 class="modal-title">
+                            {{ $t('message.teams.sced_title') }} <b>{{ userCountryUpdate.name }}</b>
+                            ({{ listCountryUpdate.total }})
+                        </h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="row">
@@ -755,7 +791,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}">
                                     <div>
                                         <select v-model="countryListAddId" class="form-control pull-right">
-                                            <option value="0">-- Select Country --</option>
+                                            <option value="0">{{ $t('message.teams.scid_select_country') }}</option>
                                             <option v-for="option in countryList.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -769,7 +805,9 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <button class="btn btn-success" @click="doAddCountryForUser">Add</button>
+                                    <button class="btn btn-success" @click="doAddCountryForUser">
+                                        {{ $t('message.teams.add') }}
+                                    </button>
                                 </div>
                             </div>
 
@@ -779,9 +817,9 @@
                                         <tbody>
                                         <tr class="label-primary">
                                             <th>#</th>
-                                            <th>Country</th>
-                                            <th>Code</th>
-                                            <th>Action</th>
+                                            <th>{{ $t('message.teams.scid_country') }}</th>
+                                            <th>{{ $t('message.teams.scid_code') }}</th>
+                                            <th>{{ $t('message.teams.t_action') }}</th>
                                         </tr>
 
                                         <tr v-for="(item, index) in listCountryUpdate.data" :key="index">
@@ -790,9 +828,13 @@
                                             <td> {{ item.code }}</td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <button @click="doRemovePermission(item)"
-                                                            class="btn btn-default"
-                                                            title="Remove"><i class="fa fa-fw fa-times"></i></button>
+                                                    <button
+                                                        title="Remove"
+                                                        class="btn btn-default"
+                                                        @click="doRemovePermission(item)">
+
+                                                        <i class="fa fa-fw fa-times"></i>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -804,8 +846,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdateExtPermission" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.teams.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdateExtPermission" class="btn btn-primary">
+                            {{ $t('message.teams.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -819,8 +865,10 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Set Internal Domain for <b>{{ userIntUpdate.name }}</b>
-                                                ({{ listIntUpdate.total }})</h4>
+                        <h4 class="modal-title">
+                            {{ $t('message.teams.sid_title') }} <b>{{ userIntUpdate.name }}</b>
+                            ({{ listIntUpdate.total }})
+                        </h4>
                     </div>
                     <div class="modal-body relative">
                         <div class="row">
@@ -830,7 +878,7 @@
                                         <select v-model="countryIdForInt"
                                                 @change="doUpdateListIntSelect"
                                                 class="form-control pull-right">
-                                            <option value="0">-- Select Country --</option>
+                                            <option value="0">{{ $t('message.teams.scid_select_country') }}</option>
                                             <option v-for="option in countryList.data" v-bind:value="option.id">
                                                 {{ option.name }}
                                             </option>
@@ -848,7 +896,7 @@
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.country_id}">
                                             <div>
                                                 <select v-model="intListAddId" class="form-control pull-right">
-                                                    <option value="0">-- Select Int domain --</option>
+                                                    <option value="0">{{ $t('message.teams.sid_select_int_domain') }}</option>
                                                     <option v-for="option in listIntSelect.data"
                                                             v-bind:value="option.id">
                                                         {{ option.domain }}
@@ -863,7 +911,9 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <button class="btn btn-success" @click="doAddIntForUser">Add</button>
+                                            <button class="btn btn-success" @click="doAddIntForUser">
+                                                {{ $t('message.teams.add') }}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -875,12 +925,12 @@
                                         <thead>
                                         <tr class="label-primary">
                                             <th>#</th>
-                                            <th>Country</th>
-                                            <th>Domain</th>
-                                            <th>Hosting Provider</th>
-                                            <th>Domain Provider</th>
-                                            <th>User</th>
-                                            <th>Action</th>
+                                            <th>{{ $t('message.teams.scid_country') }}</th>
+                                            <th>{{ $t('message.teams.sid_domain') }}</th>
+                                            <th>{{ $t('message.teams.sid_hosting_provider') }}</th>
+                                            <th>{{ $t('message.teams.sid_domain_provider') }}</th>
+                                            <th>{{ $t('message.teams.sid_user') }}</th>
+                                            <th>{{ $t('message.teams.t_action') }}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -908,8 +958,12 @@
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdateIntPermission" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.teams.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdateIntPermission" class="btn btn-primary">
+                            {{ $t('message.teams.save') }}
+                        </button>
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -1137,14 +1191,15 @@ export default {
                 this.getUserList({params : this.filterModel});
 
                 swal.fire(
-                    'Success!',
-                    'Employee has been added.',
+                    that.$t('message.teams.alert_success'),
+                    that.$t('message.teams.alert_employee_added'),
                     'success'
                 )
             }
         },
 
         async submitUpdate() {
+            let self = this;
             this.isPopupLoading = true;
             this.userUpdate.isOurs = this.user.isOurs;
             await this.$store.dispatch('actionUpdateUser', this.userUpdate);
@@ -1161,8 +1216,8 @@ export default {
                 this.getUserList()
 
                 swal.fire(
-                    'Updated!',
-                    'Information has been updated.',
+                    self.$t('message.teams.alert_updated'),
+                    self.$t('message.teams.alert_info_updated'),
                     'success'
                 )
 
@@ -1231,9 +1286,10 @@ export default {
         },
 
         doAddCountryForUser() {
+            let self = this;
             var cid = this.findCountryById(this.countryListAddId, true);
             if (cid.id !== 0) {
-                alert('item already added');
+                alert(self.$t('message.teams.alert_item_added'));
                 return;
             }
 

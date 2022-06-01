@@ -16,7 +16,7 @@
                 <div :class="'small-box bg-' + (actionMeta[key] ? actionMeta[key].label : 'green')">
                     <div class="inner">
                         <h3>{{ count }}</h3>
-                        <p style="text-transform: capitalize">Total {{ listAction[key] ? listAction[key] : key }}</p>
+                        <p style="text-transform: capitalize">{{ $t('message.system_logs.total_text') }} {{ listAction[key] ? listAction[key] : key }}</p>
                     </div>
                     <div class="icon">
                         <i :class="'fas fa-' + (actionMeta[key] ? actionMeta[key].icon : 'circle')"></i>
@@ -29,7 +29,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">System Logs</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.system_logs.sl_title') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                                           :options="rolesList"
                                           :reduce="roleTemp => roleTemp.id"
                                           label="name"
-                                          placeholder="-- All Roles --"/>
+                                          :placeholder="$t('message.system_logs.sl_roles')"/>
                             </div>
 
                             <div class="col">
@@ -50,7 +50,7 @@
                                           :options="listUser.data"
                                           :reduce="logUser => logUser.email"
                                           label="username"
-                                          placeholder="-- All Users --"/>
+                                          :placeholder="$t('message.system_logs.sl_users')"/>
                             </div>
 
                             <div class="col">
@@ -59,7 +59,7 @@
                                           :options="listTable"
                                           :reduce="tableTemp => tableTemp.id"
                                           label="value"
-                                          placeholder="-- All Tables --"/>
+                                          :placeholder="$t('message.system_logs.sl_tables')"/>
                             </div>
 
                             <div class="col">
@@ -68,7 +68,7 @@
                                           :options="listAction"
                                           :reduce="actionTemp => actionTemp.id"
                                           label="value"
-                                          placeholder="-- All Actions --"/>
+                                          :placeholder="$t('message.system_logs.sl_actions')"/>
                             </div>
 
                             <div class="col">
@@ -77,7 +77,7 @@
                                           :options="listPages"
                                           :reduce="pathTemp => pathTemp.path"
                                           label="name"
-                                          placeholder="-- All Pages --"/>
+                                          :placeholder="$t('message.system_logs.sl_pages')"/>
                             </div>
 
                             <div class="col">
@@ -86,13 +86,13 @@
                                             type="submit"
                                             title="Filter"
                                             class="btn btn-default col-5 mr-2">
-                                        Search
+                                        {{ $t('message.system_logs.search') }}
                                     </button>
 
                                     <button @click="clearFilter"
                                             title="Clear Filter"
                                             class="btn btn-default col-5">
-                                        Clear
+                                        {{ $t('message.system_logs.clear') }}
                                     </button>
                                 </div>
                             </div>
@@ -100,18 +100,19 @@
 
                         <div class="row mb-4">
                             <div class="col-1">
-                                <label for="" class="float-right">Delete data:</label>
+                                <label class="float-right">{{ $t('message.system_logs.sl_delete') }}</label>
                             </div>
 
                             <div class="col-2">
                                 <select class="form-control" v-model="deleteModel.month">
-                                    <option value="">--- SELECT MONTH ---</option>
+                                    <option value="">{{ $t('message.system_logs.sl_select_month') }}</option>
                                     <option v-for="value in months" :value="value.month">{{ value.month_name }}</option>
                                 </select>
                             </div>
 
                             <div class="col-4">
-                                <button type="button" @click="deleteMonth" class="btn btn-danger col col-2">Delete
+                                <button type="button" @click="deleteMonth" class="btn btn-danger col col-2">
+                                    {{ $t('message.system_logs.delete') }}
                                 </button>
                             </div>
 
@@ -133,11 +134,11 @@
                                     <thead>
                                     <tr class="label-primary">
                                         <th>#</th>
-                                        <th>Username</th>
-                                        <th>Table</th>
-                                        <th>Action</th>
-                                        <th>Page</th>
-                                        <th>Time</th>
+                                        <th>{{ $t('message.system_logs.t_username') }}</th>
+                                        <th>{{ $t('message.system_logs.t_table') }}</th>
+                                        <th>{{ $t('message.system_logs.t_action') }}</th>
+                                        <th>{{ $t('message.system_logs.t_page') }}</th>
+                                        <th>{{ $t('message.system_logs.t_time') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -406,10 +407,11 @@ export default {
         },
 
         deleteMonth() {
+            let self = this;
             swal.fire({
                 icon : 'warning',
-                title : 'Please confirm',
-                text : 'Are you sure you want to delete this?',
+                title : self.$t('message.system_logs.alert_confirm'),
+                text : self.$t('message.system_logs.alert_confirm_note'),
                 showCancelButton : true,
                 confirmButtonText : 'Yes',
             }).then((result) => {
@@ -420,9 +422,8 @@ export default {
 
                             swal.fire({
                                 icon : 'success',
-                                title : "Success",
-                                text :
-                                    'Deleted successfully',
+                                title : self.$t('message.system_logs.alert_success'),
+                                text : self.$t('message.system_logs.alert_deleted_successfully'),
                             });
                         })
                 }
