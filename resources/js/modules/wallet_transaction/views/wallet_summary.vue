@@ -35,36 +35,54 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>{{ $t('message.wallet_summary.filter_month') }}</label>
-                                    <select class="form-control" v-model="filterModel.month">
-                                        <option value="">{{ $t('message.wallet_summary.all') }}</option>
-                                        <option v-for="month in months" v-bind:value="month.value">
-                                            {{ month.label }}
-                                        </option>
-                                    </select>
+                                    <label>{{ $t('message.wallet_transaction.filter_date') }}</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            ref="picker"
+                                            v-model="filterModel.date"
+                                            :ranges="generateDefaultDateRange()"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                            :dateRange="filterModel.date"
+                                            :linkedCalendars="true"
+                                            opens="right"
+                                            style="width: 100%"
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.wallet_summary.filter_year') }}</label>
-                                    <date-picker
-                                        v-model="dateTemp"
-                                        format="yyyy"
-                                        minimum-view="year"
-                                        maximum-view="year"
-                                        :placeholder="$t('message.wallet_summary.all')"
-                                        clear-button-icon="fas fa-times"
-                                        :typeable=true
-                                        :clear-button=true
-                                        :full-month-name=true
-                                        :bootstrap-styling=true
+<!--                            <div class="col-md-3">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>{{ $t('message.wallet_summary.filter_month') }}</label>-->
+<!--                                    <select class="form-control" v-model="filterModel.month">-->
+<!--                                        <option value="">{{ $t('message.wallet_summary.all') }}</option>-->
+<!--                                        <option v-for="month in months" v-bind:value="month.value">-->
+<!--                                            {{ month.label }}-->
+<!--                                        </option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                                        @input="formatDate">
+<!--                            <div class="col-md-3">-->
+<!--                                <div class="form-group">-->
+<!--                                    <label>{{ $t('message.wallet_summary.filter_year') }}</label>-->
+<!--                                    <date-picker-->
+<!--                                        v-model="dateTemp"-->
+<!--                                        format="yyyy"-->
+<!--                                        minimum-view="year"-->
+<!--                                        maximum-view="year"-->
+<!--                                        :placeholder="$t('message.wallet_summary.all')"-->
+<!--                                        clear-button-icon="fas fa-times"-->
+<!--                                        :typeable=true-->
+<!--                                        :clear-button=true-->
+<!--                                        :full-month-name=true-->
+<!--                                        :bootstrap-styling=true-->
 
-                                    </date-picker>
-                                </div>
-                            </div>
+<!--                                        @input="formatDate">-->
+
+<!--                                    </date-picker>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
 
                         <div class="row mb-3">
@@ -130,8 +148,10 @@
 <script>
     import { mapState } from 'vuex';
     import axios from 'axios';
+    import {dateRange} from "../../../mixins/dateRange";
 
     export default {
+        mixins: [dateRange],
         data() {
             return {
                 summaryData: [],
@@ -190,6 +210,10 @@
                     buyer: this.$route.query.buyer || '',
                     month: this.$route.query.month || '',
                     year: this.$route.query.year || '',
+                    date : {
+                        startDate : null,
+                        endDate : null
+                    },
                 },
             }
         },
@@ -206,6 +230,9 @@
 
         methods: {
             getWalletSummary() {
+                // change the format of date
+                this.filterModel.date = this.formatFilterDates(this.filterModel.date)
+
                 if (this.filterModel.month && !this.filterModel.year) {
                     this.dateTemp = new Date();
                     this.formatDate()
@@ -225,7 +252,11 @@
                 this.filterModel = {
                     buyer: '',
                     year: '',
-                    month: ''
+                    month: '',
+                    date : {
+                        startDate : null,
+                        endDate : null
+                    },
                 }
 
                 this.dateTemp = '';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\WalletTransaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -38,6 +39,14 @@ class WalletSummaryController extends Controller
                     })
                     ->when(isset($request->month), function($query) use ($request) {
                         return $query->whereMonth('wallet_transactions.date', '=', $request->month);
+                    })
+                    ->when(isset($request->date), function($query) use ($request) {
+                        $request['date'] = json_decode($request->date);
+
+                        if( isset($request['date']) && !empty($request['date']) && $request['date']->startDate != ''){
+                            return $query->whereDate('wallet_transactions.date', '>=', Carbon::create($request['date']->startDate)->format('Y-m-d'))
+                                ->whereDate('wallet_transactions.date', '<=', Carbon::create($request['date']->endDate)->format('Y-m-d'));
+                        }
                     })
                     ->when($checkAdmin, function($query) use ($user_id) {
                         return $query->where('users.id', $user_id);
