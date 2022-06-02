@@ -93,8 +93,9 @@ class WalletTransactionController extends Controller
 
     public function getListBuyerWithWalletTransaction()
     {
-        $list = WalletTransaction::select('users.id', 'users.name', 'users.email')
+        $list = WalletTransaction::select('users.id', 'users.name', 'users.email', 'users.username')
         ->join('users', 'wallet_transactions.user_id', 'users.id')
+        ->orderBy('users.username')
         ->groupBy('wallet_transactions.user_id', 'users.id', 'users.name', 'users.email')
         ->get();
 
