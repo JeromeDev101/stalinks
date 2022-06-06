@@ -178,7 +178,6 @@ class ConfigController extends Controller
 
         $language = Language::findOrFail($request->id);
         $language->update([
-            'name' => $request->name,
             'code' => $request->code,
         ]);
         return response()->json(['success' => true],200);
