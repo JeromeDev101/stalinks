@@ -554,7 +554,7 @@
                             {{ $t('message.follow.close') }}
                         </button>
 
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">
+                        <button :disabled="isDisabledUpdate" type="button" @click="submitUpdate" class="btn btn-primary">
                             {{ $t('message.follow.save') }}
                         </button>
                     </div>
@@ -1079,7 +1079,8 @@
                     do_follow: null,
                     inc_article: null,
                     permanent_article: null
-                }
+                },
+                isDisabledUpdate: false,
             }
         },
 
@@ -1447,6 +1448,8 @@
 
             async submitUpdate(params) {
                 let self = this;
+                let loader = this.$loading.show();
+                self.isDisabledUpdate = true;
 
                 // make form data for file
                 let form_data = new FormData();
@@ -1474,13 +1477,17 @@
                     this.getListSales()
                     this.$refs.issue_file.value = '';
 
+                    loader.hide();
+
                     swal.fire(
                         self.$t('message.follow.alert_success'),
                         self.$t('message.follow.alert_updated_successfully'),
                         'success'
                     )
-
                 }
+
+                self.isDisabledUpdate = false;
+                loader.hide();
             },
 
             clearMessageform() {

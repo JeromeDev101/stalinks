@@ -794,6 +794,7 @@ export default {
         async doPay() {
             let self = this;
             $('#tbl_seller_billing').DataTable().destroy();
+            let loader = this.$loading.show();
             this.isDisabledPay = true;
 
             let ids = this.checkIds
@@ -815,6 +816,8 @@ export default {
 
                 this.checkIds = [];
 
+                loader.hide();
+
                 swal.fire(
                     self.$t('message.seller_billing.alert_success'),
                     self.$t('message.seller_billing.alert_paid_successfully'),
@@ -824,6 +827,7 @@ export default {
             }
 
             this.isDisabledPay = false;
+            loader.hide();
 
             this.$root.$refs.AppHeader.liveGetWallet()
         },
