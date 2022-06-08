@@ -9,6 +9,11 @@ import writer_survey from './Survey/id/writer';
 // subscription
 import subscription from './Subscription/id/main';
 
+// admin settings
+import IT from './IT/id/main';
+import finance from './Finance/id/main';
+import devs from './Devs/id/main';
+
 // management pages
 import role from './Role/id/main';
 import module_page from './Module/id/main';
@@ -134,6 +139,11 @@ export default {
 
         // subscription
         subscription,
+
+        // admin settings
+        IT,
+        finance,
+        devs,
 
         // management pages
         role,

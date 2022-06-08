@@ -2,7 +2,7 @@
     <!-- LANGUAGE LIST -->
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Language List</h3>
+            <h3 class="card-title">{{ $t('message.IT.l_title') }}</h3>
             <div class="card-tools">
                 <button @click="clearMessageform" data-toggle="modal" data-target="#modal-add-language"
                         class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
@@ -13,9 +13,9 @@
                 <thead>
                 <tr class="label-primary">
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Action</th>
+                    <th>{{ $t('message.IT.l_name') }}</th>
+                    <th>{{ $t('message.IT.l_code') }}</th>
+                    <th>{{ $t('message.IT.l_action') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,7 +28,7 @@
                             <button
                                 data-toggle="modal"
                                 data-target="#modal-update-language"
-                                title="Edit"
+                                :title="$t('message.IT.edit')"
                                 class="btn btn-default"
 
                                 @click="doEditLanguage(item)">
@@ -48,17 +48,17 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Language</h5>
+                        <h5 class="modal-title">{{ $t('message.IT.l_add_lang') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
-                            <label>Name</label>
+                            <label>{{ $t('message.IT.l_name') }}</label>
                             <input type="text" v-model="languageModel.name" class="form-control" required>
                             <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name"
                                   class="text-danger">{{ err }}</span>
                         </div>
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.code}" class="form-group">
-                            <label>Code</label>
+                            <label>{{ $t('message.IT.l_code') }}</label>
                             <input type="text" v-model="languageModel.code" class="form-control" required>
                             <span v-if="messageForms.errors.code" v-for="err in messageForms.errors.code"
                                   class="text-danger">{{ err }}</span>
@@ -79,11 +79,11 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Language</h5>
+                        <h5 class="modal-title">{{ $t('message.IT.l_update_lang') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.name}" class="form-group">
-                            <label>Name</label>
+                            <label>{{ $t('message.IT.l_name') }}</label>
                             <input type="text" v-model="languageUpdate.name" class="form-control" disabled>
                             <span
                                 v-if="messageForms.errors.name"
@@ -94,7 +94,7 @@
                             </span>
                         </div>
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.code}" class="form-group">
-                            <label>Code</label>
+                            <label>{{ $t('message.IT.l_code') }}</label>
                             <input type="text" v-model="languageUpdate.code" class="form-control" required>
                             <span
                                 v-if="messageForms.errors.code"
@@ -106,8 +106,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdateLanguage" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.IT.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdateLanguage" class="btn btn-primary">
+                            {{ $t('message.IT.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -165,12 +169,13 @@ export default {
         },
 
         async submitUpdateLanguage() {
+            let self = this;
             await this.$store.dispatch('actionUpdateLanguage', this.languageUpdate);
 
             if (this.messageForms.action === 'update_language') {
                 await swal.fire(
-                    'Success!',
-                    'Language successfully updated.',
+                    self.$t('message.IT.alert_success'),
+                    self.$t('message.IT.alert_success_updated'),
                     'success'
                 )
             }
@@ -179,12 +184,13 @@ export default {
         },
 
         async submitAddLanguage() {
+            let self = this;
             await this.$store.dispatch('actionAddLanguage', this.languageModel);
 
             if (this.messageForms.action === 'saved_language') {
                 await swal.fire(
-                    'Success!',
-                    'Language successfully added.',
+                    self.$t('message.IT.alert_success'),
+                    self.$t('message.IT.alert_success_added'),
                     'success'
                 )
             }

@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Admin Settings / Devs - Site Status</h1>
+                        <h1 class="m-0">{{ $t('message.devs.d_title') }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -12,7 +12,9 @@
 
         <div class="row mb-4">
             <div class="col-1">
-                <button @click="getResources" class="btn btn-success" :class="isButtonLoading ? 'disabled' : ''">Reload All</button>
+                <button @click="getResources" class="btn btn-success" :class="isButtonLoading ? 'disabled' : ''">
+                    {{ $t('message.devs.d_reload') }}
+                </button>
             </div>
         </div>
 
@@ -69,7 +71,8 @@ export default {
         },
 
         alert(target) {
-            let message = target.result.healthy ? 'There is nothing wrong with this resource.' : target.result.errorMessage
+            let self = this;
+            let message = target.result.healthy ? self.$t('message.devs.alert_no_error') : target.result.errorMessage
             let type = target.result.healthy ? 'success' : 'error';
 
             swal.fire(

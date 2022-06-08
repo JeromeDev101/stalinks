@@ -1,7 +1,7 @@
 <template>
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Formula for External Buyer</h3>
+            <h3 class="card-title">{{ $t('message.finance.for_title') }}</h3>
             <div class="card-tools">
             </div>
         </div>
@@ -11,7 +11,7 @@
                     <div class="col-md-12">
                         <form>
                             <div class="form-group row">
-                                <label for="" class="col-sm-2 col-form-label">Additional</label>
+                                <label class="col-sm-2 col-form-label">{{ $t('message.finance.for_additional') }}</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.additional">
                                     <span v-if="messageForms.errors.additional"
@@ -21,7 +21,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="" class="col-sm-2 col-form-label">Percentage</label>
+                                <label class="col-sm-2 col-form-label">{{ $t('message.finance.for_percentage') }}</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.percentage">
                                     <span v-if="messageForms.errors.percentage"
@@ -35,32 +35,34 @@
                 </div>
                 <div class="col-md-6">
                     <div class="col-sm-12">
-                        WITH ARTICLE
+                        {{ $t('message.finance.for_with_article') }}
                     </div>
-                    <div class="col-sm-12 p-3 text-primary">Commission = No</div>
-                    <div class="col-sm-12 text-danger">Formula: (Remain selling price)</div>
+                    <div class="col-sm-12 p-3 text-primary">{{ $t('message.finance.for_com_no') }}</div>
+                    <div class="col-sm-12 text-danger">{{ $t('message.finance.for_formula_remain') }} (Remain selling price)</div>
                     <hr/>
 
-                    <div class="col-sm-12 p-3 text-primary">Commission = Yes</div>
-                    <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price</div>
+                    <div class="col-sm-12 p-3 text-primary">{{ $t('message.finance.for_com_yes') }}</div>
+                    <div class="col-sm-12 text-danger">{{ $t('message.finance.for_formula_remain') }} (Percentage * selling_price) + selling_price</div>
                 </div>
                 <div class="col-md-6">
                     <div class="col-sm-12">
-                        WITHOUT ARTICLE
+                        {{ $t('message.finance.for_without_article') }}
                     </div>
 
-                    <div class="col-sm-12 p-3 text-primary">Commission = No</div>
-                    <div class="col-sm-12 text-danger">Formula: selling price + Additional</div>
+                    <div class="col-sm-12 p-3 text-primary">{{ $t('message.finance.for_com_no') }}</div>
+                    <div class="col-sm-12 text-danger">{{ $t('message.finance.for_formula_remain') }} selling price + Additional</div>
                     <hr/>
 
-                    <div class="col-sm-12 p-3 text-primary">Commission = Yes</div>
-                    <div class="col-sm-12 text-danger">Formula: (Percentage * selling_price) + selling_price + Additional</div>
+                    <div class="col-sm-12 p-3 text-primary">{{ $t('message.finance.for_com_yes') }}</div>
+                    <div class="col-sm-12 text-danger">{{ $t('message.finance.for_formula_remain') }} (Percentage * selling_price) + selling_price + Additional</div>
                 </div>
             </div>
         </div>
 
         <div class="card-footer">
-            <button type="button" @click="submitFormula" class="btn btn-primary">Save</button>
+            <button type="button" @click="submitFormula" class="btn btn-primary">
+                {{ $t('message.finance.save') }}
+            </button>
         </div>
     </div>
 </template>
@@ -97,12 +99,13 @@ export default {
 
     methods : {
         async submitFormula() {
+            let self = this;
             await this.$store.dispatch('actionUpdateFormula', this.updateFormula);
 
             if (this.messageForms.action == 'save_formula') {
                 swal.fire(
-                    'Saved!',
-                    'Successfully Updated.',
+                    self.$t('message.finance.alert_saved'),
+                    self.$t('message.finance.alert_successfully_updated'),
                     'success'
                 )
 

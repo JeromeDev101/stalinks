@@ -1,7 +1,7 @@
 <template>
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Mail Access</h3>
+            <h3 class="card-title">{{ $t('message.IT.ma_title') }}</h3>
             <div class="card-tools">
             </div>
         </div>
@@ -10,8 +10,8 @@
                 <thead>
                 <tr class="label-primary">
                     <th>#</th>
-                    <th>Username</th>
-                    <th>Action</th>
+                    <th>{{ $t('message.IT.ma_username') }}</th>
+                    <th>{{ $t('message.IT.l_action') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -21,7 +21,7 @@
                     <td>
                         <div class="btn-group">
                             <button
-                                title="Edit"
+                                :title="$t('message.IT.edit')"
                                 type="submit"
                                 class="btn btn-default"
                                 data-toggle="modal"
@@ -48,7 +48,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Email Access</h5>
+                        <h5 class="modal-title">{{ $t('message.IT.ma_update_email_access') }}</h5>
 <!--                        <div class="modal-load overlay float-right">
                             <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
@@ -65,29 +65,33 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Emails</label>
+                            <label>{{ $t('message.IT.ma_emails') }}</label>
 
                             <span
                                 class="text-danger pull-right"
                                 style="cursor: pointer;"
 
                                 @click="emailAccessModel.emails = []">
-                                    Remove all
+                                    {{ $t('message.IT.ma_remove_all') }}
                                 </span>
 
                             <v-select
                                 v-model="emailAccessModel.emails"
                                 multiple
                                 label="role_name"
-                                placeholder="Select emails"
+                                :placeholder="$t('message.IT.ma_select_emails')"
                                 :options="emailAccessOptions"
                                 :searchable="true"
                                 :reduce="email => email.work_mail"/>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitEmailAccess()" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.IT.close') }}
+                        </button>
+                        <button type="button" @click="submitEmailAccess()" class="btn btn-primary">
+                            {{ $t('message.IT.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -170,8 +174,8 @@ export default {
             if (self.messageForms.action === 'add_email_access') {
 
                 await swal.fire(
-                    'Saved!',
-                    'Successfully saved.',
+                    self.$t('message.IT.alert_saved'),
+                    self.$t('message.IT.alert_saved_success'),
                     'success'
                 )
 

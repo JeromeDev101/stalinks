@@ -1,7 +1,7 @@
 <template>
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Payment Method</h3>
+            <h3 class="card-title">{{ $t('message.finance.pm_title') }}</h3>
             <div class="card-tools">
                 <button data-toggle="modal"
                         @click="clearMessageform"
@@ -14,10 +14,10 @@
                 <thead>
                 <tr class="label-primary">
                     <th>#</th>
-                    <th>Type</th>
-                    <th>We Can Receive Payment</th>
-                    <th>We Can Send Payment</th>
-                    <th>Action</th>
+                    <th>{{ $t('message.finance.pm_type') }}</th>
+                    <th>{{ $t('message.finance.pm_we_can_receive_payment') }}</th>
+                    <th>{{ $t('message.finance.pm_we_can_send_payment') }}</th>
+                    <th>{{ $t('message.finance.pm_action') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,7 +32,7 @@
                                     @click="doEditPayment(item)"
                                     data-toggle="modal"
                                     data-target="#modal-update-payment"
-                                    title="Edit"
+                                    :title="$t('message.finance.edit')"
                                     class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
                         </div>
                     </td>
@@ -51,15 +51,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Payment Type</h5>
+                        <h5 class="modal-title">{{ $t('message.finance.apt_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
-                            <label for="">Payment Type</label>
+                            <label>{{ $t('message.finance.apt_payment_type') }}</label>
                             <input type="text"
                                    v-model="paymentModel.type"
                                    class="form-control"
-                                   placeholder="Enter Payment Type"
+                                   :placeholder="$t('message.finance.apt_enter_payment_type')"
                                    required>
                             <span v-if="messageForms.errors.type"
                                   v-for="err in messageForms.errors.type"
@@ -67,8 +67,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitAddPayment" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.finance.close') }}
+                        </button>
+                        <button type="button" @click="submitAddPayment" class="btn btn-primary">
+                            {{ $t('message.finance.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -84,47 +88,47 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Payment Type</h5>
+                        <h5 class="modal-title">{{ $t('message.finance.upt_title') }}</h5>
                     </div>
                     <div class="modal-body">
                         <div class="row">
 
                             <div class="col-sm-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.type}" class="form-group">
-                                    <label for="">Payment Type</label>
+                                    <label>{{ $t('message.finance.apt_payment_type') }}</label>
                                     <input type="text"
                                         v-model="paymentUpdate.type"
                                         class="form-control"
-                                        placeholder="Enter Payment Type"
+                                        :placeholder="$t('message.finance.apt_enter_payment_type')"
                                         required>
                                     <span v-if="messageForms.errors.type"
                                         v-for="err in messageForms.errors.type"
                                         class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
-                        
+
                             <div class="col-sm-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.receive_payment}"
                                     class="form-group">
-                                    <label for="">Receive Payment</label>
-                                    <select name="" id="" class="form-control" v-model="paymentUpdate.receive_payment">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                    <label>{{ $t('message.finance.upt_receive_payment') }}</label>
+                                    <select name="" class="form-control" v-model="paymentUpdate.receive_payment">
+                                        <option value="yes">{{ $t('message.finance.yes') }}</option>
+                                        <option value="no">{{ $t('message.finance.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.receive_payment"
                                         v-for="err in messageForms.errors.receive_payment"
                                         class="text-danger">{{ err }}</span>
                                 </div>
-                            
+
                             </div>
-                            
+
                             <div class="col-sm-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.send_payment}"
                                     class="form-group">
-                                    <label for="">Send Payment</label>
-                                    <select name="" id="" class="form-control" v-model="paymentUpdate.send_payment">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                    <label>{{ $t('message.finance.upt_send_payment') }}</label>
+                                    <select name="" class="form-control" v-model="paymentUpdate.send_payment">
+                                        <option value="yes">{{ $t('message.finance.yes') }}</option>
+                                        <option value="no">{{ $t('message.finance.no') }}</option>
                                     </select>
                                     <span v-if="messageForms.errors.send_payment"
                                         v-for="err in messageForms.errors.send_payment"
@@ -135,14 +139,14 @@
                             <div class="col-sm-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.email_value}"
                                     class="form-group">
-                                    <label for="">Email</label>
+                                    <label>{{ $t('message.finance.upt_email') }}</label>
 
                                     <input type="text"
                                         v-model="paymentUpdate.email_value"
                                         class="form-control"
-                                        placeholder="Enter Email"
+                                        :placeholder="$t('message.finance.upt_enter_email')"
                                         required>
-                                    
+
                                     <span v-if="messageForms.errors.email_value"
                                         v-for="err in messageForms.errors.email_value"
                                         class="text-danger">{{ err }}</span>
@@ -152,14 +156,14 @@
                             <div class="col-sm-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.account_value}"
                                     class="form-group">
-                                    <label for="">Account</label>
+                                    <label>{{ $t('message.finance.upt_account') }}</label>
 
                                     <input type="text"
                                         v-model="paymentUpdate.account_value"
                                         class="form-control"
-                                        placeholder="Enter Account"
+                                        :placeholder="$t('message.finance.upt_enter_account')"
                                         required>
-                                    
+
                                     <span v-if="messageForms.errors.account_value"
                                         v-for="err in messageForms.errors.account_value"
                                         class="text-danger">{{ err }}</span>
@@ -169,14 +173,15 @@
                             <div class="col-sm-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.address_value}"
                                     class="form-group">
-                                    <label for="">Address</label> <small class="text-danger"><i>(for Cypto only)</i></small>
+                                    <label>{{ $t('message.finance.upt_address') }}</label>
+                                    <small class="text-danger"><i>{{ $t('message.finance.upt_for_crypto') }}</i></small>
 
                                     <input type="text"
                                         v-model="paymentUpdate.address_value"
                                         class="form-control"
-                                        placeholder="Enter Address"
+                                        :placeholder="$t('message.finance.upt_enter_address')"
                                         required>
-                                    
+
                                     <span v-if="messageForms.errors.address_value"
                                         v-for="err in messageForms.errors.address_value"
                                         class="text-danger">{{ err }}</span>
@@ -185,7 +190,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">Upload logo</label>
+                                    <label>{{ $t('message.finance.upt_upload_logo') }}</label>
                                     <div class="row">
                                         <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo">
 
@@ -197,7 +202,7 @@
 
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="">QR Code Image</label>
+                                    <label>{{ $t('message.finance.upt_qr_code') }}</label>
                                     <div class="row">
                                         <input type="file" class="form-control col mr-2" enctype="multipart/form-data" ref="logo2">
 
@@ -206,7 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="col-sm-12">
                                 <div class="row mb-4" v-for="image in paymentImages">
                                     <div class="col-2 d-flex align-items-center">
@@ -227,8 +232,12 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" @click="submitUpdatePayment" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.finance.close') }}
+                        </button>
+                        <button type="button" @click="submitUpdatePayment" class="btn btn-primary">
+                            {{ $t('message.finance.save') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -279,21 +288,23 @@ export default {
 
     methods : {
         uploadImage(type) {
+            let self = this;
             let formData = new FormData();
+
             if(type === 'logo') {
                 formData.append('file', this.$refs.logo.files[0]);
-            } else{ 
+            } else{
                 formData.append('file', this.$refs.logo2.files[0]);
             }
 
             formData.append('image_type', type);
-                
+
 
             axios.post('/api/admin/payment-type/image/' + this.paymentUpdate.id, formData)
                 .then((response) => {
                     swal.fire(
-                        'Success!',
-                        'Image uploaded successfully!',
+                        self.$t('message.finance.alert_success'),
+                        self.$t('message.finance.alert_image_uploaded'),
                         'success'
                     )
 
@@ -302,11 +313,12 @@ export default {
         },
 
         deleteImage(id) {
+            let self = this;
             axios.delete('/api/admin/payment-type/image/' + id)
             .then((response) => {
                 swal.fire(
-                    'Success!',
-                    'Image deleted successfully!',
+                    self.$t('message.finance.alert_success'),
+                    self.$t('message.finance.alert_image_deleted'),
                     'success'
                 )
 
@@ -340,8 +352,8 @@ export default {
 
             if (this.messageForms.action === 'saved_payment') {
                 await swal.fire(
-                    'Success!',
-                    'Payment type successfully added.',
+                    that.$t('message.finance.alert_success'),
+                    that.$t('message.finance.alert_payment_type_added'),
                     'success'
                 )
 
@@ -350,8 +362,8 @@ export default {
                 this.getPaymentList();
             } else {
                 await swal.fire(
-                    'Error!',
-                    'There were some errors while adding the payment type.',
+                    that.$t('message.finance.alert_error'),
+                    that.$t('message.finance.alert_error_add_payment'),
                     'error'
                 )
             }
@@ -376,6 +388,7 @@ export default {
         },
 
         async submitUpdatePayment() {
+            let self = this;
             this.isPopupLoading = true;
 
             await this.$store.dispatch('actionUpdatePayment', this.paymentUpdate);
@@ -383,16 +396,16 @@ export default {
 
             if (this.messageForms.action === 'updated_payment') {
                 await swal.fire(
-                    'Success!',
-                    'Payment type successfully updated.',
+                    self.$t('message.finance.alert_success'),
+                    self.$t('message.finance.alert_payment_type_updated'),
                     'success',
                 )
 
                 this.closeModal('update')
             } else {
                 await swal.fire(
-                    'Error!',
-                    'There were some errors while updating the payment type.',
+                    self.$t('message.finance.alert_error'),
+                    self.$t('message.finance.alert_error_update_payment'),
                     'error',
                 )
             }

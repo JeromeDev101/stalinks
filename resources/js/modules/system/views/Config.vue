@@ -1,7 +1,7 @@
 <template>
     <div class="card card-outline card-secondary" v-if="typeConfig === 'affiliate'">
         <div class="card-header">
-            <h3 class="card-title">Commision {{ typeConfig }}</h3>
+            <h3 class="card-title">{{ $t('message.IT.c_title') }} {{ typeConfig }}</h3>
             <div class="card-tools">
             </div>
         </div>
@@ -9,13 +9,15 @@
             <form action="" role="form">
                 <div v-for="(item) in configs" class="form-group">
                     <label>{{ item.name }}</label>
-                    <input type="text" class="form-control" v-model="item.value" :placeholder="'Enter ' + item.name">
+                    <input type="text" class="form-control" v-model="item.value" :placeholder="$t('message.IT.c_enter') + item.name">
                 </div>
             </form>
         </div>
 
         <div class="card-footer">
-            <button type="button" @click="submitSaveConfig(typeConfig)" class="btn btn-primary">Save</button>
+            <button type="button" @click="submitSaveConfig(typeConfig)" class="btn btn-primary">
+                {{ $t('message.IT.save') }}
+            </button>
         </div>
     </div>
 </template>
@@ -50,6 +52,7 @@ export default {
 
     methods : {
         async submitSaveConfig(configType) {
+            let self = this;
             this.isLoadingConfig[configType] = true;
             await this.saveListConfig(this.configList.data[configType])
             this.isLoadingConfig[configType] = false;
@@ -58,7 +61,11 @@ export default {
 
             }
 
-            alert('Saved configs success');
+            await swal.fire(
+                self.$t('message.IT.alert_saved'),
+                self.$t('message.IT.alert_saved_config'),
+                'success'
+            )
         },
 
         async saveListConfig(configs) {

@@ -4,7 +4,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Admin Settings / Finance</h1>
+                        <h1 class="m-0">{{ $t('message.finance.f_title') }}</h1>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -26,8 +26,8 @@
 
         <!-- <div class="row">
             <div class="col-sm-6">
-                
-                
+
+
             </div>
 
             <div class="col-sm-6">

@@ -2,7 +2,7 @@
     <div class="card card-outline card-secondary">
         <div class="card-body">
             <div class="progress-group">
-                <span class="progress-text">Ahref API rows consume</span>
+                <span class="progress-text">{{ $t('message.IT.a_title') }}</span>
                 <span class="progress-number"><b>{{ rows_consume }}</b>/500,000</span>
 
                 <div class="progress sm my-3">
@@ -10,12 +10,14 @@
                          :style="'width:'+ consume_percentage + '%'"></div>
                 </div>
 
-                <b>Used: </b> {{ rows_consume }} <br/>
-                <b>Remaining: </b> {{ rows_remaining }} <br/>
+                <b>{{ $t('message.IT.a_used') }}: </b> {{ rows_consume }} <br/>
+                <b>{{ $t('message.IT.a_remaining') }}: </b> {{ rows_remaining }} <br/>
             </div>
 
-            <button class="btn btn-link pull-right" @click="getSubscriptionInfo">Check update
-                <i v-if="loadingUpdate" class="fa fa-refresh fa-spin"></i></button>
+            <button class="btn btn-link pull-right" @click="getSubscriptionInfo">
+                {{ $t('message.IT.a_check_update') }}
+                <i v-if="loadingUpdate" class="fa fa-refresh fa-spin"></i>
+            </button>
         </div>
     </div>
 </template>
