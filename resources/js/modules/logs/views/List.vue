@@ -128,6 +128,12 @@
                             </div>
                         </div>
 
+                        <span v-if="listLogs.total > 10" class="pagination-custom-footer-text m-0 mt-2">
+                            <b>
+                                {{ $t('message.others.table_entries', { from: listLogs.from, to: listLogs.to, end: listLogs.total }) }}
+                            </b>
+                        </span>
+
                         <div class="row">
                             <div class="col">
                                 <table class="table table-hover table-bordered table-striped rlink-table">
@@ -202,7 +208,7 @@ export default {
                 path : this.$route.query.path || '',
                 path_temp : this.$route.query.path_temp || '',
                 page : this.$route.query.page || 0,
-                per_page : this.$route.query.per_page || 5
+                per_page : this.$route.query.per_page || 10
             },
             deleteModel : {
                 month : ''
@@ -210,11 +216,11 @@ export default {
             rolesList : [],
             selectedRole : '',
             listPageOptions : [
-                5,
                 10,
                 25,
                 50,
-                100
+                100,
+                200
             ],
             isLoadingTable : false,
             isPopupLoading : false,
@@ -301,7 +307,7 @@ export default {
                 path : '',
                 path_temp : '',
                 page : 0,
-                per_page : 5
+                per_page : 10
             }
 
             this.getLogsList();

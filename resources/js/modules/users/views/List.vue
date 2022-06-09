@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group input-group-sm float-right" style="width: 65px">
+                        <div class="input-group input-group-sm float-right mb-2" style="width: 65px">
                             <select @change="doSearchList"
                                     class="form-control pull-right"
                                     v-model="filterModel.per_page"
@@ -114,6 +114,16 @@
                                 <option v-for="value in listPageOptions" :value="value">{{ value }}</option>
                             </select>
                         </div>
+
+                        <span v-if="listUser.total > 10" class="pagination-custom-footer-text m-0 mt-2">
+                            <b v-if="filterModel.per_page !== 'All'">
+                                {{ $t('message.others.table_entries', { from: listUser.from, to: listUser.to, end: listUser.total }) }}
+                            </b>
+
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: listUser.total }) }}
+                            </b>
+                        </span>
 
                         <div class="table-responsive">
                             <table id="tbl-users" class="table table-hover table-bordered table-striped rlink-table">
