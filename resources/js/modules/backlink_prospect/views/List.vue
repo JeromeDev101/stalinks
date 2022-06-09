@@ -274,7 +274,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div class="input-group mt-3">
+                                    <div class="input-group mt-3 mb-3">
                                         <button
                                             class="btn btn-default mr-2"
                                             @click="selectAll">
@@ -307,12 +307,14 @@
                             </tr>
                         </table>
 
-                        <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                             <b v-if="filterModel.paginate !== 'All'">
-                                Showing {{ backinkProspectList.from }} to {{ backinkProspectList.to }}
-                                of {{ backinkProspectList.total }} entries.
+                                {{ $t('message.others.table_entries', { from: backinkProspectList.from, to: backinkProspectList.to, end: backinkProspectList.total }) }}
                             </b>
-                            <b v-else>Showing {{ backinkProspectList.total }} entries.</b>
+
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: backinkProspectList.total }) }}
+                            </b>
                         </span>
 
                         <vue-virtual-table

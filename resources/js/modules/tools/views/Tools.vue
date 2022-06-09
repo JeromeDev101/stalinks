@@ -104,11 +104,17 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="pagination-custom-footer-text m-0 pl-2">
-                            <b>Showing {{ listTools.from }} to {{ listTools.to }} of {{ listTools.total }} entries.</b>
+                        <span class="pagination-custom-footer-text m-0">
+                            <b v-if="filterModel.paginate !== 'All'">
+                                {{ $t('message.others.table_entries', { from: listTools.from, to: listTools.to, end: listTools.total }) }}
+                            </b>
+
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: listTools.total }) }}
+                            </b>
                         </span>
 
-                        <div class="input-group input-group-sm float-right" style="width: 65px">
+                        <div class="input-group input-group-sm float-right mb-2" style="width: 65px">
                             <select
                                 v-model="filterModel.paginate"
                                 style="height: 37px;"

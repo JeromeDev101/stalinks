@@ -586,9 +586,9 @@
                             </div>
                         </div>
 
-                        <span class="pagination-custom-footer-text">
-                        <b>Showing {{ listPublish.from }} to {{ listPublish.to }} of {{ listPublish.total }} entries.</b>
-                    </span>
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listPublish.from, to: listPublish.to, end: listPublish.total }) }}</b>
+                        </span>
 
                         <vue-virtual-table
                             v-if="!tableLoading"

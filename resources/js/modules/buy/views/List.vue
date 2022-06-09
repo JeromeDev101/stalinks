@@ -421,8 +421,8 @@
                             </div>
                         </div>
 
-                        <span v-if="listBuy.total > 10" class="pagination-custom-footer-text">
-                            <b>Showing {{ listBuy.from }} to {{ listBuy.to }} of {{ listBuy.total }} entries.</b>
+                        <span v-if="listBuy.total > 10" class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listBuy.from, to: listBuy.to, end: listBuy.total }) }}</b>
                         </span>
 
                         <vue-virtual-table

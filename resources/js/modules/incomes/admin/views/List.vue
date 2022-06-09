@@ -121,11 +121,15 @@
 
                         </div>
 
-                        <span class="pagination-custom-footer-text">
-                        <b>Showing {{ listIncomesAdmin.from }} to {{ listIncomesAdmin.to }} of {{
-                                listIncomesAdmin.total
-                           }} entries.</b>
-                    </span>
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b v-if="filterModel.paginate !== 'All'">
+                                {{ $t('message.others.table_entries', { from: listIncomesAdmin.from, to: listIncomesAdmin.to, end: listIncomesAdmin.total }) }}
+                            </b>
+
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: listIncomesAdmin.total }) }}
+                            </b>
+                        </span>
 
                         <div class="table-responsive">
                             <table id="tbl_incomes_admin"

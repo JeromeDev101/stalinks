@@ -128,8 +128,8 @@
                             </tr>
                         </table>
 
-                        <span class="pagination-custom-footer-text">
-                            <b>Showing {{ listIncomes.from }} to {{ listIncomes.to }} of {{ listIncomes.total }} entries.</b>
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listIncomes.from, to: listIncomes.to, end: listIncomes.total }) }}</b>
                         </span>
 
                         <table id="tbl-income" class="table table-hover table-bordered table-striped rlink-table">

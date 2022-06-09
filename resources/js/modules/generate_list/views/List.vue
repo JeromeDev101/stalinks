@@ -165,7 +165,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table width="100%" class="mt-3">
+                        <table width="100%" class="mt-3 mb-3">
                             <tr>
                                 <td>
                                     <div class="input-group">
@@ -254,11 +254,13 @@
                             </tr>
                         </table>
 
-                        <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                             <b v-if="filterModel.paginate !== 'All'">
-                                Showing {{ generateList.from }} to {{ generateList.to }} of {{ generateList.total }} entries.
+                                {{ $t('message.others.table_entries', { from: generateList.from, to: generateList.to, end: generateList.total }) }}
                             </b>
-                            <b v-else>Showing {{ generateList.total }} entries.</b>
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: generateList.total }) }}
+                            </b>
                         </span>
 
                         <vue-virtual-table

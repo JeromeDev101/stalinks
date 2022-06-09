@@ -232,13 +232,13 @@
 
                         <h5 class="d-inline float-right">{{ $t('message.follow_backlinks.fub_amount') }} $ {{ totalAmount }}</h5>
 
-                        <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                             <b v-if="fillter.paginate !== 'All'">
-                                Showing {{ listBackLink.from }} to {{ listBackLink.to }} of {{ listBackLink.total }} entries.
+                                {{ $t('message.others.table_entries', { from: listBackLink.from, to: listBackLink.to, end: listBackLink.total }) }}
                             </b>
 
                             <b v-else>
-                                Showing all {{ listBackLink.total }} entries.
+                                {{ $t('message.others.table_all_entries', { total: listBackLink.total }) }}
                             </b>
                         </span>
 

@@ -278,7 +278,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row mb-2">
                             <div class="col-md-6">
                                 <div class="input-group input-group-sm float-left">
                                     <div class="btn-group">
@@ -373,11 +373,15 @@
                             </div>
                         </div>
 
-                        <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 pl-2">
-                        <b>
-                            Showing {{ listAccount.from }} to {{ listAccount.to }} of {{ listAccount.total }} entries.
-                        </b>
-                    </span>
+                        <span v-if="listAccount.total > 10" class="pagination-custom-footer-text m-0 mt-2">
+                            <b v-if="filterModel.paginate !== 'All'">
+                                {{ $t('message.others.table_entries', { from: listAccount.from, to: listAccount.to, end: listAccount.total }) }}
+                            </b>
+
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: listAccount.total }) }}
+                            </b>
+                        </span>
 
                         <div class="table-responsive">
                             <table id="tbl_account" class="table table-striped table-bordered" style="font-size: 0.75rem">

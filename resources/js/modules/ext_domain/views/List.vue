@@ -444,13 +444,12 @@
 
                     <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
 
-                       <span v-if="listExt.total > 10" class="pagination-custom-footer-text ml-3">
+                       <span v-if="listExt.total > 10" class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                            <b v-if="!isResultCrawled">
-                               Showing {{ listExt.from }} to {{ listExt.to }} of {{ listExt.total }} entries.
+                               {{ $t('message.others.table_entries', { from: listExt.from, to: listExt.to, end: listExt.total }) }}
                            </b>
                            <b v-else>
-                               Showing {{ listExt.data.length }} crawled items.
-                               Click search or clear filter to refresh the list.
+                               {{ $t('message.others.show_crawled', { items: listExt.data.length }) }}
                            </b>
                        </span>
 

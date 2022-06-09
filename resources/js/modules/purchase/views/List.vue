@@ -162,7 +162,13 @@
                         <div class="row mb-2">
                             <div class="col-6 d-flex align-items-end">
                                 <span class="font-weight-bold" v-if="listPurchase.total > 10">
-                                    Showing {{ listPurchase.from }} to {{ listPurchase.to }} of {{ listPurchase.total }} entries
+                                    <span v-if="filterModel.paginate !== 'All'">
+                                        {{ $t('message.others.table_entries', { from: listPurchase.from, to: listPurchase.to, end: listPurchase.total }) }}
+                                    </span>
+
+                                    <span v-else>
+                                        {{ $t('message.others.table_all_entries', { total: listPurchase.total }) }}
+                                    </span>
                                 </span>
 
                                 <span class="mb-0 ml-5 font-weight-bold">

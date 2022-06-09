@@ -243,13 +243,13 @@
 
                         <button v-if="isTeam"
                                 data-toggle="modal"
-                                @click="clearModels(); clearEditorImages()" data-target="#modal-add-article" class="btn btn-success float-right"><i
+                                @click="clearModels(); clearEditorImages()" data-target="#modal-add-article" class="btn btn-success float-right mr-2 mb-2"><i
                             class="fa fa-plus"></i> {{ $t('message.article.ar_create') }}
                         </button>
 
-                        <span class="pagination-custom-footer-text">
-                        <b>Showing {{ listArticles.data.from }} to {{ listArticles.data.to }} of {{ listArticles.data.total }} entries.</b>
-                    </span>
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listArticles.data.from, to: listArticles.data.to, end: listArticles.data.total }) }}</b>
+                        </span>
 
                         <vue-virtual-table
                             v-if="!tableLoading"

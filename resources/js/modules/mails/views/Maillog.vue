@@ -419,9 +419,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <span v-if="Listlogs.total > 0" class="pagination-custom-footer-text my-0 mx-2">
-                                <b>Showing {{ Listlogs.from }} to {{ Listlogs.to }} of {{ Listlogs.total }} entries.</b>
-                            </span>
+                        <span v-if="Listlogs.total > 0" class="pagination-custom-footer-text my-0 mx-2" style="margin-left: 0 !important;">
+                            <b>
+                                {{ $t('message.others.table_entries', { from: Listlogs.from, to: Listlogs.to, end: Listlogs.total }) }}
+                            </b>
+                        </span>
 
                         <div class="table-responsive">
                             <table class="table table-hover table-bordered table-striped">

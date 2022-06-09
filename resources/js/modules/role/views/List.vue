@@ -72,7 +72,7 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <div class="input-group input-group-sm float-right mb-2" style="width: 100px">
                             <select name=""
                                     class="form-control float-right"
                                     @change="getRoleList"
@@ -84,10 +84,13 @@
                             </select>
                         </div>
 
-                        <span class="pagination-custom-footer-text">
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                             <b v-if="filterModel.paginate !== 'All'">
-                                Showing {{ roleList.from }} to {{ roleList.to }} of {{ roleList.total }} entries.</b>
-                            <b v-else>Showing {{ roleList.total }} entries.</b>
+                                {{ $t('message.others.table_entries', { from: roleList.from, to: roleList.to, end: roleList.total }) }}
+                            </b>
+                            <b v-else>
+                                {{ $t('message.others.table_all_entries', { total: roleList.total }) }}
+                            </b>
                         </span>
 
                         <vue-virtual-table

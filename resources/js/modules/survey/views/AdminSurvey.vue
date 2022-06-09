@@ -976,10 +976,12 @@
 
                         <div class="row px-3 mb-2">
                             <div class="col-6 px-0 align-self-center">
-                                <b>
-                                    Showing {{ surveyQuestionFullDetailsData.data.from }} to
-                                    {{ surveyQuestionFullDetailsData.data.to }} of {{ surveyQuestionFullDetailsData.data.total }}
-                                    entries.
+                                <b v-if="surveyQuestionFullDetails.pagination !== 'All'">
+                                    {{ $t('message.others.table_entries', { from: surveyQuestionFullDetailsData.data.from, to: surveyQuestionFullDetailsData.data.to, end: surveyQuestionFullDetailsData.data.total }) }}
+                                </b>
+
+                                <b v-else>
+                                    {{ $t('message.others.table_all_entries', { total: surveyQuestionFullDetailsData.data.total }) }}
                                 </b>
                             </div>
 

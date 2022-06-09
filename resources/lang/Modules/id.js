@@ -127,6 +127,9 @@ import follow_backlinks from './FollowUpBacklinks/id/main';
 // purchase
 import purchase from './Purchase/id/main';
 
+// others
+import others from './Others/id/main';
+
 export default {
     message : {
         // profile
@@ -257,5 +260,8 @@ export default {
 
         // purchase
         purchase,
+
+        // others
+        others,
     }
 }

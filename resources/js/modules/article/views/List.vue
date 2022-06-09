@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group input-group-sm float-right" style="width: 100px">
+                        <div class="input-group input-group-sm float-right mb-2" style="width: 100px">
                             <select name=""
                                     class="form-control float-right"
                                     @change="doSearch"
@@ -128,10 +128,8 @@
                             </select>
                         </div>
 
-                        <span v-if="listArticlesAdmin.total > 10" class="pagination-custom-footer-text">
-                            <b>Showing {{ listArticlesAdmin.from }} to {{
-                                    listArticlesAdmin.to
-                               }} of {{ listArticlesAdmin.total }} entries.</b>
+                        <span v-if="listArticlesAdmin.total > 10" class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listArticlesAdmin.from, to: listArticlesAdmin.to, end: listArticlesAdmin.total }) }}</b>
                         </span>
 
                         <table id="tbl_article_admin"

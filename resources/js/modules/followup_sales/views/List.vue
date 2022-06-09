@@ -218,8 +218,8 @@
                             </tr>
                         </table>
 
-                        <span class="pagination-custom-footer-text">
-                            <b>Showing {{ listSales.from }} to {{ listSales.to }} of {{ listSales.total }} entries.</b>
+                        <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                            <b>{{ $t('message.others.table_entries', { from: listSales.from, to: listSales.to, end: listSales.total }) }}</b>
                         </span>
 
                         <div class="table-responsive">
