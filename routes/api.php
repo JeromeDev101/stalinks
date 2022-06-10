@@ -271,6 +271,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('get-all-users')->get('/all-users', 'LogController@getAllUsers');
         Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
         Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
+        Route::name('get-log-totals')->get('/logs/totals', 'LogController@getTotals');
         Route::name('add-country')->post('/countries', 'CountryController@store');
         Route::name('add-language')->post('/language', 'ConfigController@storeLanguage');
         Route::name('get-language')->get('/language', 'ConfigController@getLanguage');

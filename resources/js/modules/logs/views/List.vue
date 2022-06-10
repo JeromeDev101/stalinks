@@ -11,7 +11,7 @@
         </div>
 
         <div class="row">
-            <div v-for="(count, key) in counter" class="col-lg-3 col-xs-6">
+            <div v-for="(count, key) in logTotals" class="col-lg-3 col-xs-6">
                 <!-- small box -->
                 <div :class="'small-box bg-' + (actionMeta[key] ? actionMeta[key].label : 'green')">
                     <div class="inner">
@@ -20,6 +20,9 @@
                     </div>
                     <div class="icon">
                         <i :class="'fas fa-' + (actionMeta[key] ? actionMeta[key].icon : 'circle')"></i>
+                    </div>
+                    <div class="overlay" v-if="isTotalsLoading">
+                        <i class="fas fa-3x fa-spin fa-sync-alt"></i>
                     </div>
                 </div>
             </div>
@@ -46,9 +49,9 @@
 
                             <div class="col">
                                 <v-select class="col-sm-12"
-                                          v-model="filterModel.email_temp"
+                                          v-model="filterModel.user_id_temp"
                                           :options="listUser.data"
-                                          :reduce="logUser => logUser.email"
+                                          :reduce="logUser => logUser.id"
                                           label="username"
                                           :placeholder="$t('message.system_logs.sl_users')"/>
                             </div>
@@ -199,6 +202,8 @@ export default {
     data() {
         return {
             filterModel : {
+                user_id: this.$route.query.user_id || '',
+                user_id_temp : Number.parseInt(this.$route.query.user_id_temp) || '',
                 email : this.$route.query.email || '',
                 email_temp : this.$route.query.email_temp || '',
                 table : this.$route.query.table || '',
@@ -228,7 +233,14 @@ export default {
             months : [],
             listUser: [],
 
-            tablePages: Constants.LOG_PAGES
+            tablePages: Constants.LOG_PAGES,
+            logTotals: {
+                create: 0,
+                delete: 0,
+                update: 0,
+                get_alexa: 0,
+            },
+            isTotalsLoading: true,
         };
     },
 
@@ -243,7 +255,9 @@ export default {
         this.initActionMeta();
         this.getTableList();
         this.getActionList();
-        this.getLogsList();
+        this.getLogsList({
+            params : this.filterModel
+        });
         this.getMonthFilter();
         this.getUsersList({
             params : {
@@ -252,16 +266,12 @@ export default {
         });
         this.getRolesList();
         this.getAllUsers()
+        await this.getLogsTotals();
     },
 
     watch : {
         selectedRole() {
-            this.getUsersList({
-                params : {
-                    per_page : 'All',
-                    role : this.selectedRole
-                }
-            });
+            this.getAllUsers();
         }
     },
 
@@ -298,6 +308,8 @@ export default {
     methods : {
         clearFilter() {
             this.filterModel = {
+                user_id: '',
+                user_id_temp: '',
                 email : '',
                 email_temp : '',
                 table : '',
@@ -310,14 +322,23 @@ export default {
                 per_page : 10
             }
 
+            this.selectedRole = '';
+
+            this.$router.replace({'query': null});
+
             this.getLogsList();
+            this.getLogsTotals();
         },
 
         getAllUsers() {
-            axios.get('/api/admin/all-users')
-                .then((res) => {
-                    this.listUser = res;
-                })
+            axios.get('/api/admin/all-users', {
+                params: {
+                    role: this.selectedRole
+                }
+            })
+            .then((res) => {
+                this.listUser = res;
+            })
         },
 
         tableData(itemTable) {
@@ -380,6 +401,29 @@ export default {
             loader.hide();
         },
 
+        async getLogsTotals() {
+            let that = this;
+            that.isTotalsLoading = true;
+
+            that.filterModel.user_id = that.filterModel.user_id_temp;
+            that.filterModel.table = that.filterModel.table_temp;
+            that.filterModel.email = that.filterModel.email_temp;
+            that.filterModel.action = that.filterModel.action_temp;
+            that.filterModel.path = that.filterModel.path_temp;
+
+            axios.get('/api/admin/logs/totals', {
+                params: this.filterModel
+            })
+            .then((res) => {
+                this.logTotals = res.data
+                that.isTotalsLoading = false;
+            })
+            .catch((err) => {
+                console.log(err)
+                that.isTotalsLoading = false;
+            })
+        },
+
         async getUsersList(params) {
             await this.$store.dispatch('actionGetUser', {vue : this, params : params});
         },
@@ -398,11 +442,13 @@ export default {
 
         async doSearchList() {
             let that = this;
+            that.filterModel.user_id = that.filterModel.user_id_temp;
             that.filterModel.table = that.filterModel.table_temp;
             that.filterModel.email = that.filterModel.email_temp;
             that.filterModel.action = that.filterModel.action_temp;
             that.filterModel.path = that.filterModel.path_temp;
             this.goToPage(0);
+            await this.getLogsTotals();
         },
 
         getMonthFilter() {
@@ -425,6 +471,7 @@ export default {
                     axios.delete('/api/admin/logs/flush/' + this.deleteModel.month)
                         .then((response) => {
                             this.getLogsList();
+                            this.getLogsTotals();
 
                             swal.fire({
                                 icon : 'success',

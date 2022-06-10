@@ -27,17 +27,19 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
     {
         $queryBuilder = $this->getQueryBuilderList($perPage, $userEmail, $filters);
         $data = $queryBuilder->paginate($perPage);
-        $actionCreateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_CREATE'))->count();
-        $actionUpdateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_UPDATE'))->count();
-        $actionDeleteCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_DELETE'))->count();
-        $actionAlexaCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_ALEXA'))->count();
+//        $actionCreateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_CREATE'))->count();
+//        $actionUpdateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_UPDATE'))->count();
+//        $actionDeleteCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_DELETE'))->count();
+//        $actionAlexaCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_ALEXA'))->count();
 
-        $counter = [
-            config('constant.ACTION_CREATE') => $actionCreateCount,
-            config('constant.ACTION_UPDATE') => $actionUpdateCount,
-            config('constant.ACTION_DELETE') => $actionDeleteCount,
-            config('constant.ACTION_ALEXA') => $actionAlexaCount
-        ];
+        $counter = [];
+
+//        $counter = [
+//            config('constant.ACTION_CREATE') => $actionCreateCount,
+//            config('constant.ACTION_UPDATE') => $actionUpdateCount,
+//            config('constant.ACTION_DELETE') => $actionDeleteCount,
+//            config('constant.ACTION_ALEXA') => $actionAlexaCount
+//        ];
 
         return ['paginate' => $data, 'counter' => $counter];
     }

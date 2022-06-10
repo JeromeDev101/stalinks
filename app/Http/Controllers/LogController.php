@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Repositories\Contracts\LogRepositoryInterface;
 use App\Repositories\Contracts\MailLogRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -51,8 +52,11 @@ class LogController extends Controller
             ];
         }
 
-        if (isset($input['email']) && $input['email'] != '') {
-            $userEmail = $input['email'];
+        if (isset($input['user_id']) && $input['user_id'] != '') {
+            $filters['where'][] = [
+                'user_id',
+                $input['user_id']
+            ];
         }
 
         if (isset($input['table']) && $input['table'] != '') {
@@ -79,8 +83,51 @@ class LogController extends Controller
         return response()->json($data);
     }
 
+    public function getTotals(Request $request)
+    {
+        $totals = DB::table('logs')
+            ->selectRaw("count(case when logs.action = 'create' then 1 end) as log_create")
+            ->selectRaw("count(case when logs.action = 'update' then 1 end) as log_update")
+            ->selectRaw("count(case when logs.action = 'delete' then 1 end) as log_delete")
+            ->selectRaw("count(case when logs.action = 'get_alexa' then 1 end) as get_alexa");
+
+        if (isset($request->user_id) && $request->user_id != '') {
+            $totals = $totals->where('logs.user_id', $request->user_id);
+        }
+
+        if (isset($request->table) && $request->table != '') {
+            $totals = $totals->where('logs.table', $request->table);
+        }
+
+        if (isset($request->action) && $request->action != '') {
+            $totals = $totals->where('logs.action', $request->action);
+        }
+
+        if (isset($request->path) && $request->path != '') {
+            $totals = $totals->where('logs.page', $request->path);
+        }
+
+        $totals = $totals->first();
+
+        $totals_array = [
+            'create' => $totals->log_create,
+            'update' => $totals->log_update,
+            'delete' => $totals->log_delete,
+            'get_alexa' => $totals->get_alexa,
+        ];
+
+        return response()->json($totals_array);
+    }
+
     public function getAllUsers(Request $request) {
-        $data = User::where('status', 'active')->orderBy('username', 'asc')->get();
+        $data = User::where('status', 'active');
+
+        if (isset($request->role) && $request->role != '') {
+            $data = $data->where('role_id', $request->role);
+        }
+
+        $data = $data->orderBy('username', 'asc')->get();
+
         return response()->json($data);
     }
 
