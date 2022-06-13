@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\Pricelist;
 use App\Models\Language;
+use SplFileObject;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface
 {
@@ -514,198 +515,67 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $csv = fopen($csv_file, 'r');
         $ctr = 0;
 
+        // check number of lines
+        $file_temp = new SplFileObject($csv_file, 'r');
+
+        $file_temp->seek(PHP_INT_MAX);
+        $file_line_numbers = $file_temp->key();
+
         $datas = [];
         $existing_datas = [];
 
-        while (($line = fgetcsv($csv)) !== FALSE) {
-            if (Auth::user()->isOurs == 1) {
+        if ($file_line_numbers > 501) {
 
-                if (count($line) > 8 || count($line) < 8) {
-                    $message = "Please check the header: Url, Price, Inc Article, Accept C&B, KW Anchor, Language, Topic and Country only.";
-                    $file_message = "Invalid Header format. " . $message;
-                    $result = false;
-                    break;
-                }
+            $file_message = "Invalid file: Please upload only 500 urls at a time. Number of urls in file: " . ($file_line_numbers - 1);
+            $result = false;
 
-                if ($ctr > 0) {
+        } else {
+            while (($line = fgetcsv($csv)) !== FALSE) {
+                if (Auth::user()->isOurs == 1) {
 
-                    $url = trim_special_characters($line[0]);
-                    $price = trim_special_characters($line[1]);
-                    $article = trim_special_characters($line[2]);
-                    $accept = trim_special_characters($line[3]);
-                    $kw_anchor = trim_special_characters($line[4]);
-                    $language_excel = trim_special_characters($line[5]);
-                    $topic = trim_special_characters($line[6]);
-                    $country = trim_special_characters($line[7]);
-
-                    // remove http
-                    $url = remove_http($url);
-
-                    // remove space
-                    $url = trim($url, " ");
-
-                    // remove /
-                    $url = rtrim($url,"/");
-
-                    $isCheckDuplicate = $this->checkDuplicate($url, $id);
-                    $isCheckedTopic = $this->checkTopic($topic);
-
-                    // check if url format is valid
-                    $isValidURL = $this->isValidURL($url);
-
-                    if($url != ''
-                        && $topic != ''
-                        && $price != ''
-                        && $accept != ''
-                        && $article != ''
-                        && $country != ''
-                        && $kw_anchor != ''
-                        && $language_excel != '')  {
-
-                        if ($isValidURL) {
-
-                            // check yes and no values
-                            if ( in_array($article, $yes_no_values) && in_array($accept, $yes_no_values) && in_array($kw_anchor, $yes_no_values) ) {
-
-                                if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
-
-                                    if ($isCheckedTopic) {
-
-                                        if (preg_grep("/" . $country . "/i", $country_name_list)) {
-
-                                            if (!$isCheckDuplicate) {
-
-                                                if (trim($url, " ") != '') {
-                                                    $lang = $this->getLanguage($language_excel);
-                                                    $count = $this->getCountry($country);
-                                                    $valid = $this->checkValid($url);
-
-                                                    Publisher::create([
-                                                        'user_id'      => $id,
-                                                        'language_id'  => $lang,
-                                                        'continent_id' => $count->continent_id,
-                                                        'country_id'   => $count->id,
-                                                        'url'          => $url,
-                                                        'ur'           => 0,
-                                                        'dr'           => 0,
-                                                        'backlinks'    => 0,
-                                                        'ref_domain'   => 0,
-                                                        'org_keywords' => 0,
-                                                        'org_traffic'  => 0,
-                                                        'price'        => preg_replace('/[^0-9.\-]/', '', $price),
-                                                        'inc_article'  => ucwords(strtolower(trim($article, " "))),
-                                                        'valid'        => $valid,
-                                                        'casino_sites' => ucwords(strtolower(trim($accept, " "))),
-                                                        'kw_anchor'    => ucwords(strtolower(trim($kw_anchor, " "))),
-                                                        'topic'        => $topic,
-                                                        'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
-                                                    ]);
-                                                }
-                                            } else {
-                                                $file_message = "You have already uploaded this url: " . $url . ", Check in line " . (intval($ctr) + 1);
-                                                $result = true;
-
-                                                array_push($existing_datas, [
-                                                    'message' => $file_message
-                                                ]);
-                                            }
-                                        } else {
-                                            $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
-                                            $result = true;
-
-                                            array_push($existing_datas, [
-                                                'message' => $file_message
-                                            ]);
-                                        }
-                                    } else {
-                                        $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
-                                        $result = true;
-
-                                        array_push($existing_datas, [
-                                            'message' => $file_message
-                                        ]);
-                                    }
-                                } else {
-                                    $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
-                                    $result = true;
-
-                                    array_push($existing_datas, [
-                                        'message' => $file_message
-                                    ]);
-                                }
-                            } else {
-                                $file_message = "Invalid data. Inc Article, Accept C&B and KW Anchor values must be yes/no only. Check line " . (intval($ctr) + 1);
-                                $result = true;
-
-                                array_push($existing_datas, [
-                                    'message' => $file_message
-                                ]);
-                            }
-                        } else {
-                            $file_message = "Invalid url format: " . $url . $message . ". Check in line " . (intval($ctr) + 1);
-                            $result = true;
-
-                            array_push($existing_datas, [
-                                'message' => $file_message
-                            ]);
-                        }
-
-                    } else {
-                        $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
-                        $result = true;
-
-                        array_push($existing_datas, [
-                            'message' => $file_message
-                        ]);
+                    if (count($line) > 8 || count($line) < 8) {
+                        $message = "Please check the header: Url, Price, Inc Article, Accept C&B, KW Anchor, Language, Topic and Country only.";
+                        $file_message = "Invalid Header format. " . $message;
+                        $result = false;
+                        break;
                     }
-                }
-            } else {
-                if (count($line) > 9 || count($line) < 9) {
-                    $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept C&B, Language, Topic, Country and Kw Anchor only.";
-                    $file_message = "Invalid Header format. " . $message;
-                    $result = false;
-                    break;
-                }
 
-                if ($ctr > 0) {
-                    $url = trim_special_characters($line[0]);
-                    $price = trim_special_characters($line[1]);
-                    $article = trim_special_characters($line[2]);
-                    $seller_id = trim_special_characters($line[3]);
-                    $accept = trim_special_characters($line[4]);
-                    $language_excel = trim_special_characters($line[5]);
-                    $topic = trim_special_characters($line[6]);
-                    $country = trim_special_characters($line[7]);
-                    $kw_anchor = trim_special_characters($line[8]);
+                    if ($ctr > 0) {
 
-                    // remove http
-                    $url = remove_http($url);
+                        $url = trim_special_characters($line[0]);
+                        $price = trim_special_characters($line[1]);
+                        $article = trim_special_characters($line[2]);
+                        $accept = trim_special_characters($line[3]);
+                        $kw_anchor = trim_special_characters($line[4]);
+                        $language_excel = trim_special_characters($line[5]);
+                        $topic = trim_special_characters($line[6]);
+                        $country = trim_special_characters($line[7]);
 
-                    // remove space
-                    $url = trim($url, " ");
+                        // remove http
+                        $url = remove_http($url);
 
-                    // remove /
-                    $url = rtrim($url,"/");
+                        // remove space
+                        $url = trim($url, " ");
 
-                    $isCheckDuplicate = $this->checkDuplicate($url, $seller_id);
-                    $isCheckedTopic = $this->checkTopic($topic);
+                        // remove /
+                        $url = rtrim($url,"/");
 
-                    // check if url format is valid
-                    $isValidURL = $this->isValidURL($url);
+                        $isCheckDuplicate = $this->checkDuplicate($url, $id);
+                        $isCheckedTopic = $this->checkTopic($topic);
 
-                    if($url != ''
-                        && $price != ''
-                        && $topic != ''
-                        && $accept != ''
-                        && $article != ''
-                        && $country != ''
-                        && $kw_anchor != ''
-                        && $seller_id != ''
-                        && $language_excel != '')  {
+                        // check if url format is valid
+                        $isValidURL = $this->isValidURL($url);
 
-                        if ($isValidURL) {
+                        if($url != ''
+                            && $topic != ''
+                            && $price != ''
+                            && $accept != ''
+                            && $article != ''
+                            && $country != ''
+                            && $kw_anchor != ''
+                            && $language_excel != '')  {
 
-                            if (in_array($seller_id, $user_id_list)) {
+                            if ($isValidURL) {
 
                                 // check yes and no values
                                 if ( in_array($article, $yes_no_values) && in_array($accept, $yes_no_values) && in_array($kw_anchor, $yes_no_values) ) {
@@ -719,13 +589,12 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                 if (!$isCheckDuplicate) {
 
                                                     if (trim($url, " ") != '') {
-
                                                         $lang = $this->getLanguage($language_excel);
                                                         $count = $this->getCountry($country);
                                                         $valid = $this->checkValid($url);
 
                                                         Publisher::create([
-                                                            'user_id'      => $seller_id,
+                                                            'user_id'      => $id,
                                                             'language_id'  => $lang,
                                                             'continent_id' => $count->continent_id,
                                                             'country_id'   => $count->id,
@@ -740,13 +609,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                             'inc_article'  => ucwords(strtolower(trim($article, " "))),
                                                             'valid'        => $valid,
                                                             'casino_sites' => ucwords(strtolower(trim($accept, " "))),
+                                                            'kw_anchor'    => ucwords(strtolower(trim($kw_anchor, " "))),
                                                             'topic'        => $topic,
-                                                            'kw_anchor'    => $kw_anchor,
                                                             'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
                                                         ]);
                                                     }
                                                 } else {
-                                                    $file_message = " URL and Seller ID already exist, Check in line " . (intval($ctr) + 1);
+                                                    $file_message = "You have already uploaded this url: " . $url . ", Check in line " . (intval($ctr) + 1);
                                                     $result = true;
 
                                                     array_push($existing_datas, [
@@ -786,7 +655,159 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                     ]);
                                 }
                             } else {
-                                $file_message = "No Seller ID of " . $seller_id . $message . ". Check in line " . (intval($ctr) + 1);
+                                $file_message = "Invalid url format: " . $url . $message . ". Check in line " . (intval($ctr) + 1);
+                                $result = true;
+
+                                array_push($existing_datas, [
+                                    'message' => $file_message
+                                ]);
+                            }
+
+                        } else {
+                            $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
+                            $result = true;
+
+                            array_push($existing_datas, [
+                                'message' => $file_message
+                            ]);
+                        }
+                    }
+                } else {
+                    if (count($line) > 9 || count($line) < 9) {
+                        $message = "Please check the header: Url, Price, Inc Article, Seller ID, Accept C&B, Language, Topic, Country and Kw Anchor only.";
+                        $file_message = "Invalid Header format. " . $message;
+                        $result = false;
+                        break;
+                    }
+
+                    if ($ctr > 0) {
+                        $url = trim_special_characters($line[0]);
+                        $price = trim_special_characters($line[1]);
+                        $article = trim_special_characters($line[2]);
+                        $seller_id = trim_special_characters($line[3]);
+                        $accept = trim_special_characters($line[4]);
+                        $language_excel = trim_special_characters($line[5]);
+                        $topic = trim_special_characters($line[6]);
+                        $country = trim_special_characters($line[7]);
+                        $kw_anchor = trim_special_characters($line[8]);
+
+                        // remove http
+                        $url = remove_http($url);
+
+                        // remove space
+                        $url = trim($url, " ");
+
+                        // remove /
+                        $url = rtrim($url,"/");
+
+                        $isCheckDuplicate = $this->checkDuplicate($url, $seller_id);
+                        $isCheckedTopic = $this->checkTopic($topic);
+
+                        // check if url format is valid
+                        $isValidURL = $this->isValidURL($url);
+
+                        if($url != ''
+                            && $price != ''
+                            && $topic != ''
+                            && $accept != ''
+                            && $article != ''
+                            && $country != ''
+                            && $kw_anchor != ''
+                            && $seller_id != ''
+                            && $language_excel != '')  {
+
+                            if ($isValidURL) {
+
+                                if (in_array($seller_id, $user_id_list)) {
+
+                                    // check yes and no values
+                                    if ( in_array($article, $yes_no_values) && in_array($accept, $yes_no_values) && in_array($kw_anchor, $yes_no_values) ) {
+
+                                        if (preg_grep("/" . $language_excel . "/i", $language_name_list)) {
+
+                                            if ($isCheckedTopic) {
+
+                                                if (preg_grep("/" . $country . "/i", $country_name_list)) {
+
+                                                    if (!$isCheckDuplicate) {
+
+                                                        if (trim($url, " ") != '') {
+
+                                                            $lang = $this->getLanguage($language_excel);
+                                                            $count = $this->getCountry($country);
+                                                            $valid = $this->checkValid($url);
+
+                                                            Publisher::create([
+                                                                'user_id'      => $seller_id,
+                                                                'language_id'  => $lang,
+                                                                'continent_id' => $count->continent_id,
+                                                                'country_id'   => $count->id,
+                                                                'url'          => $url,
+                                                                'ur'           => 0,
+                                                                'dr'           => 0,
+                                                                'backlinks'    => 0,
+                                                                'ref_domain'   => 0,
+                                                                'org_keywords' => 0,
+                                                                'org_traffic'  => 0,
+                                                                'price'        => preg_replace('/[^0-9.\-]/', '', $price),
+                                                                'inc_article'  => ucwords(strtolower(trim($article, " "))),
+                                                                'valid'        => $valid,
+                                                                'casino_sites' => ucwords(strtolower(trim($accept, " "))),
+                                                                'topic'        => $topic,
+                                                                'kw_anchor'    => $kw_anchor,
+                                                                'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                                                            ]);
+                                                        }
+                                                    } else {
+                                                        $file_message = " URL and Seller ID already exist, Check in line " . (intval($ctr) + 1);
+                                                        $result = true;
+
+                                                        array_push($existing_datas, [
+                                                            'message' => $file_message
+                                                        ]);
+                                                    }
+                                                } else {
+                                                    $file_message = "No Country name of " . $country . $message . ". Check in line " . (intval($ctr) + 1);
+                                                    $result = true;
+
+                                                    array_push($existing_datas, [
+                                                        'message' => $file_message
+                                                    ]);
+                                                }
+                                            } else {
+                                                $file_message = " No Topic name of " . $topic . $message . ". Check in line " . (intval($ctr) + 1);
+                                                $result = true;
+
+                                                array_push($existing_datas, [
+                                                    'message' => $file_message
+                                                ]);
+                                            }
+                                        } else {
+                                            $file_message = "No Language name of " . $language_excel . $message . ". Check in line " . (intval($ctr) + 1);
+                                            $result = true;
+
+                                            array_push($existing_datas, [
+                                                'message' => $file_message
+                                            ]);
+                                        }
+                                    } else {
+                                        $file_message = "Invalid data. Inc Article, Accept C&B and KW Anchor values must be yes/no only. Check line " . (intval($ctr) + 1);
+                                        $result = true;
+
+                                        array_push($existing_datas, [
+                                            'message' => $file_message
+                                        ]);
+                                    }
+                                } else {
+                                    $file_message = "No Seller ID of " . $seller_id . $message . ". Check in line " . (intval($ctr) + 1);
+                                    $result = true;
+
+                                    array_push($existing_datas, [
+                                        'message' => $file_message
+                                    ]);
+                                }
+                            } else {
+                                $file_message = "Invalid url format: " . $url . $message . ". Check in line " . (intval($ctr) + 1);
                                 $result = true;
 
                                 array_push($existing_datas, [
@@ -794,25 +815,18 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                 ]);
                             }
                         } else {
-                            $file_message = "Invalid url format: " . $url . $message . ". Check in line " . (intval($ctr) + 1);
+                            $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
                             $result = true;
 
                             array_push($existing_datas, [
                                 'message' => $file_message
                             ]);
                         }
-                    } else {
-                        $file_message = "Invalid data. Columns cannot be empty. Check in line " . (intval($ctr) + 1);
-                        $result = true;
-
-                        array_push($existing_datas, [
-                            'message' => $file_message
-                        ]);
                     }
                 }
-            }
 
-            $ctr++;
+                $ctr++;
+            }
         }
 
         fclose($csv);
