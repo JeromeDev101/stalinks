@@ -77,7 +77,7 @@ class LogController extends Controller
             $perPage = $input['per_page'];
         }
 
-        $data             = $this->logRepository->paginate($perPage, $userEmail, $filters);
+        $data             = $this->logRepository->paginate($perPage, $userEmail, $filters, $request);
         $data['paginate'] = $this->addPaginationRaw($data['paginate']);
 
         return response()->json($data);
@@ -105,6 +105,15 @@ class LogController extends Controller
 
         if (isset($request->path) && $request->path != '') {
             $totals = $totals->where('logs.page', $request->path);
+        }
+
+        if (isset($request['date'])) {
+            $request['date'] = \GuzzleHttp\json_decode($request['date'], true);
+
+            if ($request['date']['startDate'] != null && $request['date']['endDate'] != null) {
+                $totals = $totals->whereDate('logs.created_at', '>=', Carbon::create( $request['date']['startDate'])->format('Y-m-d'));
+                $totals = $totals->whereDate('logs.created_at', '<=', Carbon::create($request['date']['endDate'])->format('Y-m-d'));
+            }
         }
 
         $totals = $totals->first();

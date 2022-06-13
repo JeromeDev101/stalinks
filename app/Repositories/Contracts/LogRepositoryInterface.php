@@ -7,5 +7,5 @@ use App\Repositories\Contracts\RepositoryInterface;
 
 interface LogRepositoryInterface extends RepositoryInterface
 {
-    public function paginate($perPage, $userEmail, $filters);
+    public function paginate($perPage, $userEmail, $filters, $request);
 }

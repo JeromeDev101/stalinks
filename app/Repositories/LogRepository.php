@@ -6,6 +6,7 @@ namespace App\Repositories;
 use App\Models\Log;
 use App\Repositories\BaseRepository;
 use App\Repositories\Contracts\LogRepositoryInterface;
+use Carbon\Carbon;
 
 class LogRepository extends BaseRepository implements LogRepositoryInterface
 {
@@ -23,9 +24,19 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
         parent::__construct($model);
     }
 
-    public function paginate($perPage, $userEmail, $filters)
+    public function paginate($perPage, $userEmail, $filters, $request)
     {
         $queryBuilder = $this->getQueryBuilderList($perPage, $userEmail, $filters);
+
+        if (isset($request['date'])) {
+            $request['date'] = \GuzzleHttp\json_decode($request['date'], true);
+
+            if ($request['date']['startDate'] != null && $request['date']['endDate'] != null) {
+                $queryBuilder = $queryBuilder->whereDate('logs.created_at', '>=', Carbon::create( $request['date']['startDate'])->format('Y-m-d'));
+                $queryBuilder = $queryBuilder->whereDate('logs.created_at', '<=', Carbon::create($request['date']['endDate'])->format('Y-m-d'));
+            }
+        }
+
         $data = $queryBuilder->paginate($perPage);
 //        $actionCreateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_CREATE'))->count();
 //        $actionUpdateCount = $this->getQueryBuilderList($perPage, $userEmail, $filters)->where('action', config('constant.ACTION_UPDATE'))->count();

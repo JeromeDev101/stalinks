@@ -37,86 +37,109 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row mb-4">
-                            <div class="col">
-                                <v-select class="col-sm-12"
-                                          v-model="selectedRole"
-                                          :options="rolesList"
-                                          :reduce="roleTemp => roleTemp.id"
-                                          label="name"
-                                          :placeholder="$t('message.system_logs.sl_roles')"/>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <v-select
+                                    class="style-chooser"
+                                    v-model="selectedRole"
+                                    :options="rolesList"
+                                    :reduce="roleTemp => roleTemp.id"
+                                    label="name"
+                                    :placeholder="$t('message.system_logs.sl_roles')"/>
                             </div>
 
-                            <div class="col">
-                                <v-select class="col-sm-12"
-                                          v-model="filterModel.user_id_temp"
-                                          :options="listUser.data"
-                                          :reduce="logUser => logUser.id"
-                                          label="username"
-                                          :placeholder="$t('message.system_logs.sl_users')"/>
+                            <div class="col-md-3">
+                                <v-select
+                                    class="style-chooser"
+                                    v-model="filterModel.user_id_temp"
+                                    :options="listUser.data"
+                                    :reduce="logUser => logUser.id"
+                                    label="username"
+                                    :placeholder="$t('message.system_logs.sl_users')"/>
                             </div>
 
-                            <div class="col">
-                                <v-select class="col-sm-12"
-                                          v-model="filterModel.table_temp"
-                                          :options="listTable"
-                                          :reduce="tableTemp => tableTemp.id"
-                                          label="value"
-                                          :placeholder="$t('message.system_logs.sl_tables')"/>
+                            <div class="col-md-3">
+                                <v-select
+                                    class="style-chooser"
+                                    v-model="filterModel.table_temp"
+                                    :options="listTable"
+                                    :reduce="tableTemp => tableTemp.id"
+                                    label="value"
+                                    :placeholder="$t('message.system_logs.sl_tables')"/>
                             </div>
 
-                            <div class="col">
-                                <v-select class="col-sm-12"
-                                          v-model="filterModel.action_temp"
-                                          :options="listAction"
-                                          :reduce="actionTemp => actionTemp.id"
-                                          label="value"
-                                          :placeholder="$t('message.system_logs.sl_actions')"/>
-                            </div>
-
-                            <div class="col">
-                                <v-select class="col-sm-12"
-                                          v-model="filterModel.path_temp"
-                                          :options="listPages"
-                                          :reduce="pathTemp => pathTemp.path"
-                                          label="name"
-                                          :placeholder="$t('message.system_logs.sl_pages')"/>
-                            </div>
-
-                            <div class="col">
-                                <div class="row">
-                                    <button @click="doSearchList"
-                                            type="submit"
-                                            title="Filter"
-                                            class="btn btn-default col-5 mr-2">
-                                        {{ $t('message.system_logs.search') }}
-                                    </button>
-
-                                    <button @click="clearFilter"
-                                            title="Clear Filter"
-                                            class="btn btn-default col-5">
-                                        {{ $t('message.system_logs.clear') }}
-                                    </button>
-                                </div>
+                            <div class="col-md-3">
+                                <v-select
+                                    class="style-chooser"
+                                    v-model="filterModel.action_temp"
+                                    :options="listAction"
+                                    :reduce="actionTemp => actionTemp.id"
+                                    label="value"
+                                    :placeholder="$t('message.system_logs.sl_actions')"/>
                             </div>
                         </div>
 
                         <div class="row mb-4">
-                            <div class="col-1">
-                                <label class="float-right">{{ $t('message.system_logs.sl_delete') }}</label>
+                            <div class="col-md-3">
+                                <v-select
+                                    class="style-chooser"
+                                    v-model="filterModel.path_temp"
+                                    :options="listPages"
+                                    :reduce="pathTemp => pathTemp.path"
+                                    label="name"
+                                    :placeholder="$t('message.system_logs.sl_pages')"/>
                             </div>
 
-                            <div class="col-2">
-                                <select class="form-control" v-model="deleteModel.month">
-                                    <option value="">{{ $t('message.system_logs.sl_select_month') }}</option>
-                                    <option v-for="value in months" :value="value.month">{{ value.month_name }}</option>
-                                </select>
+                            <div class="col-md-3">
+                                <date-range-picker
+                                    v-model="filterModel.date"
+                                    :ranges="generateDefaultDateRange()"
+                                    ref="picker"
+                                    opens="right"
+                                    style="width: 100%"
+                                    :linkedCalendars="true"
+                                    :dateRange="filterModel.date"
+                                    :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                />
                             </div>
 
-                            <div class="col-4">
-                                <button type="button" @click="deleteMonth" class="btn btn-danger col col-2">
-                                    {{ $t('message.system_logs.delete') }}
+                            <div class="col-md-3">
+                                <button @click="doSearchList"
+                                        type="submit"
+                                        title="Filter"
+                                        class="btn btn-default col-5 mr-2">
+                                    {{ $t('message.system_logs.search') }}
                                 </button>
+
+                                <button @click="clearFilter"
+                                        title="Clear Filter"
+                                        class="btn btn-default col-5">
+                                    {{ $t('message.system_logs.clear') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
+                                            {{ $t('message.system_logs.sl_delete') }}
+                                        </span>
+                                    </div>
+
+                                    <select class="form-control" v-model="deleteModel.month">
+                                        <option value="">{{ $t('message.system_logs.sl_select_month') }}</option>
+                                        <option v-for="value in months" :value="value.month">{{ value.month_name }}</option>
+                                    </select>
+
+                                    <div class="input-group-append">
+                                        <button type="button" @click="deleteMonth" class="btn btn-danger">
+                                            {{ $t('message.system_logs.delete') }}
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col">
@@ -195,10 +218,11 @@ import {mapState} from 'vuex';
 import axios from 'axios';
 import _ from 'lodash';
 import {Constants} from "../../../mixins/constants";
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
     name : 'LogsList',
-    mixins: [Constants],
+    mixins: [Constants, dateRange],
     data() {
         return {
             filterModel : {
@@ -213,7 +237,11 @@ export default {
                 path : this.$route.query.path || '',
                 path_temp : this.$route.query.path_temp || '',
                 page : this.$route.query.page || 0,
-                per_page : this.$route.query.per_page || 10
+                per_page : this.$route.query.per_page || 10,
+                date : {
+                    startDate : null,
+                    endDate : null,
+                },
             },
             deleteModel : {
                 month : ''
@@ -319,7 +347,11 @@ export default {
                 path : '',
                 path_temp : '',
                 page : 0,
-                per_page : 10
+                per_page : 10,
+                date : {
+                    startDate : null,
+                    endDate : null,
+                },
             }
 
             this.selectedRole = '';
@@ -405,6 +437,8 @@ export default {
             let that = this;
             that.isTotalsLoading = true;
 
+            // change the format of date
+            that.filterModel.date = that.formatFilterDates(this.filterModel.date)
             that.filterModel.user_id = that.filterModel.user_id_temp;
             that.filterModel.table = that.filterModel.table_temp;
             that.filterModel.email = that.filterModel.email_temp;
@@ -442,11 +476,14 @@ export default {
 
         async doSearchList() {
             let that = this;
+            // change the format of date
+            that.filterModel.date = that.formatFilterDates(this.filterModel.date)
             that.filterModel.user_id = that.filterModel.user_id_temp;
             that.filterModel.table = that.filterModel.table_temp;
             that.filterModel.email = that.filterModel.email_temp;
             that.filterModel.action = that.filterModel.action_temp;
             that.filterModel.path = that.filterModel.path_temp;
+
             this.goToPage(0);
             await this.getLogsTotals();
         },
