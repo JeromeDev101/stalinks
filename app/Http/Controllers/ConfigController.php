@@ -82,6 +82,10 @@ class ConfigController extends Controller
         return $result;
     }
 
+    public function getAlexaConsume() {
+        return Config::where('code', 'alexa_consume')->first();
+    }
+
     public function getFormula() {
         $formula = Formula::all();
         return response()->json(['data' => $formula],200);

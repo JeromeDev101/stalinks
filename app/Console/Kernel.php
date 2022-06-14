@@ -37,6 +37,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('system-logs:flush')->daily();
         $schedule->command('email_attachments:delete')->daily();
         $schedule->command('health:check')->everyFiveMinutes();
+        $schedule->command('alexa:reset')->monthly();
     }
 
     /**

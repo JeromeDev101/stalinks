@@ -25,6 +25,7 @@ use App\Models\Publisher;
 use App\Models\User;
 use App\Models\Country;
 use App\Models\ExtDomain;
+use App\Models\Config;
 use League\OAuth2\Server\RequestEvent;
 use PharIo\Manifest\Email;
 
@@ -160,7 +161,18 @@ class ExtDomainController extends Controller
             $count = $input['count'];
         }
 
-         // Comment for save money :D
+        // save consume of alexa base on count
+        $alexa = Config::where('code', 'alexa_consume')->first();
+        $value = intVal($alexa->value);
+        $consume = $value + intVal($count);
+        if($consume > 40000) {
+            $remaining = 40000 - $value;
+            return response()->json(['remaining'=>$remaining], 400);
+        }
+
+        $alexa->update(['value' => $consume]);
+
+        // Comment for save money :D
         $alexaLib = $this->getAlexaInstance($countryCode, $start, $count);
         $newData = $alexaLib->getTopSites($this->extDomainRepository);
 

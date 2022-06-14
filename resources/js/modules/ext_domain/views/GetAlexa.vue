@@ -117,6 +117,7 @@
 
 <script>
     import { mapState } from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: 'AlexaList',
@@ -130,6 +131,7 @@
                 },
 
                 isLoadingTable: false,
+                isAlexaConsumed: false,
             };
         },
 
@@ -138,6 +140,8 @@
             this.updateUserPermission();
             this.initFilter();
             this.getListCountries();
+            this.checkConsumeAlexa()
+            
         },
 
         computed: {
@@ -204,7 +208,27 @@
                 //this.isLoadingTable = false;
             },
 
+            checkConsumeAlexa() {
+                axios.get('/api/alexa-consume')
+                .then((res)=> {
+                    let result = res.data
+                    let val = parseInt(result.value)
+
+                    console.log(val)
+                    if(val > 40000) {
+                        this.isAlexaConsumed = true;
+                    } else {
+                        this.isAlexaConsumed = false;
+                    }
+                })
+            },
+
             async doGetAlexaRank() {
+                if (this.isAlexaConsumed) {
+                    swal.fire('Invalid', 'Sorry getting Alexa is already reach the limit', 'error')
+                    return false;
+                }
+
                 if (this.isLoadingTable) return;
                 let that = this;
                 await this.getAlexaRank({
@@ -213,7 +237,8 @@
                         count: that.filterModel2.count
                     });
 
-                console.log(this.listAlexa.status)
+                // console.log(this.listAlexa.status)
+                // this.checkConsumeAlexa()
             },
 
             initFilter() {

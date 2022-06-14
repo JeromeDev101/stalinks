@@ -26,9 +26,15 @@
                     <ahref></ahref>
                 </div>
 
-                <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto' && typeConfig !== 'skrill' && typeConfig !== 'affiliate'">
-                    <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
+                <div class="col-12">
+                    <get-alexa></get-alexa>
                 </div>
+
+
+
+                <!-- <div class="col-12" v-for="(configs, typeConfig) in configList.data" v-if="typeConfig !== 'crypto' && typeConfig !== 'skrill' && typeConfig !== 'affiliate'">
+                    <config :configs="configs" :message-forms="messageForms" :type-config="typeConfig"></config>
+                </div> -->
             </div>
         </div>
     </div>
@@ -39,6 +45,7 @@ import {mapState} from "vuex";
 import Language from "./Language";
 import MailAccess from "./MailAccess";
 import Ahref from "./Ahref";
+import GetAlexa from "./GetAlexa";
 import Config from "./Config";
 
 export default {
@@ -48,7 +55,8 @@ export default {
         Language,
         MailAccess,
         Ahref,
-        Config
+        Config,
+        GetAlexa
     },
 
     created() {
