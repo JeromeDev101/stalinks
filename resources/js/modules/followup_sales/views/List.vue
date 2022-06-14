@@ -309,6 +309,8 @@
                                             <a :href="'//' + replaceCharacters(sales.publisher.url)" target="_blank">
                                                 {{ replaceCharacters(sales.publisher.url) }}
                                             </a>
+
+                                            <span v-if="sales.publisher.deleted_at" class="badge badge-danger">Deleted by Seller</span>
                                         </span>
                                     </td>
                                     <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
