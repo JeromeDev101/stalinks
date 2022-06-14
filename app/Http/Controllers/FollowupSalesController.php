@@ -27,6 +27,7 @@ class FollowupSalesController extends Controller
     public function getList(Request $request)
     {
         $filter = $request->all();
+
         $paginate = isset($filter['paginate']) && !empty($filter['paginate']) ? $filter['paginate'] : 50;
         $user = Auth::user();
         $list = Backlink::select('backlinks.*', 'publisher.url as publisher_url', 'B.username as in_charge', 'article.id as article_id')
@@ -115,6 +116,12 @@ class FollowupSalesController extends Controller
                 $list->whereDate('live_date', '>=', Carbon::create($filter['date_completed']['startDate'])->format('Y-m-d'));
                 $list->whereDate('live_date', '<=', Carbon::create($filter['date_completed']['endDate'])->format('Y-m-d'));
             }
+        }
+
+        if (isset($filter['deleted_by_seller']) && $filter['deleted_by_seller'] === 'yes') {
+            $list->whereNotNull('publisher.deleted_at');
+        } else if (isset($filter['deleted_by_seller']) && $filter['deleted_by_seller'] === 'no') {
+            $list->whereNull('publisher.deleted_at');
         }
 
         $data = $list->paginate($paginate);

@@ -167,6 +167,16 @@
                                 </div>
                             </div>
 
+                            <div v-if="user.isOurs === 0" class="col-md-2">
+                                <div class="form-group">
+                                    <label>Show Deleted by Seller</label>
+                                    <select class="form-control" v-model="filterModel.deleted_by_seller">
+                                        <option value="">{{ $t('message.publisher.all') }}</option>
+                                        <option value="no">{{ $t('message.publisher.no') }}</option>
+                                        <option value="yes">{{ $t('message.publisher.yes') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -1047,7 +1057,8 @@
                     date_completed: {
                         startDate: '',
                         endDate: ''
-                    }
+                    },
+                    deleted_by_seller: this.$route.query.deleted_by_seller || '',
                 },
                 searchLoading: false,
                 isLive: false,
@@ -1220,6 +1231,7 @@
                             country_id: this.filterModel.country_id,
                             date_completed: this.filterModel.date_completed,
                             process_date: this.filterModel.process_date,
+                            deleted_by_seller: this.filterModel.deleted_by_seller
                         }
                     });
 
@@ -1238,6 +1250,7 @@
                             country_id: this.filterModel.country_id,
                             date_completed: this.filterModel.date_completed,
                             process_date: this.filterModel.process_date,
+                            deleted_by_seller: this.filterModel.deleted_by_seller
                         }
 
                     });
@@ -1372,7 +1385,8 @@
                         country_id: this.filterModel.country_id,
                         in_charge: this.filterModel.in_charge,
                         process_date: this.filterModel.process_date,
-                        date_completed: this.filterModel.date_completed
+                        date_completed: this.filterModel.date_completed,
+                        deleted_by_seller: this.filterModel.deleted_by_seller
                     }
                 });
 
@@ -1399,7 +1413,8 @@
                     date_completed: {
                         startDate: null,
                         endDate: null
-                    }
+                    },
+                    deleted_by_seller: '',
                 }
 
                 this.getListSales({
