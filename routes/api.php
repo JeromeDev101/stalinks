@@ -267,11 +267,6 @@ Route::middleware('auth:api')->group(function () {
         //Route::name('update-user')->put('/update-user', 'AuthController@edit');
         Route::name('update-user-permission')->put('/update-user-permission', 'UserController@editPermissions');
         Route::name('update-user-int-permission')->put('/update-user-int-permission', 'UserController@editIntPermissions');
-        Route::name('get-logs')->get('/logs', 'LogController@getList');
-        Route::name('get-all-users')->get('/all-users', 'LogController@getAllUsers');
-        Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
-        Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
-        Route::name('get-log-totals')->get('/logs/totals', 'LogController@getTotals');
         Route::name('add-country')->post('/countries', 'CountryController@store');
         Route::name('add-language')->post('/language', 'ConfigController@storeLanguage');
         Route::name('get-language')->get('/language', 'ConfigController@getLanguage');
@@ -286,9 +281,16 @@ Route::middleware('auth:api')->group(function () {
         Route::name('add-payment-image')->post('/payment-type/image/{id}', 'PaymentController@uploadPaymentTypeImage');
         Route::name('get-email-access')->get('/email-access', 'ConfigController@getEmailAccessList');
         Route::name('post-email-access')->post('/email-access', 'ConfigController@addEmailAccess');
-        Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
-        Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
     });
+
+    // System Logs
+    Route::name('get-logs')->get('/logs', 'LogController@getList');
+    Route::name('get-all-users')->get('/all-users', 'LogController@getAllUsers');
+    Route::name('get-log-tables')->get('/logs/tables', 'LogController@getTables');
+    Route::name('get-log-actions')->get('/logs/actions', 'LogController@getActions');
+    Route::name('get-log-totals')->get('/logs/totals', 'LogController@getTotals');
+    Route::name('system-logs-months')->get('/logs/months', 'LogController@getMonths');
+    Route::name('system-logs-delete-month')->delete('/logs/flush/{month}', 'LogController@flushMonth');
 
     //Formula
     Route::name('get-formula')->get('/formula', 'ConfigController@getFormula');
