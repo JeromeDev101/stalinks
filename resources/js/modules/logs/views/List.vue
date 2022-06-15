@@ -363,7 +363,7 @@ export default {
         },
 
         getAllUsers() {
-            axios.get('/api/admin/all-users', {
+            axios.get('/api/all-users', {
                 params: {
                     role: this.selectedRole
                 }
@@ -445,7 +445,7 @@ export default {
             that.filterModel.action = that.filterModel.action_temp;
             that.filterModel.path = that.filterModel.path_temp;
 
-            axios.get('/api/admin/logs/totals', {
+            axios.get('/api/logs/totals', {
                 params: this.filterModel
             })
             .then((res) => {
@@ -489,7 +489,7 @@ export default {
         },
 
         getMonthFilter() {
-            axios.get('/api/admin/logs/months')
+            axios.get('/api/logs/months')
                 .then((response) => {
                     this.months = response.data;
                 })
@@ -505,7 +505,7 @@ export default {
                 confirmButtonText : 'Yes',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete('/api/admin/logs/flush/' + this.deleteModel.month)
+                    axios.delete('/api/logs/flush/' + this.deleteModel.month)
                         .then((response) => {
                             this.getLogsList();
                             this.getLogsTotals();

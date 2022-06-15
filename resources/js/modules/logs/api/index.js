@@ -9,7 +9,7 @@ export default class LogService {
      *
      */
     static getLogs(params) {
-        return axios.get('/api/admin/logs', params)
+        return axios.get('/api/logs', params)
             .then(response => response)
             .catch(error => error);
     }
@@ -31,7 +31,7 @@ export default class LogService {
      * @returns {AxiosPromise<any>}
      */
     static getActions() {
-        return axios.get('/api/admin/logs/actions')
+        return axios.get('/api/logs/actions')
             .then(response => response)
             .catch(error => error);
     }
@@ -41,7 +41,7 @@ export default class LogService {
      * @returns {AxiosPromise<any>}
      */
     static getTables() {
-        return axios.get('/api/admin/logs/tables')
+        return axios.get('/api/logs/tables')
             .then(response => response)
             .catch(error => error);
     }
