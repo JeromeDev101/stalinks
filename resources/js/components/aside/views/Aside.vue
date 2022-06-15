@@ -141,7 +141,7 @@
                                 </router-link>
                             </li>
                             <li class="nav-item"
-                                v-if="user.isAdmin">
+                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
                                 <router-link :to="{ path: '/management/logs' }" class="nav-link"
                                              :class="{ active: $route.name == 'logs' }">
                                     <i class="fas fa-cogs nav-icon"></i>
