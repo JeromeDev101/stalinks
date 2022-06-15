@@ -41,7 +41,7 @@ class SendArticleReminder extends Command
         $this->info('Start sending in writing article reminders to writers');
 
         // dispatch job to send in writing article reminders to writers
-        SendArticleReminderToWriters::dispatch()->onQueue('emails');
+        SendArticleReminderToWriters::dispatch()->onQueue('high');
 
         $this->info('Sending in writing articles emails end');
     }

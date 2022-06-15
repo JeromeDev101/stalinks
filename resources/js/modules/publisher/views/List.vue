@@ -2682,6 +2682,7 @@ export default {
             },
 
             async qcValidationUpdate(value){
+                let loader = this.$loading.show();
                 let self = this;
                 await this.$store.dispatch('actionQcValidationUpdate', {
                     qc_validation: value,
@@ -2689,6 +2690,8 @@ export default {
                 });
 
                 if( this.messageForms.action === 'saved' ){
+                    loader.hide();
+
                     await swal.fire({
                         icon: 'success',
                         title: self.$t('message.publisher.alert_success'),
@@ -2698,6 +2701,8 @@ export default {
 
                     await this.getPublisherList();
                 } else {
+                    loader.hide();
+
                     await swal.fire({
                         icon: 'error',
                         title: self.$t('message.publisher.alert_error'),
@@ -2707,6 +2712,7 @@ export default {
                 }
 
                 this.checkIds = [];
+                this.allSelected = false;
             },
 
             select: function() {

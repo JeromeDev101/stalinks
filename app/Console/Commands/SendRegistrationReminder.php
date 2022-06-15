@@ -130,11 +130,11 @@ class SendRegistrationReminder extends Command
 
         foreach ($notifications as $notification) {
             try {
-                SendReminderEmail::dispatch($notification, $days)->onQueue('emails');
+                SendReminderEmail::dispatch($notification, $days)->onQueue('high');
 
                 if (isset($notification->team_in_charge)) {
                     $qc = User::find($notification->team_in_charge);
-                    SendReminderEmail::dispatch($qc, $days, $notification)->onQueue('emails');
+                    SendReminderEmail::dispatch($qc, $days, $notification)->onQueue('high');
                 }
 
             } catch (\Exception $e) {

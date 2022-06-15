@@ -42,7 +42,7 @@ class SendNewsletterToSubscribedBuyers extends Command
         $this->info('Start sending newsletter to subscribed buyers');
 
         // dispatch job to send newsletters to subscribed buyers
-        SendNewsletterToBuyers::dispatch()->onQueue('emails');
+        SendNewsletterToBuyers::dispatch()->onQueue('high');
 
         $this->info('Sending newsletter end');
     }

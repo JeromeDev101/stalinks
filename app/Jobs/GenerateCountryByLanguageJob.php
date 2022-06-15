@@ -36,14 +36,20 @@ class GenerateCountryByLanguageJob implements ShouldQueue
      */
     public function handle()
     {
-        $publishers = Publisher::whereIn('id', $this->ids)->get();
-
-        foreach ($publishers as $publisher) {
-            if (isset($this->countries[$publisher->language_id])) {
-                $publisher->update([
-                    'country_id' => $this->countries[$publisher->language_id]
+        $publishers = Publisher::whereIn('id', $this->ids)->get()->each(function ($item) {
+            if (isset($this->countries[$item->language_id])) {
+                $item->update([
+                    'country_id' => $this->countries[$item->language_id]
                 ]);
             }
-        }
+        });
+
+//        foreach ($publishers as $publisher) {
+//            if (isset($this->countries[$publisher->language_id])) {
+//                $publisher->update([
+//                    'country_id' => $this->countries[$publisher->language_id]
+//                ]);
+//            }
+//        }
     }
 }

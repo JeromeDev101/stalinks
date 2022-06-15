@@ -134,7 +134,7 @@ class SendDepositReminder extends Command
 
         foreach ($no_transactions as $no) {
             try {
-                SendDepositReminderEmail::dispatch($no, $days)->onQueue('emails');
+                SendDepositReminderEmail::dispatch($no, $days)->onQueue('high');
             } catch (\Exception $e) {
                 \Log::error($e);
             }

@@ -6,6 +6,7 @@ use App\BestPriceGenerator;
 use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
 use App\Jobs\GenerateCountryByLanguageJob;
+use App\Jobs\SimpleMultipleUpdate;
 use App\Models\DomainZone;
 use App\Notifications\CsvUploaded;
 use App\Services\HttpClient;
@@ -307,8 +308,10 @@ class PublisherController extends Controller
     }
 
     public function qcValidationUpdate(Request $request) {
-        $result = Publisher::whereIn('id', $request->ids)
-            ->update(['qc_validation' => $request->qc_validation]);
+//        $result = Publisher::whereIn('id', $request->ids)
+//            ->update(['qc_validation' => $request->qc_validation]);
+
+        $result = SimpleMultipleUpdate::dispatchNow(new Publisher(), $request->ids, ['qc_validation' => $request->qc_validation]);;
 
         return response()->json(['success'=> true, 'data' => $result],200);
     }

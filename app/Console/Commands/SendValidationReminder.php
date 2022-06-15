@@ -121,7 +121,7 @@ class SendValidationReminder extends Command
 
         foreach ($unvalidated as $un) {
             try {
-                SendValidationReminderEmail::dispatch($un, $days)->onQueue('emails');
+                SendValidationReminderEmail::dispatch($un, $days)->onQueue('high');
             } catch (\Exception $e) {
                 \Log::error($e);
             }

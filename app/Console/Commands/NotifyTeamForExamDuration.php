@@ -41,7 +41,7 @@ class NotifyTeamForExamDuration extends Command
         $this->info('Start sending articles on queue to writers');
 
         // dispatch job to send notification to team when 2nd attempt exam duration for writer is over
-        NotifyTeamWriterExamDurationOver::dispatch()->onQueue('emails');
+        NotifyTeamWriterExamDurationOver::dispatch()->onQueue('high');
 
         $this->info('Sending articles on queue emails end');
     }
