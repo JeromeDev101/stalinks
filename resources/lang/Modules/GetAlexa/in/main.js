@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'एलेक्सा हो रही है...',
     alert_please_wait: 'कृपया प्रतीक्षा कीजिये',
     alert_limit: 'इस देश में शीर्ष साइट की सीमा संख्या है ',
+    alert_invalid: 'अमान्य',
+    alert_alexa_limit: 'एलेक्सा मासिक सीमा तक पहुंचें।',
 }

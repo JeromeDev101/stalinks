@@ -169,7 +169,7 @@
 
                             <div v-if="user.isOurs === 0" class="col-md-2">
                                 <div class="form-group">
-                                    <label>Show Deleted by Seller</label>
+                                    <label>{{ $t('message.follow.dbs_filter') }}</label>
                                     <select class="form-control" v-model="filterModel.deleted_by_seller">
                                         <option value="">{{ $t('message.publisher.all') }}</option>
                                         <option value="no">{{ $t('message.publisher.no') }}</option>
@@ -320,7 +320,9 @@
                                                 {{ replaceCharacters(sales.publisher.url) }}
                                             </a>
 
-                                            <span v-if="sales.publisher.deleted_at" class="badge badge-danger">Deleted by Seller</span>
+                                            <span v-if="sales.publisher.deleted_at" class="badge badge-danger">
+                                                {{ $t('message.follow.dbs_table') }}
+                                            </span>
                                         </span>
                                     </td>
                                     <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>

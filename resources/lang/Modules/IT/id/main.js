@@ -27,6 +27,9 @@ export default  {
     c_title: 'Komisi',
     c_enter: 'Memasuki ',
 
+    // get alexa
+    ga_title: 'Dapatkan baris Alexa mengkonsumsi',
+
     // alerts
     alert_saved: 'Simpan!',
     alert_success: 'Berhasil!',

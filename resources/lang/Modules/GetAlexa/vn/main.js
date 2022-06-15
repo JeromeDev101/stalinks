@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'Nhận Alexa…',
     alert_please_wait: 'Vui lòng chờ',
     alert_limit: 'Số lượng giới hạn của Top site ở quốc gia này là ',
+    alert_invalid: 'Không hợp lệ',
+    alert_alexa_limit: 'Đạt được giới hạn hàng tháng của alexa.',
 }

@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: 'บทความจะไม่สามารถใช้ได้ตลอด',
     sc_yes_perm_article: 'บทความจะสามารถใช้ได้ตลอด',
 
+    // deleted by seller
+    dbs_filter: 'แสดง ถูกลบโดยผู้ขาย',
+    dbs_table: 'ถูกลบโดยผู้ขาย',
+
     // alerts
     alert_success: 'สำเร็จ',
     alert_updated_successfully: 'อัปเดตเรียบร้อยแล้ว',

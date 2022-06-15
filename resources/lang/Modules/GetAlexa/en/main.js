@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'Getting Alexa...',
     alert_please_wait: 'Please wait',
     alert_limit: 'The limit number of Top site in this country is ',
+    alert_invalid: 'Invalid',
+    alert_alexa_limit: 'Get alexa monthly limit reached.',
 }

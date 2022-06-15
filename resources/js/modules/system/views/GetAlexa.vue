@@ -2,7 +2,7 @@
     <div class="card card-outline card-secondary">
         <div class="card-body">
             <div class="progress-group">
-                <span class="progress-text">Get Alexa rows cosume</span>
+                <span class="progress-text">{{ $t('message.IT.ga_title') }}</span>
                 <span class="progress-number"><b>{{ rows_consume }}</b>/40,000</span>
 
                 <div class="progress sm my-3">
@@ -40,7 +40,7 @@ export default {
     },
 
     computed : {
-        
+
     },
 
     mounted() {

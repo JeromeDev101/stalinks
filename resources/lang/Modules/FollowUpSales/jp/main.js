@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: '記事は、永久に使用できません.',
     sc_yes_perm_article: '記事は、永久に使用できます.',
 
+    // deleted by seller
+    dbs_filter: '売り手によって削除されたショー',
+    dbs_table: '売り手によって削除されました',
+
     // alerts
     alert_success: '成功しました',
     alert_updated_successfully: '正常に更新されました',

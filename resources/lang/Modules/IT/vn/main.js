@@ -27,6 +27,9 @@ export default  {
     c_title: 'Nhiệm vụ',
     c_enter: 'Nhập ',
 
+    // get alexa
+    ga_title: 'Nhận hàng Alexa tiêu thụ',
+
     // alerts
     alert_saved: 'Đã Lưu!',
     alert_success: 'Thành công!',

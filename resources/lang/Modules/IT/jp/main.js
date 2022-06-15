@@ -27,6 +27,9 @@ export default  {
     c_title: 'コミッション',
     c_enter: '入力 ',
 
+    // get alexa
+    ga_title: 'Alexaの行を消費させる',
+
     // alerts
     alert_saved: '保存しました!',
     alert_success: '成功しました!',

@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'Mendapatkan Alexa…',
     alert_please_wait: 'Mohon tunggu',
     alert_limit: 'Batas jumlah situs Top di negara ini adalah ',
+    alert_invalid: 'Tidak sah',
+    alert_alexa_limit: 'Dapatkan batas bulanan alexa tercapai.',
 }

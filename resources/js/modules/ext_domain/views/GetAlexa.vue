@@ -141,7 +141,7 @@
             this.initFilter();
             this.getListCountries();
             this.checkConsumeAlexa()
-            
+
         },
 
         computed: {
@@ -215,7 +215,7 @@
                     let val = parseInt(result.value)
 
                     console.log(val)
-                    if(val > 40000) {
+                    if(val >= 40000) {
                         this.isAlexaConsumed = true;
                     } else {
                         this.isAlexaConsumed = false;
@@ -224,8 +224,14 @@
             },
 
             async doGetAlexaRank() {
+                let self = this;
+
                 if (this.isAlexaConsumed) {
-                    swal.fire('Invalid', 'Sorry getting Alexa is already reach the limit', 'error')
+                    swal.fire(
+                        self.$t('message.get_alexa.alert_invalid'),
+                        self.$t('message.get_alexa.alert_alexa_limit'),
+                        'error'
+                    )
                     return false;
                 }
 

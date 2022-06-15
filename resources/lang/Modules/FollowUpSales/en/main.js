@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: 'Article will not be available for lifetime.',
     sc_yes_perm_article: 'Article will be available for lifetime.',
 
+    // deleted by seller
+    dbs_filter: 'Show Deleted by Seller',
+    dbs_table: 'Deleted by Seller',
+
     // alerts
     alert_success: 'Success',
     alert_updated_successfully: 'Updated Successfully',

@@ -27,6 +27,9 @@ export default  {
     c_title: 'आयोग',
     c_enter: 'प्रवेश करना ',
 
+    // get alexa
+    ga_title: 'एलेक्सा पंक्तियों का उपभोग करें',
+
     // alerts
     alert_saved: 'बचाया!',
     alert_success: 'सफलता!',

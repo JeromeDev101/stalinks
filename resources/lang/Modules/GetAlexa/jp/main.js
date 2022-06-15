@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'Alexa検索中',
     alert_please_wait: 'しばらくお待ちください',
     alert_limit: 'この国のトップサイトの限界数は',
+    alert_invalid: '無効',
+    alert_alexa_limit: 'アレクサの月間制限に達しました。',
 }

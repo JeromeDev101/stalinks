@@ -13,4 +13,6 @@ export default {
     alert_get_alexa: 'กำลังรับข้อมูลจากAlexa...',
     alert_please_wait: 'โปรดรอ',
     alert_limit: 'เว็บไซต์อันดับสูงสุดในประเทศนี้คือ',
+    alert_invalid: 'ไม่ถูกต้อง',
+    alert_alexa_limit: 'รับ Alexa ถึงขีดจำกัดรายเดือน',
 }

@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: 'लेख जीवन भर उपलब्ध नहीं रहेगा।',
     sc_yes_perm_article: 'लेख जीवन भर उपलब्ध रहेगा।',
 
+    // deleted by seller
+    dbs_filter: 'विक्रेता द्वारा हटाया गया दिखाएँ',
+    dbs_table: 'विक्रेता द्वारा हटाया गया',
+
     // alerts
     alert_success: 'सफलता',
     alert_updated_successfully: 'सफलतापूर्वक अपडेट किया गया',

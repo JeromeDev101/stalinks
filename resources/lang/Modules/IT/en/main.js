@@ -27,6 +27,9 @@ export default  {
     c_title: 'Commission',
     c_enter: 'Enter ',
 
+    // get alexa
+    ga_title: 'Get Alexa rows consume',
+
     // alerts
     alert_saved: 'Saved!',
     alert_success: 'Success!',

@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: 'Artikel tidak tersedia dalam jangka waktu seumur hidup',
     sc_yes_perm_article: 'Artikel tersedia untuk jangka waktu seumur hidup',
 
+    // deleted by seller
+    dbs_filter: 'Tampilkan Dihapus oleh Penjual',
+    dbs_table: 'Dihapus oleh Penjual',
+
     // alerts
     alert_success: 'Berhasil',
     alert_updated_successfully: 'Berhasil Diperbarui',

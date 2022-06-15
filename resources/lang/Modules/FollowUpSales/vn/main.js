@@ -69,6 +69,10 @@ export default {
     sc_no_perm_article: 'Bài viết vĩnh viễn sẽ không có sẵn.',
     sc_yes_perm_article: 'Bài viết sẽ có sẵn vĩnh viễn.',
 
+    // deleted by seller
+    dbs_filter: 'Hiển thị Đã xóa bởi Người bán',
+    dbs_table: 'Người bán đã xóa',
+
     // alerts
     alert_success: 'Thành công',
     alert_updated_successfully: 'Cập nhật thành công',

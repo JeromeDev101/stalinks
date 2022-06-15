@@ -27,6 +27,9 @@ export default  {
     c_title: 'คณะกรรมการ',
     c_enter: 'เข้า ',
 
+    // get alexa
+    ga_title: 'รับแถว Alexa บริโภค',
+
     // alerts
     alert_saved: 'บันทึกแล้ว!',
     alert_success: 'สำเร็จ!',
