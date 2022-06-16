@@ -67,6 +67,7 @@ class GenerateBestPrice implements ShouldQueue
                 });
 
                 $bestPrice = $publisher
+                    ->where('price', '!=', '0')
                     ->where('price', '!=', null)
                     ->where('user', '!=', null)
                     ->where('qc_validation', '!=', 'no')
@@ -131,6 +132,7 @@ class GenerateBestPrice implements ShouldQueue
                 if ($publisher) {
                     //Get best price among URLs
                     $bestPrice = $publisher
+                        ->where('price', '!=', '0')
                         ->where('price', '!=', null)
                         ->where('user', '!=', null)
                         ->where('qc_validation', '!=', 'no')
