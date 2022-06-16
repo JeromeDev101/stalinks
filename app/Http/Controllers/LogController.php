@@ -107,6 +107,10 @@ class LogController extends Controller
             $totals = $totals->where('logs.page', $request->path);
         }
 
+        if (isset($request->payload) && $request->payload != '') {
+            $totals = $totals->where('logs.payload', 'like', '%' . $request->payload . '%');
+        }
+
         if (isset($request['date'])) {
             $request['date'] = \GuzzleHttp\json_decode($request['date'], true);
 

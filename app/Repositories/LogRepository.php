@@ -28,6 +28,10 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
     {
         $queryBuilder = $this->getQueryBuilderList($perPage, $userEmail, $filters);
 
+        if (isset($request['payload']) && $request['payload'] != '') {
+            $queryBuilder = $queryBuilder->where('payload', 'like', '%' . $request['payload'] . '%');
+        }
+
         if (isset($request['date'])) {
             $request['date'] = \GuzzleHttp\json_decode($request['date'], true);
 
@@ -57,7 +61,7 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
 
     private function getQueryBuilderList($perPage, $userEmail, $filters) {
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $queryBuilder = $queryBuilder->select('id', 'user_id', 'table', 'action', 'page', 'created_at');
+        $queryBuilder = $queryBuilder->select('id', 'user_id', 'table', 'action', 'page', 'created_at', 'payload');
         if ($userEmail !== '') {
             $queryBuilder = $queryBuilder->whereHas('user', function($query) use ($userEmail) {
                 $query->where('email', $userEmail);

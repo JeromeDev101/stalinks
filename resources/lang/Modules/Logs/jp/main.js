@@ -19,6 +19,11 @@ export default {
     t_page: 'ページ',
     t_time: '時間',
 
+    // payload
+    p_filter: 'ペイロードテキストを入力します',
+    p_table: 'ペイロード',
+    p_id: 'データID',
+
     // alerts
     alert_confirm: '確認してください',
     alert_confirm_note: '本当にこれを削除しますか？',

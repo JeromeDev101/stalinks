@@ -19,6 +19,11 @@ export default {
     t_page: 'पृष्ठ',
     t_time: 'समय',
 
+    // payload
+    p_filter: 'पेलोड टेक्स्ट टाइप करें',
+    p_table: 'पेलोड',
+    p_id: 'DATA ID',
+
     // alerts
     alert_confirm: 'कृपया पुष्टि करें',
     alert_confirm_note: 'क्या आप वाकई इसे हटाना चाहते हैं?',

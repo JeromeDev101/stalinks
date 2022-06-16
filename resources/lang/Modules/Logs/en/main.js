@@ -19,6 +19,11 @@ export default {
     t_page: 'Page',
     t_time: 'Time',
 
+    // payload
+    p_filter: 'Type payload text',
+    p_table: 'Payload',
+    p_id: 'DATA ID',
+
     // alerts
     alert_confirm: 'Please confirm',
     alert_confirm_note: 'Are you sure you want to delete this?',

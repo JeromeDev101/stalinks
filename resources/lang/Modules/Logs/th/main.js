@@ -19,6 +19,11 @@ export default {
     t_page: 'หน้า',
     t_time: 'เวลา',
 
+    // payload
+    p_filter: 'พิมพ์ข้อความเพย์โหลด',
+    p_table: 'น้ำหนักบรรทุก',
+    p_id: 'รหัสข้อมูล',
+
     // alerts
     alert_confirm: 'กรุณายืนยัน',
     alert_confirm_note: 'คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?',

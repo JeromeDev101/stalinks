@@ -19,6 +19,11 @@ export default {
     t_page: 'Trang',
     t_time: 'Thời gian',
 
+    // payload
+    p_filter: 'Nhập văn bản tải trọng',
+    p_table: 'Khối hàng',
+    p_id: 'ID DỮ LIỆU',
+
     // alerts
     alert_confirm: 'Vui lòng xác nhận',
     alert_confirm_note: 'Bạn có chắc chắn muốn xóa cái này không?',

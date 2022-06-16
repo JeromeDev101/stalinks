@@ -19,6 +19,11 @@ export default {
     t_page: 'Halaman',
     t_time: 'Waktu',
 
+    // payload
+    p_filter: 'Ketik teks muatan',
+    p_table: 'Muatan',
+    p_id: 'ID DATA',
+
     // alerts
     alert_confirm: 'Mohon konfirmasi',
     alert_confirm_note: 'Apa anda yakin ingin menghapus ini?',

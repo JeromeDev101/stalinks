@@ -104,6 +104,14 @@
                             </div>
 
                             <div class="col-md-3">
+                                <input
+                                    v-model="filterModel.payload_temp"
+                                    type="text"
+                                    class="form-control"
+                                    :placeholder="$t('message.system_logs.p_filter')"/>
+                            </div>
+
+                            <div class="col-md-3">
                                 <button @click="doSearchList"
                                         type="submit"
                                         title="Filter"
@@ -170,6 +178,7 @@
                                         <th>{{ $t('message.system_logs.t_table') }}</th>
                                         <th>{{ $t('message.system_logs.t_action') }}</th>
                                         <th>{{ $t('message.system_logs.t_page') }}</th>
+                                        <th>{{ $t('message.system_logs.p_table') }}</th>
                                         <th>{{ $t('message.system_logs.t_time') }}</th>
                                     </tr>
                                     </thead>
@@ -192,6 +201,26 @@
                                             <span v-else>
                                                 N/A
                                             </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-success">
+                                                {{ $t('message.system_logs.p_id') }}#: {{ tablePayload(item.payload, 'id') }}
+                                            </span>
+
+                                            <ul class="list-group mt-1">
+                                                <li
+                                                    v-for="(attribute, index) in tablePayload(item.payload, 'items')"
+                                                    class="list-group-item p-2">
+
+                                                    <p class="font-weight-bold mb-1">{{ index }}</p>
+
+                                                    <small v-if="attribute" class="text-muted">{{ attribute }}</small>
+
+                                                    <small v-else>
+                                                        <span class="badge badge-secondary">NULL</span>
+                                                    </small>
+                                                </li>
+                                            </ul>
                                         </td>
                                         <td>{{ item.created_at }}</td>
                                     </tr>
@@ -242,6 +271,8 @@ export default {
                     startDate : null,
                     endDate : null,
                 },
+                payload : this.$route.query.payload || '',
+                payload_temp : this.$route.query.payload_temp || '',
             },
             deleteModel : {
                 month : ''
@@ -352,6 +383,8 @@ export default {
                     startDate : null,
                     endDate : null,
                 },
+                payload: '',
+                payload_temp: '',
             }
 
             this.selectedRole = '';
@@ -403,6 +436,12 @@ export default {
             ]).name : 'N/A'
         },
 
+        tablePayload (payload, data) {
+            let parsed = JSON.parse(payload);
+
+            return data === 'items' ? parsed.payload : parsed.id
+        },
+
         isTablePage(itemPath) {
             return _.find(Constants.LOG_PAGES, [
                 'path',
@@ -444,6 +483,7 @@ export default {
             that.filterModel.email = that.filterModel.email_temp;
             that.filterModel.action = that.filterModel.action_temp;
             that.filterModel.path = that.filterModel.path_temp;
+            that.filterModel.payload = that.filterModel.payload_temp;
 
             axios.get('/api/logs/totals', {
                 params: this.filterModel
@@ -483,6 +523,7 @@ export default {
             that.filterModel.email = that.filterModel.email_temp;
             that.filterModel.action = that.filterModel.action_temp;
             that.filterModel.path = that.filterModel.path_temp;
+            that.filterModel.payload = that.filterModel.payload_temp;
 
             this.goToPage(0);
             await this.getLogsTotals();
