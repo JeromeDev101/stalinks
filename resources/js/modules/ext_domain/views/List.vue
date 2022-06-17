@@ -350,6 +350,7 @@
                                         <button
                                             data-toggle="modal"
                                             type="submit"
+                                            :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.ac_send_email')"
                                             class="btn btn-default"
 
@@ -360,6 +361,7 @@
 
                                         <button
                                             type="submit"
+                                            :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.ac_get_ahrefs')"
                                             class="btn btn-default"
 
@@ -370,6 +372,7 @@
 
                                         <button
                                             type="submit"
+                                            :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.tb_status')"
                                             class="btn btn-default"
 
@@ -390,6 +393,7 @@
 
                                         <button
                                             type="submit"
+                                            :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.ac_delete')"
                                             class="btn btn-default"
 
@@ -400,7 +404,7 @@
 
                                         <button
                                             @click="doCrawlExtList"
-                                            :disabled="isCrawling"
+                                            :disabled="isCrawling || isNotAllowedMultipleActions"
                                             type="submit"
                                             :title="$t('message.url_prospect.ac_crawl')"
                                             class="btn btn-default">
@@ -2796,6 +2800,16 @@ export default {
                      percentage: self.calculatePercentage(self.extListTotals['Qualified'])
                  },
              ];
+        },
+
+        isNotAllowedMultipleActions () {
+            let self = this;
+
+            return (self.user.role_id !== 6 && self.user.isOurs === 0)
+                ? false
+                : self.checkIds.some(function (item) {
+                    return item.user_id !== self.user.id;
+                });
         }
     },
     mounted() {
@@ -3557,50 +3571,48 @@ export default {
         },
         async getAhrefs() {
             let self = this;
-            // var listInvalid = this.checkIds.some(ext => ext.status != 30);
-            // if (listInvalid === true) {
-            //     alert('List invalid: status diff with GotContacts');
-            //     return;
-            // }
-            let listIds = this.checkIds.map(ext => ext.id).join(',');
-            this.isLoadingTable = true;
-            await this.$store.dispatch('getListAhrefs', {params : {domain_ids : listIds}});
-            this.isLoadingTable = false;
-            let that = this;
 
-            if (that.listAhrefs.length !== 0) {
+            let loader = this.$loading.show();
 
-                // this.checkIds.forEach(item => {
-                //     if (that.listAhrefs.hasOwnProperty(item.id)) {
-                //         let itemAherf = that.listAhrefs[item.id];
-                //         item.ahrefs_rank = itemAherf.ahrefs_rank;
-                //         item.no_backlinks = itemAherf.no_backlinks;
-                //         item.url_rating = itemAherf.url_rating;
-                //         item.domain_rating = itemAherf.domain_rating;
-                //         item.organic_keywords = itemAherf.organic_keywords;
-                //         item.organic_traffic = itemAherf.organic_traffic;
-                //         item.ref_domains = itemAherf.ref_domains;
-                //         item.status = itemAherf.status;
-                //     }
-                // });
-
-                this.getExtList({
-                    params : this.filterModel
-                });
-
+            if (this.checkIds.length == 0) {
                 swal.fire(
-                    self.$t('message.url_prospect.swal_success'),
-                    self.$t('message.url_prospect.swal_url_updated'),
-                    'success'
-                )
-            } else {
-                swal.fire(
-                    self.$t('message.url_prospect.swal_err'),
-                    self.$t('message.url_prospect.swal_err_ahref'),
+                    self.$t('message.url_prospect.swal_no_item'),
+                    self.$t('message.url_prospect.swal_no_item_selected'),
                     'error'
-                )
+                );
+
+                loader.hide();
+            } else {
+                let listIds = this.checkIds.map(ext => ext.id).join(',');
+                this.isLoadingTable = true;
+                await this.$store.dispatch('getListAhrefs', {params : {domain_ids : listIds}});
+                this.isLoadingTable = false;
+                let that = this;
+
+                if (that.listAhrefs.length !== 0) {
+                    this.getExtList({
+                        params : this.filterModel
+                    });
+
+                    swal.fire(
+                        self.$t('message.url_prospect.swal_success'),
+                        self.$t('message.url_prospect.swal_url_updated'),
+                        'success'
+                    )
+                } else {
+                    swal.fire(
+                        self.$t('message.url_prospect.swal_err'),
+                        self.$t('message.url_prospect.swal_err_ahref'),
+                        'error'
+                    )
+                }
+
+                this.checkIds = []
+
+                loader.hide();
             }
         },
+
         async getAhrefsById(extId, extStatus) {
             let self = this;
             // if (extStatus != 30) {
