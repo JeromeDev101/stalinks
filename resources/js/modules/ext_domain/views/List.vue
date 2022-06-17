@@ -1031,12 +1031,14 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.status}"
                                      class="form-group">
                                     <label style="color: #333">{{ $t('message.url_prospect.add_status') }}</label>
-                                    <select type="text"
-                                            v-model="extUpdate.status"
-                                            @change="showAddURL()"
-                                            class="form-control"
-                                            value=""
-                                            required="required">
+                                    <select
+                                        v-model="extUpdate.status"
+                                        :disabled="extStatusTemp === 100 || extStatusTemp === '100'"
+                                        type="text"
+                                        @change="showAddURL()"
+                                        class="form-control"
+                                        value=""
+                                        required="required">
 
                                         <option v-for="(option, key) in objectToArrayWithCustomSort(listStatusText)"
                                                 v-bind:value="option.id"
@@ -1044,6 +1046,12 @@
                                             {{ option.text }}
                                         </option>
                                     </select>
+
+                                    <small v-if="extStatusTemp === 100 || extStatusTemp === '100'" class="text-primary">
+                                        <i class="fas fa-info-circle"></i>
+                                        Status cannot be changed or updated if already qualified.
+                                    </small>
+
                                     <span v-if="messageForms.errors.status"
                                           v-for="err in messageForms.errors.status"
                                           class="text-danger">
@@ -1443,7 +1451,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="overlay" v-if="isPopupLoading"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
                             {{ $t('message.url_prospect.close') }}
@@ -2264,7 +2271,9 @@ export default {
             data_filed: {
                 'URL': 'domain',
                 'Email': 'email',
-            }
+            },
+
+            extStatusTemp: '',
         };
     },
     async created() {
@@ -2968,6 +2977,22 @@ export default {
         doMultipleStatus() {
             let self = this;
 
+            let qualified = this.checkIds.some(function (item) {
+                return item.status === 100 ||  item.status === '100';
+            });
+
+            if (qualified) {
+                swal.fire(
+                    self.$t('message.url_prospect.swal_err'),
+                    'Some of the selected items are already qualified. Multiple status update is not allowed.',
+                    'error'
+                )
+
+                this.isCrawling = false;
+                loader.hide();
+                return;
+            }
+
             if (this.checkIds.length > 0) {
                 let element = this.$refs.modalMultipleStatus
                 $(element).modal('show')
@@ -3252,11 +3277,31 @@ export default {
             let loader = this.$loading.show();
             this.isCrawling = true;
             let arrayIds = [];
+
             if (this.checkIds) {
                 for (let key in this.checkIds) {
                     arrayIds.push(this.checkIds[key].id);
                 }
             }
+
+            // check if some selected items have qualified status
+
+            let qualified = this.checkIds.some(function (item) {
+                return item.status === 100 ||  item.status === '100';
+            });
+
+            if (qualified) {
+                swal.fire(
+                    self.$t('message.url_prospect.swal_err'),
+                    'Some of the selected items are already qualified. Crawl is not allowed.',
+                    'error'
+                )
+
+                this.isCrawling = false;
+                loader.hide();
+                return;
+            }
+
             if (arrayIds.length == 0) {
                 swal.fire(
                     self.$t('message.url_prospect.swal_no_item'),
@@ -3294,6 +3339,12 @@ export default {
                 )
 
                 this.isResultCrawled = true;
+            } else if (this.messageForms.action === 'crawl_cancelled') {
+                swal.fire(
+                    self.$t('message.url_prospect.swal_err'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
 
             this.isCrawling = false;
@@ -3322,12 +3373,10 @@ export default {
             let self = this;
             let loader = this.$loading.show();
             this.toggleTableLoading();
-            this.isPopupLoading = true;
             await this.$store.dispatch('updateExt', {
                 ext : this.extUpdate,
                 pub : this.publisherAdd,
             });
-            this.isPopupLoading = false;
             if (this.messageForms.action === 'updated_ext') {
                 // console.log(this.extUpdate)
                 // for (var index in this.listExt.data) {
@@ -3381,6 +3430,8 @@ export default {
 
             this.$store.dispatch('clearMessageForm');
             this.extUpdate = JSON.parse(JSON.stringify(extDomain))
+
+            this.extStatusTemp = this.extUpdate.status;
 
             this.extUpdate.email = (this.extUpdate.email === null || this.extUpdate.email === '') ? [] : this.extUpdate.email;
 

@@ -340,8 +340,12 @@ const actions = {
         try {
             let response = await ExtDomainService.crawlExtList(params);
             if (response.status === 200) {
-                commit(EXT_DOMAIN_SET_LIST_EXT, { listExt: response.data, isOnlyData: true });
-                commit(MESSAGE_FORMS, { action: 'crawled', message: 'Crawled !', errors: {} });
+                if (response.data.success === true) {
+                    commit(EXT_DOMAIN_SET_LIST_EXT, { listExt: response.data.data, isOnlyData: true });
+                    commit(MESSAGE_FORMS, { action: 'crawled', message: 'Crawled !', errors: {} });
+                } else {
+                    commit(MESSAGE_FORMS, { action: 'crawl_cancelled', message: response.data.message, errors: {} });
+                }
             }
         } catch (e) {
             let errors = e.response.data.errors;

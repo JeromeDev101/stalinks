@@ -538,16 +538,29 @@ class ExtDomainController extends Controller
     }
 
     public function update(Request $request) {
-        // dd($request->all());
         $id = Auth::user()->id;
 
         // $input = $request->only(['info','skype','id', 'status', 'email', 'domain',
         //     'facebook', 'phone', 'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic']);
 
+        // check if qualified
+        $qualified = ExtDomain::where('id', $request->ext['id'])->first();
+
         $input['info']  = $request->ext['info'];
         $input['skype']  = $request->ext['skype'];
         $input['id']  = $request->ext['id'];
-        $input['status']  = $request->ext['status'];
+
+        // prevent status change if already qualified
+        if ($qualified) {
+            if ($qualified->status == '100' || $qualified->status == 100) {
+                $input['status']  = $qualified->status;
+            } else {
+                $input['status']  = $request->ext['status'];
+            }
+        } else {
+            $input['status']  = $request->ext['status'];
+        }
+
         $input['email']  = $request->ext['email'];
         $input['domain']  = $request->ext['domain'];
         $input['facebook']  = $request->ext['facebook'];
@@ -678,9 +691,9 @@ class ExtDomainController extends Controller
                     'casino_sites' => $request->pub['casino_sites'],
                     'valid' => 'valid',
                 ]);
-            }
 
-            $input['user_id'] = $id;
+                $input['user_id'] = $id;
+            }
         }
 
         if ($this->startsWith($input['domain'], 'https://')) {
@@ -758,13 +771,21 @@ class ExtDomainController extends Controller
         }
 
         $listId = explode(",", $input['domain_ids']);
+
+        // check qualified
+        $qualified = ExtDomain::whereIn('id', $listId)->where('status', 100)->count();
+
+        if ($qualified) {
+            return response()->json(['success' => false, 'message' => 'Some of the selected items are already qualified. Crawl is not allowed.']);
+        }
+
         $data = $this->extDomainRepository->crawlContact($listId, $pushToQueue);
 
         if ($pushToQueue === true) {
             return ['success' => true, 'queue' => $pushToQueue];
         }
 
-        return $data;
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     public function delete(Request $request) {
@@ -818,7 +839,10 @@ class ExtDomainController extends Controller
             foreach( $request->id as $domain ){
                 $id = $domain['id'];
                 $extDomain = ExtDomain::findOrFail($id);
-                $extDomain->update(['status' => $request->status]);
+
+                if ($extDomain->status != 100) {
+                    $extDomain->update(['status' => $request->status]);
+                }
 
                 Publisher::create([
                     'user_id' => $request->seller,
@@ -841,17 +865,23 @@ class ExtDomainController extends Controller
                 foreach( $request->id as $domain ){
                     $id = $domain['id'];
                     $extDomain = ExtDomain::findOrFail($id);
+
+                    if ($extDomain->status != 100) {
+                        $extDomain->update([
+                            'status' => $request->status,
+                            // 'user_id' => $request->seller,
+                        ]);
+                    }
+                }
+            } else {
+                $extDomain = ExtDomain::findOrFail($request->id);
+
+                if ($extDomain->status != 100) {
                     $extDomain->update([
                         'status' => $request->status,
                         // 'user_id' => $request->seller,
                     ]);
                 }
-            } else {
-                $extDomain = ExtDomain::findOrFail($request->id);
-                $extDomain->update([
-                    'status' => $request->status,
-                    // 'user_id' => $request->seller,
-                ]);
             }
 
         }
