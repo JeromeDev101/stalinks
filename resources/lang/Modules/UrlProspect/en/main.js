@@ -138,6 +138,11 @@ export default {
     fu_total: 'Total failed',
     fu_not_uploaded: 'Not Uploaded',
 
+    // qualified
+    q_note: 'Status cannot be changed or updated if already qualified.',
+    q_multiple_status: 'Some of the selected items are already qualified. Multiple status update is not allowed.',
+    q_crawl: 'Some of the selected items are already qualified. Crawl is not allowed.',
+
     // swal
     swal_sure: 'Are you sure?',
     swal_email_remove: 'Email contents will be removed',

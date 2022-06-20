@@ -138,6 +138,11 @@ export default {
     fu_total: 'Tổng số không thành công',
     fu_not_uploaded: 'Không được tải lên',
 
+    // qualified
+    q_note: 'Không thể thay đổi hoặc cập nhật trạng thái nếu đã đủ điều kiện.',
+    q_multiple_status: 'Một số mặt hàng được chọn đã đủ tiêu chuẩn. Không cho phép cập nhật nhiều trạng thái.',
+    q_crawl: 'Một số mặt hàng được chọn đã đủ tiêu chuẩn. Thu thập thông tin không được phép.',
+
     // swal
     swal_sure: 'Bạn có chắc không?',
     swal_email_remove: 'Nội dung email sẽ bị xóa',

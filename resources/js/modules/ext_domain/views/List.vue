@@ -1053,7 +1053,7 @@
 
                                     <small v-if="extStatusTemp === 100 || extStatusTemp === '100'" class="text-primary">
                                         <i class="fas fa-info-circle"></i>
-                                        Status cannot be changed or updated if already qualified.
+                                        {{ $t('message.url_prospect.q_note') }}
                                     </small>
 
                                     <span v-if="messageForms.errors.status"
@@ -2998,7 +2998,7 @@ export default {
             if (qualified) {
                 swal.fire(
                     self.$t('message.url_prospect.swal_err'),
-                    'Some of the selected items are already qualified. Multiple status update is not allowed.',
+                    self.$t('message.url_prospect.q_multiple_status'),
                     'error'
                 )
 
@@ -3307,7 +3307,7 @@ export default {
             if (qualified) {
                 swal.fire(
                     self.$t('message.url_prospect.swal_err'),
-                    'Some of the selected items are already qualified. Crawl is not allowed.',
+                    self.$t('message.url_prospect.q_crawl'),
                     'error'
                 )
 

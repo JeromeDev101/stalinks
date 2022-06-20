@@ -138,6 +138,11 @@ export default {
     fu_total: 'Gagal total',
     fu_not_uploaded: 'Tidak Diunggah',
 
+    // qualified
+    q_note: 'Status tidak dapat diubah atau diperbarui jika sudah memenuhi syarat.',
+    q_multiple_status: 'Beberapa item yang dipilih sudah memenuhi syarat. Pembaruan beberapa status tidak diperbolehkan.',
+    q_crawl: 'Beberapa item yang dipilih sudah memenuhi syarat. Perayapan tidak diperbolehkan.',
+
     // swal
     swal_sure: 'Apa kamu yakin?',
     swal_email_remove: 'Isi email akan dihapus',
