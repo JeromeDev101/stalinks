@@ -28,6 +28,16 @@
                     </div>
                     <div class="card-body collapse" id="collapseExample">
                         <div class="row">
+                            <div class="col-md-3">
+                                <div class="from-group">
+                                    <label style="color: #333">URL Prospect ID</label>
+                                    <input type="text"
+                                           v-model="filterModel.id_temp"
+                                           class="form-control pull-right"
+                                           placeholder="Search ID">
+                                </div>
+                            </div>
+
                             <div v-if="tableShow.domain" class="col-md-3">
                                 <div class="from-group">
                                     <label style="color: #333">{{ $t('message.url_prospect.filter_email') }}
@@ -2110,8 +2120,8 @@ export default {
             },
             dataTable : null,
             filterModel : {
-                id : this.$route.query.id || 0,
-                id_temp : this.$route.query.id_temp || 0,
+                id : this.$route.query.id || '',
+                id_temp : this.$route.query.id_temp || '',
                 country_id : this.$route.query.country_id || 0,
                 country_id_temp : this.$route.query.country_id || '',
                 countryList : {data : [], total : 0},
@@ -4121,8 +4131,8 @@ export default {
 
         clearSearch() {
             this.filterModel = {
-                id : 0,
-                id_temp : 0,
+                id : '',
+                id_temp : '',
                 country_id : 0,
                 country_id_temp : '',
                 countryList : {data : [], total : 0},

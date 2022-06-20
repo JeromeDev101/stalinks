@@ -416,6 +416,11 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             $query->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
         }
 
+        // id filter
+        if (isset($input['id']) && $input['id'] !== '') {
+            $query->where('ext_domains.id', $input['id']);
+        }
+
         // Country Filter
         if (isset($input['country_id']) && $input['country_id'] != '0') {
             if (is_array($input['country_id'])) {
