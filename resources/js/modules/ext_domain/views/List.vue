@@ -525,10 +525,19 @@
                                 <template
                                     slot-scope="scope"
                                     slot="employeeData">
-                                    {{
-                                        scope.row.users == null ?
-                                            'N/A' : scope.row.users.username
-                                    }}
+                                    <span v-if="scope.row.users === null">
+                                        N/A
+                                    </span>
+
+                                    <span v-else>
+                                        <span>
+                                            {{ scope.row.users.username }}
+                                        </span>
+
+                                        <span v-if="scope.row.users.status === 'inactive'" class="badge badge-danger">
+                                            Inactive
+                                        </span>
+                                    </span>
                                 </template>
 
                                 <template
@@ -2808,7 +2817,7 @@ export default {
             return (self.user.role_id !== 6 && self.user.isOurs === 0)
                 ? false
                 : self.checkIds.some(function (item) {
-                    return item.user_id !== self.user.id;
+                    return (item.user_id !== self.user.id && item.users.status !== 'inactive');
                 });
         }
     },
@@ -3210,6 +3219,7 @@ export default {
 
         async doSearchList() {
             let that = this;
+            that.checkIds = [];
             that.filterModel.country_id = that.filterModel.country_id_temp;
             that.filterModel.status = that.filterModel.status_temp;
             that.filterModel.domain = that.filterModel.domain_temp;
@@ -4137,6 +4147,8 @@ export default {
                 domain_zone : '',
                 adv_sort: '',
             };
+
+            this.checkIds = [];
 
             this.getExtList({
                 params : this.filterModel
