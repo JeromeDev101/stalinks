@@ -113,7 +113,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
             ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
             ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-            ->where('registration.account_validation', '!=', 'invalid')
+            // ->where('registration.account_validation', '=', 'valid')
             ->has('user');
 
         if (isset($filter['show_duplicates']) && $filter['show_duplicates'] === 'yes') {
@@ -591,7 +591,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                     if (trim($url, " ") != '') {
                                                         $lang = $this->getLanguage($language_excel);
                                                         $count = $this->getCountry($country);
-                                                        $valid = $this->checkValid($url);
+                                                        // $valid = $this->checkValid($url);
 
                                                         Publisher::create([
                                                             'user_id'      => $id,
@@ -607,7 +607,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                             'org_traffic'  => 0,
                                                             'price'        => preg_replace('/[^0-9.\-]/', '', $price),
                                                             'inc_article'  => ucwords(strtolower(trim($article, " "))),
-                                                            'valid'        => $valid,
+                                                            // 'valid'        => $valid,
+                                                            'valid'        => 'unchecked',
                                                             'casino_sites' => ucwords(strtolower(trim($accept, " "))),
                                                             'kw_anchor'    => ucwords(strtolower(trim($kw_anchor, " "))),
                                                             'topic'        => $topic,
@@ -735,7 +736,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                                                             $lang = $this->getLanguage($language_excel);
                                                             $count = $this->getCountry($country);
-                                                            $valid = $this->checkValid($url);
+                                                            // $valid = $this->checkValid($url);
 
                                                             Publisher::create([
                                                                 'user_id'      => $seller_id,
@@ -751,7 +752,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                                                 'org_traffic'  => 0,
                                                                 'price'        => preg_replace('/[^0-9.\-]/', '', $price),
                                                                 'inc_article'  => ucwords(strtolower(trim($article, " "))),
-                                                                'valid'        => $valid,
+                                                                // 'valid'        => $valid,
+                                                                'valid'        => 'unchecked',
                                                                 'casino_sites' => ucwords(strtolower(trim($accept, " "))),
                                                                 'topic'        => $topic,
                                                                 'kw_anchor'    => $kw_anchor,
@@ -886,18 +888,18 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $publisher->count() > 0;
     }
 
-    private function checkValid($url)
-    {
-        $result = 'valid';
-        $publisher = Publisher::where('url', 'like', '%' . $url . '%')->where('valid', 'valid')->count();
-        if ($publisher > 0) {
-            $result = 'unchecked';
-        } else {
-            $result = 'valid';
-        }
+    // private function checkValid($url)
+    // {
+    //     $result = 'valid';
+    //     $publisher = Publisher::where('url', 'like', '%' . $url . '%')->where('valid', 'valid')->count();
+    //     if ($publisher > 0) {
+    //         $result = 'unchecked';
+    //     } else {
+    //         $result = 'valid';
+    //     }
 
-        return $result;
-    }
+    //     return $result;
+    // }
 
     public function isValidURL($url){
         return preg_match('/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/', $url);

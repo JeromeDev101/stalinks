@@ -228,10 +228,10 @@
                                     <div class="form-group">
                                         <label>{{ $t('message.publisher.filter_account_validation') }}</label>
                                         <select class="form-control" v-model="filterModel.account_validation">
-                                            <option value="">{{ $t('message.publisher.all') }}</option>
+                                            <!-- <option value="">{{ $t('message.publisher.all') }}</option> -->
                                             <option value="valid">{{ $t('message.publisher.valid') }}</option>
                                             <option value="invalid">{{ $t('message.publisher.invalid') }}</option>
-                                            <option value="processing">{{ $t('message.publisher.filter_processing') }}</option>
+                                            <!-- <option value="processing">{{ $t('message.publisher.filter_processing') }}</option> -->
                                         </select>
                                     </div>
                                 </div>
@@ -1584,7 +1584,7 @@ export default {
                     show_duplicates:
                         this.$route.query.show_duplicates
                         || '',
-                    account_validation: this.$route.query.account_validation || '',
+                    account_validation: this.$route.query.account_validation || 'valid',
                     domain_zone: this.$route.query.domain_zone || '',
                     is_https: this.$route.query.is_https || '',
                     sort: ''
@@ -2977,7 +2977,7 @@ export default {
                     kw_anchor: '',
                     price_basis: '',
                     qc_validation: '',
-                    account_validation: '',
+                    account_validation: 'valid',
                     date: {
                         startDate: null,
                         endDate: null
