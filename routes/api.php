@@ -202,6 +202,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('ext-get-ext-seller')->get('ext/ext-seller','ExtDomainController@getListExtSeller');
     Route::name('ext-update-multiple-employee')->post('/update-multiple-employee','ExtDomainController@updateMultipleEmployee');
     Route::name('ext-export-filtered')->post('/ext/export-filtered', 'ExtDomainController@exportFiltered');
+    Route::name('ext-check-urls')->post('/ext/check-urls', 'ExtDomainController@checkUrlsExisting');
 
     // Writers Validation
     Route::name('get-ext-writers')->get('ext-writers', 'WriterValidationController@getList');

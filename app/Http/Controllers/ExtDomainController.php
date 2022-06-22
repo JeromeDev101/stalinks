@@ -671,19 +671,19 @@ class ExtDomainController extends Controller
         // check if status is 'Qualified'
         if( $input['status'] === '100'){
             $url = remove_http($request->pub['url']);
-            $publisher = Publisher::where('url', 'like', '%'.$url.'%')->count();
+            $publisher = Publisher::where('url', $url)->count();
 
             // create a copy if unique URl in list publisher
             if( $publisher == 0 ) {
                 Publisher::create([
                     'user_id' => $request->pub['seller'],
-                    'url' => $request->pub['url'],
-                    'ur' => $input['url_rating'],
-                    'dr' => $input['domain_rating'],
-                    'backlinks' => $input['no_backlinks'],
-                    'ref_domain' => $input['ref_domains'],
-                    'org_keywords' => $input['organic_keywords'],
-                    'org_traffic' => $input['organic_traffic'],
+                    'url' => $url,
+                    'ur' => $input['url_rating'] ?: 0,
+                    'dr' => $input['domain_rating'] ?: 0,
+                    'backlinks' => $input['no_backlinks'] ?: 0,
+                    'ref_domain' => $input['ref_domains'] ?: 0,
+                    'org_keywords' => $input['organic_keywords'] ?: 0,
+                    'org_traffic' => $input['organic_traffic'] ?: 0,
                     'price' => $request->pub['price'],
                     'language_id' => $request->pub['language_id'],
                     'inc_article' => $request->pub['inc_article'],
@@ -692,7 +692,7 @@ class ExtDomainController extends Controller
                     'valid' => 'valid',
                 ]);
 
-                $input['user_id'] = $id;
+//                $input['user_id'] = $id;
             }
         }
 
@@ -831,9 +831,14 @@ class ExtDomainController extends Controller
         ]);
 
         // $test = [];
-        if( $request->status == 100 ){
+        if( $request->status == 100){
             $request->validate([
                 'seller' => 'required',
+                'language_id' => 'required',
+                'inc_article' => 'required',
+                'topic' => 'required',
+                'casino_sites' => 'required',
+                'price' => 'required',
             ]);
 
             foreach( $request->id as $domain ){
@@ -844,20 +849,28 @@ class ExtDomainController extends Controller
                     $extDomain->update(['status' => $request->status]);
                 }
 
-                Publisher::create([
-                    'user_id' => $request->seller,
-                    'url' => $domain['domain'],
-                    'ur' => $domain['url_rating'],
-                    'dr' => $domain['domain_rating'],
-                    'backlinks' => $domain['no_backlinks'],
-                    'ref_domain' => $domain['ref_domains'],
-                    'org_keywords' => $domain['organic_keywords'],
-                    'org_traffic' => $domain['organic_traffic'],
-                    'price' => $domain['price'],
-                    'language_id' => $domain['country']['id'],
-                    'inc_article' => $domain['inc_article'],
-                    'valid' => 'unchecked',
-                ]);
+                $url = remove_http($domain['domain']);
+                $publisher = Publisher::where('url', $url)->count();
+
+                // add url in list publisher if it does not exist
+                if( $publisher == 0 ) {
+                    Publisher::create([
+                        'user_id' => $request->seller,
+                        'url' => $url,
+                        'ur' => $domain['url_rating'] ?: 0,
+                        'dr' => $domain['domain_rating'] ?: 0,
+                        'backlinks' => $domain['no_backlinks'] ?: 0,
+                        'ref_domain' => $domain['ref_domains'] ?: 0,
+                        'org_keywords' => $domain['organic_keywords'] ?: 0,
+                        'org_traffic' => $domain['organic_traffic'] ?: 0,
+                        'price' => $request->price,
+                        'language_id' => $request->language_id,
+                        'inc_article' => $request->inc_article,
+                        'topic' => $request->topic,
+                        'casino_sites' => $request->casino_sites,
+                        'valid' => 'valid',
+                    ]);
+                }
             }
 
         }else{
@@ -1033,5 +1046,19 @@ class ExtDomainController extends Controller
         });
 
         return $output;
+    }
+
+    public function checkUrlsExisting (Request $request) {
+        $urls = array_map(function($item) { return remove_http($item['domain']);}, $request->all());
+
+        return Publisher::select('url')
+            ->whereIn('url', $urls)
+            ->whereHas('user', function ($query) {
+                $query->where('status','=','active');
+            })
+            ->groupBy('url')
+            ->get()
+            ->pluck('url')
+            ->toArray();
     }
 }

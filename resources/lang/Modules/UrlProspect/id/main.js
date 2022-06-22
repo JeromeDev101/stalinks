@@ -93,7 +93,7 @@ export default {
     up_in_charge: 'Penanggung Jawab',
     up_publisher_list: 'Daftar Penerbit',
     up_information: 'Informasi!',
-    up_information_2: 'Domain ini sudah ada di Daftar Penerbit.',
+    up_information_2: 'Domain ini sudah ada di Penerbit Daftar. Status Prospek URL akan diperbarui menjadi memenuhi syarat tetapi URL tidak akan ditambahkan dalam data Penerbit Daftar.',
     up_seller: 'Penjual',
     up_inc_article: 'Sertakan Artikel',
     up_select_inc_article: 'Pilih Sertakan Artikel',

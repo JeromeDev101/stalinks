@@ -93,7 +93,7 @@ export default {
     up_in_charge: 'In-Charge',
     up_publisher_list: 'Publisher List',
     up_information: 'Information!',
-    up_information_2: 'These Domain is already Exist on List Publisher.',
+    up_information_2: 'This domain already exists in List Publisher. URL Prospect status will be updated to qualified but the URL will not be added in List Publisher data.',
     up_seller: 'Seller',
     up_inc_article: 'Inc Article',
     up_select_inc_article: 'Select Include Article',

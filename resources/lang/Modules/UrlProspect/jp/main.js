@@ -93,7 +93,7 @@ export default {
     up_in_charge: '担当者',
     up_publisher_list: 'パプリッシャーリスト',
     up_information: '情報!',
-    up_information_2: 'これらのドメインは、既にパブリッシャーリストに存在しています。',
+    up_information_2: 'このドメインはすでにリストパブリッシャーに存在します。 URLプロスペクトのステータスは修飾済みに更新されますが、URLはリストパブリッシャーデータに追加されません。',
     up_seller: 'セーラー',
     up_inc_article: '記事を含む',
     up_select_inc_article: '記事を含むを選択する',

@@ -44,7 +44,16 @@ class Publisher extends Model
             'valid',
             'href_fetched_at',
             'deleted_at',
-            'is_https'
+            'is_https',
+            'ur',
+            'dr',
+            'backlinks',
+            'ref_domain',
+            'org_keywords',
+            'org_traffic',
+            'direct_admin_sites',
+            'anchor_text',
+            'link'
         ];
 
     public function getCustomUrlAttribute() {

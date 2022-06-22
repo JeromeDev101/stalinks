@@ -93,7 +93,7 @@ export default {
     up_in_charge: 'Phụ trách',
     up_publisher_list: 'Danh sách nhà xuất bản',
     up_information: 'Thông tin!',
-    up_information_2: 'Tên miền này đã tồn tại trên danh sách nhà xuất bản.',
+    up_information_2: 'Miền này đã tồn tại trong Nhà xuất bản danh sách. Trạng thái URL Triển vọng sẽ được cập nhật thành đủ điều kiện nhưng URL sẽ không được thêm vào dữ liệu Nhà xuất bản danh sách.',
     up_seller: 'Người bán',
     up_inc_article: 'Bao gồm Bài viết',
     up_select_inc_article: 'Chọn Bao Gồm Bài viết',

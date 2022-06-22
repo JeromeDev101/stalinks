@@ -120,6 +120,7 @@ class WalletTransactionController extends Controller
         // $list = User::whereIn('id', $ids)->orderBy('username', 'asc');
         $list = User::select('users.*', 'registration.team_in_charge')
             ->where('role_id', 6)
+            ->where('users.status', 'active')
             ->leftJoin('registration', 'users.email', '=', 'registration.email')
             ->orderBy('username', 'asc');
         return [

@@ -93,7 +93,7 @@ export default {
     up_in_charge: 'ผู้รับผิดชอบ',
     up_publisher_list: 'รายชื่อผู้โฆษณา',
     up_information: 'ข้อมูล!',
-    up_information_2: 'โดเมนเหล่านี้มีอยู่ในรายชื่อผู้โฆษณาแล้ว',
+    up_information_2: 'โดเมนนี้มีอยู่แล้วใน List Publisher สถานะผู้มีโอกาสเป็นลูกค้าของ URL จะได้รับการอัปเดตเป็นผ่านการรับรอง แต่ URL จะไม่ถูกเพิ่มในข้อมูลผู้เผยแพร่รายการ',
     up_seller: 'ผู้ขาย',
     up_inc_article: 'รวมบทความ',
     up_select_inc_article: 'เลือกรวมบทความ',

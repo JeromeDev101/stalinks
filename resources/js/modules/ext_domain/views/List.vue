@@ -1992,27 +1992,260 @@
                                     </span>
                                 </div>
                             </div>
+
                             <div class="col-md-12" v-if="isQualified">
-                                <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.seller}">
-                                    <label style="color: #333">{{ $t('message.url_prospect.cms_seller') }}</label>
-                                    <select
-                                        type="text"
-                                        v-model="updateStatus.seller"
-                                        class="form-control"
-                                        required="required">
+                                <div class="card">
+                                    <h6 class="card-header font-weight-bold ">List Publisher Details</h6>
 
-                                        <option value="">{{ $t('message.url_prospect.cms_select_seller') }}</option>
-                                        <option v-for="option in listExtSeller" v-bind:value="option.id">
-                                            {{ option.username }}
-                                        </option>
-                                    </select>
+                                    <div class="card-body">
+                                        <div v-if="multipleUpdateStatusExistingUrls.length" class="alert alert-default-danger">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            The following URL's already exists in List Publisher. The status will be updated to
+                                            qualified but the data will not be added on the list.
 
-                                    <span
-                                        v-if="messageBacklinkForms.errors.seller"
-                                        v-for="err in messageBacklinkForms.errors.seller"
-                                        class="text-danger">
-                                        {{ err }}
-                                    </span>
+                                            <p class="mt-2">
+                                                {{ multipleUpdateStatusExistingUrls.length }} / {{ checkIds.length }}
+                                                selected URL's will not be added to list publisher.
+                                            </p>
+
+                                            <div v-if="multipleUpdateStatusExistingUrls.length <= 5">
+                                                <ul class="mt-2">
+                                                    <li v-for="item in multipleUpdateStatusExistingUrls">
+                                                        <span class="font-weight-bold">
+                                                            {{ item }}
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div v-else>
+                                                <ul class="mt-2">
+                                                    <li>
+                                                        <button class="btn btn-default btn-sm" @click="showAllExistingUrls = !showAllExistingUrls">
+                                                            Show {{ showAllExistingUrls ? 'less' : 'all' }}
+                                                        </button>
+                                                    </li>
+                                                    <template v-if="!showAllExistingUrls">
+                                                        <li v-for="item in multipleUpdateStatusExistingUrls.slice(0, 5)">
+                                                            <span class="font-weight-bold">
+                                                                {{ item }}
+                                                            </span>
+                                                        </li>
+                                                        <li>...</li>
+                                                    </template>
+                                                    <template v-else>
+                                                        <li v-for="item in multipleUpdateStatusExistingUrls">
+                                                            <span class="font-weight-bold">
+                                                                {{ item }}
+                                                            </span>
+                                                        </li>
+                                                    </template>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="alert alert-default-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            Instructions for multiple status update to QUALIFIED:
+
+                                            <ul class="list-group mt-3">
+                                                <li
+                                                    class="p-2 list-group-item d-flex justify-content-between align-items-center"
+                                                    :class="{'list-group-item-success' : isTheSameEmployeeInCharge, 'list-group-item-danger' : !isTheSameEmployeeInCharge}">
+                                                    <span class="text-dark">1. Employee in charge must be the same for all selected items, unless inactive.</span>
+                                                    <div>
+                                                        <i
+                                                            class="fas fa-2x"
+                                                            :class="{
+                                                                'fa-check-circle' : isTheSameEmployeeInCharge,
+                                                                'fa-times-circle' : !isTheSameEmployeeInCharge,
+                                                                'text-success' : isTheSameEmployeeInCharge,
+                                                                'text-danger' : !isTheSameEmployeeInCharge,
+                                                            }">
+
+                                                        </i>
+                                                    </div>
+                                                </li>
+                                                <li
+                                                    class="p-2 list-group-item d-flex justify-content-between align-items-center"
+                                                    :class="{'list-group-item-success' : isPublisherDataCompleteMultipleStatusUpdate, 'list-group-item-danger' : !isPublisherDataCompleteMultipleStatusUpdate}">
+                                                    <span class="text-dark">2. Complete the information needed for list publisher data.</span>
+                                                    <div>
+                                                        <i
+                                                            class="fas fa-2x"
+                                                            :class="{
+                                                                'fa-check-circle' : isPublisherDataCompleteMultipleStatusUpdate,
+                                                                'fa-times-circle' : !isPublisherDataCompleteMultipleStatusUpdate,
+                                                                'text-success' : isPublisherDataCompleteMultipleStatusUpdate,
+                                                                'text-danger' : !isPublisherDataCompleteMultipleStatusUpdate,
+                                                            }">
+                                                        </i>
+                                                    </div>
+                                                </li>
+                                            </ul>
+
+                                            <p class="font-italic font-weight-bold mt-2">
+                                                Note: the information in publisher details will be the same for all selected urls.
+                                            </p>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="mb-1">Employee In-charge: </label>
+                                            <br>
+                                            <p class="mb-2" v-if="isTheSameEmployeeInCharge">
+                                                {{ employeeInchargeActiveIndex >= 0
+                                                    ? checkIds[employeeInchargeActiveIndex].users.username
+                                                    : 'In-charge in selected items are inactive. Seller input will display all sellers.'
+                                                }}
+                                            </p>
+                                            <p class="mb-2 text-danger" v-else>
+                                                Selected items have different employee in-charge.
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.seller}">
+                                                <label style="color: #333">{{ $t('message.url_prospect.cms_seller') }}</label>
+
+                                                <v-select
+                                                    v-model="updateStatus.seller"
+                                                    label="username"
+                                                    :disabled="!isTheSameEmployeeInCharge"
+                                                    :searchable="true"
+                                                    :options="getSellersViaInChargeMultipleStatusUpdate()"
+                                                    :reduce="seller => seller.id"/>
+
+                                                <small class="text-primary">
+                                                    <i class="fas fa-info-circle"></i>
+                                                    Selection will display sellers according to employee in-charge.
+                                                </small>
+
+                                                <br>
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.seller"
+                                                    v-for="err in messageBacklinkForms.errors.seller"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div
+                                                :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.inc_article}"
+                                                class="form-group">
+
+                                                <label style="color: #333">
+                                                    {{ $t('message.url_prospect.up_inc_article') }}
+                                                </label>
+
+                                                <select
+                                                    class="form-control"
+                                                    v-model="updateStatus.inc_article">
+                                                    <option value="">{{ $t('message.url_prospect.up_select_inc_article') }}</option>
+                                                    <option value="yes">{{ $t('message.url_prospect.yes') }}</option>
+                                                    <option value="no">{{ $t('message.url_prospect.no') }}</option>
+                                                </select>
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.inc_article"
+                                                    v-for="err in messageBacklinkForms.errors.inc_article"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.language_id}"
+                                                 class="form-group">
+                                                <label style="color: #333">{{ $t('message.url_prospect.up_language') }}</label>
+                                                <select
+                                                    class="form-control"
+                                                    v-model="updateStatus.language_id">
+
+                                                    <option value="">{{ $t('message.url_prospect.up_select_language') }}</option>
+                                                    <option v-for="option in listLanguages.data" v-bind:value="option.id">
+                                                        {{ option.name }}
+                                                    </option>
+                                                </select>
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.language_id"
+                                                    v-for="err in messageBacklinkForms.errors.language_id"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.price}"
+                                                 class="form-group">
+                                                <label style="color: #333">{{ $t('message.url_prospect.up_price') }}</label>
+                                                <input
+                                                    type="number"
+                                                    class="form-control"
+                                                    v-model="updateStatus.price">
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.price"
+                                                    v-for="err in messageBacklinkForms.errors.price"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div
+                                                :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.casino_sites}"
+                                                class="form-group">
+
+                                                <label style="color: #333">{{ $t('message.url_prospect.up_cb') }}</label>
+
+                                                <select
+                                                    class="form-control"
+                                                    v-model="updateStatus.casino_sites">
+
+                                                    <option value="">{{ $t('message.url_prospect.up_select_cb') }}</option>
+                                                    <option value="yes">{{ $t('message.url_prospect.yes') }}</option>
+                                                    <option value="no">{{ $t('message.url_prospect.no') }}</option>
+                                                </select>
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.casino_sites"
+                                                    v-for="err in messageBacklinkForms.errors.casino_sites"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12 p-0">
+                                            <div :class="{'form-group': true, 'has-error': messageBacklinkForms.errors.topic}"
+                                                 class="form-group">
+                                                <label style="color: #333">{{ $t('message.url_prospect.up_topic') }}</label>
+                                                <select
+                                                    class="form-control"
+                                                    v-model="updateStatus.topic">
+
+                                                    <option value="">{{ $t('message.url_prospect.up_select_topic') }}</option>
+                                                    <option v-for="option in topic" v-bind:value="option">
+                                                        {{ option }}
+                                                    </option>
+                                                </select>
+
+                                                <span
+                                                    v-if="messageBacklinkForms.errors.topic"
+                                                    v-for="err in messageBacklinkForms.errors.topic"
+                                                    class="text-danger">
+                                                    {{ err }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2228,6 +2461,11 @@ export default {
             updateStatus : {
                 seller : '',
                 status : '',
+                language_id : '',
+                inc_article : '',
+                topic : '',
+                casino_sites : '',
+                price : '',
             },
             isQualified : false,
             formAddUrl : false,
@@ -2297,6 +2535,9 @@ export default {
             },
 
             extStatusTemp: '',
+
+            multipleUpdateStatusExistingUrls: [],
+            showAllExistingUrls: false,
         };
     },
     async created() {
@@ -2829,7 +3070,30 @@ export default {
                 : self.checkIds.some(function (item) {
                     return (item.user_id !== self.user.id && item.users.status !== 'inactive');
                 });
-        }
+        },
+
+        isTheSameEmployeeInCharge () {
+            let self = this;
+            let employeeIndex = self.checkIds.findIndex((item) => item.users.status === 'active');
+            let employee = employeeIndex >= 0 ? self.checkIds[employeeIndex].user_id : 0;
+
+            return self.checkIds.every(function (item) {
+                return ((item.user_id === employee && item.users.status !== 'inactive')
+                    || (item.user_id !== employee && item.users.status === 'inactive'));
+            });
+        },
+
+        employeeInchargeActiveIndex () {
+            let self = this;
+
+            return self.checkIds.findIndex((item) => item.users.status === 'active');
+        },
+
+        isPublisherDataCompleteMultipleStatusUpdate () {
+            let self = this;
+
+            return Object.values(self.updateStatus).every(x => x != null && x !== '')
+        },
     },
     mounted() {
         let that = this;
@@ -3010,6 +3274,8 @@ export default {
         doMultipleStatus() {
             let self = this;
 
+            self.checkMultipleStatusUrls();
+
             let qualified = this.checkIds.some(function (item) {
                 return item.status === 100 ||  item.status === '100';
             });
@@ -3036,6 +3302,16 @@ export default {
                     'error'
                 )
             }
+        },
+
+        checkMultipleStatusUrls () {
+            axios.post('/api/ext/check-urls', this.checkIds)
+                .then((res) => {
+                    this.multipleUpdateStatusExistingUrls = res.data;
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         },
 
         async deleteAll() {
@@ -3411,6 +3687,7 @@ export default {
                 ext : this.extUpdate,
                 pub : this.publisherAdd,
             });
+
             if (this.messageForms.action === 'updated_ext') {
                 // console.log(this.extUpdate)
                 // for (var index in this.listExt.data) {
@@ -3427,15 +3704,22 @@ export default {
 
                 $('#modal-update').modal('hide');
 
+                swal.fire(
+                    self.$t('message.url_prospect.swal_success'),
+                    self.$t('message.url_prospect.swal_successfully_updated'),
+                    'success'
+                );
+
+            } else {
+                swal.fire(
+                    self.$t('message.url_prospect.swal_err'),
+                    self.messageForms.message,
+                    'error'
+                );
             }
+
             this.toggleTableLoading();
             loader.hide();
-
-            swal.fire(
-                self.$t('message.url_prospect.swal_success'),
-                self.$t('message.url_prospect.swal_successfully_updated'),
-                'success'
-            );
         },
         async doShowBackLink(extDomain) {
             this.extBackLink = extDomain;
@@ -3491,7 +3775,7 @@ export default {
                     this.publisherAdd.url = result.data.url
                     this.publisherAdd.language_id = result.data.language_id
                     this.publisherAdd.topic = result.data.topic
-                    this.publisherAdd.casino_sites = result.data.casino_sites
+                    this.publisherAdd.casino_sites = (result.data.casino_sites).toLowerCase()
                     this.publisherAdd.price = result.data.price
 
                     this.isEditable = true;
@@ -3922,10 +4206,17 @@ export default {
 
         async doUpdateMultipleStatus(is_sending, id) {
             let self = this;
+            let loader = this.$loading.show();
+
             await this.$store.dispatch('actionUpdateMultipleStatus', {
                 id : is_sending ? id : this.checkIds,
                 seller : this.updateStatus.seller,
                 status : is_sending ? 50 : this.updateStatus.status,
+                language_id: this.updateStatus.language_id,
+                inc_article: this.updateStatus.inc_article,
+                topic: this.updateStatus.topic,
+                casino_sites: this.updateStatus.casino_sites,
+                price: this.updateStatus.price,
             });
 
             if (this.messageForms.action == 'updated') {
@@ -3948,6 +4239,16 @@ export default {
                 this.checkIds = []
                 this.updateStatus.seller = '';
                 this.updateStatus.status = '';
+                this.updateStatus.language_id = '';
+                this.updateStatus.inc_article = '';
+                this.updateStatus.topic = '';
+                this.updateStatus.casino_sites = '';
+                this.updateStatus.price = '';
+
+                this.allSelected = !this.allSelected;
+
+                loader.hide();
+
                 let message = is_sending
                     ? self.$t('message.url_prospect.swal_email_sent')
                     : self.$t('message.url_prospect.swal_successfully_updated')
@@ -3959,7 +4260,7 @@ export default {
                 )
             }
 
-            this.checkIds = []
+            loader.hide();
 
             this.getExtList({
                 params : this.filterModel
@@ -4182,6 +4483,19 @@ export default {
             return this.extUpdate.user_id === null
                 ? list
                 : list.filter(el => el.team_in_charge === this.extUpdate.user_id);
+        },
+
+        getSellersViaInChargeMultipleStatusUpdate () {
+            let self = this;
+            let employeeIndex = self.employeeInchargeActiveIndex;
+            let inCharge = employeeIndex >= 0 ? self.checkIds[employeeIndex].user_id : 0;
+            let list = self.listSeller.data
+
+            return self.isTheSameEmployeeInCharge
+                ? inCharge > 0
+                    ? list.filter(el => el.team_in_charge === inCharge)
+                    : list
+                : [];
         },
 
         checkEmailValidationError(error) {
