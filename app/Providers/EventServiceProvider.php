@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\AddWalletEvent;
+use App\Events\ArticleCreatedEvent;
 use App\Events\ArticleDoneEvent;
 use App\Events\BacklinkLiveEvent;
 use App\Events\BacklinkLiveSellerEvent;
@@ -22,6 +23,7 @@ use App\Events\WriterExamProcessedEvent;
 use App\Events\WriterPaidEvent;
 use App\Events\SellerConfirmationEvent;
 use App\Events\TeamInChargeUpdatedEvent;
+use App\Listeners\ArticleCreatedListener;
 use App\Listeners\BillingReuploadDocListener;
 use App\Listeners\RefundRequestProcessedListener;
 use App\Listeners\SellerConfirmationListener;
@@ -154,6 +156,10 @@ class EventServiceProvider extends ServiceProvider
 
         RefundRequestProcessedEvent::class => [
             RefundRequestProcessedListener::class
+        ],
+
+        ArticleCreatedEvent::class => [
+            ArticleCreatedListener::class
         ],
     ];
 

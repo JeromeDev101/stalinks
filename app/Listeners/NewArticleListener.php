@@ -22,7 +22,7 @@ class NewArticleListener
     /**
      * Handle the event.
      *
-     * @param  object  $event
+     * @param NewArticleEvent $event
      * @return void
      */
     public function handle(NewArticleEvent $event)

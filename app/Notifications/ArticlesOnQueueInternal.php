@@ -7,20 +7,20 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewArticle extends Notification implements ShouldQueue
+class ArticlesOnQueueInternal extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $article;
+    protected $articles;
 
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param $articles
      */
-    public function __construct($article)
+    public function __construct($articles)
     {
-        $this->article = $article;
+        $this->articles = $articles;
     }
 
     /**
@@ -38,7 +38,7 @@ class NewArticle extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -57,7 +57,7 @@ class NewArticle extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => 'A new article has been assigned to you (Article ID: ' . $this->article->id . ') on ' . date('Y-m-d') . '. Follow up with Backlink ID ' . $this->article->backlink->id . '.'
+            'message' => 'There are ' . count($this->articles) . ' articles on queue that you can accept and write.'
         ];
     }
 }

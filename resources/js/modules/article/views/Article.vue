@@ -86,7 +86,7 @@
                                     <label>{{ $t('message.article.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.writer">
                                         <option value="">{{ $t('message.article.all') }}</option>
-                                        <option v-for="option in listWriter.data" v-bind:value="option.id">
+                                        <option v-for="option in validWriters" v-bind:value="option.id">
                                             {{ option.username }}
                                         </option>
                                     </select>
@@ -656,12 +656,28 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ $t('message.article.filter_lang') }}</label>
+                                    <select disabled="true" class="form-control" name="" v-model="addModel.language_id">
+                                        <option v-for="option in listLanguages.data"
+                                                :value="option.id"
+                                                :key="option.id">
+                                            {{ option.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.writer}">
                                     <label>{{ $t('message.article.filter_writer') }}</label>
                                     <select name="" class="form-control" v-model="addModel.writer">
-                                        <option v-for="option in listWriter.data" v-bind:value="option.id">
-                                            {{ $t('message.article.ca_id') }} {{ option.id }} {{ $t('message.article.ca_name') }} {{ option.name }}
+                                        <option v-for="option in validWritersWithLanguage" v-bind:value="option.id">
+                                            {{ $t('message.article.ca_id') }}
+                                            {{ option.id }}
+                                            {{ $t('message.article.ca_name') }}
+                                            {{ option.name }}
                                         </option>
                                     </select>
                                     <span v-if="messageForms.errors.writer" v-for="err in messageForms.errors.writer" class="text-danger">{{ err }}</span>
@@ -842,7 +858,9 @@
                     total_done: 0,
                     total_cancelled: 0,
                     total_issue: 0
-                }
+                },
+
+                externalWriters: [],
             }
         },
 
@@ -852,8 +870,8 @@
             this.getListWriter();
             this.getListCountries();
             this.checkTeam();
-            this.getListWriter();
             this.getListLanguages();
+            this.getValidExternalWriters();
         },
 
         computed: {
@@ -965,7 +983,21 @@
                         isHidden: false
                     }
                 ];
-            }
+            },
+
+            validWriters () {
+                return this.listWriter.data.concat(this.externalWriters)
+            },
+
+            validWritersWithLanguage () {
+                let self = this;
+
+                return self.addModel.language_id
+                    ? self.listWriter.data.concat(this.externalWriters.filter(function (item) {
+                        return JSON.parse(item.language_id).includes(self.addModel.language_id)
+                    }))
+                    : self.listWriter.data.concat(this.externalWriters)
+            },
         },
 
         methods: {
@@ -1169,6 +1201,16 @@
 
             async getListWriter(params){
                 await this.$store.dispatch('actionGetListWriter', params);
+            },
+
+            getValidExternalWriters () {
+                axios.get('/api/valid-external-writers')
+                .then((res) => {
+                    this.externalWriters = res.data
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
             },
 
             checkTeam() {
@@ -1378,10 +1420,13 @@
 
             clearModels() {
                 this.addModel = {
+                    backlink: '',
                     title: '',
                     anchor_text: '',
-                    link: '',
+                    link_to: '',
                     status: '',
+                    writer: '',
+                    language_id: '',
                 }
 
                 this.viewModel = {

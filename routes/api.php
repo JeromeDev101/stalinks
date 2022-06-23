@@ -77,6 +77,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');
     Route::name('get-article-list')->get('article-list', 'ArticlesController@getArticleList');
     Route::name('get-writer-list')->get('writer-list', 'ArticlesController@getWriterList');
+    Route::name('get-valid-external-writers')->get('valid-external-writers', 'ArticlesController@getValidExternalWriters');
     Route::name('add-articles')->post('articles', 'ArticlesController@store');
     Route::name('update-article-content')->post('articles-content', 'ArticlesController@updateContent');
     Route::name('get-article-list-admin')->get('article-list-admin', 'ArticlesController@getArticleListAdmin');

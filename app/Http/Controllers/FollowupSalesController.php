@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ArticleCreatedEvent;
 use App\Events\BacklinkLiveSellerEvent;
 use App\Events\BacklinkLiveWriterEvent;
 use App\Events\BacklinkStatusChangedEvent;
@@ -239,14 +240,13 @@ class FollowupSalesController extends Controller
 
                         // Create article
                         if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
-                            Article::create([
+                            $article = Article::create([
                                 'id_backlink' => $backlink->id,
                                 'id_language' => $backlink->publisher->language_id,
                             ]);
-                            $users = User::where('status', 'active')->where('role_id', 4)->get();
-                            foreach ($users as $user) {
-                                event(new NotificationEvent("New Article to be write today!", $user->id));
-                            }
+
+                            // notify internal and external valid writers
+                            event(new ArticleCreatedEvent($article));
                         }
 
                         // notify cs, team and buyer
@@ -316,14 +316,13 @@ class FollowupSalesController extends Controller
 
                             // Create article
                             if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
-                                Article::create([
+                                $article = Article::create([
                                     'id_backlink' => $backlink->id,
                                     'id_language' => $backlink->publisher->language_id,
                                 ]);
-                                $users = User::where('status', 'active')->where('role_id', 4)->get();
-                                foreach ($users as $user) {
-                                    event(new NotificationEvent("New Article to be write today!", $user->id));
-                                }
+
+                                // notify internal and external valid writers
+                                event(new ArticleCreatedEvent($article));
                             }
 
                             $backlink->update(['status' => 'Processing']);

@@ -22,12 +22,13 @@ class ArticlesController extends Controller
 {
     public function getList(){
         $list = Backlink::select('backlinks.*')
-                        ->leftJoin('publisher', function($join){
-                            $join->on('backlinks.publisher_id', '=', 'publisher.id');
-                        })
-                        ->where('publisher.inc_article', 'Yes')
-                        ->with('publisher:id,url,inc_article,language_id')
-                        ->with('user:id,name');
+            ->leftJoin('publisher', function($join){
+                $join->on('backlinks.publisher_id', '=', 'publisher.id');
+            })
+            ->where('publisher.inc_article', 'Yes')
+            ->whereNotIn('backlinks.status', ['Issue', 'Canceled', 'Pending', 'Live'])
+            ->with('publisher:id,url,inc_article,language_id')
+            ->with('user:id,name');
 
         return [
             'total' => $list->count(),
@@ -283,12 +284,37 @@ class ArticlesController extends Controller
     }
 
     public function getWriterList() {
-        $writers = User::select('id', 'name', 'username')->where('role_id', 4)->where('isOurs', 0)->orderBy('username', 'asc')->get();
+        $writers = User::select('id', 'name', 'username')
+            ->where('role_id', 4)
+            ->where('isOurs', 0)
+            ->where('status', 'active')
+            ->orderBy('username', 'asc')
+            ->get();
 
         return [
             'total' => $writers->count(),
             'data' => $writers,
         ];
+    }
+
+    public function getValidExternalWriters () {
+        $columns = [
+            'users.id',
+            'users.name',
+            'users.username',
+            'users.isOurs',
+            'registration.language_id',
+            'registration.is_exam_passed'
+        ];
+
+        return User::select($columns)
+            ->where('role_id', 4)
+            ->leftJoin('registration', 'users.email', '=', 'registration.email')
+            ->where('users.isOurs', 1)
+            ->where('users.status', 'active')
+            ->where('registration.account_validation', 'valid')
+            ->where('registration.is_exam_passed', 1)
+            ->get();
     }
 
     public function store(Request $request, NotificationInterface $notification) {
