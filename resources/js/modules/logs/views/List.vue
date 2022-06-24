@@ -170,7 +170,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <table class="table table-hover table-bordered table-striped rlink-table">
+                                <table class="table table-bordered rlink-table">
                                     <thead>
                                     <tr class="label-primary">
                                         <th>#</th>
@@ -207,20 +207,42 @@
                                                 {{ $t('message.system_logs.p_id') }}#: {{ tablePayload(item.payload, 'id') }}
                                             </span>
 
-                                            <ul class="list-group mt-1">
-                                                <li
-                                                    v-for="(attribute, index) in tablePayload(item.payload, 'items')"
-                                                    class="list-group-item p-2">
+                                            <table class="table table-sm mt-2">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Column</th>
+                                                        <th scope="col">From</th>
+                                                        <th scope="col">To</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="attribute in tablePayloadWithFormer(item.payload, item.former, 'items')">
+                                                        <th scope="row">
+                                                            <small class="font-weight-bold">
+                                                                {{ attribute.column }}
+                                                            </small>
+                                                        </th>
+                                                        <td>
+                                                            <small v-if="attribute.from">
+                                                                {{ attribute.from }}
+                                                            </small>
 
-                                                    <p class="font-weight-bold mb-1">{{ index }}</p>
+                                                            <span v-else class="badge badge-secondary">
+                                                                <small>NULL</small>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <small v-if="attribute.to !== null && attribute.to !== ''">
+                                                                {{ attribute.to }}
+                                                            </small>
 
-                                                    <small v-if="attribute" class="text-muted">{{ attribute }}</small>
-
-                                                    <small v-else>
-                                                        <span class="badge badge-secondary">NULL</span>
-                                                    </small>
-                                                </li>
-                                            </ul>
+                                                            <span v-else class="badge badge-secondary">
+                                                                <small>NULL</small>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </td>
                                         <td>{{ item.created_at }}</td>
                                     </tr>
@@ -440,6 +462,22 @@ export default {
             let parsed = JSON.parse(payload);
 
             return data === 'items' ? parsed.payload : parsed.id
+        },
+
+        tablePayloadWithFormer (payload, former, data) {
+            let parsedPayload = JSON.parse(payload);
+            let parsedFormer = former ? JSON.parse(former) : null;
+            let final = [];
+
+            Object.keys(parsedPayload.payload).forEach(function (item) {
+                final.push({
+                    column: item,
+                    from: parsedFormer ? parsedFormer[item] : null,
+                    to: parsedPayload.payload[item]
+                })
+            })
+
+            return final;
         },
 
         isTablePage(itemPath) {

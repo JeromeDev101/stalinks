@@ -13,6 +13,7 @@ class Log extends Model
         'table',
         'action',
         'user_id',
+        'former',
         'payload',
         'page'
     ];

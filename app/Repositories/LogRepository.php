@@ -61,7 +61,7 @@ class LogRepository extends BaseRepository implements LogRepositoryInterface
 
     private function getQueryBuilderList($perPage, $userEmail, $filters) {
         $queryBuilder = $this->buildSimpleFilterQuery($filters);
-        $queryBuilder = $queryBuilder->select('id', 'user_id', 'table', 'action', 'page', 'created_at', 'payload');
+        $queryBuilder = $queryBuilder->select('id', 'user_id', 'table', 'action', 'page', 'created_at', 'payload', 'former');
         if ($userEmail !== '') {
             $queryBuilder = $queryBuilder->whereHas('user', function($query) use ($userEmail) {
                 $query->where('email', $userEmail);

@@ -21,10 +21,18 @@ trait Loggable
             static::$eventName(function (Model $model) use ($eventName) {
                 try {
                     $page = null;
+                    $former = [];
+
                     $payload = collect([
                         'payload' => $model->getDirty(),
-                        'id' => $model->getOriginal('id')
+//                        'id' => $model->getOriginal('id')
+                        'id' => $model->getAttribute('id')
                     ]);
+
+
+                    if ($model->isDirty() && static::getActionName($eventName) !== 'create') {
+                        $former = (new self)->getOriginalValuesAfterUpdate($model);
+                    }
 
                     if (Request()->server() && isset(Request()->server()['HTTP_REFERER'])) {
                         $path = Request()->server()['HTTP_REFERER'];
@@ -36,6 +44,7 @@ trait Loggable
                         'table' => 'App\\Models\\' . class_basename($model),
                         'action' => static::getActionName($eventName),
                         'user_id' => auth()->check() ? auth()->user()->id : 49,
+                        'former' => count($former) > 0 ? json_encode($former) : null,
                         'payload' => json_encode($payload),
                         'page' => $page
                     ]);
@@ -106,5 +115,22 @@ trait Loggable
         }
 
         return str_replace($root, '', $result);
+    }
+
+    /**
+     * get changes from model
+     *
+     * @param $model
+     * @return array
+     */
+    private function getOriginalValuesAfterUpdate ($model) {
+        $changed = [];
+        $values = array_keys($model->getDirty());
+
+        foreach ($values as $value) {
+            $changed[$value] = $model->getOriginal($value);
+        }
+
+        return $changed;
     }
 }
