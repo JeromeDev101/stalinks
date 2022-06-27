@@ -30,11 +30,11 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="from-group">
-                                    <label style="color: #333">URL Prospect ID</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_url_prospect_id') }}</label>
                                     <input type="text"
                                            v-model="filterModel.id_temp"
                                            class="form-control pull-right"
-                                           placeholder="Search ID">
+                                           :placeholder="$t('message.url_prospect.filter_url_prospect_id_placeholder')">
                                 </div>
                             </div>
 
@@ -545,7 +545,7 @@
                                         </span>
 
                                         <span v-if="scope.row.users.status === 'inactive'" class="badge badge-danger">
-                                            Inactive
+                                            {{ $t('message.url_prospect.t_inactive') }}
                                         </span>
                                     </span>
                                 </template>
@@ -1995,17 +1995,16 @@
 
                             <div class="col-md-12" v-if="isQualified">
                                 <div class="card">
-                                    <h6 class="card-header font-weight-bold ">List Publisher Details</h6>
+                                    <h6 class="card-header font-weight-bold ">{{ $t('message.url_prospect.lpd_title') }}</h6>
 
                                     <div class="card-body">
                                         <div v-if="multipleUpdateStatusExistingUrls.length" class="alert alert-default-danger">
                                             <i class="fas fa-exclamation-triangle"></i>
-                                            The following URL's already exists in List Publisher. The status will be updated to
-                                            qualified but the data will not be added on the list.
+                                            {{ $t('message.url_prospect.lpd_note') }}
 
                                             <p class="mt-2">
                                                 {{ multipleUpdateStatusExistingUrls.length }} / {{ checkIds.length }}
-                                                selected URL's will not be added to list publisher.
+                                                {{ $t('message.url_prospect.lpd_selected_info') }}
                                             </p>
 
                                             <div v-if="multipleUpdateStatusExistingUrls.length <= 5">
@@ -2022,7 +2021,11 @@
                                                 <ul class="mt-2">
                                                     <li>
                                                         <button class="btn btn-default btn-sm" @click="showAllExistingUrls = !showAllExistingUrls">
-                                                            Show {{ showAllExistingUrls ? 'less' : 'all' }}
+                                                            {{
+                                                                showAllExistingUrls
+                                                                    ? $t('message.url_prospect.lpd_show_less')
+                                                                    : $t('message.url_prospect.lpd_show_all')
+                                                            }}
                                                         </button>
                                                     </li>
                                                     <template v-if="!showAllExistingUrls">
@@ -2046,13 +2049,15 @@
 
                                         <div class="alert alert-default-info">
                                             <i class="fas fa-info-circle"></i>
-                                            Instructions for multiple status update to QUALIFIED:
+                                            {{ $t('message.url_prospect.imu_title') }}
 
                                             <ul class="list-group mt-3">
                                                 <li
                                                     class="p-2 list-group-item d-flex justify-content-between align-items-center"
                                                     :class="{'list-group-item-success' : isTheSameEmployeeInCharge, 'list-group-item-danger' : !isTheSameEmployeeInCharge}">
-                                                    <span class="text-dark">1. Employee in charge must be the same for all selected items, unless inactive.</span>
+                                                    <span class="text-dark">
+                                                        {{ $t('message.url_prospect.imu_1') }}
+                                                    </span>
                                                     <div>
                                                         <i
                                                             class="fas fa-2x"
@@ -2069,7 +2074,9 @@
                                                 <li
                                                     class="p-2 list-group-item d-flex justify-content-between align-items-center"
                                                     :class="{'list-group-item-success' : isPublisherDataCompleteMultipleStatusUpdate, 'list-group-item-danger' : !isPublisherDataCompleteMultipleStatusUpdate}">
-                                                    <span class="text-dark">2. Complete the information needed for list publisher data.</span>
+                                                    <span class="text-dark">
+                                                        {{ $t('message.url_prospect.imu_2') }}
+                                                    </span>
                                                     <div>
                                                         <i
                                                             class="fas fa-2x"
@@ -2085,21 +2092,21 @@
                                             </ul>
 
                                             <p class="font-italic font-weight-bold mt-2">
-                                                Note: the information in publisher details will be the same for all selected urls.
+                                                {{ $t('message.url_prospect.imu_note') }}
                                             </p>
                                         </div>
 
                                         <div class="mb-2">
-                                            <label class="mb-1">Employee In-charge: </label>
+                                            <label class="mb-1">{{ $t('message.url_prospect.lpi_title') }}</label>
                                             <br>
                                             <p class="mb-2" v-if="isTheSameEmployeeInCharge">
                                                 {{ employeeInchargeActiveIndex >= 0
                                                     ? checkIds[employeeInchargeActiveIndex].users.username
-                                                    : 'In-charge in selected items are inactive. Seller input will display all sellers.'
+                                                    : $t('message.url_prospect.lpi_incharge_inactive')
                                                 }}
                                             </p>
                                             <p class="mb-2 text-danger" v-else>
-                                                Selected items have different employee in-charge.
+                                                {{ $t('message.url_prospect.lpi_incharge_diff') }}
                                             </p>
                                         </div>
 
@@ -2117,7 +2124,7 @@
 
                                                 <small class="text-primary">
                                                     <i class="fas fa-info-circle"></i>
-                                                    Selection will display sellers according to employee in-charge.
+                                                    {{ $t('message.url_prospect.lpi_selection_note') }}
                                                 </small>
 
                                                 <br>
@@ -4253,18 +4260,18 @@ export default {
                     ? self.$t('message.url_prospect.swal_email_sent')
                     : self.$t('message.url_prospect.swal_successfully_updated')
 
-                swal.fire(
+                await swal.fire(
                     self.$t('message.url_prospect.swal_done'),
                     message,
                     'success'
                 )
+
+                await this.getExtList({
+                    params : this.filterModel
+                });
             }
 
             loader.hide();
-
-            this.getExtList({
-                params : this.filterModel
-            });
         },
 
         // async doSendEmail(ext, event) {

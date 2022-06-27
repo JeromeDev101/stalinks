@@ -1,4 +1,28 @@
 export default {
+    //updates
+    filter_url_prospect_id: 'ID khách hàng tiềm năng URL',
+    filter_url_prospect_id_placeholder: 'Tìm kiếm ID',
+    t_inactive: 'Không hoạt động',
+
+    //list publisher details
+    lpd_title: 'Liệt kê chi tiết nhà xuất bản',
+    lpd_note: 'URL sau đã tồn tại trong Nhà xuất bản danh sách. Trạng thái sẽ được cập nhật thành đủ điều kiện nhưng dữ liệu sẽ không được thêm vào danh sách.',
+    lpd_selected_info: 'URL đã chọn sẽ không được thêm vào nhà xuất bản danh sách.',
+    lpd_show_all: 'Hiển thị tất cả',
+    lpd_show_less: 'Hiện ít hơn',
+
+    // instructions for multiple update
+    imu_title: 'Hướng dẫn cập nhật nhiều trạng thái thành QUALIFIED:',
+    imu_1: '1. Nhân viên phụ trách phải giống nhau cho tất cả các mục đã chọn, trừ khi không hoạt động.',
+    imu_2: '2. Hoàn thành thông tin cần thiết cho dữ liệu nhà xuất bản danh sách.',
+    imu_note: 'Lưu ý: thông tin trong chi tiết nhà xuất bản sẽ giống nhau cho tất cả các url đã chọn.',
+
+    // list publisher details in-charge
+    lpi_title: 'Nhân viên phụ trách: ',
+    lpi_incharge_inactive: 'Phụ trách trong các mục đã chọn không hoạt động. Đầu vào của người bán sẽ hiển thị tất cả người bán.',
+    lpi_incharge_diff: 'Các mặt hàng đã chọn có nhân viên khác phụ trách.',
+    lpi_selection_note: 'Lựa chọn sẽ hiển thị người bán theo nhân viên phụ trách.',
+
     // filter
     filter_title: 'Bộ Lọc',
     filter_show: 'Hiển thị bộ lọc',

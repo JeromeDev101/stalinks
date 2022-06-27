@@ -23,6 +23,9 @@ export default {
     p_filter: 'Type payload text',
     p_table: 'Payload',
     p_id: 'DATA ID',
+    p_column: 'Column',
+    p_from: 'From',
+    p_to: 'To',
 
     // alerts
     alert_confirm: 'Please confirm',

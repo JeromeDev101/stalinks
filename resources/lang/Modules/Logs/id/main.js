@@ -23,6 +23,9 @@ export default {
     p_filter: 'Ketik teks muatan',
     p_table: 'Muatan',
     p_id: 'ID DATA',
+    p_column: 'Kolom',
+    p_from: 'Dari',
+    p_to: 'Ke',
 
     // alerts
     alert_confirm: 'Mohon konfirmasi',

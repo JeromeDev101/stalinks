@@ -23,6 +23,9 @@ export default {
     p_filter: 'ペイロードテキストを入力します',
     p_table: 'ペイロード',
     p_id: 'データID',
+    p_column: '桁',
+    p_from: 'から',
+    p_to: 'に',
 
     // alerts
     alert_confirm: '確認してください',

@@ -210,9 +210,9 @@
                                             <table class="table table-sm mt-2">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Column</th>
-                                                        <th scope="col">From</th>
-                                                        <th scope="col">To</th>
+                                                        <th scope="col">{{ $t('message.system_logs.p_column') }}</th>
+                                                        <th scope="col">{{ $t('message.system_logs.p_from') }}</th>
+                                                        <th scope="col">{{ $t('message.system_logs.p_to') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>

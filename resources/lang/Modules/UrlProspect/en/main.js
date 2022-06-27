@@ -1,4 +1,28 @@
 export default {
+    //updates
+    filter_url_prospect_id: 'URL Prospect ID',
+    filter_url_prospect_id_placeholder: 'Search ID',
+    t_inactive: 'Inactive',
+
+    //list publisher details
+    lpd_title: 'List Publisher Details',
+    lpd_note: 'The following URL\'s already exists in List Publisher. The status will be updated to qualified but the data will not be added on the list.',
+    lpd_selected_info: 'selected URL\'s will not be added to list publisher.',
+    lpd_show_all: 'Show all',
+    lpd_show_less: 'Show less',
+
+    // instructions for multiple update
+    imu_title: 'Instructions for multiple status update to QUALIFIED:',
+    imu_1: '1. Employee in charge must be the same for all selected items, unless inactive.',
+    imu_2: '2. Complete the information needed for list publisher data.',
+    imu_note: 'Note: the information in publisher details will be the same for all selected urls.',
+
+    // list publisher details in-charge
+    lpi_title: 'Employee In-charge: ',
+    lpi_incharge_inactive: 'In-charge in selected items are inactive. Seller input will display all sellers.',
+    lpi_incharge_diff: 'Selected items have different employee in-charge.',
+    lpi_selection_note: 'Selection will display sellers according to employee in-charge.',
+
     // filter
     filter_title: 'Filter',
     filter_show: 'Show Filter',

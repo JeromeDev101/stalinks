@@ -23,6 +23,9 @@ export default {
     p_filter: 'पेलोड टेक्स्ट टाइप करें',
     p_table: 'पेलोड',
     p_id: 'DATA ID',
+    p_column: 'कॉलम',
+    p_from: 'से',
+    p_to: 'प्रति',
 
     // alerts
     alert_confirm: 'कृपया पुष्टि करें',

@@ -23,6 +23,9 @@ export default {
     p_filter: 'Nhập văn bản tải trọng',
     p_table: 'Khối hàng',
     p_id: 'ID DỮ LIỆU',
+    p_column: 'Cột',
+    p_from: 'Từ',
+    p_to: 'Đến',
 
     // alerts
     alert_confirm: 'Vui lòng xác nhận',

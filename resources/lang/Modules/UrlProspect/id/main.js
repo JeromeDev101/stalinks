@@ -1,4 +1,28 @@
 export default {
+    //updates
+    filter_url_prospect_id: 'ID Prospek URL',
+    filter_url_prospect_id_placeholder: 'Cari ID',
+    t_inactive: 'tidak aktif',
+
+    //list publisher details
+    lpd_title: 'Daftar Detail Penerbit',
+    lpd_note: 'URL berikut sudah ada di Penerbit Daftar. Status akan diperbarui menjadi memenuhi syarat tetapi data tidak akan ditambahkan pada daftar.',
+    lpd_selected_info: 'URL yang dipilih tidak akan ditambahkan ke daftar penerbit.',
+    lpd_show_all: 'Tunjukkan semua',
+    lpd_show_less: 'Tampilkan lebih sedikit',
+
+    // instructions for multiple update
+    imu_title: 'Petunjuk untuk beberapa pembaruan status menjadi BERKUALIFIKASI:',
+    imu_1: '1. Karyawan yang bertanggung jawab harus sama untuk semua item yang dipilih, kecuali tidak aktif.',
+    imu_2: '2. Lengkapi informasi yang dibutuhkan untuk data penerbit daftar.',
+    imu_note: 'Catatan: informasi dalam detail penerbit akan sama untuk semua url yang dipilih.',
+
+    // list publisher details in-charge
+    lpi_title: 'Karyawan Penanggung Jawab: ',
+    lpi_incharge_inactive: 'Penanggung jawab item yang dipilih tidak aktif. Masukan penjual akan menampilkan semua penjual.',
+    lpi_incharge_diff: 'Item yang dipilih memiliki karyawan yang bertanggung jawab berbeda.',
+    lpi_selection_note: 'Seleksi akan menampilkan penjual sesuai dengan pegawai yang bertanggung jawab.',
+
     // filter
     filter_title: 'Filter',
     filter_show: 'Perlihatkan Filter',

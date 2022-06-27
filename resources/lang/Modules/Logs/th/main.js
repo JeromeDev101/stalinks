@@ -23,6 +23,9 @@ export default {
     p_filter: 'พิมพ์ข้อความเพย์โหลด',
     p_table: 'น้ำหนักบรรทุก',
     p_id: 'รหัสข้อมูล',
+    p_column: 'คอลัมน์',
+    p_from: 'จาก',
+    p_to: 'ถึง',
 
     // alerts
     alert_confirm: 'กรุณายืนยัน',

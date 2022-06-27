@@ -1,4 +1,28 @@
 export default {
+    //updates
+    filter_url_prospect_id: 'URLプロスペクトID',
+    filter_url_prospect_id_placeholder: '検索ID',
+    t_inactive: '非活性',
+
+    //list publisher details
+    lpd_title: '出版社の詳細を一覧表示する',
+    lpd_note: '次のURLはすでにリストパブリッシャーに存在します。ステータスは適格に更新されますが、データはリストに追加されません。',
+    lpd_selected_info: '選択したURLはリスト発行元に追加されません。',
+    lpd_show_all: 'すべて表示する',
+    lpd_show_less: '表示を減らす',
+
+    // instructions for multiple update
+    imu_title: 'QUALIFIEDへの複数のステータス更新の手順：',
+    imu_1: '1.担当の従業員は、非アクティブでない限り、選択したすべてのアイテムで同じである必要があります。',
+    imu_2: '2.リスト発行者データに必要な情報を完成させます。',
+    imu_note: '注：サイト運営者の詳細の情報は、選択したすべてのURLで同じになります。',
+
+    // list publisher details in-charge
+    lpi_title: '担当社員： ',
+    lpi_incharge_inactive: '選択したアイテムの担当者は非アクティブです。売り手の入力により、すべての売り手が表示されます。',
+    lpi_incharge_diff: '厳選された商品は担当者が異なります。',
+    lpi_selection_note: '選択すると、担当の従業員に応じて販売者が表示されます。',
+
     // filter
     filter_title: 'フィルター',
     filter_show: 'フィルター表示',

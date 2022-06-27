@@ -1,4 +1,28 @@
 export default {
+    //updates
+    filter_url_prospect_id: 'รหัสผู้มีโอกาสเป็นลูกค้า URL',
+    filter_url_prospect_id_placeholder: 'ค้นหา ID',
+    t_inactive: 'ไม่ใช้งาน',
+
+    //list publisher details
+    lpd_title: 'รายชื่อ รายละเอียดผู้จัดพิมพ์',
+    lpd_note: 'มี URL ต่อไปนี้ใน List Publisher แล้ว สถานะจะได้รับการอัปเดตเป็นผ่านการรับรอง แต่ข้อมูลจะไม่ถูกเพิ่มในรายการ',
+    lpd_selected_info: 'URL ที่เลือกจะไม่ถูกเพิ่มในรายการผู้เผยแพร่',
+    lpd_show_all: 'แสดงทั้งหมด',
+    lpd_show_less: 'แสดงน้อยลง',
+
+    // instructions for multiple update
+    imu_title: 'คำแนะนำสำหรับการอัปเดตสถานะหลายรายการเป็น Qualified:',
+    imu_1: '1. พนักงานที่รับผิดชอบจะต้องเหมือนกันสำหรับรายการที่เลือกทั้งหมด เว้นแต่ไม่ได้ใช้งาน',
+    imu_2: '2. กรอกข้อมูลที่จำเป็นสำหรับข้อมูลผู้จัดพิมพ์รายการ',
+    imu_note: 'หมายเหตุ: ข้อมูลในรายละเอียดผู้เผยแพร่จะเหมือนกันสำหรับ URL ที่เลือกทั้งหมด',
+
+    // list publisher details in-charge
+    lpi_title: 'พนักงานที่รับผิดชอบ: ',
+    lpi_incharge_inactive: 'การชาร์จในรายการที่เลือกไม่ได้ใช้งาน ข้อมูลผู้ขายจะแสดงผู้ขายทั้งหมด',
+    lpi_incharge_diff: 'รายการที่เลือกมีพนักงานรับผิดชอบต่างกัน',
+    lpi_selection_note: 'การคัดเลือกจะแสดงผู้ขายตามพนักงานที่รับผิดชอบ',
+
     // filter
     filter_title: 'ตัวกรอง',
     filter_show: 'แสดงตัวกรอง',
