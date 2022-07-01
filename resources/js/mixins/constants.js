@@ -12,24 +12,32 @@ export const Constants = {
             path: '/system/finance',
         },
         {
-            name: 'Tools',
-            path: '/tools',
+            name: 'Management - Role',
+            path: '/management/roles',
+        },
+        {
+            name: 'Management - Modules',
+            path: '/management/modules',
+        },
+        {
+            name: 'Management - Tools',
+            path: '/management/tools',
+        },
+        {
+            name: 'Management - Mail Logs',
+            path: '/management/mail-logs',
+        },
+        {
+            name: 'Management - System Logs',
+            path: '/management/logs',
+        },
+        {
+            name: 'Management - Team',
+            path: '/management/teams',
         },
         {
             name: 'Admin Dashboard',
             path: '/dashboard',
-        },
-        {
-            name: 'Team',
-            path: '/users',
-        },
-        {
-            name: 'Mail Logs',
-            path: '/mail-logs',
-        },
-        {
-            name: 'System Logs',
-            path: '/logs',
         },
         {
             name: 'Get Alexa',
@@ -44,8 +52,20 @@ export const Constants = {
             path: '/accounts',
         },
         {
+            name: 'Survey Dashboard',
+            path: '/survey-dashboard',
+        },
+        {
             name: 'Admin Article',
             path: '/articles-list',
+        },
+        {
+            name: "Writer's Validation",
+            path: '/validate-writer',
+        },
+        {
+            name: 'Backlinks Prospect',
+            path: '/backlink-prospect',
         },
         {
             name: 'Admin Incomes',
@@ -72,7 +92,7 @@ export const Constants = {
             path: '/',
         },
         {
-            name: 'Search Domains - URL Prospect',
+            name: 'URL Prospect',
             path: '/url-prospect',
         },
         {
@@ -88,6 +108,14 @@ export const Constants = {
             path: '/mails/starred',
         },
         {
+            name: 'Mails - Trash',
+            path: '/mails/trash',
+        },
+        {
+            name: 'Mails - Draft',
+            path: '/mails/drafts',
+        },
+        {
             name: 'Mails - Template',
             path: '/mails/template',
         },
@@ -96,8 +124,8 @@ export const Constants = {
             path: '/mails/signature',
         },
         {
-            name: 'Mails - Trash',
-            path: '/mails/trash',
+            name: 'Mails - Auto Replies',
+            path: '/mails/auto',
         },
         {
             name: 'Article',
@@ -127,9 +155,88 @@ export const Constants = {
             name: 'Buyer - Purchase',
             path: '/purchase',
         },
-        {
-            name: 'Mails - Draft',
-            path: '/mails/drafts',
-        }
-    ]
+    ],
+
+    // Add page groups here for module selection
+    PAGE_GROUPS: {
+        'Admin Settings': [
+            'IT',
+            'Finance',
+            'Dev'
+        ],
+        'Management': [
+            'Role',
+            'Module',
+            'Tools',
+            'Mail Logs',
+            'System Logs',
+            'Teams'
+        ],
+        'Admin Dashboard': [
+            'Admin Dashboard'
+        ],
+        'Get Alexa': [
+            'Gex Alexa'
+        ],
+        'Generate List': [
+            'Generate List'
+        ],
+        'Registration Accounts': [
+            'Registration Accounts'
+        ],
+        'Survey Dashboard': [
+            'Survey Dashboard'
+        ],
+        'Admin Article': [
+            'Admin Article'
+        ],
+        "Writer's Validation": [
+            "Writer's Validation"
+        ],
+        'Backlinks Prospect': [
+            'Backlinks Prospect'
+        ],
+        'Incomes': [
+            'Admin Incomes'
+        ],
+        'Billing': [
+            'Seller Billing',
+            'Writer Billing',
+            'Wallet Transaction',
+            'Wallet Summary'
+        ],
+        'Dashboard': [
+            'Dashboard'
+        ],
+        'URL Prospect': [
+            'URL Prospect'
+        ],
+        'Mails': [
+            'Inbox',
+            'Sent',
+            'Starred',
+            'Trash',
+            'Drafts',
+            'Mail Template',
+            'Signatures',
+            'Auto Replies'
+        ],
+        'Article': [
+            'Article'
+        ],
+        'Seller': [
+            'List Publisher',
+            'Follow up Sale',
+            'Incomes'
+        ],
+        'Buyer': [
+            'List Backlinks to Buy',
+            'Follow up Backlinks',
+            'Purchase'
+        ],
+        'Purchases': [
+            'Summary',
+            'Manual'
+        ]
+    }
 }

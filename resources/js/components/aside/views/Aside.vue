@@ -624,6 +624,50 @@
                         </ul>
                     </li>
 
+                    <!-- Purchase Module -->
+                    <li class="nav-item"
+                        v-if="user.isAdmin"
+                        v-show="false"
+                        :class="{
+                            active:
+                                $route.name === 'purchases-summary' ||
+                                $route.name === 'purchases-manual',
+                            'menu-open':
+                                $route.name === 'purchases-summary' ||
+                                $route.name === 'purchases-manual',
+                        }">
+                        <a href="#" class="nav-link">
+                            <img src="../../../../images/billing.png" alt="Purchases"/>
+                            <p>
+                                Purchases
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/list-backlinks' }"
+                                    :class="{ active: $route.name === 'purchases-summary' }"
+                                >
+                                    <i class="fas fa-clipboard-list nav-icon"></i>
+                                    <p>Summary</p>
+                                </router-link>
+                            </li>
+
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/followup-backlinks' }"
+                                    :class="{ active: $route.name === 'purchases-manual' }"
+                                >
+                                    <i class="fas fa-cash-register nav-icon"></i>
+                                    <p>Manual</p>
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item">
                         <router-link
                             class="nav-link"

@@ -490,6 +490,16 @@ const routes = [
                 name : 'error-page',
                 component : ErrorPage,
             },
+            {
+                path : '/purchases/summary',
+                name : 'purchases-summary',
+                component : Tools,
+            },
+            {
+                path : '/purchases/manual',
+                name : 'purchases-manual',
+                component : Tools,
+            },
         ],
     },
 ]

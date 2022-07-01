@@ -401,6 +401,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('tools-store')->post('/tools', 'ToolController@store');
     Route::name('tools-update')->put('/tools','ToolController@update');
     Route::name('tools-delete')->delete('/tools/{id}','ToolController@destroy');
+
+    // modules
+    Route::name('module-get')->get('/module', 'ModuleController@index');
+    Route::name('module-store')->post('/module', 'ModuleController@store');
+    Route::name('module-update')->put('/module','ModuleController@update');
+    Route::name('module-delete')->delete('/module/{id}','ModuleController@destroy');
+    Route::name('module-filter-values')->get('/module/get-filter-values','ModuleController@getFilterValues');
 });
 
 //Mailgun external
