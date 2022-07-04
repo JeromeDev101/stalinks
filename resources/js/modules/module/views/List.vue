@@ -480,8 +480,8 @@ export default {
         getModuleFilterValues () {
             axios.get('/api/module/get-filter-values')
             .then((res) => {
-                this.filterValues.group = res.data.group;
-                this.filterValues.page = res.data.page;
+                this.filterValues.group = Object.values(res.data.group).length ? Object.values(res.data.group) : [];
+                this.filterValues.page = Object.values(res.data.page).length ? Object.values(res.data.page) : [];
             })
             .catch((err) => {
                 console.log(err)

@@ -63,9 +63,12 @@ class ModuleController extends Controller
     }
 
     public function getFilterValues () {
-        $group = Module::select('group')->groupBy('group')->get()->pluck('group')->sort()->toArray();
-        $page = Module::select('page')->groupBy('page')->get()->pluck('page')->sort()->toArray();
+        $group = Module::select('group')->groupBy('group')->get()->pluck('group')->toArray();
+        $page = Module::select('page')->groupBy('page')->get()->pluck('page')->toArray();
 
-        return compact('group', 'page');
+        return response()->json([
+            'group' => $group,
+            'page' => $page
+        ], '200');
     }
 }
