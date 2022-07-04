@@ -494,6 +494,7 @@ export default {
             });
 
             this.getModules(1);
+            this.getModuleFilterValues();
         },
 
         clearFilter () {
