@@ -66,9 +66,6 @@ class ModuleController extends Controller
         $group = Module::select('group')->groupBy('group')->get()->pluck('group')->sort()->toArray();
         $page = Module::select('page')->groupBy('page')->get()->pluck('page')->sort()->toArray();
 
-        return response()->json([
-            'group' => $group,
-            'page' => $page,
-        ],200);
+        return compact('group', 'page');
     }
 }
