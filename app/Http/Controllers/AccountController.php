@@ -765,6 +765,10 @@ class AccountController extends Controller
             } else {
                 $credit = floatval($wallet_transaction[0]['amount_usd']);
             }
+        } else {
+            if ( isset($total_purchased[0]['total_purchased']) ) {
+                $credit = $credit - floatval($total_purchased[0]['total_purchased']);
+            }
         }
 
         if( isset($wallet_transaction_refunded[0]['amount_usd']) ) {
