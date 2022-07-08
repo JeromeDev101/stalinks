@@ -327,6 +327,12 @@
                                             </b>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            ID(s): 
+                                            <b>{{ info.ids }}</b>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
 
@@ -513,6 +519,7 @@ export default {
                 payment_type_id : '',
                 account : '',
                 amount : '',
+                ids : '',
                 payment_types: null
             },
             isDisabledPay : true,
@@ -643,6 +650,7 @@ export default {
                 let data = this.sellerInfo.data[0]
                 let account = 'Not yet setup';
                 let total = 0;
+                let _ids = '';
 
                 this.info.seller = data.username;
                 this.info.payment_types = data.user_payment_types;
@@ -667,7 +675,11 @@ export default {
 
                     if (this.checkIds[index].price != null) {
                         total += parseInt(this.checkIds[index].price);
+
+                        _ids += this.checkIds[index].id + ' ';
                     }
+
+
                 }
 
                 if (account == 'Not yet setup') {
@@ -675,7 +687,10 @@ export default {
                 }
 
                 this.info.account = account;
-                this.info.amount = total
+                this.info.amount = total;
+                this.info.ids = _ids;
+
+                $("#modal-payment").modal('show');
 
             } else {
                 swal.fire(
@@ -684,9 +699,6 @@ export default {
                     'error'
                 )
             }
-
-            $("#modal-payment").modal('show');
-
 
             this.clearMessageform();
         },
