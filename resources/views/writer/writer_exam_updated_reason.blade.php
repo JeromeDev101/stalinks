@@ -124,7 +124,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-        Writer's Examination Result
+        Writer's Examination Fail Reason Updated
     @endcomponent
 
     <tr>
@@ -133,65 +133,31 @@
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $exam->writer->name }},</p> <br />
 
-                    @if ($mode === 'approved')
-                        <p style="margin: 0;">
-                            Congratulations! Our team has evaluated your examination and have determined that
-                            you have <strong>passed</strong> the exam. If you are currently logged in, please re-login
-                            to update your account.
-                        </p> <br />
+                    <p style="margin: 0;">
+                        We've updated the reason of your failed Writer Validation Exam:
+                    </p> <br />
 
+                    <div style="border: 1px solid black !important; padding: 10px !important;">
+                        <p style="margin: 0; font-style: italic">
+                            {{ $reason }}
+                        </p>
+                    </div>
+
+                    <br />
+
+                    @if ($exam->attempt === 1)
                         <p style="margin: 0;">
+                            For more details,
                             <a target="_blank" href="{{ url('/login') }}">
-                                Login to your account now
-                            </a>
-                            and go to the 'Article' page and start accepting and writing content for our clients.
-                        </p> <br/>
-
-                        <p style="margin: 0;">
-                            Thank you for your cooperation. Have a nice day!
+                                login to your account now
+                            </a> and check the Writer's Validation page.
+                            Thank you and have a nice day!
                         </p> <br />
                     @else
-                        @if ($exam->attempt === 1)
-                            <p style="margin: 0;">
-                                We regret to inform you that you did not pass your first attempt in the writer's
-                                examination due to the following reason(s):
-                            </p> <br />
-
-                            <div style="border: 1px solid black !important; padding: 10px !important;">
-                                <p style="margin: 0; font-style: italic">
-                                    {{ $fail_reason }}
-                                </p>
-                            </div>
-
-                            <br />
-
-                            <p style="margin: 0;">
-                                But no worries! you will get a chance to do a second attempt exam after
-                                <strong>three days starting today.</strong>
-                                We will notify you shortly after your second attempt exam is created. We wish you good
-                                luck!
-                            </p> <br />
-                        @else
-                            <p style="margin: 0; font-style: italic">
-                                After much consideration upon the evaluation of your exam. We regret to inform you that you
-                                did not pass the writer's examination provided by our team due to the following
-                                reason(s):
-                            </p> <br />
-
-                            <div style="border: 1px solid black !important; padding: 10px !important;">
-                                <p style="margin: 0;">
-                                    {{ $fail_reason }}
-                                </p>
-                            </div>
-
-                            <br />
-
-                            <p style="margin: 0;">
-                                We will now deactivate your writer's account. We wish you good luck on your future endeavors. Thank you!
-                            </p> <br />
-                        @endif
+                        <p style="margin: 0;">
+                            We wish you good luck on your future endeavors. Thank you!
+                        </p> <br />
                     @endif
-
                 @endslot
 
                 @slot('button')

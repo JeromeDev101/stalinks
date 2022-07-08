@@ -175,9 +175,24 @@
                                                         class="align-middle"
                                                         :style="exam.attempt === 2 ? 'border: none !important;' : ''">
 
-                                                        <span class="badge p-3 text-uppercase" :class="examStatusBadge(exam.status)">
-                                                            {{ exam.attempt }} - {{ exam.status }}
-                                                        </span>
+                                                        <div class="d-flex">
+                                                            <span
+                                                                class="badge text-uppercase p-3"
+                                                                :class="examStatusBadge(exam.status)">
+
+                                                                {{ exam.attempt }} - {{ exam.status }}
+                                                            </span>
+
+                                                            <button
+                                                                v-if="exam.status === 'Disapproved'"
+                                                                title="Update fail reason"
+                                                                class="btn btn-warning ml-2"
+
+                                                                @click="updateExamFailReason(exam)">
+
+                                                                <i class="fas fa-comment-dots"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
 
                                                     <td :style="exam.attempt === 2 ? 'border: none !important;' : ''">
@@ -395,6 +410,14 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div v-if="viewModel.status === 'Disapproved'" class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="text-danger">Fail Reason</label>
+                                        <textarea v-model="viewModel.fail_reason" class="form-control" rows="3" disabled>
+
+                                        </textarea>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>{{ $t('message.writer_validation.filter_topic') }}</label>
@@ -484,6 +507,123 @@
             </div>
             <!-- End of Modal View Content -->
 
+            <!-- Modal Fail Reason -->
+            <div class="modal fade" id="modalFailReason" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <div class="swal2-icon swal2-error swal2-icon-show" style="display: flex;">
+                                <span class="swal2-x-mark">
+                                    <span class="swal2-x-mark-line-left"></span>
+                                    <span class="swal2-x-mark-line-right"></span>
+                                </span>
+                            </div>
+
+                            <h2 class="disapprove-title">
+                                {{ $t('message.writer_validation.alert_writer_exam_evaluation') }}
+                            </h2>
+
+                            <div class="swal2-content">
+                                Mark exam as disapprove?
+
+                                <p class="m-0">
+                                    (Please provide a reason for the writer)
+                                </p>
+
+                                <textarea
+                                    v-model="viewModel.fail_reason"
+                                    rows="3"
+                                    class="form-control mt-2">
+
+                                </textarea>
+
+                                <span
+                                    v-if="errorMessages.errors.fail_reason"
+                                    v-for="err in errorMessages.errors.fail_reason"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+                            </div>
+
+                            <div class="swal2-actions">
+                                <button
+                                    type="button"
+                                    class="swal2-confirm swal2-styled"
+                                    style="display: inline-block; border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214); background-color: #dc3545"
+                                    aria-label=""
+
+                                    @click="checkExam('disapprove')">
+
+                                    {{ $t('message.writer_validation.disapprove') }}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="swal2-cancel swal2-styled"
+                                    style="display: inline-block;"
+                                    aria-label=""
+                                    data-dismiss="modal">
+                                    {{ $t('message.writer_validation.close') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Modal Fail Reason -->
+
+            <!-- Modal Update Fail Reason -->
+            <div class="modal fade" id="modalUpdateFailReason" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Exam Failed Reason</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body text-center">
+                            <div class="alert alert-info text-left">
+                                <i class="fas fa-info-circle"></i>
+                                An email and notification will be sent to the writer about the updated reason.
+                            </div>
+
+                            <textarea
+                                v-model="examFailReasonModel.reason"
+                                rows="3"
+                                class="form-control mt-2">
+
+                            </textarea>
+
+                            <span
+                                v-if="errorMessages.errors.reason"
+                                v-for="err in errorMessages.errors.reason"
+                                class="text-danger">
+
+                                    {{ err }}
+                                </span>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+
+                                @click="updateExamFailReasonSend">
+
+                                {{ $t('message.tools.update') }}
+                            </button>
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                {{ $t('message.writer_validation.close') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Modal Update Fail Reason -->
         </div>
 
         <!-- Viewing for External Writers -->
@@ -531,7 +671,13 @@
                                         <div class="alert alert-danger">
                                             <p class="mb-0">
                                                 <i class="fas fa-info-circle"></i>
-                                                {{ $t('message.writer_validation.fam_first_attempt_failed') }} <br/> <br/>
+                                                {{ $t('message.writer_validation.fam_first_attempt_failed') }}
+                                                <br/> <br/>
+
+                                                Reason(s):
+                                                <br>
+                                                <span class="font-italic">{{ ExamUpdateFirst.fail_reason }}</span>
+                                                <br/> <br/>
 
                                                 {{ $t('message.writer_validation.fam_remaining_days') }} {{
                                                     user.exam_duration > 0 ? user.exam_duration : 0
@@ -678,6 +824,11 @@
                                                 <i class="fas fa-info-circle"></i>
                                                 {{ $t('message.writer_validation.sae_failed') }}
 
+                                                <br/> <br/>
+
+                                                Reason(s):
+                                                <br>
+                                                <span class="font-italic">{{ ExamUpdateSecond.fail_reason_two }}</span>
                                                 <br/> <br/>
 
                                                 {{ $t('message.writer_validation.sae_deactivate') }}
@@ -871,6 +1022,7 @@ export default {
                 link_to: '',
                 writer_id: '',
                 attempt: '',
+                fail_reason: '',
             },
 
             paginateOptions : [
@@ -910,6 +1062,16 @@ export default {
                 'Tech',
                 'Travel',
             ],
+
+            errorMessages: {
+                message: '',
+                errors: [],
+            },
+
+            examFailReasonModel: {
+                id: '',
+                reason: '',
+            }
         }
     },
 
@@ -933,40 +1095,113 @@ export default {
         submitUpdate(mod) {
             let self = this;
 
-            swal.fire({
-                title : self.$t('message.writer_validation.alert_writer_exam_evaluation'),
-                text : self.$t('message.writer_validation.alert_mark') + mod + "?",
-                icon : mod === 'approve' ? 'success' : 'error',
-                showCancelButton : true,
-                confirmButtonText : self.$t('message.writer_validation.yes'),
-                cancelButtonText : self.$t('message.writer_validation.no')
-            })
-            .then((result) => {
-                if (result.isConfirmed) {
-
-                    let loader = this.$loading.show();
-
-                    this.viewModel.status = mod === 'approve' ? 'Approved' : 'Disapproved';
-
-                    axios.post('/api/check-exam', this.viewModel)
-                        .then((res) => {
-
-                            loader.hide();
-
-                            swal.fire(
-                                self.$t('message.writer_validation.alert_success'),
-                                self.$t('message.writer_validation.alert_updated_successfully'),
-                                'success',
-                            )
-
-                            $("#modalEditWriterValidateViewContent").modal('hide')
-
-                            this.$nextTick(() => {
-                                this.doSearch();
-                            });
-                        })
+            if (mod === 'approve') {
+                swal.fire({
+                    title : self.$t('message.writer_validation.alert_writer_exam_evaluation'),
+                    text : self.$t('message.writer_validation.alert_mark') + mod + "?",
+                    icon : mod === 'approve' ? 'success' : 'error',
+                    showCancelButton : true,
+                    confirmButtonText : self.$t('message.writer_validation.yes'),
+                    cancelButtonText : self.$t('message.writer_validation.no')
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        self.checkExam(mod)
+                    }
+                });
+            } else {
+                this.errorMessages = {
+                    message: '',
+                    errors: [],
                 }
-            });
+                $("#modalFailReason").modal('show')
+            }
+        },
+
+        checkExam (mod) {
+            let self = this;
+            let loader = self.$loading.show();
+
+            this.viewModel.status = mod === 'approve' ? 'Approved' : 'Disapproved';
+
+            axios.post('/api/check-exam', this.viewModel)
+            .then((res) => {
+                loader.hide();
+
+                swal.fire(
+                    self.$t('message.writer_validation.alert_success'),
+                    self.$t('message.writer_validation.alert_updated_successfully'),
+                    'success',
+                )
+
+                $("#modalEditWriterValidateViewContent").modal('hide')
+
+                if (mod === 'disapprove') {
+                    $("#modalFailReason").modal('hide')
+                    this.viewModel.fail_reason = '';
+                }
+
+                self.$nextTick(() => {
+                    self.doSearch();
+                });
+            })
+            .catch((err) => {
+                console.log(err)
+
+                loader.hide();
+
+                this.viewModel.status = 'For Checking'
+
+                self.errorMessages = err.response.data
+
+                swal.fire(
+                    self.$t('message.article.alert_err'),
+                    'Please indicate the reason why the writer failed the exam.',
+                    'error'
+                )
+            })
+        },
+
+        updateExamFailReason (exam) {
+            this.examFailReasonModel.id = exam.id;
+            this.examFailReasonModel.reason = exam.attempt === 1 ? exam.fail_reason : exam.fail_reason_two;
+
+            $("#modalUpdateFailReason").modal('show')
+        },
+
+        updateExamFailReasonSend () {
+            let self = this;
+            let loader = self.$loading.show();
+
+            axios.post('/api/update-exam-fail-reason', this.examFailReasonModel)
+                .then((res) => {
+                    loader.hide();
+
+                    swal.fire(
+                        self.$t('message.writer_validation.alert_success'),
+                        self.$t('message.writer_validation.alert_updated_successfully'),
+                        'success',
+                    )
+
+                    $("#modalUpdateFailReason").modal('hide')
+
+                    self.$nextTick(() => {
+                        self.doSearch();
+                    });
+                })
+                .catch((err) => {
+                    console.log(err)
+
+                    loader.hide();
+
+                    self.errorMessages = err.response.data
+
+                    swal.fire(
+                        self.$t('message.article.alert_err'),
+                        'Please indicate the reason why the writer failed the exam.',
+                        'error'
+                    )
+                })
         },
 
         clearSearch() {
@@ -1160,6 +1395,7 @@ export default {
             this.viewModel.attempt = exam.attempt;
             this.viewModel.topic = topic;
             this.viewModel.topic_notes = exam.topic_notes;
+            this.viewModel.fail_reason = exam.attempt === 1 ? exam.fail_reason : exam.fail_reason_two;
             this.data2 = exam.content === null ? '' : exam.content;
 
             $("#modalEditWriterValidateViewContent").modal('show')
@@ -1280,11 +1516,32 @@ export default {
         vertical-align: top;
         border-top: 4px solid #dee2e6;
     }
+
+    .disapprove-title {
+        position: relative;
+        max-width: 100%;
+        margin: 0 0 .4em;
+        padding: 0;
+        color: #595959;
+        font-size: 1.875em;
+        font-weight: 600;
+        text-align: center;
+        text-transform: none;
+        word-wrap: break-word;
+    }
 </style>
 
 <style>
     .style-chooser input {
         padding-top: 2px !important;
         padding-bottom: 2px !important;
+    }
+
+    #modalFailReason .modal-header {
+        border-bottom: 0 none;
+    }
+
+    #modalFailReason .modal-footer {
+        border-top: 0 none;
     }
 </style>

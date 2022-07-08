@@ -15,18 +15,20 @@ class WriterExamProcessedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $writerExam, $mode;
+    public $writerExam, $mode, $reason;
 
     /**
      * Create a new event instance.
      *
      * @param WriterExam $writerExam
      * @param $mode
+     * @param $reason
      */
-    public function __construct(WriterExam $writerExam, $mode)
+    public function __construct(WriterExam $writerExam, $mode, $reason = null)
     {
         $this->writerExam = $writerExam;
         $this->mode = $mode;
+        $this->reason = $reason;
     }
 
     /**

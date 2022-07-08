@@ -211,6 +211,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-exam')->post('update-exam', 'WriterValidationController@update');
     Route::name('get-exam-details')->get('get-exam-details', 'WriterValidationController@getExamDetails');
     Route::name('check-exam')->post('check-exam', 'WriterValidationController@checkExam');
+    Route::name('update-exam-fail-reason')->post('update-exam-fail-reason', 'WriterValidationController@updateExamFailReason');
 
     //Internal Page
     Route::name('int-get')->get('/int', 'IntDomainController@getList');

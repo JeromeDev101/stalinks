@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\WriterExamProcessedEvent;
+use App\Notifications\WriterExamFailReasonUpdated;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -23,8 +24,22 @@ class WriterValidationController extends Controller
                         ->where('role_id', 4)
                         ->leftJoin('registration', 'users.email', '=', 'registration.email')
                         ->where('users.isOurs', 1)
-                        ->where('users.status', 'active')
-                        ->where('registration.account_validation', 'valid')
+//                        ->where('users.status', 'active')
+//                        ->where('registration.account_validation', 'valid')
+                        ->where(function ($query){
+                            $query->where('users.status', 'active')
+                                ->orWhere(function ($query) {
+                                    $query->where('users.status', 'inactive')
+                                        ->whereNotNull('users.exam_second_attempt_at');
+                                });
+                        })
+                        ->where(function ($query){
+                            $query->where('registration.account_validation', 'valid')
+                                ->orWhere(function ($query) {
+                                    $query->where('registration.account_validation', 'invalid')
+                                        ->whereNotNull('users.exam_second_attempt_at');
+                                });
+                        })
                         ->when(isset($filters['status']), function($query) use ($filters) {
                             if($filters['status'] === 'Not Yet Setup') {
                                 return $query->has('writerExam', 0);
@@ -87,18 +102,36 @@ class WriterValidationController extends Controller
     }
 
     public function checkExam(Request $request) {
-        $input = $request->only('status', 'attempt');
+        $input = $request->only('status', 'attempt', 'fail_reason');
+
+        if ($input['status'] === 'Disapproved') {
+            $request->validate([
+                'fail_reason' => 'required',
+            ]);
+        }
 
         // update exam status
         $exam = WriterExam::find($request->id);
 
         if ($input['status'] != $exam->status) {
             if ($input['status'] === 'Approved' || $input['status'] === 'Disapproved') {
-                event(new WriterExamProcessedEvent($exam, strtolower($input['status'])));
+                event(new WriterExamProcessedEvent($exam, strtolower($input['status']), $input['fail_reason']));
             }
         }
 
-        $exam->update($input);
+        if ($input['attempt'] === 2) {
+            $exam->update([
+                'status' => $input['status'],
+                'attempt' => $input['attempt'],
+                'fail_reason_two' => $input['fail_reason'],
+            ]);
+        } else {
+            $exam->update([
+                'status' => $input['status'],
+                'attempt' => $input['attempt'],
+                'fail_reason' => $input['fail_reason'],
+            ]);
+        }
 
         // update registration
         $user = User::find($request->writer_id);
@@ -111,7 +144,7 @@ class WriterValidationController extends Controller
                     $user->update(['status' => 'inactive']);
                     $registration->update(['is_exam_passed' => 0, 'account_validation' => 'invalid', 'status' => 'inactive']);
                 } else {
-                    $user->update(['exam_second_attempt_at' => Carbon::now()->addWeeks(3)->format('Y-m-d')]);
+                    $user->update(['exam_second_attempt_at' => Carbon::now()->addDays(4)->format('Y-m-d')]);
                 }
             } else {
                 if ($input['status'] === 'Approved') {
@@ -138,6 +171,25 @@ class WriterValidationController extends Controller
             }
 
         }
+    }
+
+    public function updateExamFailReason (Request $request) {
+        $request->validate([
+            'reason' => 'required',
+        ]);
+
+        $exam = WriterExam::find($request->id);
+
+        $reason = $exam->attempt === 1 ? ['fail_reason' => $request->reason] : ['fail_reason_two' => $request->reason];
+
+        // if reason is updated, notify the writer
+        $exam_reason = $exam->attempt === 1 ? $exam->fail_reason : $exam->fail_reason_2;
+
+        if ($exam_reason !== $request->reason) {
+            $exam->writer->notify(new WriterExamFailReasonUpdated($exam, $request->reason));
+        }
+
+        $exam->update($reason);
     }
 
     public function store(Request $request) {

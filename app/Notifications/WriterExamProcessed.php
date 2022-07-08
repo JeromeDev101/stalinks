@@ -11,18 +11,20 @@ class WriterExamProcessed extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $writerExam, $mode;
+    protected $writerExam, $mode, $reason;
 
     /**
      * Create a new notification instance.
      *
      * @param $writerExam
      * @param $mode
+     * @param $reason
      */
-    public function __construct($writerExam, $mode)
+    public function __construct($writerExam, $mode, $reason = null)
     {
         $this->writerExam = $writerExam;
         $this->mode = $mode;
+        $this->reason = $reason;
     }
 
     /**
@@ -58,7 +60,11 @@ class WriterExamProcessed extends Notification implements ShouldQueue
         } else if ($this->mode === 'approved' || $this->mode === 'disapproved') {
             return (new MailMessage)
                 ->subject("Writer's Examination Result " . $attempt)
-                ->markdown('writer.writer_exam_result', ['exam'=>$this->writerExam, 'mode' => $this->mode]);
+                ->markdown('writer.writer_exam_result', [
+                    'exam'=>$this->writerExam,
+                    'mode' => $this->mode,
+                    'fail_reason' => $this->reason
+                ]);
         }
     }
 
@@ -90,7 +96,7 @@ class WriterExamProcessed extends Notification implements ShouldQueue
         } else if ($this->mode === 'disapproved') {
             if ($this->writerExam->attempt === 1) {
                 $message = "We regret to inform you that you did not pass your first attempt for the writer's examination.
-                But no worries, you will get a chance to do a second attempt exam after 3 weeks! We wish you good luck!";
+                But no worries, you will get a chance to do a second attempt exam after 3 days! We wish you good luck!";
             } else {
                 $message = "We regret to inform you that you did not pass the writer's examination (2nd attempt)
                 provided by our team. We will now deactivate your writer's account. We wish you good luck on your

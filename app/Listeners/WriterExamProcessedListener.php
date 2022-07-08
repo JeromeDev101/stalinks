@@ -31,7 +31,7 @@ class WriterExamProcessedListener
     {
         if ($event->mode === 'setup' || $event->mode === 'approved' || $event->mode === 'disapproved') {
             // notify writer that if exam is created/passed/failed
-            $event->writerExam->writer->notify(new WriterExamProcessed($event->writerExam, $event->mode));
+            $event->writerExam->writer->notify(new WriterExamProcessed($event->writerExam, $event->mode, $event->reason));
         } else if ($event->mode === 'checking') {
             //  send notification to team that exam is submitted
             $team = User::whereIn('role_id', [8,1,6,4])->where('isOurs', 0)->where('status', 'active')->get();
