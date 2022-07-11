@@ -122,13 +122,13 @@ export default {
         },
 
         teamInCharge() {
-            if (this.displayModel.orderTeam === 0) {
+            if (this.displayModel.orderTeam === 0 || this.displayModel.orderTeam === null) {
                 return 'All';
+            } else {
+                return _.where(this.listSellerTeam.data, {
+                    id: this.displayModel.orderTeam
+                })[0].username;
             }
-
-            return _.where(this.listSellerTeam.data, {
-                id: this.displayModel.orderTeam
-            })[0].username;
         },
     },
 
@@ -146,8 +146,7 @@ export default {
         },
 
         filterOrder() {
-            this.displayModel.orderTeam =
-                this.filterModel.orderTeam;
+            this.displayModel.orderTeam = this.filterModel.orderTeam;
 
             if (this.filterModel.orders.dateRange.startDate !=
                 null &&
