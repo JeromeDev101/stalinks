@@ -172,14 +172,14 @@
                                 luck!
                             </p> <br />
                         @else
-                            <p style="margin: 0; font-style: italic">
+                            <p style="margin: 0;">
                                 After much consideration upon the evaluation of your exam. We regret to inform you that you
                                 did not pass the writer's examination provided by our team due to the following
                                 reason(s):
                             </p> <br />
 
                             <div style="border: 1px solid black !important; padding: 10px !important;">
-                                <p style="margin: 0;">
+                                <p style="margin: 0; font-style: italic">
                                     {{ $fail_reason }}
                                 </p>
                             </div>

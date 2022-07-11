@@ -147,7 +147,7 @@
                         <p style="margin: 0;">
                             Please note that you will be given <strong>two attempts</strong> to showcase your writing
                             skills and pass our exam. If you have failed in this first attempt, you will be given the
-                            second attempt exam after <strong>three weeks</strong>.
+                            second attempt exam after <strong>three days</strong>.
                         </p> <br/>
 
                     @else
