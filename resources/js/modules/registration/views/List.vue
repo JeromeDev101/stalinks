@@ -3015,7 +3015,7 @@ export default {
 
         checkAccessRole() {
             this.isDisabled = true;
-            if (this.user.isAdmin || (this.user.role_id == 7 && this.user.isOurs == 0)) {
+            if (this.user.isAdmin || (this.user.role_id == 7 && this.user.isOurs == 0) || (this.user.role_id == 8 && this.user.isOurs == 0)) {
                 this.isDisabled = false;
             }
         },
