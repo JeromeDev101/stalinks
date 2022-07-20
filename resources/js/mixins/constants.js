@@ -155,6 +155,18 @@ export const Constants = {
             name: 'Buyer - Purchase',
             path: '/purchase',
         },
+        {
+            name: 'Purchases - Config',
+            path: '/purchases/config',
+        },
+        {
+            name: 'Purchases - Summary',
+            path: '/purchases/summary',
+        },
+        {
+            name: 'Purchases - Manual',
+            path: '/purchases/manual',
+        },
     ],
 
     // Add page groups here for module selection
@@ -235,6 +247,7 @@ export const Constants = {
             'Purchase'
         ],
         'Purchases': [
+            'Config',
             'Summary',
             'Manual'
         ]

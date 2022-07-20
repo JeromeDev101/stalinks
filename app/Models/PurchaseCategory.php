@@ -6,19 +6,17 @@ use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tool extends Model
+class PurchaseCategory extends Model
 {
     use SoftDeletes, Loggable;
 
     protected $fillable = [
-        'url',
         'name',
-        'details',
-        'username',
-        'password',
+        'description',
     ];
 
-    public function purchases () {
-        return $this->morphMany('App\Models\Purchases', 'purchaseable');
+    public function types()
+    {
+        return $this->hasMany('App\Models\PurchaseType', 'purchase_category_id');
     }
 }

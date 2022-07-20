@@ -409,6 +409,30 @@ Route::middleware('auth:api')->group(function () {
     Route::name('module-update')->put('/module','ModuleController@update');
     Route::name('module-delete')->delete('/module/{id}','ModuleController@destroy');
     Route::name('module-filter-values')->get('/module/get-filter-values','ModuleController@getFilterValues');
+
+    // purchase category
+    Route::name('purchases-category-get')->get('/purchases/category', 'PurchaseCategoryController@index');
+    Route::name('purchases-category-selection')->get('/purchases/category/selection', 'PurchaseCategoryController@selection');
+    Route::name('purchases-category-store')->post('/purchases/category', 'PurchaseCategoryController@store');
+    Route::name('purchases-category-update')->put('/purchases/category','PurchaseCategoryController@update');
+    Route::name('purchases-category-delete')->delete('/purchases/category/{id}','PurchaseCategoryController@destroy');
+
+    // purchase type
+    Route::name('purchases-type-selection')->get('/purchases/type/selection', 'PurchaseTypeController@selection');
+    Route::name('purchases-type-store')->post('/purchases/type', 'PurchaseTypeController@store');
+    Route::name('purchases-type-update')->put('/purchases/type','PurchaseTypeController@update');
+
+    // purchase
+    Route::name('purchases-get')->get('/purchases', 'PurchasesController@index');
+    Route::name('purchases-buyer-selection')->get('/purchases/buyer-selection/{mode}', 'PurchasesController@selection');
+    Route::name('purchases-store')->post('/purchases', 'PurchasesController@store');
+    Route::name('purchases-update')->put('/purchases','PurchasesController@update');
+    Route::name('purchases-delete')->delete('/purchases/{purchase}', 'PurchasesController@delete');
+
+    // purchase graphs
+    Route::name('purchases-get-category-report')->get('/purchases/graphs/category', 'PurchasesController@getCategoryReportData');
+    Route::name('purchases-get-category-report')->get('/purchases/graphs/purchase-type', 'PurchasesController@getPurchaseTypeReportData');
+    Route::name('purchases-get-category-report')->get('/purchases/graphs/payment-method', 'PurchasesController@getPaymentMethodReportData');
 });
 
 //Mailgun external

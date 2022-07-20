@@ -627,12 +627,13 @@
                     <!-- Purchase Module -->
                     <li class="nav-item"
                         v-if="user.isAdmin"
-                        v-show="false"
                         :class="{
                             active:
+                                $route.name === 'purchases-config' ||
                                 $route.name === 'purchases-summary' ||
                                 $route.name === 'purchases-manual',
                             'menu-open':
+                                $route.name === 'purchases-config' ||
                                 $route.name === 'purchases-summary' ||
                                 $route.name === 'purchases-manual',
                         }">
@@ -647,7 +648,17 @@
                             <li class="nav-item">
                                 <router-link
                                     class="nav-link"
-                                    :to="{ path: '/list-backlinks' }"
+                                    :to="{ path: '/purchases/config' }"
+                                    :class="{ active: $route.name === 'purchases-config' }"
+                                >
+                                    <i class="fas fa-cog nav-icon"></i>
+                                    <p>Config</p>
+                                </router-link>
+                            </li>
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/purchases/summary' }"
                                     :class="{ active: $route.name === 'purchases-summary' }"
                                 >
                                     <i class="fas fa-clipboard-list nav-icon"></i>
@@ -658,7 +669,7 @@
                             <li class="nav-item">
                                 <router-link
                                     class="nav-link"
-                                    :to="{ path: '/followup-backlinks' }"
+                                    :to="{ path: '/purchases/manual' }"
                                     :class="{ active: $route.name === 'purchases-manual' }"
                                 >
                                     <i class="fas fa-cash-register nav-icon"></i>

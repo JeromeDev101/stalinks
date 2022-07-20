@@ -21,7 +21,7 @@ export default class WalletTransactionService {
     }
 
     static getPaymentType(params){
-        return axios.get('api/payment-list', params)
+        return axios.get('/api/payment-list', params)
             .then(response => response)
             .catch(error => error);
     }

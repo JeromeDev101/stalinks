@@ -80,7 +80,7 @@
                     <div class="card-body">
                         <div class="row mb-2 align-items-center">
                             <div class="col-6">
-                                <span v-if="modules.total > 10" class="pagination-custom-footer-text m-0 mt-2">
+                                <span v-if="modules.total" class="pagination-custom-footer-text m-0 mt-2">
                                     <b v-if="filterModel.paginate !== 'All'">
                                         {{ $t('message.others.table_entries', { from: modules.from, to: modules.to, end: modules.total }) }}
                                     </b>

@@ -87,6 +87,11 @@ import WriterSurvey from '@/modules/survey/views/WriterSurvey.vue'
 // subscription
 import Subscription from '@/modules/subscription/views/Subscription.vue'
 
+// purchases
+import Config from '@/modules/purchases/views/Config.vue'
+import Manual from '@/modules/purchases/views/Manual.vue'
+import Summary from '@/modules/purchases/views/Summary.vue'
+
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
 
 const routes = [
@@ -471,6 +476,21 @@ const routes = [
                 component : Tools,
             },
             {
+                path : '/purchases/config',
+                name : 'purchases-config',
+                component : Config,
+            },
+            {
+                path : '/purchases/summary',
+                name : 'purchases-summary',
+                component : Summary,
+            },
+            {
+                path : '/purchases/manual',
+                name : 'purchases-manual',
+                component : Manual,
+            },
+            {
                 path : '/survey/:set',
                 name : 'survey',
                 component : Survey,
@@ -489,16 +509,6 @@ const routes = [
                 path : '*',
                 name : 'error-page',
                 component : ErrorPage,
-            },
-            {
-                path : '/purchases/summary',
-                name : 'purchases-summary',
-                component : Tools,
-            },
-            {
-                path : '/purchases/manual',
-                name : 'purchases-manual',
-                component : Tools,
             },
         ],
     },
