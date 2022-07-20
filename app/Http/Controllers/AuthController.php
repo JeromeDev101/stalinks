@@ -99,7 +99,12 @@ class AuthController extends Controller
             'work_mail_orig',
             'payment_type',
             'user_payment_types',
-            'exam_duration'
+            'exam_duration',
+            'bank_name',
+            'account_name',
+            'account_iban',
+            'swift_code',
+            'beneficiary_add'
         );
 
 
@@ -182,6 +187,11 @@ class AuthController extends Controller
                             'user_id' => $input['id'],
                             'payment_id' => $key,
                             'account' => $types,
+                            'bank_name' => count($request->bank_name) > 0 ? json_encode($request->bank_name):null,
+                            'account_name' => count($request->account_name) > 0 ? json_encode($request->account_name):null,
+                            'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban):null,
+                            'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code):null,
+                            'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add):null,
                             'is_default' => $key == $input['id_payment_type'] ? 1:0,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now()

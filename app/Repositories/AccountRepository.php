@@ -36,7 +36,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
         $response['success'] = false;
         $input_2 = collect($data)->only('update_method_payment_type')->toArray();
-        $input = collect($data)->except('company_type', 'user', 'isVerified')->toArray();
+        $input = collect($data)->except('company_type', 'user', 'isVerified', 'bank_name', 'account_name', 'account_iban', 'swift_code', 'beneficiary_add')->toArray();
 
         $input['is_freelance'] = $data['company_type'] == 'Freelancer' ? 1:0;
         $input['is_show_price_basis'] = $data['is_show_price_basis'] == 'yes' ? 1:0;
@@ -250,6 +250,11 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                             'user_id' => $user->id,
                             'payment_id' => $key,
                             'account' => $types,
+                            'bank_name' => count($data['bank_name']) > 0 ? json_encode($data['bank_name']):null,
+                            'account_name' => count($data['account_name']) > 0 ? json_encode($data['account_name']):null,
+                            'account_iban' => count($data['account_iban']) > 0 ? json_encode($data['account_iban']):null,
+                            'swift_code' => count($data['swift_code']) > 0 ? json_encode($data['swift_code']):null,
+                            'beneficiary_add' => count($data['beneficiary_add']) > 0 ? json_encode($data['beneficiary_add']):null,
                             'is_default' => $key == $input['id_payment_type'] ? 1:0,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now()

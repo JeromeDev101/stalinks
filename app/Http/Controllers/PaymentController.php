@@ -53,12 +53,7 @@ class PaymentController extends Controller
     public function edit(Request $request)
     {
         $request->validate(['type' => 'required']);
-        $input['type'] = $request->type;
-        $input['receive_payment'] = $request->receive_payment;
-        $input['send_payment'] = $request->send_payment;
-        $input['account_value'] = $request->account_value;
-        $input['email_value'] = $request->email_value;
-        $input['address_value'] = $request->address_value;
+        $input = $request->except(['id', 'show_registration', 'qr_img_path', 'deleted_at', 'created_at', 'updated_at']);
         $payment = PaymentType::findOrFail($request->id);
         $payment->update($input);
         return response()->json(['success' => true], 200);

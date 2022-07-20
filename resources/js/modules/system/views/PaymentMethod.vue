@@ -187,6 +187,64 @@
                                         class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <hr/>
+                        <h4 class="text-primary">Other Details</h4>
+
+                        <div class="row">
+                            <table class="table">
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Bank Name</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.bank_name">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Account Name</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.account_name">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Account IBAN</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.account_iban">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>SWIFT Code</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.swift_code">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Benificiary Address</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.beneficiary_add">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <hr/>
+
+                        <div class="row">
 
                             <div class="col-sm-6">
                                 <div class="form-group">
@@ -254,7 +312,7 @@ export default {
 
     props : [
         'messageForms',
-        'isPopupLoading'
+        // 'isPopupLoading'
     ],
 
     data() {
@@ -338,6 +396,7 @@ export default {
         },
 
         doEditPayment(item) {
+            // console.log(item)
             this.clearMessageform();
             this.$store.dispatch('clearMessageFormSystem');
             this.paymentUpdate = JSON.parse(JSON.stringify(item))
@@ -346,9 +405,9 @@ export default {
 
         async submitAddPayment() {
             let that = this;
-            this.isPopupLoading = true;
+            // this.isPopupLoading = true;
             await this.$store.dispatch('actionAddPayment', that.paymentModel);
-            this.isPopupLoading = false;
+            // this.isPopupLoading = false;
 
             if (this.messageForms.action === 'saved_payment') {
                 await swal.fire(
@@ -389,10 +448,10 @@ export default {
 
         async submitUpdatePayment() {
             let self = this;
-            this.isPopupLoading = true;
+            // this.isPopupLoading = true;
 
             await this.$store.dispatch('actionUpdatePayment', this.paymentUpdate);
-            this.isPopupLoading = false;
+            // this.isPopupLoading = false;
 
             if (this.messageForms.action === 'updated_payment') {
                 await swal.fire(

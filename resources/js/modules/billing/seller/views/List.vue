@@ -333,6 +333,37 @@
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
+                                    <tr v-show="info.bank_name != null && info.bank_name != ''">
+                                        <td colspan="2">
+                                            Bank Name:
+                                            <b>{{ info.bank_name }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.account_name != null && info.account_name != ''">
+                                        <td colspan="2">
+                                            Account Name:
+                                            <b>{{ info.account_name }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.account_iban != null && info.account_iban != ''">
+                                        <td colspan="2">
+                                            Account IBAN:
+                                            <b>{{ info.account_iban }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.swift_code != null && info.swift_code != ''">
+                                        <td colspan="2">
+                                            Swift Code:
+                                            <b>{{ info.swift_code }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.beneficiary_add != null && info.beneficiary_add != ''">
+                                        <td colspan="2">
+                                            Beneficiary Address:
+                                            <b>{{ info.beneficiary_add }}</b>
+                                        </td>
+                                    </tr>
+
                                 </table>
                             </div>
 
@@ -520,7 +551,12 @@ export default {
                 account : '',
                 amount : '',
                 ids : '',
-                payment_types: null
+                payment_types: null,
+                bank_name: '',
+                account_name: '',
+                account_iban: '',
+                swift_code: '',
+                beneficiary_add: '',
             },
             isDisabledPay : true,
             isDisabledReupload: false,
@@ -656,6 +692,8 @@ export default {
                 this.info.payment_types = data.user_payment_types;
                 this.info.payment_type = data.payment_type.type;
 
+               console.log(data)
+
                 if (this.info.payment_types) {
                     this.isDisabledPay = false;
 
@@ -663,6 +701,12 @@ export default {
 
                     if (paymentType) {
                         account = paymentType.account;
+
+                        this.info.bank_name = paymentType.bank_name == null ? '':JSON.parse(paymentType.bank_name)[data.id_payment_type];
+                        this.info.account_name = paymentType.account_name == null ? '':JSON.parse(paymentType.account_name)[data.id_payment_type];
+                        this.info.account_iban = paymentType.account_iban == null ? '':JSON.parse(paymentType.account_iban)[data.id_payment_type];
+                        this.info.swift_code = paymentType.swift_code == null ? '':JSON.parse(paymentType.swift_code)[data.id_payment_type];
+                        this.info.beneficiary_add = paymentType.beneficiary_add == null ? '':JSON.parse(paymentType.beneficiary_add)[data.id_payment_type];
                     }
                 }
 

@@ -902,6 +902,42 @@
 
                                             {{ err }}
                                         </span>
+
+
+                                        <div class="px-5" 
+                                            v-show="payment_method.account_name ||
+                                                payment_method.bank_name ||
+                                                payment_method.swift_code ||
+                                                payment_method.beneficiary_add ||
+                                                payment_method.account_iban
+                                            "
+                                            >
+                                            <h6 class="text-primary">Other Details:</h6>
+                                            <hr/>
+
+                                            <div class="row">
+                                                <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                    <label for="">Bank Name:</label>
+                                                    <input type="text" class="form-control" v-model="accountModel.bank_name[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.account_name">
+                                                    <label for="">Account Name:</label>
+                                                    <input type="text" class="form-control" v-model="accountModel.account_name[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                    <label for="">Account IBAN:</label>
+                                                    <input type="text" class="form-control" v-model="accountModel.account_iban[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                    <label for="">SWIFT Code:</label>
+                                                    <input type="text" class="form-control" v-model="accountModel.swift_code[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                    <label for="">Beneficiary Address:</label>
+                                                    <input type="text" class="form-control" v-model="accountModel.beneficiary_add[payment_method.id]">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
@@ -1463,7 +1499,7 @@
                             </span>
 
                             <!-- payment for seller and writer -->
-                            <table class="table" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
+                            <table class="table table-hover" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
                                 <tr>
                                     <td></td>
                                     <td>{{ $t('message.registration_accounts.filter_default') }}</td>
@@ -1482,6 +1518,42 @@
 
                                             {{ err }}
                                         </span>
+
+                                        <div class="px-5" 
+                                            v-show="payment_method.account_name ||
+                                                payment_method.bank_name ||
+                                                payment_method.swift_code ||
+                                                payment_method.beneficiary_add ||
+                                                payment_method.account_iban
+                                            "
+                                            >
+                                            <h6 class="text-primary">Other Details:</h6>
+                                            <hr/>
+
+                                            <div class="row">
+                                                <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                    <label for="">Bank Name:</label>
+                                                    <input type="text" class="form-control" v-model="accountUpdate.bank_name[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.account_name">
+                                                    <label for="">Account Name:</label>
+                                                    <input type="text" class="form-control" v-model="accountUpdate.account_name[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                    <label for="">Account IBAN:</label>
+                                                    <input type="text" class="form-control" v-model="accountUpdate.account_iban[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                    <label for="">SWIFT Code:</label>
+                                                    <input type="text" class="form-control" v-model="accountUpdate.swift_code[payment_method.id]">
+                                                </div>
+                                                <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                    <label for="">Beneficiary Address:</label>
+                                                    <input type="text" class="form-control" v-model="accountUpdate.beneficiary_add[payment_method.id]">
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </td>
                                     <td style="width: 50px;vertical-align:middle;" class="text-center">
                                         <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
@@ -1732,6 +1804,11 @@ export default {
                 writer_price : '',
                 rate_type : '',
                 add_method_payment_type: [],
+                bank_name: [],
+                account_name: [],
+                account_iban: [],
+                swift_code: [],
+                beneficiary_add: [],
             },
 
             filterModel : {
@@ -1791,7 +1868,12 @@ export default {
                 rate_type : '',
                 is_show_price_basis : '',
                 update_method_payment_type: [],
-                is_sub_account: ''
+                is_sub_account: '',
+                bank_name: [],
+                account_name: [],
+                account_iban: [],
+                swift_code: [],
+                beneficiary_add: [],
             },
 
             isPopupLoading : false,
@@ -3059,7 +3141,7 @@ export default {
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
             this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
 
-            console.log(that)
+            // console.log(that)
 
             if(typeof account.user != "undefined" && account.user){
                 if(account.user.user_payment_types.length > 0) {
@@ -3067,8 +3149,18 @@ export default {
 
                     for(let index in account.user.user_payment_types) {
                         var payment_id = account.user.user_payment_types[index].payment_id;
+                        var acc_bank_name = JSON.parse(account.user.user_payment_types[index].bank_name)
+                        var acc_account_name = JSON.parse(account.user.user_payment_types[index].account_name)
+                        var acc_account_iban = JSON.parse(account.user.user_payment_types[index].account_iban)
+                        var acc_swift_code = JSON.parse(account.user.user_payment_types[index].swift_code)
+                        var acc_beneficiary_add = JSON.parse(account.user.user_payment_types[index].beneficiary_add)
 
                         this.accountUpdate.update_method_payment_type[payment_id] = account.user.user_payment_types[index].account
+                        this.accountUpdate.bank_name[payment_id] = account.user.user_payment_types[index].bank_name == null ? '':acc_bank_name[payment_id]
+                        this.accountUpdate.account_name[payment_id] = account.user.user_payment_types[index].account_name == null ? '':acc_account_name[payment_id]
+                        this.accountUpdate.account_iban[payment_id] = account.user.user_payment_types[index].account_iban == null ? '':acc_account_iban[payment_id]
+                        this.accountUpdate.swift_code[payment_id] = account.user.user_payment_types[index].swift_code == null ? '':acc_swift_code[payment_id]
+                        this.accountUpdate.beneficiary_add[payment_id] = account.user.user_payment_types[index].beneficiary_add == null ? '':acc_beneficiary_add[payment_id]
                     }
                 } else {
                     this.accountUpdate.update_method_payment_type = [];

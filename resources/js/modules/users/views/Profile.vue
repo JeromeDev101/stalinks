@@ -214,6 +214,8 @@
         </div>
 
         <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id === 11">
+            
+            <!-- Generate Affiliate Code -->
             <div class="col-12">
                 <div class="box box-primary">
                     <div class="box-header" style="padding-left: 0.7rem !important; padding-bottom: 0.7rem !important;">
@@ -320,6 +322,7 @@
             </div>
         </div>
 
+        <!-- Refund Section -->
         <div class="row mb-5" v-if="currentUser.isOurs == 1 && currentUser.role_id == 5 && (currentUser.registration != null && currentUser.registration.is_sub_account == 0)">
             <div class="col-sm-12 mx-3">
                 <hr/>
@@ -375,6 +378,41 @@
 
                                                 {{ err }}
                                             </span>
+
+                                            <div class="px-5 pt-3" 
+                                                v-show="payment_method.account_name ||
+                                                    payment_method.bank_name ||
+                                                    payment_method.swift_code ||
+                                                    payment_method.beneficiary_add ||
+                                                    payment_method.account_iban
+                                                "
+                                                >
+                                                <h6 class="text-primary">Other Details:</h6>
+                                                <hr/>
+
+                                                <div class="row">
+                                                    <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                        <label for="">Bank Name:</label>
+                                                        <input type="text" class="form-control" v-model="billing.bank_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_name">
+                                                        <label for="">Account Name:</label>
+                                                        <input type="text" class="form-control" v-model="billing.account_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                        <label for="">Account IBAN:</label>
+                                                        <input type="text" class="form-control" v-model="billing.account_iban[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                        <label for="">SWIFT Code:</label>
+                                                        <input type="text" class="form-control" v-model="billing.swift_code[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                        <label for="">Beneficiary Address:</label>
+                                                        <input type="text" class="form-control" v-model="billing.beneficiary_add[payment_method.id]">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -742,6 +780,11 @@ export default {
                 skrill_account: '',
                 payment_default: '',
                 payment_type: [],
+                bank_name: [],
+                account_name: [],
+                account_iban: [],
+                swift_code: [],
+                beneficiary_add: [],
             },
             new_password: '',
             c_password: '',
@@ -847,13 +890,16 @@ export default {
         },
 
         checkCanRefund() {
-            let wallet = JSON.parse(localStorage.getItem('wallet'))
-            let credit = wallet.credit;
+            // check if buyer
+            if(this.user.isOurs == 1 && this.user.role_id == 5) {
+                let wallet = JSON.parse(localStorage.getItem('wallet'))
+                let credit = wallet.credit;
 
-            if(credit <= 0) {
-                this.canRefund = false;
-            } else {
-                this.canRefund = true;
+                if(credit <= 0) {
+                    this.canRefund = false;
+                } else {
+                    this.canRefund = true;
+                }
             }
         },
 
@@ -1067,19 +1113,30 @@ export default {
         bindPayment() {
             let that = this.user.user_type
 
-            // console.log(this.user)
+            console.log(this.currentUser, that)
             if( this.currentUser.isOurs == 1 ) {
                 // this.billing.paypal_account = that.paypal_account;
                 // this.billing.skrill_account = that.skrill_account;
                 // this.billing.btc_account = that.btc_account;
-                this.billing.payment_default = this.user.id_payment_type;
+                this.billing.payment_default = this.currentUser.id_payment_type;
 
-                if(typeof this.user.user_payment_types != "undefined" && this.user.user_payment_types != null){
-                    if(this.user.user_payment_types.length > 0) {
-                        for(let index in this.user.user_payment_types) {
-                            var payment_id = this.user.user_payment_types[index].payment_id;
+                if(typeof this.currentUser.user_payment_types != "undefined" && this.currentUser.user_payment_types != null){
+                    if(this.currentUser.user_payment_types.length > 0) {
+                        for(let index in this.currentUser.user_payment_types) {
+                            var payment_id = this.currentUser.user_payment_types[index].payment_id;
+                            var bank_name = this.currentUser.user_payment_types[index].bank_name == null ? '':JSON.parse(this.currentUser.user_payment_types[index].bank_name)
+                            var account_name = this.currentUser.user_payment_types[index].account_name == null ? '':JSON.parse(this.currentUser.user_payment_types[index].account_name)
+                            var account_iban = this.currentUser.user_payment_types[index].account_iban == null ? '':JSON.parse(this.currentUser.user_payment_types[index].account_iban)
+                            var swift_code = this.currentUser.user_payment_types[index].swift_code == null ? '':JSON.parse(this.currentUser.user_payment_types[index].swift_code)
+                            var beneficiary_add = this.currentUser.user_payment_types[index].beneficiary_add == null ? '':JSON.parse(this.currentUser.user_payment_types[index].beneficiary_add)
 
-                            this.billing.payment_type[payment_id] = this.user.user_payment_types[index].account
+                            this.billing.payment_type[payment_id] = this.currentUser.user_payment_types[index].account
+
+                            this.billing.bank_name[payment_id] = bank_name[payment_id] == null ? '':bank_name[payment_id];
+                            this.billing.account_name[payment_id] = account_name[payment_id] == null ? '':account_name[payment_id];
+                            this.billing.account_iban[payment_id] = account_iban[payment_id] == null ? '':account_iban[payment_id];
+                            this.billing.swift_code[payment_id] = swift_code[payment_id] == null ? '':swift_code[payment_id];
+                            this.billing.beneficiary_add[payment_id] = bank_name[payment_id] == null ? '':beneficiary_add[payment_id];
                         }
                     }
                 }
@@ -1130,6 +1187,11 @@ export default {
                 // this.user.user_type.btc_account = this.billing.btc_account;
 
                 this.user.payment_type = this.billing.payment_type;
+                this.user.bank_name = this.billing.bank_name;
+                this.user.account_name = this.billing.account_name;
+                this.user.account_iban = this.billing.account_iban;
+                this.user.swift_code = this.billing.swift_code;
+                this.user.beneficiary_add = this.billing.beneficiary_add;
                 this.user.id_payment_type = this.billing.payment_default;
                 this.user.user_type.company_type = this.company_type;
                 this.user.user_type.country_id = this.country_id;

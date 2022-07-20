@@ -20,7 +20,12 @@ class PaymentType extends Model
         'send_payment',
         'account_value',
         'email_value',
-        'address_value'
+        'address_value',
+        'account_name',
+        'account_iban',
+        'bank_name',
+        'swift_code',
+        'beneficiary_add'
     ];
 
     public function payment_type_image() {
