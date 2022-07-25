@@ -214,7 +214,7 @@
         </div>
 
         <div class="row" v-if="currentUser.isOurs === 1 && currentUser.role.id === 11">
-            
+
             <!-- Generate Affiliate Code -->
             <div class="col-12">
                 <div class="box box-primary">
@@ -354,6 +354,10 @@
                             {{ $t('message.profile.b_note_2') }}
                         </span>
 
+                        <span v-if="validate_error_type" class="text-danger mx-2">
+                            {{ $t('message.registration_accounts.r_input_selected') }}
+                        </span>
+
                         <div class="table-responsive">
 
                             <!-- payment for seller and writer -->
@@ -379,7 +383,7 @@
                                                 {{ err }}
                                             </span>
 
-                                            <div class="px-5 pt-3" 
+                                            <div class="px-5 pt-3"
                                                 v-show="payment_method.account_name ||
                                                     payment_method.bank_name ||
                                                     payment_method.swift_code ||
@@ -818,6 +822,8 @@ export default {
             affiliateBuyers: {
                 data: []
             },
+
+            validate_error_type: false,
         };
     },
 
@@ -1195,6 +1201,22 @@ export default {
                 this.user.id_payment_type = this.billing.payment_default;
                 this.user.user_type.company_type = this.company_type;
                 this.user.user_type.country_id = this.country_id;
+
+                if (this.billing.payment_default) {
+                    if(!this.user.payment_type[this.billing.payment_default]) {
+
+                        this.validate_error_type = true;
+
+                        await swal.fire(
+                            self.$t('message.registration_accounts.alert_error'),
+                            self.$t('message.registration_accounts.alert_error_update'),
+                            'error'
+                        );
+
+                        return false;
+                    }
+                }
+
             }
 
             this.user.password = this.new_password;
@@ -1219,6 +1241,7 @@ export default {
 
                 this.new_password = '';
                 this.c_password = '';
+                this.validate_error_type = false;
             } else {
                 swal.fire(
                     self.$t('message.profile.alert_failed'),

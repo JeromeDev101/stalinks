@@ -78,7 +78,7 @@ class UpdateAccountRequest extends FormRequest
                 'required'
             ],
             'id_payment_type' => [
-                Rule::requiredIf($isSubAccount == 0 && $status == 'active' && $type !== 'Affiliate' && $verified),
+                Rule::requiredIf($isSubAccount == 0 && $status == 'active' && $type !== 'Affiliate' && $type !== 'Buyer' && $verified),
 
             ],
             // 'writer_price' => [

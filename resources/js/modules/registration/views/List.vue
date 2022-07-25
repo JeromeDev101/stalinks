@@ -904,7 +904,7 @@
                                         </span>
 
 
-                                        <div class="px-5" 
+                                        <div class="px-5"
                                             v-show="payment_method.account_name ||
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
@@ -1519,7 +1519,7 @@
                                             {{ err }}
                                         </span>
 
-                                        <div class="px-5" 
+                                        <div class="px-5"
                                             v-show="payment_method.account_name ||
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
@@ -2938,8 +2938,15 @@ export default {
             let self = this;
             let id_payment_type = this.accountModel.id_payment_type;
 
-            if(!this.accountModel.add_method_payment_type[id_payment_type] && this.accountModel.type !== 'Affiliate') {
+            if(!this.accountModel.add_method_payment_type[id_payment_type] && (this.accountModel.type !== 'Affiliate' && this.accountModel.type !== 'Buyer')) {
                 this.validate_error_type = true;
+
+                await swal.fire(
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_saving'),
+                    'error'
+                );
+
                 return false;
             } else {
                 this.validate_error_type = false;
@@ -3036,6 +3043,7 @@ export default {
             if(this.accountUpdate.is_sub_account === 0
                 && !this.accountUpdate.update_method_payment_type[id_payment_type]
                 && this.accountUpdate.type !== 'Affiliate'
+                && this.accountUpdate.type !== 'Buyer'
                 && this.isVerified) {
 
                 this.validate_error_type_update = true;

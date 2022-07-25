@@ -80,7 +80,7 @@ class UpdateUserRequest extends FormRequest
                     'required_if:user_type.company_type,==,Company'
                 ],
                 'id_payment_type' => [
-                    Rule::requiredIf($this->input('role_id') != 11)
+                    Rule::requiredIf(($this->input('role_id') != 11 && $this->input('role_id') != 5))
                 ],
                 // 'user_type.paypal_account' => [
                 //     'required_if:id_payment_type,==,1'

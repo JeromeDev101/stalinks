@@ -71,7 +71,7 @@ class AccountRequest extends FormRequest
                 'nullable'
             ],
             'id_payment_type' => [
-                Rule::requiredIf( $type !== 'Affiliate'),
+                Rule::requiredIf( ($type !== 'Affiliate' && $type !== 'Buyer')),
             ],
             // 'paypal_account' => [
             //     'required_if:id_payment_type,==,1'
