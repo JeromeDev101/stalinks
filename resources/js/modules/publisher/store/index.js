@@ -18,7 +18,7 @@ const state = {
     totalPublish: 0,
     listPublish: { data:[], total: 0 },
     summaryPublish:{ total: 0, data:[] },
-    messageForms: { action: '', message: '', errors: {} },
+    messageForms: { action: '', message: '', errors: {}, valid: 0, invalid: 0 },
     listCountryAll: { data: [], total: 0 },
     listCountryContinent: { data: [], total: 0 },
     listContinent: { data: [], total: 0 },
@@ -222,7 +222,13 @@ const actions = {
             let response = await PublisherService.uploadCsv(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'uploaded', message: '', errors: response.data.data });
+                commit(MESSAGE_FORMS, {
+                    action: 'uploaded',
+                    message: '',
+                    errors: response.data.data,
+                    valid: response.data.valid,
+                    invalid: response.data.invalid
+                });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

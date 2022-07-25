@@ -1320,7 +1320,17 @@
                     <div class="modal-body">
                         <table class="table table-condensed">
                             <tr>
-                                <th colspan="2">{{ $t('message.publisher.fu_total_failed') }} ({{failedUpload.total}})</th>
+                                <th>
+                                    <span class="text-danger">
+                                        {{ $t('message.publisher.fu_total_failed') }} ({{failedUpload.invalid}})
+                                    </span>
+                                </th>
+
+                                <th>
+                                    <span class="text-success">
+                                        Total uploaded ({{failedUpload.valid}})
+                                    </span>
+                                </th>
                             </tr>
                             <tr v-for="(ext, index) in failedUpload.message" :key="index">
                                 <td>{{ ext }}</td>
@@ -1669,6 +1679,8 @@ export default {
                     'Unlisted',
                 ],
                 failedUpload: {
+                    valid: 0,
+                    invalid: 0,
                     total: 0,
                     message: [],
                 },
@@ -2894,6 +2906,8 @@ export default {
 
                 this.failedUpload.total = 0;
                 this.failedUpload.message = [];
+                this.failedUpload.valid = 0;
+                this.failedUpload.invalid = 0;
 
                 swal.fire({
                     title: self.$t('message.publisher.alert_uploading_csv'),
@@ -2934,6 +2948,8 @@ export default {
                         }
 
                         this.failedUpload.total = cnt_failed;
+                        this.failedUpload.valid = this.messageForms.valid;
+                        this.failedUpload.invalid = this.messageForms.invalid;
                         $("#modal-failed-upload").modal('show')
                     }
                 } else {

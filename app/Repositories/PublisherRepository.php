@@ -8,6 +8,8 @@ use App\Models\ExtDomain;
 use App\Models\Publisher;
 use App\Models\Registration;
 use App\Libs\Ahref;
+use App\Rules\ValidTopic;
+use App\Rules\ValidUrl;
 use App\Services\HttpClient;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +19,8 @@ use App\Models\User;
 use App\Models\Country;
 use App\Models\Pricelist;
 use App\Models\Language;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use SplFileObject;
 
 class PublisherRepository extends BaseRepository implements PublisherRepositoryInterface
@@ -496,6 +500,316 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             default:
                 return '';
         }
+    }
+
+    public function importExcelTwo ($request) {
+        $valid = 0;
+        $invalid = 0;
+        $rows = [];
+        $result = true;
+        $message = '';
+        $file_message = '';
+        $existing_data = [];
+
+        $country_name_list = Country::pluck('name')->toArray();
+        $language_name_list = Language::pluck('name')->toArray();
+
+        $headers = Auth::user()->isOurs == 1
+            ? [
+                'URL',
+                'Price',
+                'Inc Article',
+                'Accept C&B',
+                'KW Anchor',
+                'Language',
+                'Topic',
+                'Country',
+            ]
+            : [
+                'URL',
+                'Price',
+                'Inc Article',
+                'Seller ID',
+                'Accept C&B',
+                'Language',
+                'Topic',
+                'Country',
+                'KW Anchor'
+            ];
+
+        $path = $request->file('file')->getRealPath();
+        $records = array_map('str_getcsv', file($path));
+
+        // if records is empty, throw error
+        if (count($records) <= 1) {
+            $file_message = "Invalid file. Uploaded csv file is empty.";
+            $result = false;
+        } else {
+            // get field names from header column
+            $fields = $records[0];
+
+            // if fields are invalid, throw error
+            if ($headers !== $fields) {
+                $file_message = "Invalid file. Headers must be: " . implode(', ', $headers) . " only";
+                $result = false;
+            } else {
+                // remove the header column
+                array_shift($records);
+
+                // check number of lines, must not exceed 500, if invalid throw error
+                if (count($records) > 500) {
+                    $file_message = "Invalid file: Please upload only 500 urls at a time. Number of urls in file: "
+                    . count($records);
+
+                    $result = false;
+                } else {
+
+                    // generate item array
+                    foreach ($records as $index=>$record) {
+                        $record = array_combine($fields, $record);
+
+                        $url = trim_special_characters($record['URL']);
+                        $price = trim_special_characters($record['Price']);
+                        $article = trim_special_characters($record['Inc Article']);
+                        $seller_id = Auth::user()->isOurs == 1
+                            ? Auth::user()->id
+                            : trim_special_characters($record['Seller ID']);
+                        $accept = trim_special_characters($record['Accept C&B']);
+                        $language_excel = trim_special_characters($record['Language']);
+                        $topic = trim_special_characters($record['Topic']);
+                        $country = trim_special_characters($record['Country']);
+                        $kw_anchor = trim_special_characters($record['KW Anchor']);
+
+                        // remove http
+                        $url = remove_http($url);
+
+                        // remove space
+                        $url = trim($url, " ");
+
+                        // remove /
+                        $url = rtrim($url,"/");
+
+                        if($url == ''
+                            || $price == ''
+                            || $topic == ''
+                            || $accept == ''
+                            || $article == ''
+                            || $country == ''
+                            || $kw_anchor == ''
+                            || $seller_id == ''
+                            || $language_excel == '') {
+
+                            $file_message = "Invalid data. Columns cannot be empty. Check in row " . (intval($index) + 1);
+                            $result = true;
+                            $invalid++;
+
+                            array_push($existing_data, [
+                                'message' => $file_message
+                            ]);
+
+                        } else {
+                            // check language
+                            if (!in_array($language_excel, $language_name_list)) {
+                                $file_message = "No language name of " . $language_excel . ". Check in row " . (intval($index) + 1);
+                                $result = true;
+                                $invalid++;
+
+                                array_push($existing_data, [
+                                    'message' => $file_message
+                                ]);
+                            } else {
+
+                                // check country
+                                if (!in_array($country, $country_name_list)) {
+                                    $file_message = "No country name of " . $country . ". Check in row " . (intval($index) + 1);
+                                    $result = true;
+                                    $invalid++;
+
+                                    array_push($existing_data, [
+                                        'message' => $file_message
+                                    ]);
+                                } else {
+                                    $lang = $this->getLanguage($language_excel);
+                                    $count = $this->getCountry($country);
+
+                                    $row = [
+                                        'user_id'      => $seller_id,
+                                        'language_id'  => $lang,
+                                        'continent_id' => $count->continent_id,
+                                        'country_id'   => $count->id,
+                                        'url'          => $url,
+                                        'ur'           => 0,
+                                        'dr'           => 0,
+                                        'backlinks'    => 0,
+                                        'ref_domain'   => 0,
+                                        'org_keywords' => 0,
+                                        'org_traffic'  => 0,
+                                        'price'        => preg_replace('/[^0-9.\-]/', '', $price),
+                                        'inc_article'  => ucwords(strtolower(trim($article, " "))),
+                                        'valid'        => 'unchecked',
+                                        'casino_sites' => ucwords(strtolower(trim($accept, " "))),
+                                        'topic'        => $topic,
+                                        'kw_anchor'    => $kw_anchor,
+                                        'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                                    ];
+
+                                    if (count($rows)) {
+                                        // check for duplicate seller and url in rows array
+                                        $existing_rows = array_filter($rows, function ($var) use ($row) {
+                                            return ($var['user_id'] == $row['user_id'] && $var['url'] == $row['url']);
+                                        });
+
+                                        if (!count($existing_rows)) {
+                                            $rows[$index] = $row;
+                                        } else {
+                                            $file_message = Auth::user()->isOurs == 1
+                                                ? "Duplicate url in csv file. Check in row " . (intval($index) + 2)
+                                                : "Duplicate seller and url in csv file. Check in row " . (intval($index) + 2);
+
+                                            $invalid++;
+
+                                            array_push($existing_data, [
+                                                'message' => $file_message
+                                            ]);
+                                        }
+                                    } else {
+                                        $rows[$index] = $row;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (count($rows)) {
+                        $validator = Validator::make(
+                            $rows,
+                            $this->generateValidationRules($rows),
+                            $this->generateValidationMessages($rows)
+                        );
+
+                        if ($validator->fails()) {
+
+                            foreach ($validator->errors()->all() as $error) {
+                                array_push($existing_data, [
+                                    'message' => $error
+                                ]);
+                            }
+                        }
+
+                        // insert valid
+                        if (count($validator->valid())) {
+
+                            $for_insert = array_chunk($validator->valid(), 100);
+
+                            // chunk items
+                            foreach ($for_insert as $insert_items_array) {
+                                foreach ($insert_items_array as $insert) {
+                                    Publisher::create($insert);
+                                }
+                            }
+                        }
+
+                        // count valid and invalid
+                        $valid = count($validator->valid());
+                        $invalid = $invalid + count($validator->invalid());
+                    }
+                }
+            }
+        }
+
+        return [
+            "valid" => $valid,
+            "invalid" => $invalid,
+            "success" => $result,
+            "message" => $message,
+            "errors"  => [
+                "file" => $file_message,
+            ],
+            "exist"   => $existing_data,
+        ];
+    }
+
+    public function generateValidationRules ($data) {
+        $rules = [];
+
+        $user_id_list = User::pluck('id')->toArray();
+        $yes_no_values = ['yes', 'no', 'Yes', 'No'];
+
+        foreach ($data as $key => $value){
+            $rules[$key . '.url'] = [
+                'required',
+                'unique:publisher,url,NULL,id,user_id,' . $value['user_id'],
+                new ValidUrl($key)
+            ];
+
+            $rules[$key . '.price'] = [
+                'required'
+            ];
+
+            $rules[$key . '.inc_article'] = [
+                'required',
+                Rule::in($yes_no_values),
+            ];
+
+            $rules[$key . '.user_id'] = [
+                'required',
+                Rule::in($user_id_list),
+            ];
+
+            $rules[$key . '.casino_sites'] = [
+                'required',
+                Rule::in($yes_no_values),
+            ];
+
+            $rules[$key . '.language_id'] = [
+                'required'
+            ];
+
+            $rules[$key . '.topic'] = [
+                'required',
+                new ValidTopic($key, $this->topic_list)
+            ];
+
+            $rules[$key . '.country_id'] = [
+                'required'
+            ];
+
+            $rules[$key . '.kw_anchor'] = [
+                'required',
+                Rule::in($yes_no_values),
+            ];
+        }
+
+        return $rules;
+    }
+
+    public function generateValidationMessages ($data) {
+        $messages = [];
+
+        foreach ($data as $key => $value){
+            $messages[$key . '.user_id' . '.required'] = 'The Seller ID field is required. Check row ' . ($key + 2);
+            $messages[$key . '.user_id' . '.in'] = 'Seller ID not found. Check row ' . ($key + 2);
+
+            $messages[$key . '.url' . '.required'] = 'The URL field is required. Check row ' . ($key + 2);
+            $messages[$key . '.url' . '.unique'] = Auth::user()->isOurs == 1
+                ? 'You have already uploaded this url: :input . Check row ' . ($key + 2)
+                : 'The url and seller already exists. Check row ' . ($key + 2);
+
+            $messages[$key . '.price' . '.required'] = 'The price field is required. Check row ' . ($key + 2);
+
+            $messages[$key . '.inc_article' . '.required'] = 'The Inc Article field is required. Check row ' . ($key + 2);
+            $messages[$key . '.inc_article' . '.in'] = 'Invalid data. Inc Article column must only be yes/no. Check row ' . ($key + 2);
+
+            $messages[$key . '.kw_anchor' . '.required'] = 'The KW Anchor field is required. Check row ' . ($key + 2);
+            $messages[$key . '.kw_anchor' . '.in'] = 'Invalid data. KW Anchor column must only be yes/no. Check row ' . ($key + 2);
+
+            $messages[$key . '.casino_sites' . '.required'] = 'The Accept C&B field is required. Check row ' . ($key + 2);
+            $messages[$key . '.casino_sites' . '.in'] = 'Invalid data. Accept C&B column must only be yes/no. Check row ' . ($key + 2);
+
+            $messages[$key . '.topic' . '.required'] = 'The topic field is required. Check row ' . ($key + 2);
+        }
+
+        return $messages;
     }
 
     public function importExcel($file)

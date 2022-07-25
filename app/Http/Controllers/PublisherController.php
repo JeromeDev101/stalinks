@@ -67,8 +67,8 @@ class PublisherController extends Controller
         }
 
         $file = $request->all();
-        $data = $this->publisherRepository->importExcel($file);
-
+//        $data = $this->publisherRepository->importExcel($file);
+        $data = $this->publisherRepository->importExcelTwo($request);
 
         if($data['success'] === false){
             unset($data['success']);
@@ -80,7 +80,12 @@ class PublisherController extends Controller
             }
         }
 
-        return response()->json(['success' => true, 'data' => $data['exist'] ], 200);
+        return response()->json([
+            'success' => true,
+            'data' => $data['exist'],
+            'valid' => $data['valid'],
+            'invalid' => $data['invalid']
+        ], 200);
 
     }
 
