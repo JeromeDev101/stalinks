@@ -29,6 +29,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         'Adult',
         'Art',
         'Beauty',
+        'CBD',
         'Charity',
         'Cooking',
         'Crypto',
