@@ -47,6 +47,8 @@ class ToolRequest extends FormRequest
                 'details' => 'required',
                 'username' => 'required',
                 'password' => 'required',
+                'expired_at' => 'required',
+                'registered_at' => 'required',
             ];
         }
     }
@@ -56,6 +58,8 @@ class ToolRequest extends FormRequest
         return [
             'name.required' => 'The tool field is required.',
             'name.unique' => $this->input('name') . ' is already taken.',
+            'expired_at.required' => 'The expiration date field is required.',
+            'registered_at.required' => 'The registration date field is required.',
         ];
     }
 }

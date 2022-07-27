@@ -126,70 +126,97 @@
                             </select>
                         </div>
 
-                        <table id="tbl-tools" class="table table-hover table-bordered table-striped rlink-table">
-                            <thead>
-                            <tr class="label-primary">
-                                <th>#ID</th>
-                                <th>{{ $t('message.tools.filter_tool') }}</th>
-                                <th>{{ $t('message.tools.filter_url') }}</th>
-                                <th>{{ $t('message.tools.filter_username') }}</th>
-                                <th>{{ $t('message.tools.t_password') }}</th>
-                                <th>{{ $t('message.tools.filter_details') }}</th>
-                                <th>{{ $t('message.tools.t_action') }}</th>
-                            </tr>
-                            </thead>
+                        <div class="table-responsive">
+                            <table id="tbl-tools" class="table table-hover table-bordered table-striped rlink-table">
+                                <thead>
+                                    <tr class="label-primary">
+                                        <th>#ID</th>
+                                        <th>{{ $t('message.tools.filter_tool') }}</th>
+                                        <th>{{ $t('message.tools.filter_url') }}</th>
+                                        <th>{{ $t('message.tools.filter_username') }}</th>
+                                        <th>{{ $t('message.tools.t_password') }}</th>
+                                        <th>{{ $t('message.tools.filter_details') }}</th>
+                                        <th>Reg Date</th>
+                                        <th>Exp Date</th>
+                                        <th>{{ $t('message.tools.t_action') }}</th>
+                                    </tr>
+                                    </thead>
 
-                            <tbody>
-                            <tr v-for="(tool, index) in listTools.data" :key="index">
-                                <td class="center-content">{{ tool.id }}</td>
-                                <td>{{ tool.name }}</td>
-                                <td>
-                                    <a v-if="tool.url" :href="'//' + tool.url" target="_blank">
-                                        {{ tool.url }}
-                                    </a>
-                                    <span v-else>N/A</span>
-                                </td>
-                                <td>{{ tool.username }}</td>
-                                <td>
-                                    <span>
-                                        <i :ref="'eyes' + index" class="fa fa-eye" @click="togglePassword(index)"></i>
-                                    </span>
+                                    <tbody>
+                                    <tr v-for="(tool, index) in listTools.data" :key="index">
+                                        <td class="center-content">{{ tool.id }}</td>
+                                        <td>{{ tool.name }}</td>
+                                        <td>
+                                            <a v-if="tool.url" :href="'//' + tool.url" target="_blank">
+                                                {{ tool.url }}
+                                            </a>
+                                            <span v-else>N/A</span>
+                                        </td>
+                                        <td>{{ tool.username }}</td>
+                                        <td>
+                                        <span>
+                                            <i :ref="'eyes' + index" class="fa fa-eye" @click="togglePassword(index)"></i>
+                                        </span>
 
-                                    <span :ref="'badge' + index" class="badge badge-secondary">
-                                        {{ $t('message.tools.t_hidden') }}
-                                    </span>
+                                            <span :ref="'badge' + index" class="badge badge-secondary">
+                                            {{ $t('message.tools.t_hidden') }}
+                                        </span>
 
-                                    <span :ref="'pass' + index" style="display: none">{{ tool.password }}</span>
-                                </td>
-                                <td>
-                                    <div style="white-space: pre-line;">{{ tool.details }}</div>
-                                </td>
-                                <td>
-                                    <div class="text-center">
-                                        <button
-                                            type="button"
-                                            :title="$t('message.tools.t_edit_tool')"
-                                            class="btn btn-default"
+                                            <span :ref="'pass' + index" style="display: none">{{ tool.password }}</span>
+                                        </td>
+                                        <td>
+                                            <div style="white-space: pre-line;">{{ tool.details }}</div>
+                                        </td>
+                                        <td>
+                                        <span v-if="tool.registered_at">
+                                            {{ tool.registered_at }}
+                                        </span>
 
-                                            @click="updateTool(tool); modalOpener('update')">
+                                            <span v-else>N/A</span>
+                                        </td>
+                                        <td>
+                                            <div v-if="tool.expired_at">
+                                            <span>
+                                                {{ tool.expired_at }}
+                                            </span>
 
-                                            <i class="fa fa-edit"></i>
-                                        </button>
+                                                <span v-if="tool.expiring_days !== null" :class="expireBadgeColor(tool.expiring_days)">
+                                                {{ tool.expiring_days > 0 ? tool.expiring_days + ' day(s) left' : 'expired' }}
+                                            </span>
+                                            </div>
 
-                                        <button
-                                            type="button"
-                                            :title="$t('message.tools.t_delete_tool')"
-                                            class="btn btn-default"
+                                            <div v-else>
+                                                <span>N/A</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-center">
+                                                <button
+                                                    type="button"
+                                                    :title="$t('message.tools.t_edit_tool')"
+                                                    class="btn btn-default"
 
-                                            @click="deleteTool(tool.id)">
+                                                    @click="updateTool(tool); modalOpener('update')">
 
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    :title="$t('message.tools.t_delete_tool')"
+                                                    class="btn btn-default"
+
+                                                    @click="deleteTool(tool.id)">
+
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
                         <pagination :data="listTools" @pagination-change-page="getToolList" :limit="8"></pagination>
                     </div>
                 </div>
@@ -307,7 +334,47 @@
                                     {{ err }}
                                 </span>
                             </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.registered_at}">
+                                    <label>Registration Date</label>
+                                    <input
+                                        v-model="modelRegisteredAt"
+                                        type="date"
+                                        class="form-control">
+
+                                    <span
+                                        v-if="messageFormsTools.errors.registered_at"
+                                        v-for="err in messageFormsTools.errors.registered_at"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.expired_at}">
+                                    <label>Expiration Date</label>
+                                    <input
+                                        v-model="modelExpiredAt"
+                                        type="date"
+                                        class="form-control">
+
+                                    <span
+                                        v-if="messageFormsTools.errors.expired_at"
+                                        v-for="err in messageFormsTools.errors.expired_at"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.details}">
                                     <label>{{ $t('message.tools.filter_details') }}</label>
@@ -328,7 +395,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="modal-footer">
@@ -725,6 +791,8 @@ export default {
                 details : '',
                 username : '',
                 password : '',
+                expired_at: '',
+                registered_at: '',
             },
 
             updateToolModel : {
@@ -734,6 +802,8 @@ export default {
                 details : '',
                 username : '',
                 password : '',
+                expired_at: '',
+                registered_at: '',
             }
         }
     },
@@ -797,6 +867,32 @@ export default {
                     this.toolModel.password = val
                 } else {
                     this.updateToolModel.password = val
+                }
+            }
+        },
+
+        modelRegisteredAt : {
+            get() {
+                return this.modalMode === 'add' ? this.toolModel.registered_at : this.updateToolModel.registered_at
+            },
+            set(val) {
+                if (this.modalMode === 'add') {
+                    this.toolModel.registered_at = val
+                } else {
+                    this.updateToolModel.registered_at = val
+                }
+            }
+        },
+
+        modelExpiredAt : {
+            get() {
+                return this.modalMode === 'add' ? this.toolModel.expired_at : this.updateToolModel.expired_at
+            },
+            set(val) {
+                if (this.modalMode === 'add') {
+                    this.toolModel.expired_at = val
+                } else {
+                    this.updateToolModel.expired_at = val
                 }
             }
         },
@@ -952,6 +1048,8 @@ export default {
             this.updateToolModel.details = data.details;
             this.updateToolModel.username = data.username;
             this.updateToolModel.password = data.password;
+            this.updateToolModel.expired_at = data.expired_at;
+            this.updateToolModel.registered_at = data.registered_at;
         },
 
         modalOpener(mode) {
@@ -977,6 +1075,8 @@ export default {
                     details : '',
                     username : '',
                     password : '',
+                    expired_at: '',
+                    registered_at: '',
                 }
             } else if (mod === 'update') {
                 this.updateToolModel = {
@@ -986,6 +1086,8 @@ export default {
                     details : '',
                     username : '',
                     password : '',
+                    expired_at: '',
+                    registered_at: '',
                 }
             } else {
                 this.filterModel = {
@@ -1012,6 +1114,20 @@ export default {
                 eyes.classList.value = 'fa fa-eye'
                 badge.style.display = 'inline';
                 pass.style.display = 'none';
+            }
+        },
+
+        expireBadgeColor (days) {
+            if (days > 100) {
+                return 'badge badge-success'
+            } else if (days > 50 && days < 100) {
+                return 'badge badge-primary'
+            } else if (days > 20 && days < 50) {
+                return 'badge badge-warning'
+            } else if (days < 20) {
+                return 'badge badge-danger'
+            } else {
+                return 'badge badge-danger'
             }
         },
 

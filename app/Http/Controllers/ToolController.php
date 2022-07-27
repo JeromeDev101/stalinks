@@ -53,7 +53,7 @@ class ToolController extends Controller
 
     public function update(ToolRequest $request)
     {
-        $inputs = $request->only('url', 'name', 'username', 'password', 'details');
+        $inputs = $request->only('url', 'name', 'username', 'password', 'details', 'expired_at', 'registered_at');
 
         $tool = Tool::find($request->id);
 
