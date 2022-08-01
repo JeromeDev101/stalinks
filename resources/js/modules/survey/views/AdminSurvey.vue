@@ -439,6 +439,42 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- set b 6 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ buyerSetBQuestions[5].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'b',
+                                                                    'buyer',
+                                                                    'six',
+                                                                     buyerSetBQuestions[5].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="setBSixData"
+                                                            :options="setBSixChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -679,6 +715,42 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- seller set a 7 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ sellerSetAQuestions[6].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'seller',
+                                                                    'seven',
+                                                                     sellerSetAQuestions[6].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="sellerSetASevenData"
+                                                            :options="sellerSetASevenChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -883,6 +955,42 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!-- writer set a 6 -->
+                                            <div class="col-12 col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="font-weight-bold">
+                                                                {{ writerSetAQuestions[5].question }}
+                                                            </span>
+
+                                                            <button
+                                                                class="btn btn-primary"
+                                                                title="View Question Answers Full Details"
+
+                                                                @click="viewSurveyQuestionFullDetails(
+                                                                    'a',
+                                                                    'writer',
+                                                                    'six',
+                                                                     writerSetAQuestions[5].question)">
+
+                                                                <i class="fas fa-list-alt"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="card-body">
+                                                        <apexchart
+                                                            :series="writerSetASixData"
+                                                            :options="writerSetASixChartOptions"
+                                                            type="donut">
+
+                                                        </apexchart>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1190,6 +1298,9 @@ export default {
             setBFiveChartOptions: {},
             setBFiveData: [],
 
+            setBSixChartOptions: {},
+            setBSixData: [],
+
             // seller surveys
 
             sellerSetAOneChartOptions: {},
@@ -1210,6 +1321,9 @@ export default {
             sellerSetASixChartOptions: {},
             sellerSetASixData: [],
 
+            sellerSetASevenChartOptions: {},
+            sellerSetASevenData: [],
+
             // writer surveys
 
             writerSetAOneChartOptions: {},
@@ -1229,6 +1343,7 @@ export default {
 
             writerSetASixChartOptions: {},
             writerSetASixData: [],
+
         }
     },
 
@@ -1288,6 +1403,10 @@ export default {
                     number: 'five',
                     question: this.$t('message.buyer_survey.buyer_survey_b_q_5')
                 },
+                {
+                    number: 'six',
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_6')
+                },
             ];
         },
 
@@ -1317,6 +1436,10 @@ export default {
                     number: 'six',
                     question: this.$t('message.seller_survey.seller_survey_a_q_6')
                 },
+                {
+                    number: 'seven',
+                    question: this.$t('message.seller_survey.seller_survey_a_q_7')
+                },
             ];
         },
 
@@ -1342,6 +1465,10 @@ export default {
                     number: 'five',
                     question: this.$t('message.writer_survey.writer_survey_a_q_5')
                 },
+                {
+                    number: 'six',
+                    question: this.$t('message.writer_survey.writer_survey_a_q_6')
+                },
             ];
         },
     },
@@ -1363,6 +1490,7 @@ export default {
         this.setBThreeChartOptions = set_b.graphSetting('three');
         this.setBFourChartOptions = set_b.graphSetting('four');
         this.setBFiveChartOptions = set_b.graphSetting('five');
+        this.setBSixChartOptions = set_b.graphSetting('six');
 
         // seller surveys
 
@@ -1372,6 +1500,7 @@ export default {
         this.sellerSetAFourChartOptions = seller_set_a.graphSetting('four')
         this.sellerSetAFiveChartOptions = seller_set_a.graphSetting('five')
         this.sellerSetASixChartOptions = seller_set_a.graphSetting('six')
+        this.sellerSetASevenChartOptions = seller_set_a.graphSetting('seven')
 
         // writer surveys
 
@@ -1380,6 +1509,7 @@ export default {
         this.writerSetAThreeChartOptions = writer_set_a.graphSetting('three')
         this.writerSetAFourChartOptions = writer_set_a.graphSetting('four')
         this.writerSetAFiveChartOptions = writer_set_a.graphSetting('five')
+        this.writerSetASixChartOptions = writer_set_a.graphSetting('six')
     },
 
     methods: {
@@ -1401,6 +1531,7 @@ export default {
                     this.setBThreeData = set_b.graphData(this.surveys, 'three');
                     this.setBFourData = set_b.graphData(this.surveys, 'four');
                     this.setBFiveData = set_b.graphData(this.surveys, 'five');
+                    this.setBSixData = set_b.graphData(this.surveys, 'six');
 
                     // seller surveys
 
@@ -1410,6 +1541,7 @@ export default {
                     this.sellerSetAFourData = seller_set_a.graphData(this.surveys, 'four');
                     this.sellerSetAFiveData = seller_set_a.graphData(this.surveys, 'five');
                     this.sellerSetASixData = seller_set_a.graphData(this.surveys, 'six');
+                    this.sellerSetASevenData = seller_set_a.graphData(this.surveys, 'seven');
 
                     // writer surveys
 
@@ -1418,6 +1550,7 @@ export default {
                     this.writerSetAThreeData = writer_set_a.graphData(this.surveys, 'three');
                     this.writerSetAFourData = writer_set_a.graphData(this.surveys, 'four');
                     this.writerSetAFiveData = writer_set_a.graphData(this.surveys, 'five');
+                    this.writerSetASixData = writer_set_a.graphData(this.surveys, 'six');
                 })
         },
 

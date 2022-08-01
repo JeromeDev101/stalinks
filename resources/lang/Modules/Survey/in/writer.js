@@ -24,6 +24,13 @@ export default {
     writer_survey_a_q_5_b: '5-7 मैं इस पर विचार करूंगा',
     writer_survey_a_q_5_c: '7-10 मैं निश्चित रूप से आपकी सेवाओं का उपयोग करने के लिए अपने कनेक्शन की सिफारिश करूंगा',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. आप स्टैलिंक्स के बारे में कैसे जानते हैं?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
+
     // aside
     writer_survey_aside: 'न मुद्दों का आप पहले ही ऊपर उल्लेख कर चुके हैं, उनके अलावा, क्या कोई अन्य टिप्पणी है जिसे आप साझा करना चाहेंगे?',
 

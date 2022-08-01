@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 検討する',
     seller_survey_a_q_6_c: '7-10 関係者に是非このサービスを勧めたい',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. スターリンクスについてどのように知っていますか?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: '上記以外に何かご意見がございますか？',
 

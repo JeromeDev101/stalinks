@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 จะพิจารณา',
     seller_survey_a_q_6_c: '7-10 ฉันจะแนะนำให้คนรู้จักของฉันใช้บริการของคุณอย่างแน่นอน',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. คุณรู้เกี่ยวกับ stalinks ได้อย่างไร?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: 'นอกจากประเด็นที่คุณได้กล่าวไว้ข้างต้นแล้ว มีความคิดเห็นอื่นๆ ที่คุณอยากจะแบ่งปันอีกไหม?',
 

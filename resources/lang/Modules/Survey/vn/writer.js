@@ -24,6 +24,13 @@ export default {
     writer_survey_a_q_5_b: '5-7 Tôi sẽ xem xét nó',
     writer_survey_a_q_5_c: '7-10 Tôi chắc chắn sẽ giới thiệu cho các mối liên kết của tôi sử dụng dịch vụ của bạn',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. Làm thế nào để bạn biết về rình rập?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
+
     // aside
     writer_survey_aside: 'Ngoài những vấn đề bạn đã đề cập ở trên, bạn có bất kỳ ý kiến ​​nào khác muốn chia sẻ không?',
 

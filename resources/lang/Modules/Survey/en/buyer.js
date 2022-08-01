@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> Disappointed',
     buyer_survey_b_q_5_10: '10-> Very satisfied, would recommend',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. How do you know about stalinks?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: 'Thank you for answering this survey!',
     thanks_2: 'This would help us a lot to understand your needs even better!',

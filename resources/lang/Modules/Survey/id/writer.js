@@ -24,6 +24,13 @@ export default {
     writer_survey_a_q_5_b: '5-7 Saya akan mempertimbangkannya',
     writer_survey_a_q_5_c: '7-10 Saya pasti akan merekomendasikan kepada koneksi saya untuk menggunakan layanan Anda',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. Bagaimana Anda tahu tentang stalink?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
+
     // aside
     writer_survey_aside: 'Selain hal-hal yang telah Anda sebutkan di atas, apakah ada komentar lain yang ingin Anda sampaikan?',
 

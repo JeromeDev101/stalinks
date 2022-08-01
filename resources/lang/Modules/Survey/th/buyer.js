@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> น่าผิดหวัง',
     buyer_survey_b_q_5_10: '10-> พอใจมากจะแนะนำต่อ',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. คุณรู้เกี่ยวกับ stalinks ได้อย่างไร?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: 'ขอขอบคุณที่ตอบแบบสำรวจนี้!',
     thanks_2: 'สิ่งนี้จะช่วยให้เราเข้าใจความต้องการของคุณได้ดียิ่งขึ้น!',

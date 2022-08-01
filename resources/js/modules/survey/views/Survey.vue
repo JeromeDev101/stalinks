@@ -625,6 +625,66 @@
                                 <hr/>
                             </div>
 
+                            <!-- b6 -->
+                            <div class="col-12">
+                                <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_b_q_6') }}</p>
+                                <div class="form-group">
+                                    <div class="custom-control custom-radio">
+                                        <input
+                                            v-model="survey.answers.six"
+                                            type="radio"
+                                            id="question-six-b-a"
+                                            name="question-six-b"
+                                            value="Facebook"
+                                            class="custom-control-input">
+
+                                        <label for="question-six-b-a" class="custom-control-label font-weight-normal">
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_6_fb') }}
+                                        </label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input
+                                            v-model="survey.answers.six"
+                                            type="radio"
+                                            id="question-six-b-b"
+                                            name="question-six-b"
+                                            class="custom-control-input"
+                                            value="LinkedIn">
+
+                                        <label for="question-six-b-b" class="custom-control-label font-weight-normal">
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_6_li') }}
+                                        </label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input
+                                            v-model="survey.answers.six"
+                                            type="radio"
+                                            value="other"
+                                            id="question-six-b-c"
+                                            name="question-six-b"
+                                            class="custom-control-input">
+
+                                        <label for="question-six-b-d" class="custom-control-label font-weight-normal">
+                                            {{ $t('message.buyer_survey.buyer_survey_b_q_6_others') }}
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div v-if="survey.answers.six === 'other'" class="form-group">
+                                    <label>{{ $t('message.buyer_survey.other') }}</label>
+
+                                    <textarea
+                                        v-model="survey.answers.six_other"
+                                        rows="3"
+                                        class="form-control"
+                                        :placeholder="$t('message.buyer_survey.enter')">
+
+                                    </textarea>
+                                </div>
+
+                                <hr/>
+                            </div>
+
                             <!-- b comment -->
                             <div class="col-12">
                                 <div class="form-group">
@@ -707,11 +767,13 @@ export default {
                     three : null,
                     four: null,
                     five : null,
+                    six : null,
                     one_other: '',
                     two_other: '',
                     three_other: '',
                     four_other: '',
                     five_other: '',
+                    six_other: '',
                     comment: null,
                     set : 'a',
                     code: null,
@@ -773,7 +835,7 @@ export default {
                     name: 'question-' + number + '-b-f',
                     value: '1-> Very Difficult',
                     label: self.$t('message.buyer_survey.buyer_survey_b_q_2_1')
-                },
+                }
             ]
         },
 

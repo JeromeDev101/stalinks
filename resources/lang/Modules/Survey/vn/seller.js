@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 I Tôi sẽ xem xét nó',
     seller_survey_a_q_6_c: '7-10 Tôi chắc chắn sẽ giới thiệu cho các mối liên kết của tôi sử dụng dịch vụ của bạn',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. Làm thế nào để bạn biết về rình rập?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: 'Ngoài những vấn đề bạn đã đề cập ở trên, bạn có bất kỳ ý kiến ​​nào khác muốn chia sẻ không?',
 

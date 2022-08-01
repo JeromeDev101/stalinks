@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 Saya akan mempertimbangkannya',
     seller_survey_a_q_6_c: '7-10 Saya pasti akan merekomendasikan kepada koneksi saya untuk menggunakan layanan Anda',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. Bagaimana Anda tahu tentang stalink?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: 'Selain hal-hal yang telah Anda sebutkan di atas, apakah ada komentar lain yang ingin Anda sampaikan?',
 

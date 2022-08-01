@@ -24,6 +24,13 @@ export default {
     writer_survey_a_q_5_b: '5-7 จะพิจารณา',
     writer_survey_a_q_5_c: '7-10 ฉันจะแนะนำให้คนรู้จักของฉันใช้บริการของคุณอย่างแน่นอน',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. คุณรู้เกี่ยวกับ stalinks ได้อย่างไร?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
+
     // aside
     writer_survey_aside: 'นอกจากประเด็นที่คุณได้กล่าวไว้ข้างต้นแล้ว มีความคิดเห็นอื่นๆ ที่คุณอยากจะแบ่งปันอีกไหม?',
 

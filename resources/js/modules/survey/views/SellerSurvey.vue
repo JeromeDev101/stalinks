@@ -307,6 +307,33 @@
                                 <hr/>
                             </div>
 
+                            <!-- a7 -->
+                            <div class="col-12">
+                                <p class="font-weight-bold">
+                                    {{ $t('message.seller_survey.seller_survey_a_q_7') }}
+                                </p>
+                                <div class="form-group">
+                                    <div
+                                        v-for="answerSetAOne in sellerSurveyAnswers('a','seven')"
+                                        class="custom-control custom-radio">
+
+                                        <input
+                                            v-model="survey.answers.seven"
+                                            :value="answerSetAOne.value"
+                                            type="radio"
+                                            :name="answerSetAOne.name"
+                                            :id="answerSetAOne.id"
+                                            class="custom-control-input">
+
+                                        <label :for="answerSetAOne.id" class="custom-control-label font-weight-normal">
+                                            {{ answerSetAOne.label }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <hr/>
+                            </div>
+
                             <!-- a comment -->
                             <div class="col-12">
                                 <div class="form-group">
@@ -397,12 +424,14 @@ export default {
                     four: null,
                     five : null,
                     six: null,
+                    seven: null,
                     one_other: '',
                     two_other: '',
                     three_other: '',
                     four_other: '',
                     five_other: '',
                     six_other: '',
+                    seven_other: '',
                     comment: null,
                     set : 'a',
                     code: null,
@@ -542,6 +571,27 @@ export default {
                             name: 'question-' + number + 'a-c',
                             value: '7-10 I will definitely recommend to my connections to use your services',
                             label: self.$t('message.seller_survey.seller_survey_a_q_6_c')
+                        }
+                    ],
+
+                    seven: [
+                        {
+                            id: 'question-' + number + 'a-a',
+                            name: 'question-' + number + 'a-a',
+                            value: 'Facebook',
+                            label: self.$t('message.seller_survey.seller_survey_a_q_7_fb')
+                        },
+                        {
+                            id: 'question-' + number + 'a-b',
+                            name: 'question-' + number + 'a-b',
+                            value: 'LinkedIn',
+                            label: self.$t('message.seller_survey.seller_survey_a_q_7_li')
+                        },
+                        {
+                            id: 'question-' + number + 'a-c',
+                            name: 'question-' + number + 'a-c',
+                            value: 'Other',
+                            label: self.$t('message.seller_survey.seller_survey_a_q_7_others')
                         }
                     ],
                 }

@@ -24,6 +24,13 @@ export default {
     writer_survey_a_q_5_b: '5-7 検討する',
     writer_survey_a_q_5_c: '7-10 関係者に是非このサービスを勧めたい',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. スターリンクスについてどのように知っていますか?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
+
     // aside
     writer_survey_aside: '上記以外に何かご意見がございますか？',
 

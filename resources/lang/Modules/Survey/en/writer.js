@@ -24,6 +24,12 @@ export default {
     writer_survey_a_q_5_b: '5-7 I will consider it',
     writer_survey_a_q_5_c: '7-10 I will definitely recommend to my connections to use your services',
 
+    // writer survey a q6
+    writer_survey_a_q_6: '6. How do you know about stalinks?',
+    writer_survey_a_q_6_fb: 'Facebook',
+    writer_survey_a_q_6_li: 'LinkedIn',
+    writer_survey_a_q_6_others: 'Others',
+
     // aside
     writer_survey_aside: 'Aside from the issues you have already mentioned above, are there any other comments you would like to share?',
 

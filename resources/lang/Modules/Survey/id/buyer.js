@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> Kecewa',
     buyer_survey_b_q_5_10: '10-> Sangat puas, akan merekomendasikan',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. Bagaimana Anda tahu tentang stalink?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: 'Terima kasih telah menjawab survei ini!',
     thanks_2: 'Ini akan sangat membantu kami untuk lebih memahami kebutuhan Anda!',

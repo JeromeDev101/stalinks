@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 मैं इस पर विचार करूंगा',
     seller_survey_a_q_6_c: '7-10 मैं निश्चित रूप से आपकी सेवाओं का उपयोग करने के लिए अपने कनेक्शन की सिफारिश करूंगा',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. आप स्टैलिंक्स के बारे में कैसे जानते हैं?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: 'जिन मुद्दों का आप पहले ही ऊपर उल्लेख कर चुके हैं, उनके अलावा, क्या कोई अन्य टिप्पणी है जिसे आप साझा करना चाहेंगे?',
 

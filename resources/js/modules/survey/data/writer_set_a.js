@@ -68,6 +68,12 @@ export default {
                 'Somewhat satisfied',
                 'Extremely satisfied'
             ];
+        } else if (number === 'six') {
+            return [
+                'Facebook',
+                'LinkedIn',
+                'Others'
+            ];
         } else {
             return [
                 '1-4 I will not recommend to anyone',

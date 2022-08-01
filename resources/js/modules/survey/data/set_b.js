@@ -79,6 +79,12 @@ export default {
                 'Personalized help choosing the right URLs',
                 'other'
             ];
+        } else if (number === 'six') {
+            return [
+                'Facebook',
+                'LinkedIn',
+                'Others'
+            ];
         } else {
             return [
                 '1-> Disappointed',

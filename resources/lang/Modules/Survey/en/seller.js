@@ -28,6 +28,12 @@ export default {
     seller_survey_a_q_6_b: '5-7 I will consider it',
     seller_survey_a_q_6_c: '7-10 I will definitely recommend to my connections to use your services',
 
+    // survey a q7
+    seller_survey_a_q_7: '7. How do you know about stalinks?',
+    seller_survey_a_q_7_fb: 'Facebook',
+    seller_survey_a_q_7_li: 'LinkedIn',
+    seller_survey_a_q_7_others: 'Others',
+
     // aside
     seller_survey_aside: 'Aside from the issues you have already mentioned above, are there any other comments you would like to share?',
 

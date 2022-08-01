@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> 期待外れ',
     buyer_survey_b_q_5_10: '10-> 非常に満足、お勧めします',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. スターリンクスについてどのように知っていますか?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: '調査アンケートにご協力いただき誠にありがとうございます。',
     thanks_2: 'お客様のご協力により、より一層のサービス向上に繋げると共に、改善にも繋げて参ります。',

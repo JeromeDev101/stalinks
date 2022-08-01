@@ -23,7 +23,8 @@ class CreateSurvey
             'three' => 'required',
             'four' => 'required',
             'five' => 'required',
-            'six' => 'required_if:type,==,seller',
+            'six' => 'required',
+            'seven' => 'required_if:type,==,seller',
             'user_id' => 'required'
         ];
     }

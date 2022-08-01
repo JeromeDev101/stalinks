@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> Thất vọng',
     buyer_survey_b_q_5_10: '10-> Rất hài lòng, muốn giới thiệu',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. Làm thế nào để bạn biết về rình rập?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: 'Cảm ơn bạn đã trả lời cuộc khảo sát này!',
     thanks_2: 'Điều này sẽ giúp chúng tôi rất nhiều để hiểu nhu cầu của bạn tốt hơn!',

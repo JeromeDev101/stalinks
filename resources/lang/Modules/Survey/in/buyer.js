@@ -46,6 +46,12 @@ export default {
     buyer_survey_b_q_5_1: '1-> निराश',
     buyer_survey_b_q_5_10: '10-> बहुत संतुष्ट, सिफारिश करूँगा',
 
+    // survey b q6
+    buyer_survey_b_q_6: '6. आप स्टैलिंक्स के बारे में कैसे जानते हैं?',
+    buyer_survey_b_q_6_fb: 'Facebook',
+    buyer_survey_b_q_6_li: 'LinkedIn',
+    buyer_survey_b_q_6_others: 'Others',
+
     // thanks
     thanks_1: 'इस सर्वेक्षण का उत्तर देने के लिए धन्यवाद!',
     thanks_2: 'इससे हमें आपकी ज़रूरतों को और भी बेहतर ढंग से समझने में बहुत मदद मिलेगी!',
