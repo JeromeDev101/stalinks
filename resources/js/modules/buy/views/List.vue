@@ -1181,6 +1181,7 @@ export default {
                 'Adult',
                 'Art',
                 'Beauty',
+                'CBD',
                 'Charity',
                 'Cooking',
                 'Crypto',
