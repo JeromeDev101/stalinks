@@ -39,5 +39,20 @@ export const filterModel = {
 
             return formData;
         },
+
+        appendPurchaseFormData (formData, data) {
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    formData.append(
+                        'purchase_' + key,
+                        data[key] === null
+                            ? ''
+                            : data[key]
+                    );
+                }
+            }
+
+            return formData;
+        },
     }
 }

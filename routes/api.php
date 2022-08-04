@@ -433,6 +433,9 @@ Route::middleware('auth:api')->group(function () {
     Route::name('purchases-get-category-report')->get('/purchases/graphs/category', 'PurchasesController@getCategoryReportData');
     Route::name('purchases-get-category-report')->get('/purchases/graphs/purchase-type', 'PurchasesController@getPurchaseTypeReportData');
     Route::name('purchases-get-category-report')->get('/purchases/graphs/payment-method', 'PurchasesController@getPaymentMethodReportData');
+
+    // renew
+    Route::name('renew-post')->post('/renew', 'RenewController@renew');
 });
 
 //Mailgun external

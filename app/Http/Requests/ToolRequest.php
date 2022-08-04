@@ -35,6 +35,8 @@ class ToolRequest extends FormRequest
                 'details' => 'required',
                 'username' => 'required',
                 'password' => 'required',
+                'expired_at' => 'required',
+                'registered_at' => 'required',
             ];
         } else {
             return [

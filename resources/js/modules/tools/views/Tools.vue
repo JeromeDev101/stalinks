@@ -233,6 +233,15 @@
 
                     <div class="modal-body relative">
 
+                        <div v-if="modalMode === 'update' && updateToolModel.expiring_days <= 0" class="row">
+                            <div class="col-md-12">
+                                <div class="alert alert-danger" role="alert">
+                                    This tool is now expired. Renew this tool by clicking the renew button beside
+                                    the expiration date field.
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.name}">
@@ -343,7 +352,8 @@
                                     <input
                                         v-model="modelRegisteredAt"
                                         type="date"
-                                        class="form-control">
+                                        class="form-control"
+                                        :disabled="modalMode === 'update'">
 
                                     <span
                                         v-if="messageFormsTools.errors.registered_at"
@@ -358,10 +368,28 @@
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.expired_at}">
                                     <label>Expiration Date</label>
-                                    <input
-                                        v-model="modelExpiredAt"
-                                        type="date"
-                                        class="form-control">
+
+                                    <div class="input-group mb-3">
+                                        <input
+                                            v-model="modelExpiredAt"
+                                            type="date"
+                                            class="form-control"
+                                            :disabled="modalMode === 'update'">
+
+                                        <div
+                                            v-if="updateToolModel.expiring_days <= 0 && modalMode === 'update'"
+                                            class="input-group-append">
+
+                                            <button
+                                                type="button"
+                                                title="Renew Tool"
+                                                class="btn btn-info"
+                                                @click="isShowRenewModal = true">
+
+                                                <i class="fas fa-sync"></i>
+                                            </button>
+                                        </div>
+                                    </div>
 
                                     <span
                                         v-if="messageFormsTools.errors.expired_at"
@@ -395,6 +423,24 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div v-if="modalMode === 'add'" class="row">
+                            <div class="col-md-12">
+                                <div class="form-group form-check">
+                                    <input
+                                        v-model="modelIsPurchased"
+                                        type="checkbox"
+                                        id="isPurchased"
+                                        class="form-check-input">
+
+                                    <label class="form-check-label" for="isPurchased">Is Purchased?</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="modelIsPurchased && modalMode === 'add'">
+                            <purchase-details v-model="purchaseDetails" :errors="messageFormsTools"/>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -426,6 +472,17 @@
                 </div>
             </div>
         </div>
+
+        <renew
+            :mode="'Tool'"
+            :purchaseable="true"
+            :refs="'renewToolModal'"
+            :model="'App\\Models\\Tool'"
+            :details="updateToolModel"
+            :visible="isShowRenewModal"
+
+            @renew="toolRenewed()"
+            @close="isShowRenewModal = false"/>
     </div>
 
     <!--    <div class="row">
@@ -753,14 +810,17 @@
 
 <script>
 import {mapState} from 'vuex';
+import {filterModel} from "../../../mixins/filterModel";
 import {copyPassword} from "../../../mixins/copyPassword";
+import PurchaseDetails from '@/components/purchase/PurchaseDetails';
+import Renew from '@/components/renew/Renew';
 
 export default {
     props : [],
-    mixins: [copyPassword],
+    mixins: [copyPassword, filterModel],
+    components: { PurchaseDetails, Renew },
     data() {
         return {
-
             // misc
             modalMode : '',
             isPopupLoading : false,
@@ -793,6 +853,7 @@ export default {
                 password : '',
                 expired_at: '',
                 registered_at: '',
+                is_purchased: false,
             },
 
             updateToolModel : {
@@ -804,7 +865,19 @@ export default {
                 password : '',
                 expired_at: '',
                 registered_at: '',
-            }
+                is_purchased: false,
+                expiring_days: '',
+            },
+
+            purchaseDetails: {
+                notes: '',
+                amount: '',
+                type_id: '',
+                payment_type_id: '',
+                file: '',
+            },
+
+            isShowRenewModal: false,
         }
     },
 
@@ -909,6 +982,19 @@ export default {
                 }
             }
         },
+
+        modelIsPurchased : {
+            get() {
+                return this.modalMode === 'add' ? this.toolModel.is_purchased : this.updateToolModel.is_purchased
+            },
+            set(val) {
+                if (this.modalMode === 'add') {
+                    this.toolModel.is_purchased = val
+                } else {
+                    this.updateToolModel.is_purchased = val
+                }
+            }
+        },
     },
 
     methods : {
@@ -939,8 +1025,15 @@ export default {
             let self = this;
             let loader = self.$loading.show();
 
+            let formDataTool = self.generateFormData(self.toolModel)
+
+            // append purchase details
+            if (self.toolModel.is_purchased) {
+                formDataTool = self.appendPurchaseFormData(formDataTool, self.purchaseDetails);
+            }
+
             self.isPopupLoading = true;
-            await self.$store.dispatch('actionAddTool', self.toolModel);
+            await self.$store.dispatch('actionAddTool', formDataTool);
             self.isPopupLoading = false;
 
             if (self.messageFormsTools.action === 'added') {
@@ -1050,6 +1143,7 @@ export default {
             this.updateToolModel.password = data.password;
             this.updateToolModel.expired_at = data.expired_at;
             this.updateToolModel.registered_at = data.registered_at;
+            this.updateToolModel.expiring_days = data.expiring_days;
         },
 
         modalOpener(mode) {
@@ -1067,6 +1161,13 @@ export default {
             $(element).modal('hide')
         },
 
+        toolRenewed () {
+            let self = this;
+
+            self.closeModal()
+            self.getToolList(this.filterModel.page);
+        },
+
         clearModel(mod) {
             if (mod === 'add') {
                 this.toolModel = {
@@ -1077,6 +1178,7 @@ export default {
                     password : '',
                     expired_at: '',
                     registered_at: '',
+                    is_purchased: false,
                 }
             } else if (mod === 'update') {
                 this.updateToolModel = {
@@ -1088,6 +1190,8 @@ export default {
                     password : '',
                     expired_at: '',
                     registered_at: '',
+                    is_purchased: false,
+                    expiring_days: '',
                 }
             } else {
                 this.filterModel = {
@@ -1137,7 +1241,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-
-</style>

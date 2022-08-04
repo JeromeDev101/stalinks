@@ -35,6 +35,8 @@ class PurchaseService
 
         $purchases = $this->generateFilterQuery($request, $purchases, 'page');
 
+        $purchases = $purchases->orderBy('purchased_at', 'desc');
+
         if( isset($request->paginate) && $request->paginate == 'All' ){
             $purchases = $purchases->get();
 
@@ -72,18 +74,33 @@ class PurchaseService
         return $buyers;
     }
 
-    public function store ($request, $mod) {
+    public function store ($request, $mod, $model = null) {
         // save file
         $filename = '';
-        $inputs = $request->except('file', 'mode');
+        $inputs = $mod === 'manual' ? $request->except('file', 'mode') : $request->all();
 
-        if ($request->hasFile('file')) {
-            $filename = time() . '-purchases.' . $request->file->getClientOriginalExtension();
-            move_file_to_storage($request->file, 'images/purchases', $filename);
+        if ($request->hasFile('file') || ($request->purchase_file != null || $request->purchase_file != '')) {
+            $file = $mod === 'manual' ? $request->file : $request->purchase_file;
+
+            $filename = time() . '-purchases.' . $file->getClientOriginalExtension();
+            move_file_to_storage($file, 'images/purchases', $filename);
         }
 
         if ($mod !== 'manual') {
+            $purchase = $model->purchases()->create([
+                'type_id' => $inputs['purchase_type_id'],
+                'amount' => $inputs['purchase_amount'],
+                'from' => $inputs['purchase_from'],
+                'payment_type_id' => $inputs['purchase_payment_type_id'],
+                'notes' => $inputs['purchase_notes'],
+                'purchased_at' => $inputs['purchase_purchased_at'],
+                'user_id' => auth()->id(),
+                'is_manual' => 0
+            ]);
 
+            $purchase->file()->create([
+                'path' => '/images/purchases/' . $filename
+            ]);
         } else {
             $purchase = Purchases::create($inputs + [
                 'user_id' => auth()->id(),
