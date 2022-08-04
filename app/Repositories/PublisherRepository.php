@@ -540,6 +540,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $path = $request->file('file')->getRealPath();
         $records = array_map('str_getcsv', file($path));
 
+        // store uploaded csv - remove this after we got a sample file
+
+        $filename = time() . '-' . Auth::user()->id . '-csv.' . $request->file->getClientOriginalExtension();
+        $request->file->move(public_path('/files/csv'), $filename);
+
         // if records is empty, throw error
         if (count($records) <= 1) {
             $file_message = "Invalid file. Uploaded csv file is empty.";
