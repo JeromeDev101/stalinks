@@ -291,17 +291,38 @@
                                     </td>
                                     <td>{{ index + 1}}</td>
                                     <td
-                                        v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}</td>
+                                        v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}
+                                    </td>
                                     <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                     <td v-show="tblOptions.arc_id">
-                                        {{ sales.article_id == null ? 'N/A':'' }}
-                                        <span
-                                            v-if="sales.article_id != null" title="Go to Article"
-                                            style="cursor: pointer; color: #1c85ff"
+                                        <div class="d-flex align-items-center">
 
-                                            @click="redirectToArticle(sales.article_id)">
-                                        {{ sales.article_id }}
-                                    </span>
+                                            <span v-if="sales.article_id == null" class="badge badge-danger">
+                                                N/A
+                                            </span>
+
+                                            <span
+                                                v-else
+                                                title="Go to Article"
+                                                style="cursor: pointer; color: #1c85ff"
+
+                                                @click="redirectToArticle(sales.article_id)">
+
+                                                {{ sales.article_id }}
+                                            </span>
+
+                                            <button
+                                                v-if="sales.article_id == null
+                                                    && sales.status === 'Processing'
+                                                    && (user.isAdmin || user.role_id === 8)"
+                                                title="Generate Article"
+                                                class="btn btn-primary ml-2"
+
+                                                @click="generateArticle(sales)">
+
+                                                <i class="fas fa-pen-fancy"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td
                                         v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
@@ -786,7 +807,7 @@
                                                     </strong>
                                                 </p>
 
-                                                <div class="mb-1">
+                                                <div class="mb-3">
                                                     <p class="mb-1">
                                                         <span class="badge badge-danger">{{ $t('message.follow.no') }}</span>
                                                         {{ $t('message.follow.sc_inc_no') }}
@@ -794,6 +815,22 @@
                                                     <p class="mb-1">
                                                         <span class="badge badge-success">{{ $t('message.follow.yes') }}</span>
                                                         {{ $t('message.follow.sc_inc_yes') }}
+                                                    </p>
+                                                </div>
+
+                                                <!-- update list publisher data inc article -->
+                                                <div v-if="sellerConfirmationData.publisher.inc_article === 'yes'
+                                                    || sellerConfirmationData.publisher.inc_article === 'Yes'">
+                                                    <p class="mb-1">
+                                                        Upon confirmation, the system will NOT generate an
+                                                        article for this order.
+                                                    </p>
+                                                    <p
+                                                        class="mb-1 text-primary"
+                                                        style="cursor: pointer !important;"
+
+                                                        @click="updatePublisherIncArticle(sellerConfirmationData)">
+                                                        Click here to update list publisher data include article to 'No'
                                                     </p>
                                                 </div>
                                             </td>
@@ -1570,6 +1607,96 @@
 
                     loader.hide();
                 })
+            },
+
+            generateArticle (sales) {
+                let self = this;
+
+                swal.fire({
+                    title: 'Generate Article for backlink ID# ' + sales.id,
+                    text: 'Confirming will generate an article and update list publisher data - inc article to "no"',
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: self.$t('message.publisher.yes'),
+                    cancelButtonText: self.$t('message.publisher.no')
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let loader = self.$loading.show();
+
+                        axios.post('/api/generate-article', sales)
+                            .then((res) => {
+                                loader.hide();
+
+                                swal.fire(
+                                    self.$t('message.tools.alert_success'),
+                                    'Article successfully generated',
+                                    'success'
+                                )
+
+                                this.getListSales();
+                            })
+                            .catch((err) => {
+                                loader.hide();
+
+                                swal.fire(
+                                    self.$t('message.tools.alert_error'),
+                                    'There were some errors while generating an article.',
+                                    'error'
+                                )
+                            });
+                    } else {
+
+                    }
+                });
+            },
+
+            updatePublisherIncArticle (sales) {
+                let self = this;
+
+                swal.fire({
+                    title: 'Update list publisher data: include article for backlink ID# ' + sales.id,
+                    text: 'Confirming will update list publisher ID# '
+                        + sales.publisher_id
+                        + ' data - include article to "no"',
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: self.$t('message.publisher.yes'),
+                    cancelButtonText: self.$t('message.publisher.no')
+                })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            let loader = self.$loading.show();
+
+                            axios.post('/api/update-publisher-inc-article', {
+                                id: sales.id,
+                                publisher_id: sales.publisher_id
+                            })
+                            .then((res) => {
+                                loader.hide();
+
+                                swal.fire(
+                                    self.$t('message.tools.alert_success'),
+                                    'List publisher data: include article successfully updated.',
+                                    'success'
+                                )
+
+                                this.sellerConfirmationData.publisher.inc_article = 'no';
+                                this.getListSales();
+                            })
+                            .catch((err) => {
+                                loader.hide();
+
+                                swal.fire(
+                                    self.$t('message.tools.alert_error'),
+                                    'There were some errors while updating the list publisher data.',
+                                    'error'
+                                )
+                            });
+                        } else {
+
+                        }
+                    });
             }
         }
     }

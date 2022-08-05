@@ -225,6 +225,42 @@ class FollowupSalesController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+    public function generateArticle (Request $request) {
+        DB::transaction(function () use ($request) {
+            // generate article
+
+            $backlink = Backlink::find($request->id);
+
+            if ($backlink) {
+                // Create article
+                if (isset($backlink->publisher)) {
+                    $article = Article::create([
+                        'id_backlink' => $backlink->id,
+                        'id_language' => $backlink->publisher->language_id,
+                    ]);
+
+                    // notify internal and external valid writers
+                    event(new ArticleCreatedEvent($article));
+
+                    // update list publisher data inc article to 'no'
+                    $backlink->publisher()->update([
+                        'inc_article' => 'no'
+                    ]);
+                }
+            }
+        });
+    }
+
+    public function updatePublisherIncArticle (Request $request) {
+        $publisher = Publisher::find($request->publisher_id);
+
+        if ($publisher) {
+            $publisher->inc_article = 'no';
+
+            $publisher->save();
+        }
+    }
+
     public function orderConfirmation(Request $request)
     {
         $id = isset($request->code) ? $request->code : null;
