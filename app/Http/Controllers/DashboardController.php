@@ -229,8 +229,9 @@ class DashboardController extends Controller
         }
 
         $columns = [
-            'users.username',
-            'users.name',
+            'A.username',
+            'A.name',
+            'B.name as team_in_charge',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content In Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
@@ -254,7 +255,9 @@ class DashboardController extends Controller
 
         $list = Backlink::select($columns)
             ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
-            ->leftJoin('users', 'backlinks.user_id', '=', 'users.id');
+            ->leftJoin('users as A', 'backlinks.user_id', '=', 'A.id')
+            ->leftJoin('registration', 'A.email', 'registration.email')
+            ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id');
 
         if ($buyer != "") {
             $list = $list->where('backlinks.user_id', $buyer);
@@ -271,10 +274,9 @@ class DashboardController extends Controller
 //        }
 
         if ($user_id->isOurs == 1 && $user_id->role_id == 5) {
-            $list = $list->leftJoin('registration', 'users.email', 'registration.email')
-            ->where(function ($query) use ($user_id) {
+            $list = $list->where(function ($query) use ($user_id) {
                 $query->where('registration.team_in_charge', $user_id->id)
-                    ->orWhere('users.id', $user_id->id);
+                    ->orWhere('A.id', $user_id->id);
             });
         }
 
@@ -284,8 +286,8 @@ class DashboardController extends Controller
             $list = $list->whereIn('backlinks.user_id', $affiliate_buyer_ids);
         }
 
-        return $list->groupBy('backlinks.user_id', 'users.username')
-            ->orderBy('users.username', 'asc')
+        return $list->groupBy('backlinks.user_id', 'A.username')
+            ->orderBy('A.username', 'asc')
             ->get();
     }
 

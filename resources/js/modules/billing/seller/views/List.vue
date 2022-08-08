@@ -329,7 +329,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            ID(s): 
+                                            ID: 
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>

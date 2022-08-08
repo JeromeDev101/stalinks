@@ -405,7 +405,10 @@
                                                 </span>
 
                                                 <span v-else>
-                                                    {{ upperCase(buyer.username) }}
+                                                    {{ upperCase(buyer.username) }} 
+                                                    <span class="text-primary">
+                                                        {{ buyer.team_in_charge != null ?  '('+ upperCase(buyer.team_in_charge)+')':''}}
+                                                    </span>
                                                 </span>
                                             </td>
                                             <td>{{ buyer.num_total }}</td>
