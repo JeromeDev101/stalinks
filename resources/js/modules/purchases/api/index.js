@@ -98,4 +98,12 @@ export default class PurchaseService {
             .then(response => response)
             .catch(error => error)
     }
+
+    // purchase module
+
+    static getPurchaseModuleSelection(params) {
+        return axios.get('/api/purchases/modules/selection', params)
+            .then(response => response)
+            .catch(error => error)
+    }
 }

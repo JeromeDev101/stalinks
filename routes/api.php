@@ -429,10 +429,13 @@ Route::middleware('auth:api')->group(function () {
     Route::name('purchases-update')->put('/purchases','PurchasesController@update');
     Route::name('purchases-delete')->delete('/purchases/{purchase}', 'PurchasesController@delete');
 
+    // purchase modules
+    Route::name('purchases-type-selection')->get('/purchases/modules/selection', 'PurchasesController@getPurchaseModules');
+
     // purchase graphs
     Route::name('purchases-get-category-report')->get('/purchases/graphs/category', 'PurchasesController@getCategoryReportData');
-    Route::name('purchases-get-category-report')->get('/purchases/graphs/purchase-type', 'PurchasesController@getPurchaseTypeReportData');
-    Route::name('purchases-get-category-report')->get('/purchases/graphs/payment-method', 'PurchasesController@getPaymentMethodReportData');
+    Route::name('purchases-get-purchase-type-report')->get('/purchases/graphs/purchase-type', 'PurchasesController@getPurchaseTypeReportData');
+    Route::name('purchases-get-payment-method-report')->get('/purchases/graphs/payment-method', 'PurchasesController@getPaymentMethodReportData');
 
     // renew
     Route::name('renew-post')->post('/renew', 'RenewController@renew');

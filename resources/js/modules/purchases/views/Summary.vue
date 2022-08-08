@@ -123,6 +123,21 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Purchased Module</label>
+
+                                    <v-select
+                                        v-model="filterModel.module"
+                                        label="name"
+                                        class="style-chooser"
+                                        placeholder="Select Purchase Module"
+                                        :searchable="true"
+                                        :reduce="module => module.value"
+                                        :options="moduleSelection.data"/>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -218,8 +233,10 @@
                                     <div style="display: block">
                                         {{ scope.row.id }}
 
-                                        <div v-if="scope.row.is_manual === 1">
-                                            <span class="badge badge-primary">Manual</span>
+                                        <div>
+                                            <span class="badge badge-primary">
+                                                {{ getModuleName(scope.row.purchaseable_type) }}
+                                            </span>
                                         </div>
                                     </div>
                                 </template>
@@ -571,6 +588,7 @@ export default {
                 from : this.$route.query.from || '',
                 page : this.$route.query.page || 0,
                 paginate: this.$route.query.paginate || 10,
+                module: this.$route.query.module || '',
                 type_id: parseInt(this.$route.query.type_id) || '',
                 user_id: parseInt(this.$route.query.user_id) || '',
                 category_id: parseInt(this.$route.query.category_id) || '',
@@ -614,6 +632,7 @@ export default {
             purchases : state => state.storePurchases.purchases,
             purchasesBuyers : state => state.storePurchases.purchasesBuyers,
             typesSelection : state => state.storePurchases.typesSelection,
+            moduleSelection : state => state.storePurchases.moduleSelection,
             listPayment : state => state.storeWalletTransaction.listPayment,
             categoriesSelection : state => state.storePurchases.categoriesSelection,
             messageFormsPurchases : state => state.storePurchases.messageFormsPurchases,
@@ -765,6 +784,7 @@ export default {
         this.getBuyers();
         this.getPaymentTypes();
         this.getPurchaseTypes();
+        this.getPurchaseModules();
         this.getPurchaseCategories();
     },
 
@@ -910,6 +930,10 @@ export default {
             await this.$store.dispatch('actionGetPurchaseTypesSelection');
         },
 
+        async getPurchaseModules () {
+            await this.$store.dispatch('actionGetPurchaseModuleSelection');
+        },
+
         clearModel (mod) {
             switch(mod) {
                 case 'add':
@@ -940,6 +964,7 @@ export default {
                     this.filterModel = {
                         page: 1,
                         from : '',
+                        module: '',
                         type_id: '',
                         user_id: '',
                         mode: 'summary',
@@ -980,6 +1005,14 @@ export default {
             let element = this.$refs.modalPurchaseImage
             $(element).modal('show')
         },
+
+        getModuleName (type) {
+            let module = this.moduleSelection.data.find(item => item.purchaseable_type === type)
+
+            if (module) {
+                return module.name
+            }
+        }
     },
 }
 </script>

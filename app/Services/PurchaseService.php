@@ -205,6 +205,25 @@ class PurchaseService
         return $query->get();
     }
 
+    public function getModules () {
+        $modules = Purchases::select('purchases.purchaseable_type')
+            ->groupBy('purchases.purchaseable_type')
+            ->orderBy('purchases.purchaseable_type', 'asc')
+            ->get();
+
+        foreach ($modules as $module) {
+            if ($module->purchaseable_type) {
+                $module['name'] = class_basename($module->purchaseable_type);
+                $module['value'] = strtolower(class_basename($module->purchaseable_type));
+            } else {
+                $module['name'] = 'Manual';
+                $module['value'] = 'manual';
+            }
+        }
+
+        return $modules;
+    }
+
     protected function generateFilterQuery ($request, $query, $mod) {
         if (isset($request->category_id) && $request->category_id != null) {
             $query = $query->whereHas('type.category', function($q) use ($request) {
@@ -218,6 +237,19 @@ class PurchaseService
 
         if (isset($request->from) && $request->from != null) {
             $query = $query->where('from', 'like', '%' . $request->from . '%');
+        }
+
+        if (isset($request->module) && $request->module != null) {
+            switch ($request->module) {
+                case 'tool':
+                    $query = $query->whereIn('purchaseable_type', [Tool::class]);
+                    break;
+                case 'manual':
+                    $query = $query->whereNull('purchaseable_type')
+                        ->whereNull('purchaseable_id');
+                    break;
+                default:
+            }
         }
 
         if (isset($request->user_id) && $request->user_id != null) {

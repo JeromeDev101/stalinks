@@ -54,4 +54,10 @@ class PurchasesController extends Controller
 
         return response()->json($data, 200);
     }
+
+    public function getPurchaseModules (PurchaseService $purchaseService) {
+        $modules = $purchaseService->getModules();
+
+        return response()->json(['data'=> $modules], 200);
+    }
 }

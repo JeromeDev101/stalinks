@@ -10,6 +10,7 @@ const CATEGORIES = 'CATEGORIES';
 const CATEGORIES_SELECTION = 'CATEGORIES_SELECTION';
 const TYPES = 'TYPES';
 const TYPES_SELECTION = 'TYPES_SELECTION';
+const MODULES_SELECTION = 'MODULES_SELECTION';
 const PURCHASES_MESSAGE_FORMS = 'PURCHASES_MESSAGE_FORMS';
 const MANUAL_PURCHASES_MESSAGE_FORMS = 'MANUAL_PURCHASES_MESSAGE_FORMS';
 const TOOLS_PURCHASES_MESSAGE_FORMS = 'TOOLS_PURCHASES_MESSAGE_FORMS';
@@ -33,6 +34,7 @@ const state = {
     categoriesSelection: { data:[] },
     types: { data:[] },
     typesSelection: { data:[] },
+    moduleSelection: { data:[] },
     messageFormsPurchases: { action: '', message: '', errors: {} },
     messageFormsManualPurchases: { action: '', message: '', errors: {} },
     messageFormsToolsPurchases: { action: '', message: '', errors: {} },
@@ -84,6 +86,10 @@ const mutations = {
 
     [TYPES_SELECTION](state, { typesSelection }) {
         return state.typesSelection = typesSelection;
+    },
+
+    [MODULES_SELECTION](state, { moduleSelection }) {
+        return state.moduleSelection = moduleSelection;
     },
 
     [PURCHASES_MESSAGE_FORMS] (state, payload) {
@@ -611,6 +617,17 @@ const actions = {
         try {
             let response = await PurchaseService.getPaymentMethodReportData(params)
             commit(PAYMENT_METHOD_REPORT , { paymentMethodReport: response.data });
+        }catch(e) {
+            let errors = e.response.data.errors;
+            console.log(errors)
+        }
+    },
+
+    // MODULE SELECTION
+    async actionGetPurchaseModuleSelection ({ commit }, params){
+        try {
+            let response = await PurchaseService.getPurchaseModuleSelection(params)
+            commit(MODULES_SELECTION , { moduleSelection: response.data });
         }catch(e) {
             let errors = e.response.data.errors;
             console.log(errors)
