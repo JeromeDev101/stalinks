@@ -345,6 +345,64 @@
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
+                            <h3 class="card-title text-primary">{{ $t('message.dashboard.lb_title') }}</h3>
+                            <div class="card-tools">
+                            </div>
+                        </div>
+                        <div class="card-body custom-box">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover tbl-custom">
+                                        <thead>
+                                        <tr>
+                                            <th>
+                                                {{ $t('message.dashboard.lb_buyer') }}
+                                                <span v-if="user.isAdmin" class="text-primary">
+                                                    ({{ backlink_to_buy.total }})
+                                                </span>
+                                            </th>
+                                            <!--                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>-->
+                                            <th>{{ $t('message.dashboard.lb_new') }}</th>
+                                            <!--                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>-->
+                                            <th>{{ $t('message.dashboard.lb_interested') }}</th>
+                                            <!--                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>-->
+                                            <th>{{ $t('message.dashboard.lb_purchased') }}</th>
+                                            <!--                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>-->
+                                            <th>{{ $t('message.dashboard.lb_not_interested') }}</th>
+                                            <!--                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>-->
+                                            <th>{{ $t('message.dashboard.lb_total') }}</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
+                                            <td>
+                                                <span v-if="isAffiliate">
+                                                    {{ upperCase(buy.name) }}
+                                                </span>
+
+                                                <span v-else>
+                                                    {{ upperCase(buy.username) }}
+                                                </span>
+                                            </td>
+                                            <td>{{ buy.num_new }}</td>
+                                            <td>{{ buy.num_interested }}</td>
+                                            <td>{{ buy.num_purchased }}</td>
+                                            <td>{{ buy.num_not_interested }}</td>
+                                            <td>{{ buy.num_total }}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" v-if="!isExtWriter">
+                <div class="col-sm-12">
+                    <div class="card card-outline card-secondary">
+                        <div class="card-header">
                             <h3 class="card-title text-primary">{{ $t('message.dashboard.tbb_title') }}</h3>
                             <div class="card-tools">
                             </div>
@@ -405,10 +463,10 @@
                                                 </span>
 
                                                 <span v-else>
-                                                    {{ upperCase(buyer.username) }} 
-                                                    <span class="text-primary">
-                                                        {{ buyer.team_in_charge != null ?  '('+ upperCase(buyer.team_in_charge)+')':''}}
+                                                    <span class="text-primary" v-if="buyer.is_sub_account == 1">
+                                                        {{ buyer.under_name != null ?  '['+ upperCase(buyer.under_name)+']':''}}
                                                     </span>
+                                                    {{ upperCase(buyer.username) }} 
                                                 </span>
                                             </td>
                                             <td>{{ buyer.num_total }}</td>
@@ -420,64 +478,6 @@
                                             <td>{{ buyer.num_live_in_process }}</td>
                                             <td>{{ buyer.num_live }}</td>
                                             <td>{{ buyer.num_canceled }}</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row" v-if="!isExtWriter">
-                <div class="col-sm-12">
-                    <div class="card card-outline card-secondary">
-                        <div class="card-header">
-                            <h3 class="card-title text-primary">{{ $t('message.dashboard.lb_title') }}</h3>
-                            <div class="card-tools">
-                            </div>
-                        </div>
-                        <div class="card-body custom-box">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <table class="table table-hover tbl-custom">
-                                        <thead>
-                                        <tr>
-                                            <th>
-                                                {{ $t('message.dashboard.lb_buyer') }}
-                                                <span v-if="user.isAdmin" class="text-primary">
-                                                    ({{ backlink_to_buy.total }})
-                                                </span>
-                                            </th>
-                                            <!--                                        <th>New <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_new }})</span></th>-->
-                                            <th>{{ $t('message.dashboard.lb_new') }}</th>
-                                            <!--                                        <th>Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_interested }})</span></th>-->
-                                            <th>{{ $t('message.dashboard.lb_interested') }}</th>
-                                            <!--                                        <th>Purchased <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_purchased }})</span></th>-->
-                                            <th>{{ $t('message.dashboard.lb_purchased') }}</th>
-                                            <!--                                        <th>Not Interested <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_not_interested }})</span></th>-->
-                                            <th>{{ $t('message.dashboard.lb_not_interested') }}</th>
-                                            <!--                                        <th>Total <span v-if="user.isAdmin" class="text-primary">({{ backlink_to_buy.num_total }})</span></th>-->
-                                            <th>{{ $t('message.dashboard.lb_total') }}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr v-for="(buy, index) in listData.backlink_to_buy" :key="index">
-                                            <td>
-                                                <span v-if="isAffiliate">
-                                                    {{ upperCase(buy.name) }}
-                                                </span>
-
-                                                <span v-else>
-                                                    {{ upperCase(buy.username) }}
-                                                </span>
-                                            </td>
-                                            <td>{{ buy.num_new }}</td>
-                                            <td>{{ buy.num_interested }}</td>
-                                            <td>{{ buy.num_purchased }}</td>
-                                            <td>{{ buy.num_not_interested }}</td>
-                                            <td>{{ buy.num_total }}</td>
                                         </tr>
                                         </tbody>
                                     </table>

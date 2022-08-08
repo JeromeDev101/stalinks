@@ -231,7 +231,8 @@ class DashboardController extends Controller
         $columns = [
             'A.username',
             'A.name',
-            'B.name as team_in_charge',
+            'B.username as under_name',
+            'registration.is_sub_account',
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content In Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
