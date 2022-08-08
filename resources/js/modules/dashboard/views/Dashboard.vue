@@ -528,6 +528,9 @@
                                                 </span>
 
                                                 <span v-else>
+                                                    <span class="text-primary" v-if="purchase.is_sub_account == 1">
+                                                        {{ purchase.under_name != null ?  '['+ upperCase(purchase.under_name)+']':''}}
+                                                    </span>
                                                     {{ upperCase(purchase.username) }}
                                                 </span>
                                             </td>

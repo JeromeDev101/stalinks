@@ -126,8 +126,10 @@ class DashboardController extends Controller
 //        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id->id)->pluck('email');
 
         $columns = [
-            'users.username',
-            'users.name',
+            'A.username',
+            'A.name',
+            'B.username as under_name',
+            'registration.is_sub_account',
             DB::raw('COUNT(publisher.url) as num_backlink'),
             DB::raw('SUM(CASE WHEN backlinks.payment_status = "Not Paid" THEN 1 ELSE 0 END) AS num_unpaid'),
             DB::raw('SUM(CASE WHEN backlinks.payment_status = "Paid" THEN 1 ELSE 0 END) AS num_paid'),
@@ -135,7 +137,9 @@ class DashboardController extends Controller
 
         $list = Backlink::select($columns)
             ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
-            ->leftJoin('users', 'backlinks.user_id', '=', 'users.id')
+            ->leftJoin('users as A', 'backlinks.user_id', '=', 'A.id')
+            ->leftJoin('registration', 'A.email', 'registration.email')
+            ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
             ->where('backlinks.status', 'Live');
 
 //        if( $user_id->role_id == 5 && $user_id->isOurs == 0 ){
@@ -150,10 +154,10 @@ class DashboardController extends Controller
 
         if ($user->isOurs == 1 && $user->role_id == 5) {
 
-            $list = $list->leftJoin('registration', 'users.email', 'registration.email')
+            $list = $list
                 ->where(function($query) use ($user) {
                     $query->where('registration.team_in_charge', $user->id)
-                    ->orWhere('users.id', $user->id);
+                    ->orWhere('A.id', $user->id);
             });
         }
 
@@ -163,8 +167,8 @@ class DashboardController extends Controller
             $list = $list->whereIn('backlinks.user_id', $affiliate_buyer_ids);
         }
 
-        return $list->groupBy('backlinks.user_id', 'users.username')
-            ->orderBy('users.username', 'asc')
+        return $list->groupBy('backlinks.user_id', 'A.username')
+            ->orderBy('A.username', 'asc')
             ->get();
     }
 
