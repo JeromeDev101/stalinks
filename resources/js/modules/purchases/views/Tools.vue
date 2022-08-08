@@ -86,7 +86,7 @@
                                         placeholder="Select Purchased By"
                                         :searchable="true"
                                         :reduce="user => user.id"
-                                        :options="purchasesBuyers.data"/>
+                                        :options="toolBuyers.data"/>
                                 </div>
                             </div>
 
@@ -127,10 +127,10 @@
 
                         <div class="row mb-3">
                             <div class="col-md-12">
-                                <button class="btn btn-default" @click="clearFilter">
+                                <button class="btn btn-default" @click="clearFilter()">
                                     {{ $t('message.module_page.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="filterPurchases">
+                                <button class="btn btn-default" @click="filterToolPurchases()">
                                     {{ $t('message.module_page.search') }}
                                     <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
@@ -141,52 +141,26 @@
             </div>
         </div>
 
-        <!-- CATEGORY REPORT -->
-        <category-report-graph
-            v-if="(user.isAdmin || user.role_id === 8) && purchases.data.length"
-            ref="categoryReportGraph"
-            :filter-model="filterModel">
-
-        </category-report-graph>
-
-        <!-- PURCHASE TYPE REPORT -->
-        <purchase-type-report-graph
-            v-if="(user.isAdmin || user.role_id === 8) && purchases.data.length"
-            ref="purchaseTypeReportGraph"
-            :filter-model="filterModel">
-
-        </purchase-type-report-graph>
-
-        <!-- PAYMENT METHODS REPORT -->
-        <payment-method-report-graph
-            v-if="(user.isAdmin || user.role_id === 8) && purchases.data.length"
-            ref="paymentMethodReportGraph"
-            :filter-model="filterModel">
-
-        </payment-method-report-graph>
-
-        <!-- TABLE AND GRAPHS -->
+        <!-- TABLE -->
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Purchase: Summary</h3>
+                        <h3 class="card-title text-primary">Purchase: Tools</h3>
                     </div>
-
                     <div class="card-body">
                         <div class="row mb-2 align-items-center">
                             <div class="col-6">
-                                <span v-if="purchases.total" class="pagination-custom-footer-text m-0 mt-2">
+                                <span v-if="tools.total" class="pagination-custom-footer-text m-0 mt-2">
                                     <b v-if="filterModel.paginate !== 'All'">
-                                        {{ $t('message.others.table_entries', { from: purchases.from, to: purchases.to, end: purchases.total }) }}
+                                        {{ $t('message.others.table_entries', { from: tools.from, to: tools.to, end: tools.total }) }}
                                     </b>
 
                                     <b v-else>
-                                        {{ $t('message.others.table_all_entries', { total: purchases.total }) }}
+                                        {{ $t('message.others.table_all_entries', { total: tools.total }) }}
                                     </b>
                                 </span>
                             </div>
-
                             <div class="col-6">
                                 <div class="input-group input-group-sm float-right mr-2" style="width: 65px">
                                     <select
@@ -194,7 +168,7 @@
                                         class="form-control"
                                         style="height: 37px;"
 
-                                        @change="getPurchases()">
+                                        @change="getToolPurchases()">
 
                                         <option v-for="value in pageOptions" :value="value">{{ value }}</option>
                                     </select>
@@ -202,7 +176,7 @@
                             </div>
                         </div>
 
-                        <div v-if="purchases.data.length">
+                        <div v-if="tools.data.length">
                             <vue-virtual-table
                                 width="100%"
                                 :min-width="450"
@@ -212,17 +186,7 @@
                                 :hover-highlight="true"
                                 :config="tableConfig"
                                 :enable-export="true"
-                                :data="purchases.data">
-
-                                <template slot-scope="scope" slot="id">
-                                    <div style="display: block">
-                                        {{ scope.row.id }}
-
-                                        <div v-if="scope.row.is_manual === 1">
-                                            <span class="badge badge-primary">Manual</span>
-                                        </div>
-                                    </div>
-                                </template>
+                                :data="tools.data">
 
                                 <template slot-scope="scope" slot="category">
                                     <span>
@@ -260,7 +224,7 @@
                                         class="btn btn-primary m-1"
                                         :disabled="!user.isAdmin || user.role_id === 8"
 
-                                        @click="fillPurchaseData(scope.row); modalOpener('Update')">
+                                        @click="fillToolData(scope.row); modalOpener('Update')">
 
                                         <i class="fas fa-pen-square"></i>
                                     </button>
@@ -270,7 +234,7 @@
                                         class="btn btn-danger"
                                         :disabled="!user.isAdmin || user.role_id === 8"
 
-                                        @click="deletePurchase(scope.row.id)">
+                                        @click="deleteTool(scope.row.id)">
 
                                         <i class="fas fa-trash"></i>
                                     </button>
@@ -280,9 +244,9 @@
 
                             <pagination
                                 :limit="8"
-                                :data="purchases"
+                                :data="tools"
 
-                                @pagination-change-page="getPurchases">
+                                @pagination-change-page="getToolPurchases">
 
                             </pagination>
                         </div>
@@ -301,9 +265,9 @@
         <!-- Modal Purchase -->
         <div
             class="modal fade"
-            ref="modalPurchase"
+            ref="modalToolPurchase"
             style="display: none;"
-            id="modal-purchase"
+            id="modal-tool-purchase"
             data-backdrop="static">
 
             <div class="modal-dialog modal-lg">
@@ -322,13 +286,13 @@
                                     <label style="color: #333">Purchase Date</label>
 
                                     <input
-                                        v-model="modelDate"
+                                        v-model="modelToolDate"
                                         type="date"
                                         class="form-control">
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.purchased_at"
-                                        v-for="err in messageFormsPurchases.errors.purchased_at"
+                                        v-if="messageFormsToolsPurchases.errors.purchased_at"
+                                        v-for="err in messageFormsToolsPurchases.errors.purchased_at"
                                         class="text-danger">
 
                                         {{ err }}
@@ -341,14 +305,14 @@
                                     <label style="color: #333">Purchase From</label>
 
                                     <input
-                                        v-model="modelFrom"
+                                        v-model="modelToolFrom"
                                         type="text"
                                         class="form-control"
                                         placeholder="Enter Purchase From">
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.from"
-                                        v-for="err in messageFormsPurchases.errors.from"
+                                        v-if="messageFormsToolsPurchases.errors.from"
+                                        v-for="err in messageFormsToolsPurchases.errors.from"
                                         class="text-danger">
 
                                         {{ err }}
@@ -363,7 +327,7 @@
                                     <label style="color: #333">Purchase Type</label>
 
                                     <v-select
-                                        v-model="modelTypeId"
+                                        v-model="modelToolTypeId"
                                         label="name"
                                         class="style-chooser"
                                         placeholder="Select Purchase Type"
@@ -372,8 +336,8 @@
                                         :options="typesSelection.data"/>
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.type_id"
-                                        v-for="err in messageFormsPurchases.errors.type_id"
+                                        v-if="messageFormsToolsPurchases.errors.type_id"
+                                        v-for="err in messageFormsToolsPurchases.errors.type_id"
                                         class="text-danger">
 
                                         {{ err }}
@@ -386,14 +350,14 @@
                                     <label style="color: #333">Price</label>
 
                                     <input
-                                        v-model="modelAmount"
+                                        v-model="modelToolAmount"
                                         type="number"
                                         class="form-control"
                                         placeholder="Enter Price">
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.amount"
-                                        v-for="err in messageFormsPurchases.errors.amount"
+                                        v-if="messageFormsToolsPurchases.errors.amount"
+                                        v-for="err in messageFormsToolsPurchases.errors.amount"
                                         class="text-danger">
 
                                         {{ err }}
@@ -408,7 +372,7 @@
                                     <label style="color: #333">Purchase Via</label>
 
                                     <v-select
-                                        v-model="modelPaymentTypeId"
+                                        v-model="modelToolPaymentTypeId"
                                         label="type"
                                         class="style-chooser"
                                         placeholder="Select Purchase Via"
@@ -417,8 +381,8 @@
                                         :options="listPayment.data"/>
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.payment_type_id"
-                                        v-for="err in messageFormsPurchases.errors.payment_type_id"
+                                        v-if="messageFormsToolsPurchases.errors.payment_type_id"
+                                        v-for="err in messageFormsToolsPurchases.errors.payment_type_id"
                                         class="text-danger">
 
                                         {{ err }}
@@ -438,8 +402,8 @@
                                         enctype="multipart/form-data">
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.file"
-                                        v-for="err in messageFormsPurchases.errors.file"
+                                        v-if="messageFormsToolsPurchases.errors.file"
+                                        v-for="err in messageFormsToolsPurchases.errors.file"
                                         class="text-danger">
 
                                         {{ err }}
@@ -454,7 +418,7 @@
                                     <label style="color: #333">Notes</label>
 
                                     <textarea
-                                        v-model="modelNotes"
+                                        v-model="modelToolNotes"
                                         rows="5"
                                         type="text"
                                         class="form-control"
@@ -463,8 +427,8 @@
                                     </textarea>
 
                                     <span
-                                        v-if="messageFormsPurchases.errors.notes"
-                                        v-for="err in messageFormsPurchases.errors.notes"
+                                        v-if="messageFormsToolsPurchases.errors.notes"
+                                        v-for="err in messageFormsToolsPurchases.errors.notes"
                                         class="text-danger">
 
                                         {{ err }}
@@ -473,7 +437,7 @@
                             </div>
                         </div>
 
-                        <div v-if="modalMode === 'Update' && updatePurchaseModel.file" class="row">
+                        <div v-if="modalMode === 'Update' && updateToolPurchaseModel.file" class="row">
                             <div class="col-12">
                                 <div class="form-group">
                                     <label style="color: #333">Uploaded Photo:</label>
@@ -481,12 +445,12 @@
                                     <div class="card" style="cursor: pointer;" @click="previewFile">
                                         <div class="card-body">
                                             <img
-                                                v-if="updatePurchaseModel.file"
+                                                v-if="updateToolPurchaseModel.file"
                                                 width="350"
                                                 style="min-height: 200px; height: 200px"
                                                 alt="Uploaded purchase photo"
                                                 class="img-thumbnail"
-                                                :src="updatePurchaseModel.file">
+                                                :src="updateToolPurchaseModel.file">
                                         </div>
                                     </div>
                                 </div>
@@ -501,8 +465,8 @@
                                     <input
                                         type="file"
                                         class="form-control"
-                                        ref="purchaseFileUpdate"
-                                        name="purchaseFileUpdate"
+                                        ref="toolPurchaseFileUpdate"
+                                        name="toolPurchaseFileUpdate"
                                         enctype="multipart/form-data">
                                 </div>
                             </div>
@@ -513,10 +477,10 @@
                         <button type="button" class="btn btn-default pull-left" @click="modalCloser">
                             {{ $t('message.signature.close') }}
                         </button>
-                        <button v-if="modalMode === 'Add'" type="button" @click="addPurchase" class="btn btn-primary">
+                        <button v-if="modalMode === 'Add'" type="button" @click="addToolPurchase" class="btn btn-primary">
                             {{ $t('message.signature.save') }}
                         </button>
-                        <button v-else type="button" @click="updatePurchase" class="btn btn-primary">
+                        <button v-else type="button" @click="updateToolPurchase" class="btn btn-primary">
                             {{ $t('message.signature.update') }}
                         </button>
                     </div>
@@ -528,9 +492,9 @@
         <!-- Modal Image Preview -->
         <div
             class="modal fade"
-            ref="modalPurchaseImage"
+            ref="modalToolPurchaseImage"
             style="display: none;"
-            id="modal-purchase-image">
+            id="modal-tool-purchase-image">
 
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
@@ -538,7 +502,7 @@
                         <img
                             class="img-fluid img-thumbnail rounded mx-auto d-block"
                             alt="Uploaded purchase photo"
-                            :src="updatePurchaseModel.file">
+                            :src="updateToolPurchaseModel.file">
                     </div>
                 </div>
             </div>
@@ -552,22 +516,15 @@ import VueVirtualTable from 'vue-virtual-table';
 import {Constants} from "../../../mixins/constants";
 import {dateRange} from "../../../mixins/dateRange";
 import {filterModel} from "../../../mixins/filterModel";
-import CategoryReportGraph from "../../../components/graphs/Purchases/CategoryReportGraph";
-import PurchaseTypeReportGraph from "../../../components/graphs/Purchases/PurchaseTypeReportGraph";
-import PaymentMethodReportGraph from "../../../components/graphs/Purchases/PaymentMethodReportGraph";
 
 export default {
     mixins: [Constants, dateRange, filterModel],
-    components : {
-        VueVirtualTable,
-        CategoryReportGraph,
-        PurchaseTypeReportGraph,
-        PaymentMethodReportGraph
-    },
+    components: { VueVirtualTable },
+
     data() {
         return {
             filterModel: {
-                mode: 'summary',
+                mode: 'tools',
                 from : this.$route.query.from || '',
                 page : this.$route.query.page || 0,
                 paginate: this.$route.query.paginate || 10,
@@ -581,24 +538,24 @@ export default {
                 },
             },
 
-            addPurchaseModel: {
+            addToolPurchaseModel: {
                 from: '',
                 notes: '',
                 amount: '',
                 type_id: '',
-                mode: 'manual',
+                mode: 'tools',
                 purchased_at: '',
                 payment_type_id: '',
             },
 
-            updatePurchaseModel: {
+            updateToolPurchaseModel: {
                 id: '',
                 from: '',
                 file: '',
                 notes: '',
                 amount: '',
                 type_id: '',
-                mode: 'manual',
+                mode: 'tools',
                 purchased_at: '',
                 payment_type_id: '',
             },
@@ -611,100 +568,100 @@ export default {
     computed: {
         ...mapState({
             user : state => state.storeAuth.currentUser,
-            purchases : state => state.storePurchases.purchases,
-            purchasesBuyers : state => state.storePurchases.purchasesBuyers,
+            tools : state => state.storePurchases.tools,
+            toolBuyers : state => state.storePurchases.toolBuyers,
             typesSelection : state => state.storePurchases.typesSelection,
             listPayment : state => state.storeWalletTransaction.listPayment,
             categoriesSelection : state => state.storePurchases.categoriesSelection,
-            messageFormsPurchases : state => state.storePurchases.messageFormsPurchases,
+            messageFormsToolsPurchases : state => state.storePurchases.messageFormsToolsPurchases,
         }),
 
-        modelDate: {
+        modelToolDate: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.purchased_at
-                    : this.updatePurchaseModel.purchased_at
+                    ? this.addToolPurchaseModel.purchased_at
+                    : this.updateToolPurchaseModel.purchased_at
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.purchased_at = val
+                    this.addToolPurchaseModel.purchased_at = val
                 } else {
-                    this.updatePurchaseModel.purchased_at = val
+                    this.updateToolPurchaseModel.purchased_at = val
                 }
             }
         },
 
-        modelFrom: {
+        modelToolFrom: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.from
-                    : this.updatePurchaseModel.from
+                    ? this.addToolPurchaseModel.from
+                    : this.updateToolPurchaseModel.from
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.from = val
+                    this.addToolPurchaseModel.from = val
                 } else {
-                    this.updatePurchaseModel.from = val
+                    this.updateToolPurchaseModel.from = val
                 }
             }
         },
 
-        modelTypeId: {
+        modelToolTypeId: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.type_id
-                    : this.updatePurchaseModel.type_id
+                    ? this.addToolPurchaseModel.type_id
+                    : this.updateToolPurchaseModel.type_id
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.type_id = val
+                    this.addToolPurchaseModel.type_id = val
                 } else {
-                    this.updatePurchaseModel.type_id = val
+                    this.updateToolPurchaseModel.type_id = val
                 }
             }
         },
 
-        modelAmount: {
+        modelToolAmount: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.amount
-                    : this.updatePurchaseModel.amount
+                    ? this.addToolPurchaseModel.amount
+                    : this.updateToolPurchaseModel.amount
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.amount = val
+                    this.addToolPurchaseModel.amount = val
                 } else {
-                    this.updatePurchaseModel.amount = val
+                    this.updateToolPurchaseModel.amount = val
                 }
             }
         },
 
-        modelPaymentTypeId: {
+        modelToolPaymentTypeId: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.payment_type_id
-                    : this.updatePurchaseModel.payment_type_id
+                    ? this.addToolPurchaseModel.payment_type_id
+                    : this.updateToolPurchaseModel.payment_type_id
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.payment_type_id = val
+                    this.addToolPurchaseModel.payment_type_id = val
                 } else {
-                    this.updatePurchaseModel.payment_type_id = val
+                    this.updateToolPurchaseModel.payment_type_id = val
                 }
             }
         },
 
-        modelNotes: {
+        modelToolNotes: {
             get () {
                 return this.modalMode === 'Add'
-                    ? this.addPurchaseModel.notes
-                    : this.updatePurchaseModel.notes
+                    ? this.addToolPurchaseModel.notes
+                    : this.updateToolPurchaseModel.notes
             },
             set (val) {
                 if (this.modalMode === 'Add') {
-                    this.addPurchaseModel.notes = val
+                    this.addToolPurchaseModel.notes = val
                 } else {
-                    this.updatePurchaseModel.notes = val
+                    this.updateToolPurchaseModel.notes = val
                 }
             }
         },
@@ -712,10 +669,9 @@ export default {
         tableConfig() {
             return [
                 {
-                    prop : '_action',
+                    prop : 'id',
                     name : 'ID',
                     sortable: true,
-                    actionName : 'id',
                 },
                 {
                     prop : 'full_clean_date',
@@ -761,15 +717,15 @@ export default {
     },
 
     mounted () {
-        this.getPurchases(this.$route.query.page);
-        this.getBuyers();
+        this.getToolPurchases(this.$route.query.page);
+        this.getToolsBuyers();
         this.getPaymentTypes();
         this.getPurchaseTypes();
         this.getPurchaseCategories();
     },
 
     methods: {
-        async getPurchases (page = 1) {
+        async getToolPurchases (page = 1) {
             let self = this;
             let loader = self.$loading.show();
 
@@ -781,50 +737,52 @@ export default {
 
             })
 
-            await self.$store.dispatch('actionGetPurchases', {params : self.filterModel});
+            await self.$store.dispatch('actionGetToolsPurchases', {params : self.filterModel});
 
             loader.hide();
         },
 
-        filterPurchases () {
+        filterToolPurchases () {
             // change the format of date
             this.filterModel.date = this.formatFilterDates(this.filterModel.date)
 
-            this.getPurchases(1);
-            this.$refs.categoryReportGraph.getCategoryReportData();
-            this.$refs.purchaseTypeReportGraph.getPurchaseTypeReportData();
-            this.$refs.paymentMethodReportGraph.getPaymentMethodReportData();
+            this.getToolPurchases(1);
         },
 
-        addPurchase () {
+        clearFilter () {
+            this.clearModel('filter')
+            this.getToolPurchases(1);
+        },
+
+        addToolPurchase () {
 
         },
 
-        async updatePurchase () {
+        async updateToolPurchase () {
             let self = this;
             let loader = self.$loading.show();
 
-            let formDataPurchaseUpdate = self.generateFormData(self.updatePurchaseModel)
+            let formDataToolPurchaseUpdate = self.generateFormData(self.updateToolPurchaseModel)
 
             // add _method put to read formData as put request - make axios into post instead of put
-            formDataPurchaseUpdate.append("_method", "PUT")
-            formDataPurchaseUpdate.append('file', self.$refs.purchaseFileUpdate.files[0]);
+            formDataToolPurchaseUpdate.append("_method", "PUT")
+            formDataToolPurchaseUpdate.append('file', self.$refs.toolPurchaseFileUpdate.files[0]);
 
-            await self.$store.dispatch('actionUpdatePurchase', formDataPurchaseUpdate);
+            await self.$store.dispatch('actionUpdateToolsPurchase', formDataToolPurchaseUpdate);
 
-            if (self.messageFormsPurchases.action === 'updated') {
+            if (self.messageFormsToolsPurchases.action === 'updated') {
 
                 self.modalCloser();
                 self.clearModel('update');
-                await self.getPurchases(self.filterModel.page);
+                await self.getToolPurchases(self.filterModel.page);
                 loader.hide();
 
                 // clear file input
-                this.$refs.purchaseFileUpdate.value = '';
+                this.$refs.toolPurchaseFileUpdate.value = '';
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase successfully updated.',
+                    'Tool purchase successfully updated.',
                     'success'
                 )
             } else {
@@ -832,18 +790,18 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the purchase details.',
+                    'There were some errors while updating the tool purchase details.',
                     'error'
                 )
             }
         },
 
-        async deletePurchase (id) {
+        async deleteTool (id) {
             let self = this;
 
             let result = await swal.fire({
-                title : 'Delete Purchase',
-                text : 'Are you sure that you want to delete this purchase?',
+                title : 'Delete Tool Purchase',
+                text : 'Are you sure that you want to delete this tool purchase?',
                 icon : "warning",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.tools.yes_delete'),
@@ -851,55 +809,31 @@ export default {
             })
 
             if (result.isConfirmed) {
-                await self.$store.dispatch('actionDeletePurchase', id);
+                await self.$store.dispatch('actionDeleteToolsPurchase', id);
 
-                if (self.messageFormsPurchases.action === 'deleted') {
+                if (self.messageFormsToolsPurchases.action === 'deleted') {
 
-                    let page = self.purchases.data.length <= 1 ? 1 : self.filterModel.page;
+                    let page = self.tools.data.length <= 1 ? 1 : self.filterModel.page;
 
-                    await self.getPurchases(page);
+                    await self.getToolPurchases(page);
 
                     await swal.fire(
                         self.$t('message.tools.alert_deleted'),
-                        'Purchase successfully deleted.',
+                        'Tool purchase successfully deleted.',
                         'success'
                     )
                 } else {
                     await swal.fire(
                         self.$t('message.tools.alert_error'),
-                        'There were some errors while deleting the purchase details.',
+                        'There were some errors while deleting the tool purchase details.',
                         'error'
                     )
                 }
             }
         },
 
-        fillPurchaseData (data) {
-            this.updatePurchaseModel.id = data.id;
-            this.updatePurchaseModel.from = data.from;
-            this.updatePurchaseModel.file = data.file ? data.file.path : '';
-            this.updatePurchaseModel.notes = data.notes;
-            this.updatePurchaseModel.amount = data.amount;
-            this.updatePurchaseModel.type_id = data.type_id;
-            this.updatePurchaseModel.purchased_at = data.purchased_at;
-            this.updatePurchaseModel.payment_type_id = data.payment_type_id;
-        },
-
-        async clearFilter () {
-            this.clearModel('filter')
-            await this.getPurchases(1);
-
-            await this.$refs.categoryReportGraph.getCategoryReportData();
-            await this.$refs.purchaseTypeReportGraph.getPurchaseTypeReportData();
-            await this.$refs.paymentMethodReportGraph.getPaymentMethodReportData();
-        },
-
-        async getBuyers () {
-            await this.$store.dispatch('actionGetPurchaseBuyerSelection', 'summary');
-        },
-
-        async getPaymentTypes (params) {
-            await this.$store.dispatch('actionGetListPaymentType', params);
+        async getToolsBuyers () {
+            await this.$store.dispatch('actionGetToolsPurchaseBuyerSelection', 'tools');
         },
 
         async getPurchaseCategories () {
@@ -910,10 +844,25 @@ export default {
             await this.$store.dispatch('actionGetPurchaseTypesSelection');
         },
 
+        async getPaymentTypes (params) {
+            await this.$store.dispatch('actionGetListPaymentType', params);
+        },
+
+        fillToolData (data) {
+            this.updateToolPurchaseModel.id = data.id;
+            this.updateToolPurchaseModel.from = data.from;
+            this.updateToolPurchaseModel.file = data.file ? data.file.path : '';
+            this.updateToolPurchaseModel.notes = data.notes;
+            this.updateToolPurchaseModel.amount = data.amount;
+            this.updateToolPurchaseModel.type_id = data.type_id;
+            this.updateToolPurchaseModel.purchased_at = data.purchased_at;
+            this.updateToolPurchaseModel.payment_type_id = data.payment_type_id;
+        },
+
         clearModel (mod) {
             switch(mod) {
                 case 'add':
-                    this.addPurchaseModel = {
+                    this.addToolPurchaseModel = {
                         from: '',
                         notes: '',
                         amount: '',
@@ -924,7 +873,7 @@ export default {
 
                     break;
                 case 'update':
-                    this.updatePurchaseModel = {
+                    this.updateToolPurchaseModel = {
                         id: '',
                         from: '',
                         file: '',
@@ -954,36 +903,32 @@ export default {
 
                     break;
                 default:
-                    this.clearMessageFormPurchases();
+                    this.clearMessageFormToolPurchases();
             }
         },
 
-        clearMessageFormPurchases() {
-            this.$store.dispatch('clearMessageFormPurchases');
+        clearMessageFormToolPurchases() {
+            this.$store.dispatch('clearMessageFormToolPurchases');
         },
 
         modalOpener (mode) {
             this.modalMode = mode
 
-            let element = this.$refs.modalPurchase
+            let element = this.$refs.modalToolPurchase
             $(element).modal('show')
         },
 
         modalCloser () {
-            let element = this.$refs.modalPurchase
+            let element = this.$refs.modalToolPurchase
             $(element).modal('hide')
 
             this.clearModel('error');
         },
 
         previewFile () {
-            let element = this.$refs.modalPurchaseImage
+            let element = this.$refs.modalToolPurchaseImage
             $(element).modal('show')
         },
     },
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -467,7 +467,7 @@
                             </div>
                         </div>
 
-                        <div v-if="modalMode === 'Update' && updateManualPurchaseModel.file" class="row">
+                        <div v-if="modalMode === 'Update'" class="row">
                             <div class="col-12">
                                 <div class="form-group">
                                     <label style="color: #333">Update Photo:</label>
@@ -819,6 +819,9 @@ export default {
                 self.clearModel('update');
                 await self.getManualPurchases(self.filterModel.page);
                 loader.hide();
+
+                // clear file input
+                this.$refs.manualPurchaseFileUpdate.value = '';
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),

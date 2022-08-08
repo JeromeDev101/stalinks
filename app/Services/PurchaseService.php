@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\PaymentType;
 use App\Models\Purchases;
 use App\Models\PurchaseType;
+use App\Models\Tool;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -16,7 +17,7 @@ class PurchaseService
 
         switch ($request->mode) {
             case 'tools':
-
+                $purchases = $purchases->whereIn('purchaseable_type', [Tool::class]);
                 break;
             case 'manual':
                 $purchases = $purchases->whereNull('purchaseable_type')
@@ -57,7 +58,7 @@ class PurchaseService
 
         switch ($mod) {
             case 'tools':
-
+                $buyers = $buyers->whereIn('purchaseable_type', [Tool::class]);
                 break;
             case 'manual':
                 $buyers = $buyers->whereNull('purchaseable_type')
@@ -121,18 +122,24 @@ class PurchaseService
         // process file
         if ($request->hasFile('file')) {
 
-            $path = public_path() . $purchase->file->path;
+            $path = $purchase->file ? public_path() . $purchase->file->path : null;
 
-            if (File::exists($path)) {
+            if ($path != null && File::exists($path)) {
                 unlink($path);
             }
 
             $filename = time() . '-purchases.' . $request->file->getClientOriginalExtension();
             move_file_to_storage($request->file, 'images/purchases', $filename);
 
-            $purchase->file()->update([
-                'path' => '/images/purchases/' . $filename
-            ]);
+            if ($path != null) {
+                $purchase->file()->update([
+                    'path' => '/images/purchases/' . $filename
+                ]);
+            } else {
+                $purchase->file()->create([
+                    'path' => '/images/purchases/' . $filename
+                ]);
+            }
         }
 
         if (!$purchase) {

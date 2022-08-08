@@ -91,6 +91,7 @@ import Subscription from '@/modules/subscription/views/Subscription.vue'
 import Config from '@/modules/purchases/views/Config.vue'
 import Manual from '@/modules/purchases/views/Manual.vue'
 import Summary from '@/modules/purchases/views/Summary.vue'
+import PurchaseTools from '@/modules/purchases/views/Tools.vue'
 
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
 
@@ -484,6 +485,11 @@ const routes = [
                 path : '/purchases/summary',
                 name : 'purchases-summary',
                 component : Summary,
+            },
+            {
+                path : '/purchases/tools',
+                name : 'purchases-tools',
+                component : PurchaseTools,
             },
             {
                 path : '/purchases/manual',

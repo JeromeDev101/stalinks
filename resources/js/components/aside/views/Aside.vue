@@ -128,7 +128,7 @@
                                 v-if="user.isAdmin">
                                 <router-link :to="{ path: '/management/tools' }" class="nav-link"
                                              :class="{ active: $route.name == 'tools' }">
-                                    <i class="fas fa-cog nav-icon"></i>
+                                    <i class="fas fa-tools nav-icon"></i>
                                     <p>{{ $t('message.sidebar.tools') }}</p>
                                 </router-link>
                             </li>
@@ -631,10 +631,12 @@
                             active:
                                 $route.name === 'purchases-config' ||
                                 $route.name === 'purchases-summary' ||
+                                $route.name === 'purchases-tools' ||
                                 $route.name === 'purchases-manual',
                             'menu-open':
                                 $route.name === 'purchases-config' ||
                                 $route.name === 'purchases-summary' ||
+                                $route.name === 'purchases-tools' ||
                                 $route.name === 'purchases-manual',
                         }">
                         <a href="#" class="nav-link">
@@ -665,7 +667,16 @@
                                     <p>Summary</p>
                                 </router-link>
                             </li>
-
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/purchases/tools' }"
+                                    :class="{ active: $route.name === 'purchases-tools' }"
+                                >
+                                    <i class="fas fa-tools nav-icon"></i>
+                                    <p>Tools</p>
+                                </router-link>
+                            </li>
                             <li class="nav-item">
                                 <router-link
                                     class="nav-link"

@@ -164,6 +164,10 @@ export const Constants = {
             path: '/purchases/summary',
         },
         {
+            name: 'Purchases - Tools',
+            path: '/purchases/tools',
+        },
+        {
             name: 'Purchases - Manual',
             path: '/purchases/manual',
         },
@@ -249,6 +253,7 @@ export const Constants = {
         'Purchases': [
             'Config',
             'Summary',
+            'Tools',
             'Manual'
         ]
     }

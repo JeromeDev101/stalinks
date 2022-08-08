@@ -4,12 +4,15 @@ const PURCHASES = 'PURCHASES';
 const PURCHASES_BUYERS = 'PURCHASES_BUYERS';
 const MANUAL_PURCHASES = 'MANUAL_PURCHASES';
 const MANUAL_PURCHASES_BUYERS = 'MANUAL_PURCHASES_BUYERS';
+const TOOLS_PURCHASES = 'TOOLS_PURCHASES';
+const TOOLS_PURCHASES_BUYERS = 'TOOLS_PURCHASES_BUYERS';
 const CATEGORIES = 'CATEGORIES';
 const CATEGORIES_SELECTION = 'CATEGORIES_SELECTION';
 const TYPES = 'TYPES';
 const TYPES_SELECTION = 'TYPES_SELECTION';
 const PURCHASES_MESSAGE_FORMS = 'PURCHASES_MESSAGE_FORMS';
 const MANUAL_PURCHASES_MESSAGE_FORMS = 'MANUAL_PURCHASES_MESSAGE_FORMS';
+const TOOLS_PURCHASES_MESSAGE_FORMS = 'TOOLS_PURCHASES_MESSAGE_FORMS';
 const CATEGORIES_MESSAGE_FORMS = 'CATEGORIES_MESSAGE_FORMS';
 const TYPES_MESSAGE_FORMS = 'TYPES_MESSAGE_FORMS';
 
@@ -24,12 +27,15 @@ const state = {
     purchasesBuyers: { data:[] },
     manuals: { data:[] },
     manualBuyers: { data:[] },
+    tools: { data:[] },
+    toolBuyers: { data:[] },
     categories: { data:[] },
     categoriesSelection: { data:[] },
     types: { data:[] },
     typesSelection: { data:[] },
     messageFormsPurchases: { action: '', message: '', errors: {} },
     messageFormsManualPurchases: { action: '', message: '', errors: {} },
+    messageFormsToolsPurchases: { action: '', message: '', errors: {} },
     messageFormsCategories: { action: '', message: '', errors: {} },
     messageFormsTypes: { action: '', message: '', errors: {} },
 
@@ -56,6 +62,14 @@ const mutations = {
         return state.manualBuyers = manualBuyers;
     },
 
+    [TOOLS_PURCHASES](state, { tools }) {
+        return state.tools = tools;
+    },
+
+    [TOOLS_PURCHASES_BUYERS](state, { toolBuyers }) {
+        return state.toolBuyers = toolBuyers;
+    },
+
     [CATEGORIES](state, { categories }) {
         return state.categories = categories;
     },
@@ -78,6 +92,10 @@ const mutations = {
 
     [MANUAL_PURCHASES_MESSAGE_FORMS] (state, payload) {
         state.messageFormsManualPurchases = payload;
+    },
+
+    [TOOLS_PURCHASES_MESSAGE_FORMS] (state, payload) {
+        state.messageFormsToolsPurchases = payload;
     },
 
     [CATEGORIES_MESSAGE_FORMS] (state, payload) {
@@ -457,6 +475,94 @@ const actions = {
         }
     },
 
+    // TOOLS PURCHASE
+
+    async actionGetToolsPurchases ({ commit }, params){
+        try {
+            let response = await PurchaseService.getPurchases(params)
+            commit(TOOLS_PURCHASES , { tools: response.data });
+            commit(TOOLS_PURCHASES_MESSAGE_FORMS, {
+                action: 'loaded',
+                message: 'Tool purchases successfully loaded.',
+                errors: {}
+            });
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, errors);
+            } else {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, e.response.data);
+            }
+        }
+    },
+
+    async actionGetToolsPurchaseBuyerSelection ({ commit }, params){
+        try {
+            let response = await PurchaseService.getPurchasesBuyerSelection(params)
+            commit(TOOLS_PURCHASES_BUYERS , { toolBuyers: response.data });
+            commit(TOOLS_PURCHASES_MESSAGE_FORMS, {
+                action: 'loaded',
+                message: 'Tool purchases buyer selection successfully loaded.',
+                errors: {}
+            });
+        }catch(e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, errors);
+            } else {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, e.response.data);
+            }
+        }
+    },
+
+    async actionUpdateToolsPurchase ({ commit }, params) {
+        try {
+            let response = await PurchaseService.updatePurchase(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, {
+                    action: 'updated',
+                    message: 'Tool purchase successfully updated!',
+                    errors: {}
+                });
+            }
+            else if (response.response.status === 422) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, errors);
+            } else {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, e.response.data);
+            }
+        }
+    },
+
+    async actionDeleteToolsPurchase ({ commit }, params) {
+        try {
+            let response = await PurchaseService.deletePurchase(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, {
+                    action: 'deleted',
+                    message: 'Tool purchase successfully deleted!',
+                    errors: {}
+                });
+            }
+            else if (response.response.status === 422) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, response.response.data);
+            }
+        } catch (e) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, errors);
+            } else {
+                commit(TOOLS_PURCHASES_MESSAGE_FORMS, e.response.data);
+            }
+        }
+    },
+
     // MESSAGE FORMS
 
     clearMessageFormPurchases ({commit}) {
@@ -465,6 +571,10 @@ const actions = {
 
     clearMessageFormManualPurchases ({commit}) {
         commit(MANUAL_PURCHASES_MESSAGE_FORMS, { action: '', message: '', errors: {}});
+    },
+
+    clearMessageFormToolPurchases ({commit}) {
+        commit(TOOLS_PURCHASES_MESSAGE_FORMS, { action: '', message: '', errors: {}});
     },
 
     clearMessageFormCategories ({commit}) {
