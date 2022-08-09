@@ -233,10 +233,10 @@
 
                     <div class="modal-body relative">
 
-                        <div v-if="modalMode === 'update' && updateToolModel.expiring_days <= 0" class="row">
+                        <div v-if="modalMode === 'update' && updateToolModel.expiring_days <= 30" class="row">
                             <div class="col-md-12">
                                 <div class="alert alert-danger" role="alert">
-                                    This tool is now expired. Renew this tool by clicking the renew button beside
+                                    This tool is about to expire or now expired. Renew this tool by clicking the renew button beside
                                     the expiration date field.
                                 </div>
                             </div>
@@ -377,7 +377,7 @@
                                             :disabled="modalMode === 'update'">
 
                                         <div
-                                            v-if="updateToolModel.expiring_days <= 0 && modalMode === 'update'"
+                                            v-if="updateToolModel.expiring_days <= 30 && modalMode === 'update'"
                                             class="input-group-append">
 
                                             <button
