@@ -67,7 +67,8 @@ class AddPurchase implements ShouldQueue
                 : $request->registered_at,
             'purchase_payment_type_id' => $request->purchase_payment_type_id,
             'purchase_notes' => $request->purchase_notes,
-            'purchase_file' => $request->purchase_file
+            'purchase_receipt' => $request->purchase_receipt,
+            'purchase_invoice' => $request->purchase_invoice,
         ]);
 
         return $purchaseRequest;

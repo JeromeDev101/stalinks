@@ -43,9 +43,19 @@ class Purchases extends Model
         return $this->morphMany('App\Models\Purchases', 'purchaseable');
     }
 
-    public function file()
+    public function files()
     {
-        return $this->morphOne('App\Models\File', 'fileable');
+        return $this->morphMany('App\Models\File', 'fileable');
+    }
+
+    public function receipt()
+    {
+        return $this->morphOne('App\Models\File', 'fileable')->where('is_receipt', 1);
+    }
+
+    public function invoice()
+    {
+        return $this->morphOne('App\Models\File', 'fileable')->where('is_invoice', 1);
     }
 
     public function purchaseable () {

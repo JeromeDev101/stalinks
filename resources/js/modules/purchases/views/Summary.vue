@@ -420,7 +420,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <div class="form-group">
                                     <label style="color: #333">Purchase Via</label>
 
@@ -436,27 +436,6 @@
                                     <span
                                         v-if="messageFormsPurchases.errors.payment_type_id"
                                         v-for="err in messageFormsPurchases.errors.payment_type_id"
-                                        class="text-danger">
-
-                                        {{ err }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div v-if="modalMode !== 'Update'" class="col-6">
-                                <div class="form-group">
-                                    <label style="color: #333">Photo</label>
-
-                                    <input
-                                        type="file"
-                                        class="form-control"
-                                        ref="purchaseFile"
-                                        name="purchaseFile"
-                                        enctype="multipart/form-data">
-
-                                    <span
-                                        v-if="messageFormsPurchases.errors.file"
-                                        v-for="err in messageFormsPurchases.errors.file"
                                         class="text-danger">
 
                                         {{ err }}
@@ -490,37 +469,171 @@
                             </div>
                         </div>
 
-                        <div v-if="modalMode === 'Update' && updatePurchaseModel.file" class="row">
-                            <div class="col-12">
+                        <div v-if="modalMode !== 'Update'" class="row">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Uploaded Photo:</label>
+                                    <label style="color: #333">Receipt</label>
 
-                                    <div class="card" style="cursor: pointer;" @click="previewFile">
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        ref="purchaseReceipt"
+                                        name="purchaseReceipt"
+                                        enctype="multipart/form-data">
+
+                                    <span
+                                        v-if="messageFormsPurchases.errors.receipt"
+                                        v-for="err in messageFormsPurchases.errors.receipt"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Invoice</label>
+
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        ref="purchaseInvoice"
+                                        name="purchaseInvoice"
+                                        enctype="multipart/form-data">
+
+                                    <span
+                                        v-if="messageFormsPurchases.errors.invoice"
+                                        v-for="err in messageFormsPurchases.errors.invoice"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-if="modalMode === 'Update' && updatePurchaseModel.files.length" class="row">
+                            <div v-if="checkFile(updatePurchaseModel.files, 'is_receipt')" class="col-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Uploaded Receipt:</label>
+
+                                    <div
+                                        v-if="checkFileExtension(getFileExtension(getFile(updatePurchaseModel.files, 'is_receipt'))) === 'image'"
+                                        class="card"
+                                        style="cursor: pointer;"
+
+                                        @click="previewFile(getFile(updatePurchaseModel.files, 'is_receipt'))">
+
                                         <div class="card-body">
                                             <img
-                                                v-if="updatePurchaseModel.file"
                                                 width="350"
                                                 style="min-height: 200px; height: 200px"
-                                                alt="Uploaded purchase photo"
+                                                alt="Uploaded purchase receipt"
                                                 class="img-thumbnail"
-                                                :src="updatePurchaseModel.file">
+                                                :src="getFile(updatePurchaseModel.files, 'is_receipt')">
+                                        </div>
+                                    </div>
+
+                                    <div v-else class="card">
+                                        <div class="card-body">
+                                            <a
+                                                :href="getFile(updatePurchaseModel.files, 'is_receipt')"
+                                                download
+                                                class="btn btn-default"
+                                                title="Download uploaded receipt">
+                                                {{ getFileName(getFile(updatePurchaseModel.files, 'is_receipt')) }}
+
+                                                <i class="fas fa-download"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-if="checkFile(updatePurchaseModel.files, 'is_invoice')" class="col-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Uploaded Invoice:</label>
+
+                                    <div
+                                        v-if="checkFileExtension(getFileExtension(getFile(updatePurchaseModel.files, 'is_invoice'))) === 'image'"
+                                        class="card"
+                                        style="cursor: pointer;"
+
+                                        @click="previewFile(getFile(updatePurchaseModel.files, 'is_invoice'))">
+
+                                        <div class="card-body">
+                                            <img
+                                                width="350"
+                                                style="min-height: 200px; height: 200px"
+                                                alt="Uploaded purchase receipt"
+                                                class="img-thumbnail"
+                                                :src="getFile(updatePurchaseModel.files, 'is_invoice')">
+                                        </div>
+                                    </div>
+
+                                    <div v-else class="card">
+                                        <div class="card-body">
+                                            <a
+                                                :href="getFile(updatePurchaseModel.files, 'is_invoice')"
+                                                download
+                                                class="btn btn-default"
+                                                title="Download uploaded invoice">
+                                                {{ getFileName(getFile(updatePurchaseModel.files, 'is_invoice')) }}
+
+                                                <i class="fas fa-download"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div v-if="modalMode === 'Update'" class="row">
+                        <div v-if="modalMode === 'Update'" class="row mt-4">
                             <div class="col-12">
+                                <div class="form-divider">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Update Photo:</label>
+                                    <label style="color: #333">Update Receipt:</label>
 
                                     <input
                                         type="file"
                                         class="form-control"
-                                        ref="purchaseFileUpdate"
-                                        name="purchaseFileUpdate"
+                                        ref="purchaseReceiptUpdate"
+                                        name="purchaseReceiptUpdate"
                                         enctype="multipart/form-data">
+
+                                    <span
+                                        v-if="messageFormsPurchases.errors.receipt"
+                                        v-for="err in messageFormsPurchases.errors.receipt"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label style="color: #333">Update Invoice:</label>
+
+                                    <input
+                                        type="file"
+                                        class="form-control"
+                                        ref="purchaseInvoiceUpdate"
+                                        name="purchaseInvoiceUpdate"
+                                        enctype="multipart/form-data">
+
+                                    <span
+                                        v-if="messageFormsPurchases.errors.invoice"
+                                        v-for="err in messageFormsPurchases.errors.invoice"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -555,7 +668,7 @@
                         <img
                             class="img-fluid img-thumbnail rounded mx-auto d-block"
                             alt="Uploaded purchase photo"
-                            :src="updatePurchaseModel.file">
+                            :src="filePreview">
                     </div>
                 </div>
             </div>
@@ -565,6 +678,7 @@
 
 <script>
 import {mapState} from 'vuex';
+import {files} from "../../../mixins/files";
 import VueVirtualTable from 'vue-virtual-table';
 import {Constants} from "../../../mixins/constants";
 import {dateRange} from "../../../mixins/dateRange";
@@ -574,7 +688,7 @@ import PurchaseTypeReportGraph from "../../../components/graphs/Purchases/Purcha
 import PaymentMethodReportGraph from "../../../components/graphs/Purchases/PaymentMethodReportGraph";
 
 export default {
-    mixins: [Constants, dateRange, filterModel],
+    mixins: [Constants, dateRange, filterModel, files],
     components : {
         VueVirtualTable,
         CategoryReportGraph,
@@ -612,7 +726,7 @@ export default {
             updatePurchaseModel: {
                 id: '',
                 from: '',
-                file: '',
+                files: [],
                 notes: '',
                 amount: '',
                 type_id: '',
@@ -623,6 +737,8 @@ export default {
 
             modalMode: 'Add',
             pageOptions: [10, 25, 50, 100, 'All'],
+
+            filePreview: '',
         }
     },
 
@@ -828,7 +944,8 @@ export default {
 
             // add _method put to read formData as put request - make axios into post instead of put
             formDataPurchaseUpdate.append("_method", "PUT")
-            formDataPurchaseUpdate.append('file', self.$refs.purchaseFileUpdate.files[0]);
+            formDataPurchaseUpdate.append('receipt', self.$refs.purchaseReceiptUpdate.files[0] ? self.$refs.purchaseReceiptUpdate.files[0] : '');
+            formDataPurchaseUpdate.append('invoice', self.$refs.purchaseInvoiceUpdate.files[0] ? self.$refs.purchaseInvoiceUpdate.files[0] : '');
 
             await self.$store.dispatch('actionUpdatePurchase', formDataPurchaseUpdate);
 
@@ -840,7 +957,8 @@ export default {
                 loader.hide();
 
                 // clear file input
-                this.$refs.purchaseFileUpdate.value = '';
+                this.$refs.purchaseReceiptUpdate.value = '';
+                this.$refs.purchaseInvoiceUpdate.value = '';
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
@@ -897,7 +1015,7 @@ export default {
         fillPurchaseData (data) {
             this.updatePurchaseModel.id = data.id;
             this.updatePurchaseModel.from = data.from;
-            this.updatePurchaseModel.file = data.file ? data.file.path : '';
+            this.updatePurchaseModel.files = data.files;
             this.updatePurchaseModel.notes = data.notes;
             this.updatePurchaseModel.amount = data.amount;
             this.updatePurchaseModel.type_id = data.type_id;
@@ -951,7 +1069,7 @@ export default {
                     this.updatePurchaseModel = {
                         id: '',
                         from: '',
-                        file: '',
+                        files: [],
                         notes: '',
                         amount: '',
                         type_id: '',
@@ -1001,7 +1119,8 @@ export default {
             this.clearModel('error');
         },
 
-        previewFile () {
+        previewFile (file) {
+            this.filePreview = file
             let element = this.$refs.modalPurchaseImage
             $(element).modal('show')
         },

@@ -28,10 +28,10 @@ class PurchaseService
         }
 
         $purchases = $purchases->with(
-            'user:id,username,name',
-            'file:id,path,fileable_id',
             'type.category',
-            'paymentType:id,type'
+            'paymentType:id,type',
+            'user:id,username,name',
+            'files:id,path,fileable_id,is_invoice,is_receipt'
         );
 
         $purchases = $this->generateFilterQuery($request, $purchases, 'page');
@@ -76,68 +76,119 @@ class PurchaseService
     }
 
     public function store ($request, $mod, $model = null) {
-        // save file
-        $filename = '';
-        $inputs = $mod === 'manual' ? $request->except('file', 'mode') : $request->all();
+        DB::transaction(function () use ($request, $mod, $model) {
+            // save file
+            $receipt_name = '';
+            $invoice_name = '';
+            $inputs = $mod === 'manual' ? $request->except('invoice', 'receipt', 'mode') : $request->all();
 
-        if ($request->hasFile('file') || ($request->purchase_file != null || $request->purchase_file != '')) {
-            $file = $mod === 'manual' ? $request->file : $request->purchase_file;
+            // process receipt
+            if ($request->hasFile('receipt') || ($request->purchase_receipt != null || $request->purchase_receipt != '')) {
+                $receipt = $mod === 'manual' ? $request->receipt : $request->purchase_receipt;
 
-            $filename = time() . '-purchases.' . $file->getClientOriginalExtension();
-            move_file_to_storage($file, 'images/purchases', $filename);
-        }
+                $receipt_name = time() . '-purchases-receipt.' . $receipt->getClientOriginalExtension();
+                move_file_to_storage($receipt, 'images/purchases', $receipt_name);
+            }
 
-        if ($mod !== 'manual') {
-            $purchase = $model->purchases()->create([
-                'type_id' => $inputs['purchase_type_id'],
-                'amount' => $inputs['purchase_amount'],
-                'from' => $inputs['purchase_from'],
-                'payment_type_id' => $inputs['purchase_payment_type_id'],
-                'notes' => $inputs['purchase_notes'],
-                'purchased_at' => $inputs['purchase_purchased_at'],
-                'user_id' => auth()->id(),
-                'is_manual' => 0
-            ]);
+            // process invoice
+            if ($request->hasFile('invoice') || ($request->purchase_invoice != null || $request->purchase_invoice != '')) {
+                $invoice = $mod === 'manual' ? $request->invoice : $request->purchase_invoice;
 
-            $purchase->file()->create([
-                'path' => '/images/purchases/' . $filename
-            ]);
-        } else {
-            $purchase = Purchases::create($inputs + [
-                'user_id' => auth()->id(),
-                'is_manual' => 1
-            ]);
+                $invoice_name = time() . '-purchases-invoice.' . $invoice->getClientOriginalExtension();
+                move_file_to_storage($invoice, 'images/purchases', $invoice_name);
+            }
 
-            $purchase->file()->create([
-                'path' => '/images/purchases/' . $filename
-            ]);
-        }
+            if ($mod !== 'manual') {
+                $purchase = $model->purchases()->create([
+                    'type_id' => $inputs['purchase_type_id'],
+                    'amount' => $inputs['purchase_amount'],
+                    'from' => $inputs['purchase_from'],
+                    'payment_type_id' => $inputs['purchase_payment_type_id'],
+                    'notes' => $inputs['purchase_notes'],
+                    'purchased_at' => $inputs['purchase_purchased_at'],
+                    'user_id' => auth()->id(),
+                    'is_manual' => 0
+                ]);
+
+                $purchase->files()->create([
+                    'path' => '/images/purchases/' . $receipt_name,
+                    'is_receipt' => 1
+                ]);
+
+                $purchase->files()->create([
+                    'path' => '/images/purchases/' . $invoice_name,
+                    'is_invoice' => 1
+                ]);
+            } else {
+                $purchase = Purchases::create($inputs + [
+                        'user_id' => auth()->id(),
+                        'is_manual' => 1
+                    ]);
+
+                // save receipt
+                $purchase->files()->create([
+                    'path' => '/images/purchases/' . $receipt_name,
+                    'is_receipt' => 1
+                ]);
+
+                // save invoice
+                $purchase->files()->create([
+                    'path' => '/images/purchases/' . $invoice_name,
+                    'is_invoice' => 1
+                ]);
+            }
+        });
     }
 
     public function update ($request) {
-        $inputs = $request->except('file', '_method', 'mode');
+        $inputs = $request->except('file', '_method', 'mode', 'receipt', 'invoice');
 
         $purchase = Purchases::find($request->id);
 
-        // process file
-        if ($request->hasFile('file')) {
-
-            $path = $purchase->file ? public_path() . $purchase->file->path : null;
+        // process receipt
+        if ($request->hasFile('receipt')) {
+            $path = $purchase->receipt ? public_path() . $purchase->receipt->path : null;
 
             if ($path != null && File::exists($path)) {
                 unlink($path);
             }
 
-            $filename = time() . '-purchases.' . $request->file->getClientOriginalExtension();
-            move_file_to_storage($request->file, 'images/purchases', $filename);
+            $receipt_name = time() . '-purchases-receipt.' . $request->receipt->getClientOriginalExtension();
+            move_file_to_storage($request->receipt, 'images/purchases', $receipt_name);
 
             if ($path != null) {
-                $purchase->file()->update([
-                    'path' => '/images/purchases/' . $filename
+                $purchase->receipt()->update([
+                    'path' => '/images/purchases/' . $receipt_name,
+                    'is_receipt' => 1
                 ]);
             } else {
-                $purchase->file()->create([
-                    'path' => '/images/purchases/' . $filename
+                $purchase->receipt()->create([
+                    'path' => '/images/purchases/' . $receipt_name,
+                    'is_receipt' => 1
+                ]);
+            }
+        }
+
+        // process invoice
+        if ($request->hasFile('invoice')) {
+            $path = $purchase->invoice ? public_path() . $purchase->invoice->path : null;
+
+            if ($path != null && File::exists($path)) {
+                unlink($path);
+            }
+
+            $invoice_name = time() . '-purchases-invoice.' . $request->invoice->getClientOriginalExtension();
+            move_file_to_storage($request->invoice, 'images/purchases', $invoice_name);
+
+            if ($path != null) {
+                $purchase->invoice()->update([
+                    'path' => '/images/purchases/' . $invoice_name,
+                    'is_invoice' => 1
+                ]);
+            } else {
+                $purchase->invoice()->create([
+                    'path' => '/images/purchases/' . $invoice_name,
+                    'is_invoice' => 1
                 ]);
             }
         }

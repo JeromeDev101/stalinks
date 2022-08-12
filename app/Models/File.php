@@ -11,7 +11,9 @@ class File extends Model
     use SoftDeletes, Loggable;
 
     protected $fillable = [
-        'path'
+        'path',
+        'is_receipt',
+        'is_invoice',
     ];
 
     public function fileable () {

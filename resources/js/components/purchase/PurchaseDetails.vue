@@ -56,7 +56,7 @@
         </div>
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <div class="form-group">
                     <label style="color: #333">Purchase Via</label>
 
@@ -78,29 +78,6 @@
                         </span>
                 </div>
             </div>
-
-            <div class="col-6">
-                <div class="form-group">
-                    <label style="color: #333">Photo</label>
-
-                    <input
-                        type="file"
-                        class="form-control"
-                        ref="purchaseFile"
-                        name="purchaseFile"
-                        enctype="multipart/form-data"
-
-                        @change="previewFiles">
-
-                    <span
-                        v-if="errors.errors.purchase_file"
-                        v-for="err in errors.errors.purchase_file"
-                        class="text-danger">
-
-                        {{ err }}
-                    </span>
-                </div>
-            </div>
         </div>
 
         <div class="row">
@@ -116,6 +93,54 @@
                         placeholder="Enter Purchase Note">
 
                     </textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="form-group">
+                    <label style="color: #333">Receipt</label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        ref="purchaseReceipt"
+                        name="purchaseReceipt"
+                        enctype="multipart/form-data"
+
+                        @change="previewFilesReceipt">
+
+                    <span
+                        v-if="errors.errors.purchase_receipt"
+                        v-for="err in errors.errors.purchase_receipt"
+                        class="text-danger">
+
+                        {{ err }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group">
+                    <label style="color: #333">Invoice</label>
+
+                    <input
+                        type="file"
+                        class="form-control"
+                        ref="purchaseInvoice"
+                        name="purchaseInvoice"
+                        enctype="multipart/form-data"
+
+                        @change="previewFilesInvoice">
+
+                    <span
+                        v-if="errors.errors.purchase_invoice"
+                        v-for="err in errors.errors.purchase_invoice"
+                        class="text-danger">
+
+                        {{ err }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -154,7 +179,8 @@ export default {
                 amount: '',
                 type_id: '',
                 payment_type_id: '',
-                file: '',
+                receipt: '',
+                invoice: '',
             }
         }
     },
@@ -198,12 +224,17 @@ export default {
                 amount: details.amount,
                 type_id: details.type_id,
                 payment_type_id: details.payment_type_id,
-                file: details.file,
+                receipt: details.receipt,
+                invoice: details.invoice,
             })
         },
 
-        previewFiles (event) {
-            this.componentDetails.file = event.target.files[0]
+        previewFilesReceipt (event) {
+            this.componentDetails.receipt = event.target.files[0]
+        },
+
+        previewFilesInvoice (event) {
+            this.componentDetails.invoice = event.target.files[0]
         },
     },
 }

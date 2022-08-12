@@ -181,7 +181,8 @@ export default {
             },
 
             purchaseDetailsRenew: {
-                file: '',
+                receipt: '',
+                invoice: '',
                 notes: '',
                 amount: '',
                 type_id: '',
@@ -291,7 +292,10 @@ export default {
 
                     self.toggleModal(false);
 
-                    self.$emit('renew')
+                    self.$emit('renew');
+                    self.$emit('close');
+
+                    self.clearDetails();
                 })
                 .catch((err) => {
                     loader.hide();
@@ -311,6 +315,12 @@ export default {
 
             if (show) {
                 $(element).modal('show')
+
+                this.renewErrors = {
+                    action: '',
+                    message: '',
+                    errors: {}
+                }
             } else {
                 $(element).modal('hide')
             }
@@ -321,7 +331,28 @@ export default {
             this.renewDetails.name = data.name;
             this.renewDetails.expired_at = data.expired_at;
             this.renewDetails.registered_at = data.registered_at;
-        }
+        },
+
+        clearDetails () {
+            this.renewDetails = {
+                id: '',
+                name: '',
+                model: '',
+                expired_at: '',
+                registered_at: '',
+                renewal_period: '',
+                is_purchased: false,
+            }
+
+            this.purchaseDetailsRenew = {
+                receipt: '',
+                invoice: '',
+                notes: '',
+                amount: '',
+                type_id: '',
+                payment_type_id: '',
+            }
+        },
     },
 }
 </script>

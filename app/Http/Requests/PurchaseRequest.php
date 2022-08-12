@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PurchaseRequest extends FormRequest
 {
@@ -30,7 +31,8 @@ class PurchaseRequest extends FormRequest
                 'type_id' => 'required',
                 'purchased_at' => 'required',
                 'payment_type_id' => 'required',
-                'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'invoice' => 'required|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048',
+                'receipt' => 'required|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048'
             ];
         } else if ($this->method() === 'GET') {
             return [
@@ -39,7 +41,8 @@ class PurchaseRequest extends FormRequest
                 'purchase_type_id' => 'required',
                 'purchase_purchased_at' => 'required',
                 'purchase_payment_type_id' => 'required',
-                'purchase_file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+                'purchase_receipt' => 'required|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048',
+                'purchase_invoice' => 'required|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048'
             ];
         } else {
             return [
@@ -48,6 +51,8 @@ class PurchaseRequest extends FormRequest
                 'type_id' => 'required',
                 'purchased_at' => 'required',
                 'payment_type_id' => 'required',
+                'invoice' => 'nullable|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048',
+                'receipt' => 'nullable|mimes:jpeg,png,jpg,gif,svg,doc,docx,pdf,csv,xlsx,xls|max:2048'
             ];
         }
     }

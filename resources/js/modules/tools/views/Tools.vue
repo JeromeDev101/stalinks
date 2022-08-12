@@ -874,7 +874,8 @@ export default {
                 amount: '',
                 type_id: '',
                 payment_type_id: '',
-                file: '',
+                receipt: '',
+                invoice: '',
             },
 
             isShowRenewModal: false,
@@ -1038,6 +1039,7 @@ export default {
 
             if (self.messageFormsTools.action === 'added') {
                 self.clearModel('add');
+                self.clearModel('purchase');
 
                 await self.getToolList(this.filterModel.page);
 
@@ -1192,6 +1194,15 @@ export default {
                     registered_at: '',
                     is_purchased: false,
                     expiring_days: '',
+                }
+            } else if (mod === 'purchase') {
+                this.purchaseDetails = {
+                    notes: '',
+                    amount: '',
+                    type_id: '',
+                    payment_type_id: '',
+                    receipt: '',
+                    invoice: '',
                 }
             } else {
                 this.filterModel = {
