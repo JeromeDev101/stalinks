@@ -34,7 +34,7 @@ export default {
     filter_date_reg: 'Date of Registration',
     filter_account_verified: 'Account Verified',
     filter_sub_account: 'Sub Account',
-    filter_payment_info: 'Payment Info',
+    filter_payment_info: 'Payment Info Type',
     filter_default: 'Default',
     filter_buyer_trans: 'Buyer Transaction',
     filter_with: 'With',

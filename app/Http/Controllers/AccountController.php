@@ -188,6 +188,7 @@ class AccountController extends Controller
         $company_url = $request->company_url;
         $account_validation = $request->account_validation;
         $payment_info = $request->payment_info;
+        $payment_info_data = $request->payment_info_data;
         $is_sub_account = ($request->is_sub_account == '' || $request->is_sub_account == null)
             ? null : ($request->is_sub_account == 1 ? 'Sub' : 'Not');
         $created_at = json_decode($request->created_at);
@@ -286,7 +287,13 @@ class AccountController extends Controller
                 });
             });
         })
-
+        ->when(isset($payment_info_data), function($query) use ($payment_info_data){
+            $query->whereHas('user', function($_query) use ($payment_info_data){
+                $_query->whereHas('userPaymentTypes', function($sub) use ($payment_info_data) {
+                    $sub->where( 'account', 'LIKE', '%'.$payment_info_data.'%' )->where('is_default', 1);
+                });
+            });
+        })
         ->when(isset($buyer_transaction), function($query) use ($buyer_transaction){
             if ($buyer_transaction === 'with') {
                 $query->where('type', 'Buyer')

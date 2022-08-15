@@ -241,6 +241,18 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Payment Info</label>
+
+                                    <input
+                                        v-model="filterModel.payment_info_data"
+                                        type="text"
+                                        class="form-control"
+                                        :placeholder="$t('message.registration_accounts.type')">
+                                </div>
+                            </div>
+
                             <div class="col-md-3" v-if="user.role_id == 8 || user.isAdmin">
                                 <div class="form-group">
                                     <label>{{ $t('message.registration_accounts.filter_buyer_trans') }}</label>
@@ -1827,6 +1839,7 @@ export default {
                 company_url : this.$route.query.company_url || '',
                 account_validation : this.$route.query.account_validation || '',
                 payment_info : this.$route.query.payment_info || '',
+                payment_info_data : this.$route.query.payment_info_data || '',
                 created_at : {
                     startDate : null,
                     endDate : null
@@ -3211,6 +3224,7 @@ export default {
                     company_url : this.filterModel.company_url,
                     account_validation : this.filterModel.account_validation,
                     payment_info : this.filterModel.payment_info,
+                    payment_info_data : this.filterModel.payment_info_data,
                     created_at : this.filterModel.created_at,
                     account_verification :
                     this.filterModel.account_verification,
@@ -3265,6 +3279,7 @@ export default {
                 company_url : '',
                 account_validation : '',
                 payment_info : '',
+                payment_info_data : '',
                 country : '',
                 language_id : '',
                 created_at : {
@@ -3310,6 +3325,7 @@ export default {
                     company_url : this.filterModel.company_url,
                     account_validation : this.filterModel.account_validation,
                     payment_info : this.filterModel.payment_info,
+                    payment_info_data : this.filterModel.payment_info_data,
                     created_at : this.filterModel.created_at,
                     account_verification :
                     this.filterModel.account_verification,
