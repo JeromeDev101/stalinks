@@ -136,6 +136,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="sellerSurveyErrors.errors.one"
+                                    v-for="err in sellerSurveyErrors.errors.one"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.one_other"
+                                    v-for="err in sellerSurveyErrors.errors.one_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -173,6 +189,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.two"
+                                    v-for="err in sellerSurveyErrors.errors.two"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.two_other"
+                                    v-for="err in sellerSurveyErrors.errors.two_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -212,6 +244,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="sellerSurveyErrors.errors.three"
+                                    v-for="err in sellerSurveyErrors.errors.three"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.three_other"
+                                    v-for="err in sellerSurveyErrors.errors.three_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -250,6 +298,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="sellerSurveyErrors.errors.four"
+                                    v-for="err in sellerSurveyErrors.errors.four"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.four_other"
+                                    v-for="err in sellerSurveyErrors.errors.four_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -276,6 +340,22 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.five"
+                                    v-for="err in sellerSurveyErrors.errors.five"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.five_other"
+                                    v-for="err in sellerSurveyErrors.errors.five_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -304,6 +384,22 @@
                                     </div>
                                 </div>
 
+                                <span
+                                    v-if="sellerSurveyErrors.errors.six"
+                                    v-for="err in sellerSurveyErrors.errors.six"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.six_other"
+                                    v-for="err in sellerSurveyErrors.errors.six_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -330,6 +426,34 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <div v-if="survey.answers.seven === 'Others'" class="form-group">
+                                    <label>{{ $t('message.buyer_survey.other') }}</label>
+
+                                    <textarea
+                                        v-model="survey.answers.seven_other"
+                                        rows="3"
+                                        class="form-control"
+                                        :placeholder="$t('message.buyer_survey.enter')">
+
+                                    </textarea>
+                                </div>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.seven"
+                                    v-for="err in sellerSurveyErrors.errors.seven"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="sellerSurveyErrors.errors.seven_other"
+                                    v-for="err in sellerSurveyErrors.errors.seven_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -440,6 +564,11 @@ export default {
             },
 
             pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
+
+            sellerSurveyErrors: {
+                message: '',
+                errors: {}
+            }
         }
     },
 
@@ -590,7 +719,7 @@ export default {
                         {
                             id: 'question-' + number + 'a-c',
                             name: 'question-' + number + 'a-c',
-                            value: 'Other',
+                            value: 'Others',
                             label: self.$t('message.seller_survey.seller_survey_a_q_7_others')
                         }
                     ],
@@ -633,6 +762,8 @@ export default {
                         err.response.data.message,
                         'error',
                     )
+
+                    self.sellerSurveyErrors = err.response.data;
 
                     console.log(err.response.data.message)
                 });

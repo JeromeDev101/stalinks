@@ -144,6 +144,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="surveyErrors.errors.one"
+                                    v-for="err in surveyErrors.errors.one"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.one_other"
+                                    v-for="err in surveyErrors.errors.one_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -192,6 +208,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="surveyErrors.errors.two"
+                                    v-for="err in surveyErrors.errors.two"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.two_other"
+                                    v-for="err in surveyErrors.errors.two_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -237,6 +269,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.three"
+                                    v-for="err in surveyErrors.errors.three"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.three_other"
+                                    v-for="err in surveyErrors.errors.three_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -288,6 +336,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="surveyErrors.errors.four"
+                                    v-for="err in surveyErrors.errors.four"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.four_other"
+                                    v-for="err in surveyErrors.errors.four_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -335,6 +399,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.five"
+                                    v-for="err in surveyErrors.errors.five"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.five_other"
+                                    v-for="err in surveyErrors.errors.five_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -446,6 +526,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="surveyErrors.errors.one"
+                                    v-for="err in surveyErrors.errors.one"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.one_other"
+                                    v-for="err in surveyErrors.errors.one_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -478,6 +574,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.two"
+                                    v-for="err in surveyErrors.errors.two"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.two_other"
+                                    v-for="err in surveyErrors.errors.two_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -513,6 +625,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.three"
+                                    v-for="err in surveyErrors.errors.three"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.three_other"
+                                    v-for="err in surveyErrors.errors.three_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -587,6 +715,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="surveyErrors.errors.four"
+                                    v-for="err in surveyErrors.errors.four"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.four_other"
+                                    v-for="err in surveyErrors.errors.four_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -621,6 +765,22 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.five"
+                                    v-for="err in surveyErrors.errors.five"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.five_other"
+                                    v-for="err in surveyErrors.errors.five_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -659,18 +819,18 @@
                                         <input
                                             v-model="survey.answers.six"
                                             type="radio"
-                                            value="other"
+                                            value="Others"
                                             id="question-six-b-c"
                                             name="question-six-b"
                                             class="custom-control-input">
 
-                                        <label for="question-six-b-d" class="custom-control-label font-weight-normal">
+                                        <label for="question-six-b-c" class="custom-control-label font-weight-normal">
                                             {{ $t('message.buyer_survey.buyer_survey_b_q_6_others') }}
                                         </label>
                                     </div>
 
                                 </div>
-                                <div v-if="survey.answers.six === 'other'" class="form-group">
+                                <div v-if="survey.answers.six === 'Others'" class="form-group">
                                     <label>{{ $t('message.buyer_survey.other') }}</label>
 
                                     <textarea
@@ -681,6 +841,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="surveyErrors.errors.six"
+                                    v-for="err in surveyErrors.errors.six"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="surveyErrors.errors.six_other"
+                                    v-for="err in surveyErrors.errors.six_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -782,6 +958,11 @@ export default {
             },
 
             pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
+
+            surveyErrors: {
+                message: '',
+                errors: {}
+            }
         }
     },
 
@@ -874,7 +1055,10 @@ export default {
                         'error',
                     )
 
-                    console.log(err.response.data.message)
+                    self.surveyErrors.errors = err.response.data.errors;
+                    self.surveyErrors.message = err.response.data.message;
+
+                    console.log(err.response.data)
                 });
         },
 

@@ -136,6 +136,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="writerSurveyErrors.errors.one"
+                                    v-for="err in writerSurveyErrors.errors.one"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.one_other"
+                                    v-for="err in writerSurveyErrors.errors.one_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -173,6 +189,22 @@
 
                                     </textarea>
                                 </div>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.two"
+                                    v-for="err in writerSurveyErrors.errors.two"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.two_other"
+                                    v-for="err in writerSurveyErrors.errors.two_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -212,6 +244,22 @@
                                     </textarea>
                                 </div>
 
+                                <span
+                                    v-if="writerSurveyErrors.errors.three"
+                                    v-for="err in writerSurveyErrors.errors.three"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.three_other"
+                                    v-for="err in writerSurveyErrors.errors.three_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -238,6 +286,22 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.four"
+                                    v-for="err in writerSurveyErrors.errors.four"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.four_other"
+                                    v-for="err in writerSurveyErrors.errors.four_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -266,6 +330,22 @@
                                     </div>
                                 </div>
 
+                                <span
+                                    v-if="writerSurveyErrors.errors.five"
+                                    v-for="err in writerSurveyErrors.errors.five"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.five_other"
+                                    v-for="err in writerSurveyErrors.errors.five_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
                                 <hr/>
                             </div>
 
@@ -292,6 +372,34 @@
                                         </label>
                                     </div>
                                 </div>
+
+                                <div v-if="survey.answers.six === 'Others'" class="form-group">
+                                    <label>{{ $t('message.buyer_survey.other') }}</label>
+
+                                    <textarea
+                                        v-model="survey.answers.six_other"
+                                        rows="3"
+                                        class="form-control"
+                                        :placeholder="$t('message.buyer_survey.enter')">
+
+                                    </textarea>
+                                </div>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.six"
+                                    v-for="err in writerSurveyErrors.errors.six"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
+
+                                <span
+                                    v-if="writerSurveyErrors.errors.six_other"
+                                    v-for="err in writerSurveyErrors.errors.six_other"
+                                    class="text-danger">
+
+                                    {{ err }}
+                                </span>
 
                                 <hr/>
                             </div>
@@ -400,6 +508,11 @@ export default {
             },
 
             pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
+
+            writerSurveyErrors: {
+                message: '',
+                errors: {}
+            }
         }
     },
 
@@ -579,6 +692,8 @@ export default {
                         err.response.data.message,
                         'error',
                     )
+
+                    self.writerSurveyErrors = err.response.data;
 
                     console.log(err.response.data.message)
                 });
