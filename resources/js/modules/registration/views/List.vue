@@ -3211,6 +3211,7 @@ export default {
         },
 
         async getAccountList(page = 1) {
+            let loader = this.$loading.show();
 
             // change the format of date
             this.filterModel.created_at = this.formatFilterDates(this.filterModel.created_at)
@@ -3275,6 +3276,8 @@ export default {
                     {orderable : false, targets : '_all'}
                 ],
             });
+
+            loader.hide();
         },
 
         clearSearch() {
@@ -3378,7 +3381,7 @@ export default {
             this.getAccountList({
                 params : this.filterModel
             });
-        }, 800)
+        }, 500)
     }
 }
 </script>
