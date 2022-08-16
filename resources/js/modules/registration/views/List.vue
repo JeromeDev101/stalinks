@@ -291,7 +291,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row mb-2">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-2">
                                 <div class="input-group input-group-sm float-left">
                                     <div class="btn-group">
                                         <button
@@ -350,7 +350,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6 mt-2">
                                 <div class="input-group input-group-sm float-right" style="width: 100px">
                                     <select
                                         v-model="filterModel.paginate"
@@ -382,6 +382,16 @@
 
                                     {{ $t('message.registration_accounts.ra_register') }}
                                 </button>
+
+                                <div class="form-group w-50 float-right mr-2">
+                                    <input
+                                        v-model="filterModel.advance_search"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Search here..."
+
+                                        @input="advanceSearch">
+                                </div>
                             </div>
                         </div>
 
@@ -1769,6 +1779,7 @@
 
 <script>
 import {mapActions, mapState} from 'vuex';
+import __ from "lodash";
 import axios from 'axios';
 import TermsAndConditions from "../../../components/terms/TermsAndConditions";
 import {createTags} from "@johmun/vue-tags-input";
@@ -1848,6 +1859,7 @@ export default {
                     this.$route.query.account_verification || '',
                 is_sub_account : this.$route.query.is_sub_account || '',
                 buyer_transaction : this.$route.query.buyer_transaction || '',
+                advance_search: this.$route.query.advance_search || ''
             },
 
             accountUpdate : {
@@ -3230,6 +3242,7 @@ export default {
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
                     buyer_transaction : this.filterModel.buyer_transaction,
+                    advance_search : this.filterModel.advance_search,
                     page : page
                 }
             });
@@ -3289,6 +3302,7 @@ export default {
                 account_verification : '',
                 is_sub_account: '',
                 buyer_transaction: '',
+                advance_search: '',
             }
 
             this.getAccountList({
@@ -3331,6 +3345,7 @@ export default {
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
                     buyer_transaction : this.filterModel.buyer_transaction,
+                    advance_search : this.filterModel.advance_search,
                 }
             });
 
@@ -3357,7 +3372,13 @@ export default {
             }
 
             return frags.join(' ');
-        }
+        },
+
+        advanceSearch: __.debounce(function () {
+            this.getAccountList({
+                params : this.filterModel
+            });
+        }, 800)
     }
 }
 </script>

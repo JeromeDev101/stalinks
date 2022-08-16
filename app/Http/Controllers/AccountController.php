@@ -170,7 +170,6 @@ class AccountController extends Controller
 
     public function getList(Request $request)
     {
-        // dd($request->all());
         $user_id = Auth::user()->id;
         $status = $request->status;
         $type = $request->type;
@@ -194,6 +193,10 @@ class AccountController extends Controller
         $created_at = json_decode($request->created_at);
         $isTeamSeller = $this->checkTeamSeller();
         $buyer_transaction = $request->buyer_transaction;
+
+        // advance search
+
+        $advance_search = $request->advance_search;
 
         $list = Registration::when( $status, function($query) use ($status){
             return $query->where( 'status', $status );
@@ -306,6 +309,38 @@ class AccountController extends Controller
                     ->doesntHave('user.wallet_transactions');
             }
         })
+
+        // advance search
+
+        ->when(isset($advance_search), function($query) use ($advance_search){
+            $query->whereHas('user', function($sub) use ($advance_search){
+                $sub->where('id', 'LIKE', '%' . $advance_search . '%');
+            })
+            ->orWhere('created_at', 'LIKE', '%' . $advance_search . '%')
+            ->orWhereHas('user', function($sub) use ($advance_search){
+                $sub->whereHas('userPaymentTypes', function($sub_2) use ($advance_search) {
+                    $sub_2->where( 'account', 'LIKE', '%' . $advance_search . '%')->where('is_default', 1);
+                });
+            })
+            ->orWhere( 'email', 'LIKE', '%' . $advance_search . '%' )
+            ->orWhereHas('team_in_charge', function ($sub) use( $advance_search ) {
+                $sub->where('username', 'LIKE', '%' . $advance_search . '%');
+            })
+           ->orWhereHas('affiliate', function ($sub) use( $advance_search ) {
+               $sub->where('username', 'LIKE', '%' . $advance_search . '%');
+            })
+            ->orWhere( 'name', 'LIKE', '%'.$advance_search.'%' )
+            ->orWhere( 'username', 'LIKE', '%'.$advance_search.'%' )
+            ->orWhereHas('country', function ($sub) use( $advance_search ) {
+                $sub->where('name', 'LIKE', '%' . $advance_search . '%');
+            })
+            ->orWhereHas('language', function ($sub) use( $advance_search ) {
+                $sub->where('name', 'LIKE', '%' . $advance_search . '%');
+            })
+            ->orWhere( 'company_name', 'LIKE', '%'.$advance_search.'%' )
+            ->orWhere( 'company_url', 'LIKE', '%'.$advance_search.'%' );
+        })
+
         ->with([
             'team_in_charge:id,name,username,status',
             'team_in_charge' => function ($query) {
