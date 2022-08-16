@@ -276,7 +276,7 @@
                                     </button>
 
                                     <button
-                                        v-if="(user.isOurs === 0 || user.isOurs === 1) && !isStatusOnQueue(scope.row)"
+                                        v-if="(user.isOurs === 0 || user.isOurs === 1)"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
@@ -759,7 +759,7 @@
                     allow_script_urls: false,
                 },
 
-                writer_status: ['In Writing', 'Issue', 'Done'],
+                writer_status: ['Queue', 'In Writing', 'Issue', 'Done'],
                 viewModel: {
                     backlink: '',
                 },

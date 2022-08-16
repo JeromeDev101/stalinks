@@ -349,12 +349,12 @@
                                     <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
                                     <td v-show="tblOptions.link_from">
                                         <div class="dont-break-out">
-                                            {{ sales.link_from }}
+                                            <a :href="sales.link_from" target="_blank">{{ sales.link_from }}</a>
                                         </div>
                                     </td>
                                     <td v-show="tblOptions.link_to">
                                         <div class="dont-break-out">
-                                            <a :href="'//' + sales.link" target="_blank">{{ sales.link }}</a>
+                                            <a :href="sales.link" target="_blank">{{ sales.link }}</a>
                                         </div>
                                     </td>
                                     <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
@@ -1055,8 +1055,12 @@
                     'Content sent',
                     'Live in Process',
                     'Issue',
+                    'Canceled',
                     'Live',
-                    'Canceled'
+                    'Nofollow',
+                    '404',
+                    'Deleted',
+                    'Refund'
                 ],
                 writer_status: ['In Writing', 'Done'],
                 updateModel: {

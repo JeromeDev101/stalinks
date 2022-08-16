@@ -309,7 +309,7 @@
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.link_from">
                                             <div class="dont-break-out">
-                                                <a :href="'//' + backLink.link_from" target="_blank">{{ backLink.link_from }}</a>
+                                                <a :href="backLink.link_from" target="_blank">{{ backLink.link_from }}</a>
                                             </div>
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.link_to">
@@ -630,7 +630,22 @@
             return {
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
-                statusBaclink: ['To Be Validated', 'Pending', 'Processing', 'Content In Writing', 'Content Done', 'Content sent', 'Live', 'Live in Process',  'Issue', 'Canceled'],
+                statusBaclink: [
+                    'To Be Validated',
+                    'Pending',
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live in Process', 
+                    'Issue',
+                    'Canceled',
+                    'Live',
+                    'Nofollow',
+                    '404',
+                    'Deleted',
+                    'Refund'
+                ],
                 data_filed: {
                     'URL Publisher': 'publisher.url',
                     'URL Advertiser': 'url_advertiser',
