@@ -299,22 +299,22 @@
                                         <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
                                             <!--                                    {{ backLink.url_advertiser }}-->
                                             <span v-if="backLink.url_advertiser == null">
-                                            N/A
-                                        </span>
+                                                N/A
+                                            </span>
                                             <span v-else>
-                                            <a :href="'//' + replaceCharacters(backLink.url_advertiser)" target="_blank">
+                                            <!-- <a :href="'//' + replaceCharacters(backLink.url_advertiser)" target="_blank"> -->
                                                 {{ backLink.url_advertiser }}
-                                            </a>
-                                        </span>
+                                            <!-- </a> -->
+                                            </span>
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.link_from">
                                             <div class="dont-break-out">
-                                                {{ backLink.link_from }}
+                                                <a :href="'//' + backLink.link_from" target="_blank">{{ backLink.link_from }}</a>
                                             </div>
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.link_to">
                                             <div class="dont-break-out">
-                                                <a href="backLink.link">{{ backLink.link }}</a>
+                                                {{ backLink.link }}
                                             </div>
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">{{ backLink.price == null || backLink.price == '' ? 0:'$ '+ formatPrice(backLink.price) }}</td>

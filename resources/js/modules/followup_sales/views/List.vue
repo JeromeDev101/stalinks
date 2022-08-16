@@ -354,7 +354,7 @@
                                     </td>
                                     <td v-show="tblOptions.link_to">
                                         <div class="dont-break-out">
-                                            {{ sales.link }}
+                                            <a :href="'//' + sales.link" target="_blank">{{ sales.link }}</a>
                                         </div>
                                     </td>
                                     <td v-show="tblOptions.anchor_text">{{ sales.anchor_text }}</td>
