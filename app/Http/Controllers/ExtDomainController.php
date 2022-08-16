@@ -690,6 +690,7 @@ class ExtDomainController extends Controller
                     'topic' => $request->pub['topic'],
                     'casino_sites' => $request->pub['casino_sites'],
                     'valid' => 'valid',
+                    'from' => 'prospect',
                 ]);
 
 //                $input['user_id'] = $id;

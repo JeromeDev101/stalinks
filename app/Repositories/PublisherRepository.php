@@ -656,6 +656,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                                         'topic'        => $topic,
                                         'kw_anchor'    => $kw_anchor,
                                         'is_https'     => $this->httpClient->getProtocol($url) == 'https' ? 'yes' : 'no',
+                                        'from'         => 'csv',
                                     ];
 
                                     if (count($rows)) {

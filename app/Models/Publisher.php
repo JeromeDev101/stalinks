@@ -53,7 +53,8 @@ class Publisher extends Model
             'org_traffic',
             'direct_admin_sites',
             'anchor_text',
-            'link'
+            'link',
+            'from',
         ];
 
     public function getCustomUrlAttribute() {

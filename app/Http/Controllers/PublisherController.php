@@ -149,6 +149,7 @@ class PublisherController extends Controller
         }
 
         $input['is_https'] = $this->httpClient->getProtocol($url_copy) == 'https' ? 'yes' : 'no';
+        $input['from'] = 'manual';
 
         Publisher::create($input);
         return response()->json(['success' => true], 200);

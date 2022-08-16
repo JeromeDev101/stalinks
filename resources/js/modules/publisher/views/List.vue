@@ -1114,7 +1114,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             {{ $t('message.publisher.close') }}
                         </button>
-                        <button type="button" @click="submitAdd" class="btn btn-primary">
+                        <button type="button" @click="submitAdd" class="btn btn-primary" :disabled="isSubmitAdd">
                             {{ $t('message.publisher.add') }}
                         </button>
                     </div>
@@ -1697,6 +1697,8 @@ export default {
                 // for removed items in list
 
                 removedItems: [],
+
+                isSubmitAdd: false,
             }
         },
 
@@ -2860,6 +2862,7 @@ export default {
 
             async submitAdd() {
                 let self = this;
+                self.isSubmitAdd = true;
                 this.addModel.account_valid = this.checkAccountValidity();
 
                 await this.$store.dispatch('actionAddUrl', this.addModel);
@@ -2887,12 +2890,16 @@ export default {
                         continent_id: '',
                         kw_anchor: '',
                     }
+
+                    self.isSubmitAdd = false;
                 } else {
                     swal.fire(
                         self.$t('message.publisher.alert_failed'),
                         self.$t('message.publisher.alert_failed_url'),
                         'error'
                     )
+
+                    self.isSubmitAdd = false;
                 }
             },
 
