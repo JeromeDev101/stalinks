@@ -389,6 +389,7 @@
                                         type="text"
                                         class="form-control"
                                         placeholder="Search here..."
+                                        :disabled="isAdvanceSearching"
 
                                         @input="advanceSearch">
                                 </div>
@@ -1958,6 +1959,8 @@ export default {
                 type: '',
                 category: ''
             },
+
+            isAdvanceSearching: false,
         }
     },
 
@@ -3212,6 +3215,7 @@ export default {
 
         async getAccountList(page = 1) {
             let loader = this.$loading.show();
+            this.isAdvanceSearching = true;
 
             // change the format of date
             this.filterModel.created_at = this.formatFilterDates(this.filterModel.created_at)
@@ -3277,6 +3281,7 @@ export default {
                 ],
             });
 
+            this.isAdvanceSearching = false;
             loader.hide();
         },
 
