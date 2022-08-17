@@ -84,7 +84,7 @@
                                 <div class="form-group">
                                     <label>{{ $t('message.follow_backlinks.filter_status') }}</label>
                                     <v-select multiple
-                                              v-model="fillter.status" :options="statusBaclink" :searchable="false" :placeholder="$t('message.follow_backlinks.all')"/>
+                                              v-model="fillter.status" :options="statusBaclinkAfterLive" :searchable="false" :placeholder="$t('message.follow_backlinks.all')"/>
                                     <!--                                <select class="form-control" v-model="fillter.status">-->
                                     <!--                                    <option value="">All</option>-->
                                     <!--                                    <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>-->
@@ -530,7 +530,8 @@
                                     <div>
                                         <label>{{ $t('message.follow_backlinks.filter_status') }}</label>
                                         <select  class="form-control pull-right" v-model="modelBaclink.status" style="height: 37px;" :disabled="isBuyer || user.role_id == 8">
-                                            <option v-for="status in statusBaclink" v-bind:value="status">{{ status }}</option>
+                                            <option v-for="status in statusBaclinkAfterLive" v-bind:value="status" v-if="modelBaclink.status == 'Live' || modelBaclink.status == 'Nofollow' || modelBaclink.status == '404' || modelBaclink.status == 'Deleted' || modelBaclink.status == 'Refund'">{{ status }}</option>
+                                            <option v-for="status in statusBaclink" v-bind:value="status" v-if="modelBaclink.status != 'Live' && modelBaclink.status != 'Nofollow' && modelBaclink.status != '404' && modelBaclink.status != 'Deleted' && modelBaclink.status != 'Refund'">{{ status }}</option>
                                         </select>
                                         <span v-if="messageBacklinkForms.errors.status" v-for="statusErr in messageBacklinkForms.errors.status" class="text-danger">{{ statusErr }}</span>
                                     </div>
@@ -631,6 +632,18 @@
                 paginate: [50,150,250,350,500,'All'],
                 file_csv: 'baclink.xls',
                 statusBaclink: [
+                    'To Be Validated',
+                    'Pending',
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live in Process', 
+                    'Issue',
+                    'Canceled',
+                    'Live'
+                ],
+                statusBaclinkAfterLive: [
                     'To Be Validated',
                     'Pending',
                     'Processing',
@@ -1006,10 +1019,10 @@
                 axios.get('/api/backlinks-summary-status')
                 .then((res)=> {
                     let _res = res.data
-                    for(let index in this.statusBaclink) {
-                        let _result = _res.find( ({ status }) => status === this.statusBaclink[index] );
+                    for(let index in this.statusBaclinkAfterLive) {
+                        let _result = _res.find( ({ status }) => status === this.statusBaclinkAfterLive[index] );
                         let data = {
-                            "status": this.statusBaclink[index],
+                            "status": this.statusBaclinkAfterLive[index],
                             "total": (typeof(_result) != "undefined") ? _result.total:0
                         }
 

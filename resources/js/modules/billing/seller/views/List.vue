@@ -121,7 +121,7 @@
                     <div class="card-body">
                         <h5 class="d-inline pull-right">{{ $t('message.seller_billing.sb_amount') }} $ {{ totalAmount }}</h5>
 
-                        <div class="row">
+                        <div class="row" v-if="user.isOurs != 1">
                             <div class="col-md-2 my-3">
 
                                 <div class="input-group">
@@ -155,7 +155,7 @@
                             <thead>
                             <tr class="label-primary">
                                 <th>#</th>
-                                <th>{{ $t('message.seller_billing.sb_select') }}</th>
+                                <th v-if="user.isOurs != 1">{{ $t('message.seller_billing.sb_select')}} </th>
                                 <th>{{ $t('message.seller_billing.sb_id_backlink') }}</th>
                                 <th>{{ $t('message.seller_billing.filter_seller') }}</th>
                                 <th>{{ $t('message.seller_billing.sb_seller_price') }}</th>
@@ -169,7 +169,7 @@
                             <tbody>
                             <tr v-for="(seller, index) in listSellerBilling.data" :key="index">
                                 <td>{{ index + 1 }}</td>
-                                <td>
+                                <td v-if="user.isOurs != 1">
                                     <div class="btn-group">
                                         <label class="btn btn-default">
                                             <input type="checkbox"
@@ -584,6 +584,7 @@ export default {
             listPayment : state => state.storeBillingSeller.listPayment,
             listSeller : state => state.storeBillingSeller.listSeller,
             sellerInfo : state => state.storeBillingSeller.sellerInfo,
+            user: state => state.storeAuth.currentUser,
         }),
     },
 

@@ -60,7 +60,7 @@
                                     <v-select
                                         multiple
                                         v-model="filterModel.status"
-                                        :options="statusBacklinkQc"
+                                        :options="statusBacklinkQcAfterLive"
                                         :searchable="false"
                                         :placeholder="$t('message.follow.all')"/>
                                     <!--                                <select name="" class="form-control" v-model="filterModel.status">-->
@@ -498,7 +498,14 @@
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklinkQc"
-                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0">
+                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0 && updateModel.status != 'Live' && updateModel.status != 'Nofollow' && updateModel.status != '404' && updateModel.status != 'Deleted' && updateModel.status != 'Refund'">
+                                                {{ status }}
+                                            </option>
+
+                                            <option
+                                                v-bind:value="status"
+                                                v-for="status in statusBacklinkQcAfterLive"
+                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0 && (updateModel.status == 'Live' || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund')">
                                                 {{ status }}
                                             </option>
                                         </select>
@@ -1048,6 +1055,17 @@
                     'Canceled'
                 ],
                 statusBacklinkQc: [
+                    'Pending',
+                    'Processing',
+                    'Content In Writing',
+                    'Content Done',
+                    'Content sent',
+                    'Live in Process',
+                    'Issue',
+                    'Canceled',
+                    'Live'
+                ],
+                statusBacklinkQcAfterLive: [
                     'Pending',
                     'Processing',
                     'Content In Writing',
