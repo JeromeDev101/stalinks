@@ -227,14 +227,10 @@ class FollowupSalesController extends Controller
     }
 
     public function generateArticle (Request $request) {
-        Log::info('generate_article: ', ['request' => $request->all()]);
-
         DB::transaction(function () use ($request) {
             // generate article
 
             $backlink = Backlink::find($request->id);
-
-            Log::info('generate_article: ', ['request' => $backlink]);
 
             if ($backlink) {
                 // Create article
@@ -244,12 +240,8 @@ class FollowupSalesController extends Controller
                         'id_language' => $backlink->publisher->language_id,
                     ]);
 
-                    Log::info('generate_article_v2: ', ['request' => $article]);
-
                     // notify internal and external valid writers
                     event(new ArticleCreatedEvent($article));
-
-                    Log::info('generate_article_v3: ', ['request' => $backlink->publisher]);
 
                     // update list publisher data inc article to 'no'
                     $backlink->publisher()->update([
