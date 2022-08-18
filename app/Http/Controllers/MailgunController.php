@@ -609,6 +609,8 @@ class MailgunController extends Controller
         $data = [
             'sender'          => $request->sender,
             'subject'         => $request->subject,
+            'cc'              => $request->cc,
+            'bcc'             => $request->bcc,
             'body'            => json_encode($request->only('body-plain')),
             'stripped_html'   => $stripped_html,
             'body_html'       => $body_html,
