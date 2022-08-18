@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Article;
 use App\Events\NotificationEvent;
+use Illuminate\Support\Facades\Log;
 
 class FollowupSalesController extends Controller
 {
@@ -226,6 +227,8 @@ class FollowupSalesController extends Controller
     }
 
     public function generateArticle (Request $request) {
+        Log::info('generate_article: ', ['request' => $request->all()]);
+
         DB::transaction(function () use ($request) {
             // generate article
 
