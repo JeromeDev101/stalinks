@@ -441,8 +441,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('renew-post')->post('/renew', 'RenewController@renew');
 
     // generate article for follow up sales
-    Route::name('generate-article')->post('/generate-article', 'FollowUpSalesController@generateArticle');
-    Route::name('update-publisher-inc-article')->post('/update-publisher-inc-article', 'FollowUpSalesController@updatePublisherIncArticle');
+    Route::name('generate-article')->post('/generate-article', 'FollowupSalesController@generateArticle');
+    Route::name('update-publisher-inc-article')->post('/update-publisher-inc-article', 'FollowupSalesController@updatePublisherIncArticle');
 });
 
 //Mailgun external
