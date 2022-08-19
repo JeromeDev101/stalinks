@@ -3103,7 +3103,7 @@ export default {
                 this.validate_error_type_update = false;
                 $(element).modal('hide');
 
-                this.getAccountList();
+                await this.getAccountList();
 
                 loader.hide();
             } else {
@@ -3215,8 +3215,6 @@ export default {
 
         async getAccountList(page = 1) {
             let loader = this.$loading.show();
-            this.isAdvanceSearching = true;
-
             // change the format of date
             this.filterModel.created_at = this.formatFilterDates(this.filterModel.created_at)
 
@@ -3224,6 +3222,8 @@ export default {
             this.isLoadingTable = true;
             this.isSearchLoading = true;
             this.isSearching = true;
+            this.isAdvanceSearching = true;
+
             await this.$store.dispatch('actionGetAccount', {
                 params : {
                     type : this.filterModel.type,
@@ -3254,6 +3254,7 @@ export default {
             this.isLoadingTable = false;
             this.isSearchLoading = false;
             this.isSearching = false;
+            this.isAdvanceSearching = false;
 
             $("#tbl_account").DataTable({
                 paging : false,
@@ -3280,8 +3281,6 @@ export default {
                     {orderable : false, targets : '_all'}
                 ],
             });
-
-            this.isAdvanceSearching = false;
             loader.hide();
         },
 
@@ -3383,9 +3382,7 @@ export default {
         },
 
         advanceSearch: __.debounce(function () {
-            this.getAccountList({
-                params : this.filterModel
-            });
+            this.getAccountList();
         }, 500)
     }
 }
