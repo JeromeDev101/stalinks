@@ -248,8 +248,10 @@
                                     <input
                                         v-model="filterModel.payment_info_data"
                                         type="text"
-                                        autocomplete="false"
                                         class="form-control"
+                                        autocomplete="disabled"
+                                        id="filterPaymentInfoData"
+                                        name="filterPaymentInfoData"
                                         :placeholder="$t('message.registration_accounts.type')">
                                 </div>
                             </div>
@@ -388,8 +390,10 @@
                                     <input
                                         v-model="filterModel.advance_search"
                                         type="text"
-                                        autocomplete="false"
                                         class="form-control"
+                                        autocomplete="disabled"
+                                        id="filterAdvanceSearch"
+                                        name="filterAdvanceSearch"
                                         placeholder="Search here..."
                                         :disabled="isAdvanceSearching"
 
