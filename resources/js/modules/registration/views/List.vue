@@ -248,7 +248,7 @@
                                     <input
                                         v-model="filterModel.payment_info_data"
                                         type="text"
-                                        autocomplete="off"
+                                        autocomplete="false"
                                         class="form-control"
                                         :placeholder="$t('message.registration_accounts.type')">
                                 </div>
@@ -388,7 +388,7 @@
                                     <input
                                         v-model="filterModel.advance_search"
                                         type="text"
-                                        autocomplete="off"
+                                        autocomplete="false"
                                         class="form-control"
                                         placeholder="Search here..."
                                         :disabled="isAdvanceSearching"
