@@ -13,6 +13,7 @@ use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mailgun\Mailgun;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -577,18 +578,20 @@ class MailgunController extends Controller
 
         $stored_attachments_data = count($stored_attachments) > 0 ? json_encode($stored_attachments) : null;
 
-        $message_id    = $request->only('Message-Id');
-        $message_id    = preg_replace("/[<>]/", "", $message_id['Message-Id']);
-        $in_reply_to   = null;
-        $references    = null;
+        $message_id = $request->only('Message-Id');
+        $message_id = preg_replace("/[<>]/", "", $message_id['Message-Id']);
+        $in_reply_to = null;
+        $references = null;
         $stripped_html = null;
-        $body_html     = null;
-        $to            = null;
+        $body_html = null;
+        $to = null;
+        $bcc = null;
+        $cc = null;
 
         $r_attachment = [];
 
         // log request
-        Log::info('post_reply: ', ['request' => $request->all()]);
+//        Log::info('post_reply: ', ['request' => $request->all()]);
 
         $input = $request->all();
 
@@ -611,16 +614,23 @@ class MailgunController extends Controller
         }
 
         if (isset($input['To']) && $input['To']) {
-            $to = preg_replace("/[<>]/", "", $input['To']);
+            $to = $this->getStringBetween($input['To'], ['<', '>']);
         }
 
-        Log::info('post_reply_to: ', ['to' => $to]);
+        if (isset($request->Bcc) && $request->Bcc) {
+            $bcc = $this->getStringBetween($request->Bcc, ['<', '>']);
+        }
+
+        if (isset($request->Cc) && $request->Cc) {
+            $cc = $this->getStringBetween($request->Cc, ['<', '>']);
+        }
 
         $data = [
             'sender'          => $request->sender,
             'subject'         => $request->subject,
-            'cc'              => $request->Cc,
-            'bcc'             => $request->Bcc,
+            'cc'              => $cc,
+            'bcc'             => $bcc,
+            'email_to'        => $to,
             'body'            => json_encode($request->only('body-plain')),
             'stripped_html'   => $stripped_html,
             'body_html'       => $body_html,
@@ -1393,5 +1403,14 @@ class MailgunController extends Controller
         return strpos($subject, 'Re:') !== false
             ? str_replace('Re: ', "", $subject)
             : 'Re: ' . $subject;
+    }
+
+    public function getStringBetween ($string, Array $params) {
+        if (Str::contains($string, $params)) {
+            $after = Str::after($string, $params[0]);
+            return Str::before($after, $params[1]);
+        } else {
+            return $string;
+        }
     }
 }
