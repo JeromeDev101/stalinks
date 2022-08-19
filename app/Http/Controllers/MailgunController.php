@@ -583,11 +583,12 @@ class MailgunController extends Controller
         $references    = null;
         $stripped_html = null;
         $body_html     = null;
+        $to            = null;
 
         $r_attachment = [];
 
         // log request
-//        Log::info('post_reply: ', ['request' => $request->all()]);
+        Log::info('post_reply: ', ['request' => $request->all()]);
 
         $input = $request->all();
 
@@ -608,6 +609,12 @@ class MailgunController extends Controller
         if (isset($input['body-html']) && $input['body-html']) {
             $body_html = json_encode($request->only('body-html'));
         }
+
+        if (isset($input['To']) && $input['To']) {
+            $to = preg_replace("/[<>]/", "", $input['To']);
+        }
+
+        Log::info('post_reply_to: ', ['to' => $to]);
 
         $data = [
             'sender'          => $request->sender,
