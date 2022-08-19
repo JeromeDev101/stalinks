@@ -63,8 +63,9 @@
                                     <input
                                         v-model="filterModel.details"
                                         type="text"
-                                        :placeholder="$t('message.tools.filter_search_details')"
-                                        class="form-control pull-right">
+                                        autocomplete="off"
+                                        class="form-control pull-right"
+                                        :placeholder="$t('message.tools.filter_search_details')">
                                 </div>
                             </div>
                         </div>

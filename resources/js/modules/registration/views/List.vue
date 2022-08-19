@@ -248,6 +248,7 @@
                                     <input
                                         v-model="filterModel.payment_info_data"
                                         type="text"
+                                        autocomplete="off"
                                         class="form-control"
                                         :placeholder="$t('message.registration_accounts.type')">
                                 </div>
@@ -387,6 +388,7 @@
                                     <input
                                         v-model="filterModel.advance_search"
                                         type="text"
+                                        autocomplete="off"
                                         class="form-control"
                                         placeholder="Search here..."
                                         :disabled="isAdvanceSearching"
@@ -3309,7 +3311,7 @@ export default {
                 account_verification : '',
                 is_sub_account: '',
                 buyer_transaction: '',
-                advance_search: '',
+                advance_search: this.filterModel.advance_search,
             }
 
             this.getAccountList({
