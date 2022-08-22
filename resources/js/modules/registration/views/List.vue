@@ -716,381 +716,383 @@
         <div class="modal fade" id="modal-registration" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ $t('message.registration_accounts.r_title') }}</h5>
-                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                    <form action="" autocomplete="off" @submit.prevent="">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ $t('message.registration_accounts.r_title') }}</h5>
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
-                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
                             {{ messageForms.message }}
                         </span>
-                    </div>
-                    <div class="modal-body">
-                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountModel.type" @change="checkTeamIncharge('add')">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
-                                        <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
-                                        <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
-                                        <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
-                                        <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                        </div>
+                        <div class="modal-body">
+                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountModel.type" @change="checkTeamIncharge('add')">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
+                                            <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                            <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                            <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                            <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.username" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.name" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.name" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.email" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.email" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_phone') }}</label>
-                                    <input type="text" class="form-control" v-model="accountModel.phone" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_phone') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.phone" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_skype') }}</label>
-                                    <input type="text" class="form-control" v-model="accountModel.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_skype') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.skype">
+                                        <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_password') }} <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" v-model="accountModel.password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_password') }} <span class="text-danger">*</span></label>
+                                        <input type="password" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.password" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_confirm_password') }} <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_confirm_password') }} <span class="text-danger">*</span></label>
+                                        <input type="password" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.c_password" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-12" >
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
-                                        <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
-                                        <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
-                                    </select>
+                                <div class="col-md-12" >
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" v-model="accountModel.company_type" @click="checkCompanyType()">
+                                            <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
+                                            <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-12" v-show="addCompanyName">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountModel.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-12" v-show="addCompanyName">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.company_name">
+                                        <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-12" v-show="addCompanyName">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
-                                    <input type="text" class="form-control" v-model="accountModel.company_url">
-                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-12" v-show="addCompanyName">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.company_url">
+                                        <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
-                                    <select class="form-control" v-model="accountModel.country_id">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_country') }}</label>
+                                        <select class="form-control" v-model="accountModel.country_id">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>
-                                        {{ $t('message.registration_accounts.filter_lang') }}
-                                    </label>
-                                    <small>
-                                        <i class="text-danger">
-                                            {{ $t('message.registration_accounts.r_required_writer') }}
-                                        </i>
-                                    </small>
-                                    <v-select
-                                        multiple
-                                        v-model="accountModel.language_id"
-                                        label="name"
-                                        :options="listLanguages.data"
-                                        :reduce="name => name.id"
-                                        :searchable="true"
-                                        :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>
+                                            {{ $t('message.registration_accounts.filter_lang') }}
+                                        </label>
+                                        <small>
+                                            <i class="text-danger">
+                                                {{ $t('message.registration_accounts.r_required_writer') }}
+                                            </i>
+                                        </small>
+                                        <v-select
+                                            multiple
+                                            v-model="accountModel.language_id"
+                                            label="name"
+                                            :options="listLanguages.data"
+                                            :reduce="name => name.id"
+                                            :searchable="true"
+                                            :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
 
                                         <span class="text-danger" v-if="isErrorLang">
                                             {{ $t('message.registration_accounts.r_required_lang') }}
                                         </span>
+                                    </div>
                                 </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_address') }}</label>
+                                        <textarea class="form-control" v-model="accountModel.address"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_info') }}</label>
+                                        <textarea class="form-control" v-model="accountModel.info"></textarea>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_address') }}</label>
-                                    <textarea class="form-control" v-model="accountModel.address"></textarea>
+                            <hr v-show="addDisplayWriterPrice"/>
+                            <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
+                            <div v-show="addDisplayWriterPrice" class="alert alert-info">
+                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                            </div>
+                            <hr v-show="addDisplayWriterPrice"/>
+
+                            <div class="row" v-show="addDisplayWriterPrice">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
+                                        <select class="form-control" v-model="accountModel.rate_type">
+                                            <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
+                                            <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
+
                             </div>
 
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_info') }}</label>
-                                    <textarea class="form-control" v-model="accountModel.info"></textarea>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <hr v-show="addDisplayWriterPrice"/>
-                        <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
-                        <div v-show="addDisplayWriterPrice" class="alert alert-info">
-                            <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
-                        </div>
-                        <hr v-show="addDisplayWriterPrice"/>
-
-                        <div class="row" v-show="addDisplayWriterPrice">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
-                                    <select class="form-control" v-model="accountModel.rate_type">
-                                        <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
-                                        <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div v-if="accountModel.type !== 'Affiliate'">
-                            <hr/>
-                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_payment_info') }}</h4>
-                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">
+                            <div v-if="accountModel.type !== 'Affiliate'">
+                                <hr/>
+                                <h4 class="text-primary">{{ $t('message.registration_accounts.r_payment_info') }}</h4>
+                                <span v-if="messageForms.errors.id_payment_type" class="text-danger">
                                 {{ $t('message.registration_accounts.r_select_default') }}
                             </span>
-                            <span v-if="validate_error_type" class="text-danger">
+                                <span v-if="validate_error_type" class="text-danger">
                                 {{ $t('message.registration_accounts.r_input_selected') }}
                             </span>
 
-                            <!-- empty account type -->
-                            <table class="table" v-if="accountModel.type == ''">
-                                <tr>
-                                    <td class="text-center text-danger">
-                                        {{ $t('message.registration_accounts.r_select_account') }}
-                                    </td>
-                                </tr>
-                            </table>
+                                <!-- empty account type -->
+                                <table class="table" v-if="accountModel.type == ''">
+                                    <tr>
+                                        <td class="text-center text-danger">
+                                            {{ $t('message.registration_accounts.r_select_account') }}
+                                        </td>
+                                    </tr>
+                                </table>
 
-                            <!-- payment for seller and writer -->
-                            <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
-                                </tr>
-                                <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
-                                    <td>
-                                        <div class="form-group">
-                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
-                                            <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
-                                        </div>
+                                <!-- payment for seller and writer -->
+                                <table class="table" v-if="accountModel.type === 'Seller' || accountModel.type === 'Writer'">
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $t('message.registration_accounts.filter_default') }}</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
+                                                <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
+                                            </div>
 
-                                        <span
-                                            v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
-                                            v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
-                                            class="text-danger">
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
+                                                class="text-danger">
 
                                             {{ err }}
                                         </span>
 
 
-                                        <div class="px-5"
-                                            v-show="payment_method.account_name ||
+                                            <div class="px-5"
+                                                 v-show="payment_method.account_name ||
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
                                                 payment_method.account_iban
                                             "
                                             >
-                                            <h6 class="text-primary">Other Details:</h6>
-                                            <hr/>
+                                                <h6 class="text-primary">Other Details:</h6>
+                                                <hr/>
 
-                                            <div class="row">
-                                                <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                    <label for="">Bank Name:</label>
-                                                    <input type="text" class="form-control" v-model="accountModel.bank_name[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.account_name">
-                                                    <label for="">Account Name:</label>
-                                                    <input type="text" class="form-control" v-model="accountModel.account_name[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                    <label for="">Account IBAN:</label>
-                                                    <input type="text" class="form-control" v-model="accountModel.account_iban[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                    <label for="">SWIFT Code:</label>
-                                                    <input type="text" class="form-control" v-model="accountModel.swift_code[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                    <label for="">Beneficiary Address:</label>
-                                                    <input type="text" class="form-control" v-model="accountModel.beneficiary_add[payment_method.id]">
+                                                <div class="row">
+                                                    <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                        <label>Bank Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.bank_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_name">
+                                                        <label>Account Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                        <label>Account IBAN:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_iban[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                        <label>SWIFT Code:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.swift_code[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                        <label>Beneficiary Address:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.beneficiary_add[payment_method.id]">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- end of payment for seller and writer -->
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- end of payment for seller and writer -->
 
-                            <!-- payment for buyer -->
-                            <table class="table" v-if="accountModel.type === 'Buyer'">
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
-                                </tr>
-                                <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
-                                    <td>
-                                        <div class="form-group">
-                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
-                                            <input type="text" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
-                                        </div>
+                                <!-- payment for buyer -->
+                                <table class="table" v-if="accountModel.type === 'Buyer'">
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $t('message.registration_accounts.filter_default') }}</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index">
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
+                                                <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.add_method_payment_type[payment_method.id]">
+                                            </div>
 
-                                        <span
-                                            v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
-                                            v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
-                                            class="text-danger">
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
+                                                class="text-danger">
 
                                             {{ err }}
                                         </span>
-                                    </td>
-                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- end of payment for buyer -->
-                        </div>
-
-                        <hr/>
-                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
-                        <hr/>
-
-                        <div class="row">
-
-                            <!-- <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>Commission <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountModel.commission">
-                                        <option value="" disabled>Select Commission</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div> -->
-
-                            <div class="col-sm-6" v-if="isTeamSeller">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
-                                    <select class="form-control" v-model="accountModel.team_in_charge">
-                                        <option value="">{{ $t('message.registration_accounts.r_select_in_charge') }}</option>
-                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
-                                            {{ option.username == null || option.username == '' ? option.name:option.username}}
-                                        </option>
-                                    </select>
-                                </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountModel.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- end of payment for buyer -->
                             </div>
 
-                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
-                                <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
-                                <select class="form-control" name="" v-model="accountModel.account_validation">
-                                    <option value="" disabled>{{ $t('message.registration_accounts.r_select_account_validation') }}</option>
-                                    <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
-                                    <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
-                                    <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
-                                </select>
-                                <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
-                            </div>
+                            <hr/>
+                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
+                            <hr/>
 
-                            <div class="col-sm-6" v-if="accountModel.type == 'Buyer' && user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
-                                    <select class="form-control" v-model="accountModel.affiliate">
-                                        <option value="">{{ $t('message.registration_accounts.none') }}</option>
-                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
-                                        </option>
+                            <div class="row">
+
+                                <!-- <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Commission <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountModel.commission">
+                                            <option value="" disabled>Select Commission</option>
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div> -->
+
+                                <div class="col-sm-6" v-if="isTeamSeller">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
+                                        <select class="form-control" v-model="accountModel.team_in_charge">
+                                            <option value="">{{ $t('message.registration_accounts.r_select_in_charge') }}</option>
+                                            <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                                {{ option.username == null || option.username == '' ? option.name:option.username}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
+                                    <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="" v-model="accountModel.account_validation">
+                                        <option value="" disabled>{{ $t('message.registration_accounts.r_select_account_validation') }}</option>
+                                        <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                        <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                        <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
                                     </select>
+                                    <span v-if="messageForms.errors.account_validation" v-for="err in messageForms.errors.account_validation" class="text-danger">{{ err }}</span>
+                                </div>
+
+                                <div class="col-sm-6" v-if="accountModel.type == 'Buyer' && user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
+                                        <select class="form-control" v-model="accountModel.affiliate">
+                                            <option value="">{{ $t('message.registration_accounts.none') }}</option>
+                                            <option v-for="option in listAffiliate.data" v-bind:value="option.id">
+                                                {{ option.username == null ? option.name : option.username }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer d-flex align-items-center justify-content-between">
-                        <div>
-                            <p class="mb-0">
-                                <input
-                                    type="checkbox"
-                                    v-model="btnTermsAndConditions"
-                                    @change="isDisableSubmit =  !isDisableSubmit">
-                                {{ $t('message.registration_accounts.r_ive_read') }}
+                        <div class="modal-footer d-flex align-items-center justify-content-between">
+                            <div>
+                                <p class="mb-0">
+                                    <input
+                                        type="checkbox"
+                                        v-model="btnTermsAndConditions"
+                                        @change="isDisableSubmit =  !isDisableSubmit">
+                                    {{ $t('message.registration_accounts.r_ive_read') }}
 
-                                <a
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#modalTermsAndCondition">
-                                    {{ $t('message.registration_accounts.r_terms') }}
-                                </a>
-                            </p>
-                        </div>
+                                    <a
+                                        href="#"
+                                        data-toggle="modal"
+                                        data-target="#modalTermsAndCondition">
+                                        {{ $t('message.registration_accounts.r_terms') }}
+                                    </a>
+                                </p>
+                            </div>
 
-                        <div>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                {{ $t('message.registration_accounts.close') }}
-                            </button>
-                            <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">
-                                {{ $t('message.registration_accounts.save') }}
-                            </button>
+                            <div>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    {{ $t('message.registration_accounts.close') }}
+                                </button>
+                                <button :disabled="isDisableSubmit" type="button" @click="submitAdd" class="btn btn-primary">
+                                    {{ $t('message.registration_accounts.save') }}
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1334,392 +1336,394 @@
         <div class="modal fade" id="modal-update-registration" ref="modalUpdateAccount" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">{{ $t('message.registration_accounts.ur_title') }}</h5>
-                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                    <form action="" autocomplete="off" @submit.prevent="">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ $t('message.registration_accounts.ur_title') }}</h5>
+                            <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
-                        <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            <span v-if="messageForms.message != '' && !isPopupLoading" :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
                             {{ messageForms.message }}
                         </span>
-                    </div>
-                    <div class="modal-body">
-
-                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
-                        <hr/>
-
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="alert alert-warning" v-show="!isVerified">
-                                    <p>
-                                        {{ $t('message.registration_accounts.ur_account_not_verified') }}
-                                        <button class="btn btn-default pull-right" @click="verifiedAccount()">
-                                            {{ $t('message.registration_accounts.ur_verify') }}
-                                        </button>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
-                                        <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
-                                        <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
-                                        <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
-                                        <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" :disabled="true" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_phone') }}</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_skype') }}</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.skype">
-                                    <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_password') }}</label>
-                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_confirm_password') }}</label>
-                                    <input type="password" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
-                                    <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
-                                        <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
-                                        <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_name">
-                                    <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12" v-show="updateCompanyName">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
-                                    <input type="text" class="form-control" v-model="accountUpdate.company_url">
-                                    <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
-                                    <select class="form-control" v-model="accountUpdate.country_id">
-                                        <option v-for="option in listCountryAll.data" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>
-                                        {{ $t('message.registration_accounts.filter_lang') }}
-                                    </label>
-                                    <small>
-                                        <i class="text-danger">* {{ $t('message.registration_accounts.r_required_writer') }}</i>
-                                    </small>
-                                    <v-select
-                                        multiple
-                                        v-model="accountUpdate.language_id"
-                                        label="name"
-                                        :options="listLanguages.data"
-                                        :reduce="name => name.id"
-                                        :searchable="true"
-                                        :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
-
-                                    <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_address') }}</label>
-                                    <textarea class="form-control" v-model="accountUpdate.address"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_info') }}</label>
-                                    <textarea class="form-control" v-model="accountUpdate.info"></textarea>
-                                </div>
-                            </div>
-
                         </div>
+                        <div class="modal-body">
 
-                        <hr v-show="updateDisplayWriterPrice"/>
-                        <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
-                        <div v-show="updateDisplayWriterPrice" class="alert alert-info">
-                            <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
-                        </div>
-                        <hr v-show="updateDisplayWriterPrice"/>
+                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_account_info') }}</h4>
+                            <hr/>
 
-                        <div class="row" v-show="updateDisplayWriterPrice">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
-                                    <select class="form-control" v-model="accountUpdate.rate_type">
-                                        <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
-                                        <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="alert alert-warning" v-show="!isVerified">
+                                        <p>
+                                            {{ $t('message.registration_accounts.ur_account_not_verified') }}
+                                            <button class="btn btn-default pull-right" @click="verifiedAccount()">
+                                                {{ $t('message.registration_accounts.ur_verify') }}
+                                            </button>
+                                        </p>
+                                    </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_type') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountUpdate.type" :disabled="isDisabled" @change="checkTeamIncharge('update')">
+                                            <option value="Seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                            <option value="Buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                            <option value="Writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                            <option value="Affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.type" v-for="err in messageForms.errors.type" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_username') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" :disabled="true" v-model="accountUpdate.username" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.username" v-for="err in messageForms.errors.username" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" :disabled="user.isOurs != 0" v-model="accountUpdate.name" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.name" v-for="err in messageForms.errors.name" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ra_email') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" :disabled="true" v-model="accountUpdate.email" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.email" v-for="err in messageForms.errors.email" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_phone') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.phone" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.phone" v-for="err in messageForms.errors.phone" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_skype') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.skype">
+                                        <span v-if="messageForms.errors.skype" v-for="err in messageForms.errors.skype" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_password') }}</label>
+                                        <input type="password" role="presentation" autocomplete="off" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.password" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.password" v-for="err in messageForms.errors.password" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_confirm_password') }}</label>
+                                        <input type="password" role="presentation" autocomplete="off" class="form-control" :disabled="!user.isAdmin" v-model="accountUpdate.c_password" name="" aria-describedby="helpId" placeholder="">
+                                        <span v-if="messageForms.errors.c_password" v-for="err in messageForms.errors.c_password" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_type') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control"  v-model="accountUpdate.company_type" @click="checkCompanyType()">
+                                            <option value="Company">{{ $t('message.registration_accounts.filter_company') }}</option>
+                                            <option value="Freelancer">{{ $t('message.registration_accounts.filter_freelance') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12" v-show="updateCompanyName">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_name') }} <span class="text-danger">*</span></label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.company_name">
+                                        <span v-if="messageForms.errors.company_name" v-for="err in messageForms.errors.company_name" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12" v-show="updateCompanyName">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
+                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.company_url">
+                                        <span v-if="messageForms.errors.company_url" v-for="err in messageForms.errors.company_url" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_country') }}</label>
+                                        <select class="form-control" v-model="accountUpdate.country_id">
+                                            <option v-for="option in listCountryAll.data" v-bind:value="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>
+                                            {{ $t('message.registration_accounts.filter_lang') }}
+                                        </label>
+                                        <small>
+                                            <i class="text-danger">* {{ $t('message.registration_accounts.r_required_writer') }}</i>
+                                        </small>
+                                        <v-select
+                                            multiple
+                                            v-model="accountUpdate.language_id"
+                                            label="name"
+                                            :options="listLanguages.data"
+                                            :reduce="name => name.id"
+                                            :searchable="true"
+                                            :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
+
+                                        <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_address') }}</label>
+                                        <textarea class="form-control" v-model="accountUpdate.address"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_info') }}</label>
+                                        <textarea class="form-control" v-model="accountUpdate.info"></textarea>
+                                    </div>
+                                </div>
+
                             </div>
 
-                        </div>
+                            <hr v-show="updateDisplayWriterPrice"/>
+                            <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                            <div v-show="updateDisplayWriterPrice" class="alert alert-info">
+                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                            </div>
+                            <hr v-show="updateDisplayWriterPrice"/>
 
-                        <div v-if="accountUpdate.type !== 'Affiliate'">
-                            <hr v-if="accountUpdate.is_sub_account === 0"/>
+                            <div class="row" v-show="updateDisplayWriterPrice">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
+                                        <select class="form-control" v-model="accountUpdate.rate_type">
+                                            <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
+                                            <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
 
-                            <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">
-                                {{ $t('message.registration_accounts.r_payment_info') }}
-                            </h4>
-                            <span v-if="messageForms.errors.id_payment_type" class="text-danger">
+                            </div>
+
+                            <div v-if="accountUpdate.type !== 'Affiliate'">
+                                <hr v-if="accountUpdate.is_sub_account === 0"/>
+
+                                <h4 v-if="accountUpdate.is_sub_account === 0" class="text-primary">
+                                    {{ $t('message.registration_accounts.r_payment_info') }}
+                                </h4>
+                                <span v-if="messageForms.errors.id_payment_type" class="text-danger">
                                 {{ $t('message.registration_accounts.r_select_default') }}
                             </span>
-                            <span v-if="validate_error_type_update" class="text-danger">
+                                <span v-if="validate_error_type_update" class="text-danger">
                                 {{ $t('message.registration_accounts.r_input_selected') }}
                             </span>
 
-                            <!-- payment for seller and writer -->
-                            <table class="table table-hover" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
-                                </tr>
-                                <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
-                                    <td>
-                                        <div class="form-group">
-                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
-                                            <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
-                                        </div>
+                                <!-- payment for seller and writer -->
+                                <table class="table table-hover" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $t('message.registration_accounts.filter_default') }}</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
+                                                <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
+                                            </div>
 
-                                        <span
-                                            v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
-                                            v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
-                                            class="text-danger">
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
+                                                class="text-danger">
 
                                             {{ err }}
                                         </span>
 
-                                        <div class="px-5"
-                                            v-show="payment_method.account_name ||
+                                            <div class="px-5"
+                                                 v-show="payment_method.account_name ||
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
                                                 payment_method.account_iban
                                             "
                                             >
-                                            <h6 class="text-primary">Other Details:</h6>
-                                            <hr/>
+                                                <h6 class="text-primary">Other Details:</h6>
+                                                <hr/>
 
-                                            <div class="row">
-                                                <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                    <label for="">Bank Name:</label>
-                                                    <input type="text" class="form-control" v-model="accountUpdate.bank_name[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.account_name">
-                                                    <label for="">Account Name:</label>
-                                                    <input type="text" class="form-control" v-model="accountUpdate.account_name[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                    <label for="">Account IBAN:</label>
-                                                    <input type="text" class="form-control" v-model="accountUpdate.account_iban[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                    <label for="">SWIFT Code:</label>
-                                                    <input type="text" class="form-control" v-model="accountUpdate.swift_code[payment_method.id]">
-                                                </div>
-                                                <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                    <label for="">Beneficiary Address:</label>
-                                                    <input type="text" class="form-control" v-model="accountUpdate.beneficiary_add[payment_method.id]">
+                                                <div class="row">
+                                                    <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                        <label>Bank Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.bank_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_name">
+                                                        <label>Account Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                        <label>Account IBAN:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_iban[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                        <label>SWIFT Code:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.swift_code[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                        <label>Beneficiary Address:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.beneficiary_add[payment_method.id]">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                    </td>
-                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- end of payment for seller and writer -->
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- end of payment for seller and writer -->
 
-                            <!-- payment for buyer -->
-                            <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $t('message.registration_accounts.filter_default') }}</td>
-                                </tr>
-                                <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
-                                    <td>
-                                        <div class="form-group">
-                                            <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
-                                            <input type="text" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
-                                        </div>
+                                <!-- payment for buyer -->
+                                <table class="table" v-if="accountUpdate.type === 'Buyer' && accountUpdate.is_sub_account === 0">
+                                    <tr>
+                                        <td></td>
+                                        <td>{{ $t('message.registration_accounts.filter_default') }}</td>
+                                    </tr>
+                                    <tr v-for="(payment_method, index) in paymentMethodListReceivePayment" :key="index" >
+                                        <td>
+                                            <div class="form-group">
+                                                <label>{{ payment_method.type }} {{ $t('message.registration_accounts.r_account') }}</label>
+                                                <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
+                                            </div>
 
-                                        <span
-                                            v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
-                                            v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
-                                            class="text-danger">
+                                            <span
+                                                v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
+                                                v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
+                                                class="text-danger">
 
                                             {{ err }}
                                         </span>
-                                    </td>
-                                    <td style="width: 50px;vertical-align:middle;" class="text-center">
-                                        <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
-                                    </td>
-                                </tr>
-                            </table>
-                            <!-- end of payment for buyer -->
-                        </div>
+                                        </td>
+                                        <td style="width: 50px;vertical-align:middle;" class="text-center">
+                                            <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="accountUpdate.id_payment_type">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- end of payment for buyer -->
+                            </div>
 
-                        <hr/>
-                        <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
-                        <hr/>
+                            <hr/>
+                            <h4 class="text-primary">{{ $t('message.registration_accounts.r_internal_info') }}</h4>
+                            <hr/>
 
-                        <div class="row">
+                            <div class="row">
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.ur_is_show_price_basis') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis" :disabled="!user.isAdmin">
-                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.is_show_price_basis" v-for="err in messageForms.errors.is_show_price_basis" class="text-danger">{{ err }}</span>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.ur_is_show_price_basis') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountUpdate.is_show_price_basis" :disabled="!user.isAdmin">
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.is_show_price_basis" v-for="err in messageForms.errors.is_show_price_basis" class="text-danger">{{ err }}</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_status') }}</label>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_status') }}</label>
 
-                                    <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
-                                        <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
-                                        <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
-                                    </select>
+                                        <select class="form-control" name="" v-model="accountUpdate.status" :disabled="isDisabled">
+                                            <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
+                                            <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
+                                        </select>
 
-                                    <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
-                                        {{ $t('message.registration_accounts.ur_account_invalid') }}
-                                    </small>
+                                        <small class="text-primary" v-if="accountUpdate.status == 'active' && accountUpdate.account_validation == 'invalid'">
+                                            {{ $t('message.registration_accounts.ur_account_invalid') }}
+                                        </small>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
-                                <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="!user.isAdmin">
-                                    <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                    <option value="No">{{ $t('message.registration_accounts.no') }}</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6">
-                                <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
-                                <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
-                                    <option value="">N/A</option>
-                                    <option v-for="option in listTeamIncharge" v-bind:value="option.id">
-                                        {{ option.username == null || option.username == '' ? option.name:option.username}}
-                                    </option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.account_validation">
-                                        <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
-                                        <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
-                                        <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
+                                <div class="col-sm-6">
+                                    <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
+                                    <select class="form-control" name="" v-model="accountUpdate.credit_auth" :disabled="!user.isAdmin">
+                                        <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                        <option value="No">{{ $t('message.registration_accounts.no') }}</option>
                                     </select>
                                 </div>
-                            </div>
 
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_commission') }} <span class="text-danger">*</span></label>
-                                    <select class="form-control" name="" v-model="accountUpdate.commission" :disabled="!user.isAdmin">
-                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
-                                    <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6" v-if="accountUpdate.type == 'Buyer' && user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
-                                    <select class="form-control" v-model="accountUpdate.affiliate">
-                                        <option value="">{{ $t('message.registration_accounts.none') }}</option>
-                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
+                                <div class="col-sm-6">
+                                    <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
+                                    <select class="form-control" name="" v-model="accountUpdate.team_in_charge">
+                                        <option value="">N/A</option>
+                                        <option v-for="option in listTeamIncharge" v-bind:value="option.id">
+                                            {{ option.username == null || option.username == '' ? option.name:option.username}}
                                         </option>
                                     </select>
                                 </div>
-                            </div>
 
+                                <div class="col-sm-6" v-show="user.role_id === 8 || user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_validation') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountUpdate.account_validation">
+                                            <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                            <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                            <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_commission') }} <span class="text-danger">*</span></label>
+                                        <select class="form-control" name="" v-model="accountUpdate.commission" :disabled="!user.isAdmin">
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                        <span v-if="messageForms.errors.commission" v-for="err in messageForms.errors.commission" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6" v-if="accountUpdate.type == 'Buyer' && user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_affiliates') }}</label>
+                                        <select class="form-control" v-model="accountUpdate.affiliate">
+                                            <option value="">{{ $t('message.registration_accounts.none') }}</option>
+                                            <option v-for="option in listAffiliate.data" v-bind:value="option.id">
+                                                {{ option.username == null ? option.name : option.username }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            {{ $t('message.registration_accounts.close') }}
-                        </button>
-                        <button type="button" @click="submitUpdate" class="btn btn-primary">
-                            {{ $t('message.registration_accounts.update') }}
-                        </button>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                {{ $t('message.registration_accounts.close') }}
+                            </button>
+                            <button type="button" @click="submitUpdate" class="btn btn-primary">
+                                {{ $t('message.registration_accounts.update') }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
