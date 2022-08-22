@@ -29,256 +29,259 @@
                         </div>
                     </div>
                     <div class="card-body collapse" id="collapseFilterRegistration">
-                        <div class="row mb-3">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_search') }}</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           v-model="filterModel.search"
-                                           aria-describedby="helpId"
-                                           :placeholder="$t('message.registration_accounts.type')">
+                        <form action="" autocomplete="off" @submit.prevent="">
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_search') }}</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               v-model="filterModel.search"
+                                               aria-describedby="helpId"
+                                               :placeholder="$t('message.registration_accounts.type')">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_status') }}</label>
-                                    <select class="form-control" v-model="filterModel.status">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_status') }}</option>
-                                        <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
-                                        <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_status') }}</label>
+                                        <select class="form-control" v-model="filterModel.status">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_status') }}</option>
+                                            <option value="active">{{ $t('message.registration_accounts.filter_active') }}</option>
+                                            <option value="inactive">{{ $t('message.registration_accounts.filter_inactive') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_type') }}</label>
-                                    <select class="form-control" v-model="filterModel.type">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
-                                        <option value="seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
-                                        <option value="buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
-                                        <option value="writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
-                                        <option value="affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_type') }}</label>
+                                        <select class="form-control" v-model="filterModel.type">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_type') }}</option>
+                                            <option value="seller">{{ $t('message.registration_accounts.filter_seller') }}</option>
+                                            <option value="buyer">{{ $t('message.registration_accounts.filter_buyer') }}</option>
+                                            <option value="writer">{{ $t('message.registration_accounts.filter_writer') }}</option>
+                                            <option value="affiliate">{{ $t('message.registration_accounts.filter_affiliate') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_country') }}</label>
-                                    <select class="form-control" name="" v-model="filterModel.country">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_country') }}</option>
-                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
-                                        <option v-for="option in listCountryAll.data"
-                                                :value="option.id"
-                                                :key="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_country') }}</label>
+                                        <select class="form-control" name="" v-model="filterModel.country">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_country') }}</option>
+                                            <option value="none">{{ $t('message.registration_accounts.none') }}</option>
+                                            <option v-for="option in listCountryAll.data"
+                                                    :value="option.id"
+                                                    :key="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_lang') }}</label>
-                                    <select class="form-control" name="" v-model="filterModel.language_id">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_lang') }}</option>
-                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
-                                        <option v-for="option in listLanguages.data"
-                                                :value="option.id"
-                                                :key="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_lang') }}</label>
+                                        <select class="form-control" name="" v-model="filterModel.language_id">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_lang') }}</option>
+                                            <option value="none">{{ $t('message.registration_accounts.none') }}</option>
+                                            <option v-for="option in listLanguages.data"
+                                                    :value="option.id"
+                                                    :key="option.id">
+                                                {{ option.name }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_commission') }}</label>
-                                    <select class="form-control" name="" v-model="filterModel.commission">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_answer') }}</option>
-                                        <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="no">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_commission') }}</label>
+                                        <select class="form-control" name="" v-model="filterModel.commission">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_answer') }}</option>
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
-                                    <select class="form-control" name="" v-model="filterModel.credit_auth">
-                                        <option value="">{{ $t('message.registration_accounts.filter_select_credit_auth') }}</option>
-                                        <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="No">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_credit_auth') }}</label>
+                                        <select class="form-control" name="" v-model="filterModel.credit_auth">
+                                            <option value="">{{ $t('message.registration_accounts.filter_select_credit_auth') }}</option>
+                                            <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="No">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
-                                    <select class="form-control" v-model="filterModel.team_in_charge">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="none">{{ $t('message.registration_accounts.none') }}</option>
-                                        <option v-for="option in listIncharge.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
-                                        </option>
-                                    </select>
+                                <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
+                                        <select class="form-control" v-model="filterModel.team_in_charge">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="none">{{ $t('message.registration_accounts.none') }}</option>
+                                            <option v-for="option in listIncharge.data" v-bind:value="option.id">
+                                                {{ option.username == null ? option.name : option.username }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_affiliate') }}</label>
-                                    <select class="form-control" v-model="filterModel.affiliate">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option v-for="option in listAffiliate.data" v-bind:value="option.id">
-                                            {{ option.username == null ? option.name : option.username }}
-                                        </option>
-                                    </select>
+                                <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_affiliate') }}</label>
+                                        <select class="form-control" v-model="filterModel.affiliate">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option v-for="option in listAffiliate.data" v-bind:value="option.id">
+                                                {{ option.username == null ? option.name : option.username }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_type') }}</label>
-                                    <select class="form-control" v-model="filterModel.company_type">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="1">{{ $t('message.registration_accounts.filter_freelance') }}</option>
-                                        <option value="0">{{ $t('message.registration_accounts.filter_company') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_type') }}</label>
+                                        <select class="form-control" v-model="filterModel.company_type">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="1">{{ $t('message.registration_accounts.filter_freelance') }}</option>
+                                            <option value="0">{{ $t('message.registration_accounts.filter_company') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_name') }}</label>
-                                    <input
-                                        v-model="filterModel.company_name"
-                                        type="text"
-                                        class="form-control"
-                                        :placeholder="$t('message.registration_accounts.type')">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_name') }}</label>
+                                        <input
+                                            v-model="filterModel.company_name"
+                                            type="text"
+                                            class="form-control"
+                                            :placeholder="$t('message.registration_accounts.type')">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
-                                    <input
-                                        v-model="filterModel.company_url"
-                                        type="text"
-                                        class="form-control"
-                                        :placeholder="$t('message.registration_accounts.type')">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_company_url') }}</label>
+                                        <input
+                                            v-model="filterModel.company_url"
+                                            type="text"
+                                            class="form-control"
+                                            :placeholder="$t('message.registration_accounts.type')">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_validation') }}</label>
-                                    <select class="form-control" v-model="filterModel.account_validation">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
-                                        <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
-                                        <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
-                                    </select>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_validation') }}</label>
+                                        <select class="form-control" v-model="filterModel.account_validation">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="valid">{{ $t('message.registration_accounts.filter_valid') }}</option>
+                                            <option value="invalid">{{ $t('message.registration_accounts.filter_invalid') }}</option>
+                                            <option value="processing">{{ $t('message.registration_accounts.filter_processing') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_date_reg') }}</label>
-                                    <div class="input-group">
-                                        <date-range-picker
-                                            v-model="filterModel.created_at"
-                                            :ranges="generateDefaultDateRange()"
-                                            :linkedCalendars="true"
-                                            :dateRange="filterModel.created_at"
-                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
-                                            ref="picker"
-                                            opens="left"
-                                            style="width: 100%"
-                                        />
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_date_reg') }}</label>
+                                        <div class="input-group">
+                                            <date-range-picker
+                                                v-model="filterModel.created_at"
+                                                :ranges="generateDefaultDateRange()"
+                                                :linkedCalendars="true"
+                                                :dateRange="filterModel.created_at"
+                                                :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                                ref="picker"
+                                                opens="left"
+                                                style="width: 100%"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_account_verified') }}</label>
+                                        <select class="form-control"
+                                                v-model="filterModel.account_verification">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="No">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_sub_account') }}</label>
+                                        <select class="form-control" v-model="filterModel.is_sub_account">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="1">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="0">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_payment_info') }}</label>
+
+                                        <select class="form-control" v-model="filterModel.payment_info">
+                                            <option value="">{{ $t('message.registration_accounts.filter_default') }}</option>
+                                            <option v-for="(option, index) in paymentMethodList" v-bind:value="option.id" :key="index">
+                                                {{ option.type }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Payment Info</label>
+
+                                        <input
+                                            v-model="filterModel.payment_info_data"
+                                            type="text"
+                                            class="form-control"
+                                            role="presentation"
+                                            autocomplete="off"
+                                            id="filterPaymentInfoData"
+                                            name="filterPaymentInfoData"
+                                            :placeholder="$t('message.registration_accounts.type')">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" v-if="user.role_id == 8 || user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.filter_buyer_trans') }}</label>
+                                        <select class="form-control" v-model="filterModel.buyer_transaction">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="with">{{ $t('message.registration_accounts.filter_with') }}</option>
+                                            <option value="none">{{ $t('message.registration_accounts.filter_without') }}</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_account_verified') }}</label>
-                                    <select class="form-control"
-                                            v-model="filterModel.account_verification">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="Yes">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="No">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
+                            <div class="row mb-3">
+                                <div class="col-md-2">
+                                    <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
+                                        {{ $t('message.registration_accounts.clear') }}
+                                    </button>
+                                    <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
+                                        {{ $t('message.registration_accounts.search') }}
+                                        <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i>
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_sub_account') }}</label>
-                                    <select class="form-control" v-model="filterModel.is_sub_account">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="1">{{ $t('message.registration_accounts.yes') }}</option>
-                                        <option value="0">{{ $t('message.registration_accounts.no') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_payment_info') }}</label>
-
-                                    <select class="form-control" v-model="filterModel.payment_info">
-                                        <option value="">{{ $t('message.registration_accounts.filter_default') }}</option>
-                                        <option v-for="(option, index) in paymentMethodList" v-bind:value="option.id" :key="index">
-                                            {{ option.type }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label>Payment Info</label>
-
-                                    <input
-                                        v-model="filterModel.payment_info_data"
-                                        type="text"
-                                        class="form-control"
-                                        autocomplete="disabled"
-                                        id="filterPaymentInfoData"
-                                        name="filterPaymentInfoData"
-                                        :placeholder="$t('message.registration_accounts.type')">
-                                </div>
-                            </div>
-
-                            <div class="col-md-3" v-if="user.role_id == 8 || user.isAdmin">
-                                <div class="form-group">
-                                    <label>{{ $t('message.registration_accounts.filter_buyer_trans') }}</label>
-                                    <select class="form-control" v-model="filterModel.buyer_transaction">
-                                        <option value="">{{ $t('message.registration_accounts.all') }}</option>
-                                        <option value="with">{{ $t('message.registration_accounts.filter_with') }}</option>
-                                        <option value="none">{{ $t('message.registration_accounts.filter_without') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-2">
-                                <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
-                                    {{ $t('message.registration_accounts.clear') }}
-                                </button>
-                                <button class="btn btn-default" @click="doSearch" :disabled="isSearching">
-                                    {{ $t('message.registration_accounts.search') }}
-                                    <i class="fa fa-refresh fa-spin" v-if="isSearchLoading"></i>
-                                </button>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -386,19 +389,22 @@
                                     {{ $t('message.registration_accounts.ra_register') }}
                                 </button>
 
-                                <div class="form-group w-50 float-right mr-2">
-                                    <input
-                                        v-model="filterModel.advance_search"
-                                        type="text"
-                                        class="form-control"
-                                        autocomplete="disabled"
-                                        id="filterAdvanceSearch"
-                                        name="filterAdvanceSearch"
-                                        placeholder="Search here..."
-                                        :disabled="isAdvanceSearching"
+                                <form action="" autocomplete="off" @submit.prevent="">
+                                    <div class="form-group w-50 float-right mr-2">
+                                        <input
+                                            v-model="filterModel.advance_search"
+                                            type="text"
+                                            class="form-control"
+                                            role="presentation"
+                                            autocomplete="off"
+                                            id="filterAdvanceSearch"
+                                            name="filterAdvanceSearch"
+                                            placeholder="Search here..."
+                                            :disabled="isAdvanceSearching"
 
-                                        @input="advanceSearch">
-                                </div>
+                                            @input="advanceSearch">
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
@@ -3389,7 +3395,7 @@ export default {
 
         advanceSearch: __.debounce(function () {
             this.getAccountList();
-        }, 500)
+        }, 1000)
     }
 }
 </script>
