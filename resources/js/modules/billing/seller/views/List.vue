@@ -41,6 +41,7 @@
                                         <option value="Not Yet">{{ $t('message.seller_billing.not_yet') }}</option>
                                         <option value="Done">{{ $t('message.seller_billing.done') }}</option>
                                         <option value="Voided">{{ $t('message.seller_billing.voided') }}</option>
+                                        <option value="Refunded">Refunded</option>
                                     </select>
                                 </div>
                             </div>
@@ -142,6 +143,10 @@
 
                                             <a class="dropdown-item" @click="updatePayment" href="#">
                                                 {{ $t('message.seller_billing.sb_void') }}
+                                            </a>
+
+                                            <a class="dropdown-item" @click="doRefund" href="#">
+                                                Refund
                                             </a>
                                         </div>
                                     </div>
@@ -677,6 +682,10 @@ export default {
             });
 
             this.getTotalAmount()
+        },
+
+        doRefund() {
+
         },
 
         async doUpdatePayment() {

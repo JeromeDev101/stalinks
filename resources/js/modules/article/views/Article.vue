@@ -287,6 +287,14 @@
 
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
+
+                                    <button 
+                                        v-if="scope.row.status_writer === 'Done' && scope.row.backlink_status != 'Canceled'" 
+                                        class="btn btn-default" 
+                                        @click="Export2Word(scope.row, scope.row.title)"
+                                    >
+                                        Export Docs
+                                    </button>
                                 </div>
                             </template>
 
@@ -1001,6 +1009,60 @@
         },
 
         methods: {
+
+            Export2Word(element, filename = ''){
+                console.log(element, filename)
+
+                // return false
+                let preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
+                let postHtml = "</body></html>";
+                let title = (element.backlink) ? element.backlink.title: ''
+                let link = (element.backlink) ? element.backlink.link: ''
+                let anchor_text = (element.backlink) ? element.backlink.anchor_text: ''
+                filename = title
+                let content = `
+                    <b>Article ID: </b> <br>`+ element.id +` <br><br>
+                    <b>Title: </b> <br>`+ title +` <br><br>
+                    <b>Anchor Text: </b> <br>`+ anchor_text +` <br><br>
+                    <b>Meta Description: </b> <br>`+ element.meta_description +` <br><br>
+                    <b>Meta Keywords: </b> <br>`+ element.meta_keyword +` <br><br>
+                    <b>Note: </b> <br>`+ element.note +` <br><br>
+                    <b>Link To: </b> <br>`+ link +` <br><br><br>
+                    <b>Content: </b><br>
+                    <p>`+ element.contentnohtml +`</p> <br>
+                `;
+                let html = preHtml+content+postHtml;
+
+                let blob = new Blob(['\ufeff', html], {
+                    type: 'application/msword'
+                });
+
+                // Specify link url
+                let url = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(html);
+
+                // Specify file name
+                filename = filename?filename+'.doc':'document.doc';
+
+                // Create download link element
+                let downloadLink = document.createElement("a");
+
+                document.body.appendChild(downloadLink);
+
+                if(navigator.msSaveOrOpenBlob ){
+                    navigator.msSaveOrOpenBlob(blob, filename);
+                }else{
+                    // Create a link to the file
+                    downloadLink.href = url;
+
+                    // Setting the file name
+                    downloadLink.download = filename;
+
+                    //triggering the function
+                    downloadLink.click();
+                }
+
+                document.body.removeChild(downloadLink);
+            },
 
             acceptArticle (data) {
                 let self = this;
