@@ -591,7 +591,7 @@ class MailgunController extends Controller
         $r_attachment = [];
 
         // log request
-        Log::info('post_reply: ', ['request' => $request->all()]);
+//        Log::info('post_reply: ', ['request' => $request->all()]);
 
         $input = $request->all();
 

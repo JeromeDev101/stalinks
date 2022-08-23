@@ -284,10 +284,16 @@
 
                     <div v-show="MessageDisplay" class="box-header with-border">
                         <h3 class="box-title">
-                            <button type="button"
-                                    title="Back"
-                                    class="btn btn-default btn-sm mr-3"
-                                    @click="clearViewing()"><i class="fa fa-chevron-left"></i></button>
+                            <button
+                                type="button"
+                                title="Back"
+                                class="btn btn-default btn-sm mr-3"
+
+                                @click="clearViewing()">
+
+                                <i class="fa fa-chevron-left"></i>
+                            </button>
+
                             {{ $t('message.inbox.i_read_mail') }}
                         </h3>
 
@@ -301,19 +307,37 @@
                     <div v-show="MessageDisplay" class="box-body no-padding">
                         <div class="mailbox-read-info">
                             <h3>{{ viewContent.subject }}</h3>
-                            <h5 v-show="viewContent.is_sent == 0">
-                                {{ $t('message.inbox.i_from') }} {{ viewContent.from }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span>
-                            </h5>
-                            <h5 v-show="viewContent.is_sent == 1">
-                                {{ $t('message.inbox.i_to') }} {{ checkEmail(viewContent.received) }}
-                                <span class="mailbox-read-time pull-right">{{ viewContent.date }}</span>
-                            </h5>
+
+                            <h6 class="font-weight-bold mb-0 mt-2">
+                                <span v-if="viewContent.is_sent === 0">
+                                    {{ viewContent.from }}
+                                </span>
+
+                                <span v-if="viewContent.is_sent === 1">
+                                   {{ $t('message.inbox.i_to') }} {{ checkEmail(viewContent.received) }}
+                                </span>
+
+                                <span class="float-right mailbox-read-time">
+                                    {{ viewContent.date }}
+                                </span>
+                            </h6>
+
+                            <!-- display cc, bcc and to -->
+
+                            <div v-if="viewContent.cc">
+                                <small class="text-muted">
+                                    CC: {{ viewContent.cc }}
+                                </small>
+                            </div>
+
+                            <div v-if="viewContent.bcc">
+                                <small class="text-muted">
+                                    BCC: {{ viewContent.bcc }}
+                                </small>
+                            </div>
                         </div>
 
                         <div class="mailbox-read-message">
-                            <!--                            <textarea class="form-control message-content" readonly>{{ viewContent.strippedHtml }}</textarea>-->
-                            <!--                            <div id="htmlDiv" v-html="viewContent.strippedHtml" style="white-space: pre-line"></div>-->
                             <div>
                                 <iframe
                                     ref="iframe"
@@ -523,8 +547,28 @@
                             </h6>
 
                             <small class="text-muted">
-                                To: {{ user.work_mail === email.received ? 'Me' : checkEmail(email.received) }}
+                                Recipient: {{ user.work_mail === email.received ? 'Me' : checkEmail(email.received) }}
                             </small>
+
+                            <!-- display cc, bcc and to -->
+
+                            <div v-if="email.cc">
+                                <small class="text-muted">
+                                    CC: {{ email.cc }}
+                                </small>
+                            </div>
+
+                            <div v-if="email.bcc">
+                                <small class="text-muted">
+                                    BCC: {{ email.bcc }}
+                                </small>
+                            </div>
+
+                            <div v-if="email.bcc || email.cc">
+                                <small class="text-muted">
+                                    To: {{ email.email_to }}
+                                </small>
+                            </div>
                         </div>
 
                         <!-- email body -->
@@ -1446,6 +1490,8 @@ export default {
                 received : '',
                 is_sent : '',
                 from_mail : '',
+                cc: '',
+                bcc: '',
                 index : '',
                 id : '',
                 date : '',
@@ -2646,6 +2692,8 @@ export default {
                 this.selectedMessage = false;
                 this.MessageDisplay = true;
                 this.viewContent.from = inbox.from_mail;
+                this.viewContent.cc = inbox.cc;
+                this.viewContent.bcc = inbox.bcc;
                 this.viewContent.strippedHtml = content;
                 this.viewContent.date = inbox.full_clean_date;
                 this.viewContent.subject = inbox.subject;
