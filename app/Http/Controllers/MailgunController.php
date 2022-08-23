@@ -1406,11 +1406,18 @@ class MailgunController extends Controller
     }
 
     public function getStringBetween ($string, Array $params) {
-        if (Str::contains($string, $params)) {
-            $after = Str::after($string, $params[0]);
-            return Str::before($after, $params[1]);
-        } else {
-            return $string;
+        $string_array = explode(',', $string);
+        $new_array = [];
+
+        foreach ($string_array as $temp) {
+            if (Str::contains($temp, $params)) {
+                $after = Str::after($temp, $params[0]);
+                $new_array[] = Str::before($after, $params[1]);
+            } else {
+                $new_array[] = $temp;
+            }
         }
+
+        return implode(',', $new_array);
     }
 }
