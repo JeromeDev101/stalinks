@@ -276,7 +276,7 @@
                                     </button>
 
                                     <button
-                                        v-if="(user.isOurs === 0 || user.isOurs === 1)"
+                                        v-if="(user.isOurs === 0 || (user.isOurs === 1 && !isStatusOnQueue(scope.row)))"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
@@ -288,12 +288,13 @@
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
 
-                                    <button 
-                                        v-if="scope.row.status_writer === 'Done' && scope.row.backlink_status != 'Canceled'" 
-                                        class="btn btn-default" 
+                                    <button
+                                        v-if="scope.row.status_writer === 'Done' && scope.row.backlink_status != 'Canceled'"
+                                        class="btn btn-default"
+                                        title="Export to document"
                                         @click="Export2Word(scope.row, scope.row.title)"
                                     >
-                                        Export Docs
+                                        <i class="fas fa-file-export"></i>
                                     </button>
                                 </div>
                             </template>
