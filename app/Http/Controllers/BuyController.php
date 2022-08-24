@@ -297,6 +297,7 @@ class BuyController extends Controller
 
         $total_purchased = Backlink::selectRaw('SUM(prices) as total_purchased')
             ->where('status', '!=', 'Canceled')
+            ->where('status', '!=', 'To Be Validated')
             ->where(function ($query) use ($sub_buyer_ids, $UserId) {
                 if (count($sub_buyer_ids) > 0) {
                     return $query->whereIn('user_id', array_merge($sub_buyer_ids->toArray(), $UserId));
@@ -470,39 +471,65 @@ class BuyController extends Controller
                 $publisher = Publisher::find($id);
                 $this->updateStatus('Interested', $publisher->id);
 
-                Backlink::create([
-                    'prices' => $request->prices,
-                    'price' => $request->seller_price,
-                    'url_advertiser' => $request->url_advertiser,
-                    'anchor_text' => $request->anchor_text,
-                    'link' => $request->link,
-                    'publisher_id' => $publisher->id,
-                    'user_id' => $user->id,
-                    'status' => 'To Be Validated',
-                    'date_process' => date('Y-m-d'),
-                    'ext_domain_id' => 0,
-                    'int_domain_id' => 0,
-                    'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
-                ]);
+//                Backlink::create([
+//                    'prices' => $request->prices,
+//                    'price' => $request->seller_price,
+//                    'url_advertiser' => $request->url_advertiser,
+//                    'anchor_text' => $request->anchor_text,
+//                    'link' => $request->link,
+//                    'publisher_id' => $publisher->id,
+//                    'user_id' => $user->id,
+//                    'status' => 'To Be Validated',
+//                    'date_process' => date('Y-m-d'),
+//                    'ext_domain_id' => 0,
+//                    'int_domain_id' => 0,
+//                    'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
+//                ]);
             }
         } else {
             $publisher = Publisher::find($request->id);
             $this->updateStatus('Interested', $publisher->id);
 
-            Backlink::create([
-                'prices' => $request->prices,
-                'price' => $request->seller_price,
-                'url_advertiser' => $request->url_advertiser,
-                'anchor_text' => $request->anchor_text,
-                'link' => $request->link,
-                'publisher_id' => $publisher->id,
-                'user_id' => $user->id,
-                'status' => 'To Be Validated',
-                'date_process' => date('Y-m-d'),
-                'ext_domain_id' => 0,
-                'int_domain_id' => 0,
-                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
-            ]);
+//            Backlink::create([
+//                'prices' => $request->prices,
+//                'price' => $request->seller_price,
+//                'url_advertiser' => $request->url_advertiser,
+//                'anchor_text' => $request->anchor_text,
+//                'link' => $request->link,
+//                'publisher_id' => $publisher->id,
+//                'user_id' => $user->id,
+//                'status' => 'To Be Validated',
+//                'date_process' => date('Y-m-d'),
+//                'ext_domain_id' => 0,
+//                'int_domain_id' => 0,
+//                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
+//            ]);
+        }
+
+        return response()->json(['success' => true], 200);
+    }
+
+    public function updateUninterestedNew (Request $request) {
+        $user = auth()->user();
+
+        if (is_array($request->id)) {
+            foreach ($request->id as $id) {
+                $buyerPurchasedIds = BuyerPurchased::where([
+                    'user_id_buyer' => $user->id,
+                    'status' => 'Interested',
+                    'publisher_id' => $id
+                ])->get()->pluck('id');
+
+                BuyerPurchased::destroy($buyerPurchasedIds);
+            }
+        } else {
+            $buyerPurchasedIds = BuyerPurchased::where([
+                'user_id_buyer' => $user->id,
+                'status' => 'Interested',
+                'publisher_id' => $request->id
+            ])->get()->pluck('id');
+
+            BuyerPurchased::destroy($buyerPurchasedIds);
         }
 
         return response()->json(['success' => true], 200);

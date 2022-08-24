@@ -382,6 +382,9 @@
                                             <a class="dropdown-item " @click="interestedSelected">
                                                 {{ $t('message.list_backlinks.bb_interested') }}
                                             </a>
+                                            <a class="dropdown-item " @click="uninterestedSelected">
+                                                Uninterested
+                                            </a>
                                             <a class="dropdown-item " @click="notInterestedSelected">
                                                 {{ $t('message.list_backlinks.bb_not_interested') }}
                                             </a>
@@ -439,8 +442,8 @@
                                 <input type="checkbox"
                                        class="custom-checkbox"
                                        @change="checkSelected"
-                                       :id="scope.row.id"
-                                       :value="scope.row.id"
+                                       :id="scope.row"
+                                       :value="scope.row"
                                        v-model="checkIds">
                             </template>
 
@@ -561,12 +564,12 @@
                                         data-toggle="modal"
                                         class="btn btn-default"><i class="fas fa-dollar-sign"></i></button>
                                     <button
-                                        :disabled="scope.row.status_purchased == 'Interested'"
-                                        @click="doLike(scope.row)"
+                                        :disabled="scope.row.status_purchased == 'Interested' || scope.row.status_purchased == 'Purchased'"
+                                        @click="doLike(scope.row.id)"
                                         :title="$t('message.list_backlinks.bb_interested')"
                                         class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
                                     <button
-                                        :disabled="scope.row.status_purchased == 'Not interested'"
+                                        :disabled="scope.row.status_purchased == 'Not interested' || scope.row.status_purchased == 'Purchased'"
                                         @click="doDislike(scope.row.id)"
                                         :title="$t('message.list_backlinks.bb_not_interested')"
                                         class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
@@ -662,7 +665,25 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             {{ $t('message.list_backlinks.close') }}
                         </button>
-                        <button type="button" @click="submitBuy" :disabled="btnBuy" class="btn btn-primary">
+
+                        <button
+                            v-if="updateModel.status_purchased === 'Interested'"
+                            type="button"
+                            class="btn btn-danger"
+                            :disabled="btnBuy"
+
+                            @click="doUninterested(updateModel.id)">
+
+                            Uninterested
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="btnBuy"
+
+                            @click="submitBuy">
+
                             {{ $t('message.list_backlinks.t_buy') }}
                         </button>
                     </div>
@@ -1908,13 +1929,57 @@ export default {
         },
 
         interestedSelected() {
-            this.doLike(this.checkIds)
-            this.checkIds = [];
+            let self = this;
+
+            let allNotPurchased = self.checkIds.every(item => item.status_purchased !== 'Purchased')
+
+            if (allNotPurchased) {
+                let ids = self.checkIds.map(a => a.id);
+                this.doLike(ids)
+                this.checkIds = [];
+            } else {
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    "Selected items must not have the status 'Purchased'",
+                    'error'
+                );
+            }
         },
 
         notInterestedSelected() {
-            this.doDislike(this.checkIds)
-            this.checkIds = [];
+            let self = this;
+
+            let allNotPurchased = self.checkIds.every(item => item.status_purchased !== 'Purchased')
+
+            if (allNotPurchased) {
+                let ids = self.checkIds.map(a => a.id);
+                this.doDislike(ids)
+                this.checkIds = [];
+            } else {
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    "Selected items must not have the status 'Purchased'",
+                    'error'
+                );
+            }
+        },
+
+        uninterestedSelected () {
+            let self = this;
+
+            let allInterested = self.checkIds.every(item => item.status_purchased === 'Interested')
+
+            if (allInterested) {
+                let ids = self.checkIds.map(a => a.id);
+                this.doUninterested(ids)
+                self.checkIds = [];
+            } else {
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_invalid'),
+                    "Selected items must have the status 'Interested'",
+                    'error'
+                );
+            }
         },
 
         doSearch() {
@@ -2005,27 +2070,92 @@ export default {
         async doDislike(id) {
             let self = this;
 
-            if (confirm(self.$t('message.list_backlinks.alert_not_interested'))) {
-                $('#tbl_buy_backlink').DataTable().destroy();
+            // if (confirm(self.$t('message.list_backlinks.alert_not_interested'))) {
+            //     $('#tbl_buy_backlink').DataTable().destroy();
+            //
+            //     this.searchLoading = true;
+            //     await this.$store.dispatch('actionDislike', {id : id})
+            //     this.searchLoading = false;
+            //
+            //     this.getBuyList();
+            // }
 
-                this.searchLoading = true;
-                await this.$store.dispatch('actionDislike', {id : id})
-                this.searchLoading = false;
+            swal.fire({
+                title : "Mark backlink(s) as 'Not Interested'?",
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $('#tbl_buy_backlink').DataTable().destroy();
 
-                this.getBuyList();
-            }
+                    this.searchLoading = true;
+                    this.$store.dispatch('actionDislike', {id : id})
+                    this.searchLoading = false;
+
+                    this.getBuyList();
+                }
+            });
         },
 
-        async doLike(data) {
-            let that = JSON.parse(JSON.stringify(data))
+        async doLike(id) {
+            // let that = JSON.parse(JSON.stringify(data))
+            //
+            // this.updateModel = that
+            // this.updateModel.seller_price = that.price;
+            // this.updateModel.price = this.computePrice(that.price, that.inc_article);
+            // this.updateModel.prices = this.updateModel.price
+            //
+            // $('#modal-interested-update').modal({
+            //     show : true
+            // });
 
-            this.updateModel = that
-            this.updateModel.seller_price = that.price;
-            this.updateModel.price = this.computePrice(that.price, that.inc_article);
-            this.updateModel.prices = this.updateModel.price
+            let self = this;
 
-            $('#modal-interested-update').modal({
-                show : true
+            swal.fire({
+                title : "Mark backlink(s) as 'Interested'?",
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $('#tbl_buy_backlink').DataTable().destroy();
+
+                    this.searchLoading = true;
+                    this.$store.dispatch('actionLike', {id : id})
+                    this.searchLoading = false;
+
+                    this.getBuyList();
+                }
+            });
+        },
+
+        async doUninterested (id) {
+            let self = this;
+
+            swal.fire({
+                title : "Remove 'Interested' status in backlinks(s)?",
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $('#tbl_buy_backlink').DataTable().destroy();
+
+                    this.searchLoading = true;
+                    this.$store.dispatch('actionUninterested', {id : id})
+                    this.searchLoading = false;
+
+                    this.getBuyList();
+
+                    $("#modal-buy-update").modal('hide');
+                }
             });
         },
 

@@ -124,6 +124,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-buy')->put('buy','BuyController@update');
     Route::name('update-buy-dislike')->post('buy-dislike','BuyController@updateDislike');
     Route::name('update-buy-like')->post('buy-like','BuyController@updateLike');
+    Route::name('update-buy-uninterested')->post('buy-uninterested-new','BuyController@updateUninterestedNew');
     Route::name('update-uninterested')->post('buy-uninterested', 'BuyController@UpdateUninterested');
     Route::name('update-uninterested-multiple')->post('buy-uninterested-multiple', 'BuyController@UpdateMultipleUninterested');
 
