@@ -128,6 +128,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-uninterested')->post('buy-uninterested', 'BuyController@UpdateUninterested');
     Route::name('update-uninterested-multiple')->post('buy-uninterested-multiple', 'BuyController@UpdateMultipleUninterested');
 
+    Route::name('update-buy-order-validate')->post('buy-order-validate','BuyController@validateOrder');
+
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
     Route::name('generate-list')->get('generate-list','GenerateListController@getList');

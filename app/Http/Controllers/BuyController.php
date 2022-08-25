@@ -360,7 +360,7 @@ class BuyController extends Controller
      */
     public function update(Request $request, NotificationInterface $notification)
     {
-
+        $status = 'Pending';
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
 
         $user = User::where('id', auth()->user()->id)->first();
@@ -372,6 +372,14 @@ class BuyController extends Controller
                     'insufficent_credits'
                 ]
             ], 422);
+        }
+
+        if ($user->registration) {
+            if ($user->registration->is_sub_account == 1) {
+                if ($user->registration->can_validate_backlink == 0) {
+                    $status = 'To Be Validated';
+                }
+            }
         }
 
         $this->updateStatus('Purchased', $publisher->id);
@@ -393,6 +401,8 @@ class BuyController extends Controller
             $backlink->update([
                 'status' => 'Pending'
             ]);
+
+            $status = 'Pending';
         } else {
             $backlink = Backlink::create([
                 'prices' => $request->prices,
@@ -402,7 +412,7 @@ class BuyController extends Controller
                 'link' => $request->link,
                 'publisher_id' => $publisher->id,
                 'user_id' => $user->id,
-                'status' => 'Pending',
+                'status' => $status,
                 // default status when buys a URL
                 'date_process' => date('Y-m-d'),
                 'ext_domain_id' => 0,
@@ -412,25 +422,32 @@ class BuyController extends Controller
         }
 
         event(new BuyEvent($backlink, $user));
-        event(new SellerReceivesOrderEvent($backlink, $publisher->user));
-        event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
 
-        // seller confirmation email
-        $seller_account = null;
-
-        if ($backlink->publisher) {
-            $seller_account = $backlink->publisher->user ?: null;
+        if ($status === 'Pending') {
+            event(new SellerReceivesOrderEvent($backlink, $publisher->user));
         }
 
-        if ($seller_account) {
+        event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
 
-            if ($seller_account->registration->survey_code === null) {
-                $seller_account->registration->update([
-                    'survey_code' => md5(uniqid(rand(), true))
-                ]);
+
+        if ($status === 'Pending') {
+            // seller confirmation email
+            $seller_account = null;
+
+            if ($backlink->publisher) {
+                $seller_account = $backlink->publisher->user ?: null;
             }
 
-            event(new SellerConfirmationEvent($backlink, $seller_account));
+            if ($seller_account) {
+
+                if ($seller_account->registration->survey_code === null) {
+                    $seller_account->registration->update([
+                        'survey_code' => md5(uniqid(rand(), true))
+                    ]);
+                }
+
+                event(new SellerConfirmationEvent($backlink, $seller_account));
+            }
         }
 
         // if (isset($backlink->publisher->inc_article) && strtolower($backlink->publisher->inc_article) == "no") {
@@ -445,6 +462,55 @@ class BuyController extends Controller
         // }
 
         return response()->json(['success' => true], 200);
+    }
+
+    public function validateOrder (Request $request)
+    {
+        if (isset($request->ids)) {
+            foreach ($request->ids as $id) {
+                // get backlink
+                $backlink = Backlink::find($id);
+
+                if ($backlink->user) {
+                    if ($backlink->user->credit_auth != 'Yes' && $request->credit < $backlink->prices) {
+                        return response()->json([
+                            'message' => 'Insufficient Credits',
+                            'errors' => [
+                                'insufficient_credits'
+                            ]
+                        ], 422);
+                    } else {
+                        $backlink->update([
+                            'status' => 'Pending'
+                        ]);
+
+                        // notify seller
+                        event(new SellerReceivesOrderEvent($backlink, $backlink->publisher->user));
+
+                        // notify for status change
+                        event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
+
+                        // seller confirmation email
+                        $seller_account = null;
+
+                        if ($backlink->publisher) {
+                            $seller_account = $backlink->publisher->user ?: null;
+                        }
+
+                        if ($seller_account) {
+
+                            if ($seller_account->registration->survey_code === null) {
+                                $seller_account->registration->update([
+                                    'survey_code' => md5(uniqid(rand(), true))
+                                ]);
+                            }
+
+                            event(new SellerConfirmationEvent($backlink, $seller_account));
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public function updateDislike(Request $request)

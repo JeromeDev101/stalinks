@@ -177,7 +177,7 @@
 
                         <div class="row">
                             <div class="col-md-8 mb-2">
-                                <div class="input-group" v-if="user.isAdmin || isCanValidateBacklink || isSubAccount">
+                                <div class="input-group" v-if="user.isAdmin || listSubAccounts.length">
                                     <button class="btn btn-default mr-2" @click="selectAll">
                                         {{
                                             allSelected
@@ -188,13 +188,25 @@
                                     </button>
 
                                     <div class="dropdown mr-2">
-                                        <button class="btn btn-default dropdown-toggle" :disabled="isDisabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button
+                                            type="button"
+                                            id="dropdownMenuButton"
+                                            class="btn btn-default dropdown-toggle"
+                                            aria-haspopup="true"
+                                            aria-expanded="false"
+                                            data-toggle="dropdown"
+                                            :disabled="isDisabled">
+
                                             {{ $t('message.follow_backlinks.fub_selected_action') }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item " @click="buyValidated">{{ $t('message.follow_backlinks.fub_buy') }}</a>
-                                            <a class="dropdown-item " @click="UnInterestedValidated" >{{ $t('message.follow_backlinks.fub_uninterested') }}</a>
-<!--                                            <a class="dropdown-item" @click="doMultipleDelete" href="#" v-if="user.isAdmin">{{ $t('message.follow_backlinks.delete') }}</a>-->
+                                            <a class="dropdown-item " @click="validateSelected">
+                                                Validate
+                                            </a>
+
+                                            <a class="dropdown-item " @click="UnInterestedValidated" >
+                                                Invalidate
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -247,7 +259,7 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th v-if="user.isAdmin || isCanValidateBacklink || isSubAccount"></th>
+                                    <th v-if="user.isAdmin || listSubAccounts.length"></th>
                                     <th v-show="tblFollowupBacklinksOpt.id_backlink">{{ $t('message.follow_backlinks.t_id_bck') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{ $t('message.follow_backlinks.filter_seller') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_user_buyer') }}</th>
@@ -270,21 +282,31 @@
                                 <tbody v-show="!searchLoading">
                                     <tr v-for="(backLink, index) in listBackLink.data">
                                         <td class="center-content">{{ index + 1 }}</td>
-                                        <td class="text-center" v-if="user.isAdmin || isCanValidateBacklink || isSubAccount">
-                                            <input type="checkbox"
-                                            class="custom-checkbox"
-                                            @change="checkSelected"
-                                            :id="backLink.id"
-                                            :value="backLink.id"
-                                            :disabled="backLink.status !== 'To Be Validated' && !user.isAdmin"
-                                            v-model="checkIds">
+                                        <td v-if="user.isAdmin || listSubAccounts.length" class="text-center">
+                                            <input
+                                                v-if="user.isAdmin || listSubAccounts.length"
+                                                v-model="checkIds"
+                                                type="checkbox"
+                                                class="custom-checkbox"
+                                                :id="backLink"
+                                                :value="backLink"
+                                                :disabled="backLink.status !== 'To Be Validated'"
+
+                                                @change="checkSelected">
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
-                                        <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs ==
-                                     0 && !user.isAdmin) ||
-                                     user.isAdmin">{{
-                                                backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}</td>
-                                        <td v-show="tblFollowupBacklinksOpt.buyer">{{backLink.user.username == null ? backLink.user.name : backLink.user.username}}</td>
+                                        <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+                                            {{ backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}
+                                        </td>
+                                        <td v-show="tblFollowupBacklinksOpt.buyer">
+                                            {{
+                                                backLink.user
+                                                ? backLink.user.username == null
+                                                    ? backLink.user.name
+                                                    : backLink.user.username
+                                                : 'N/A'
+                                            }}
+                                        </td>
                                         <td v-show="tblFollowupBacklinksOpt.url_publisher">
                                             <!--                                    {{ backLink.publisher == null ? 'N/A' : replaceCharacters(backLink.publisher.url) }}-->
                                             <span v-if="backLink.publisher == null">
@@ -424,7 +446,6 @@
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
-
                             <div class="col-md-6" v-show="user.role_id != 5">
                                 <div class="form-group">
                                     <label>{{ $t('message.follow_backlinks.efb_seller_name') }}</label>
@@ -557,23 +578,20 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6" v-if="modelBaclink.status === 'To Be Validated'">
-                                <div class="row">
-                                    <button class="btn btn-danger col mr-2" @click.prevent="uninterest">
-                                        {{ $t('message.follow_backlinks.efb_uninterested') }}
-                                    </button>
-                                    <button
-                                        v-if="user.isAdmin || isCanValidateBacklink || isSubAccount"
-                                        class="btn btn-success col"
-
-                                        @click.prevent="buy">
-
-                                        {{ $t('message.follow_backlinks.buy') }}
-                                    </button>
+                            <div v-if="modelBaclink.status === 'To Be Validated'" class="col-md-12">
+                                <div v-if="user.isAdmin || listSubAccounts.length" class="row">
+                                    <div class="col">
+                                        <button class="btn btn-success col" @click.prevent="validateSubBuyerOrder(modelBaclink.id)">
+                                            Validate
+                                        </button>
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-danger col mr-2" @click.prevent="uninterest">
+                                            Invalidate
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-
-
                         </form>
                         <div class="overlay" v-if="isPopupLoading"></div>
                     </div>
@@ -638,7 +656,7 @@
                     'Content In Writing',
                     'Content Done',
                     'Content sent',
-                    'Live in Process', 
+                    'Live in Process',
                     'Issue',
                     'Canceled',
                     'Live'
@@ -650,7 +668,7 @@
                     'Content In Writing',
                     'Content Done',
                     'Content sent',
-                    'Live in Process', 
+                    'Live in Process',
                     'Issue',
                     'Canceled',
                     'Live',
@@ -709,15 +727,13 @@
             }
         },
         async created() {
-            console.log(this.user)
-
+            this.getSubAccount();
             await this.$store.dispatch('actionCheckAdminCurrentUser', { vue: this });
             await this.getBackLinkList();
             this.checkAccountType();
             this.getSellerList();
             this.getBuyerList();
             this.getBuyerBoughtList();
-            this.getSubAccount();
             this.getFormula();
             this.getSummaryStatus();
             this.canValidateBacklink();
@@ -771,12 +787,12 @@
             checkSubAccount() {
                 if(this.user.registration) {
                     if(this.user.registration.is_sub_account === 0) {
-                        this.isSubAccount = true;
-                    } else {
                         this.isSubAccount = false;
+                    } else {
+                        this.isSubAccount = true;
                     }
                 } else {
-                    this.this.isSubAccount = false;
+                    this.isSubAccount = false;
                 }
             },
 
@@ -788,7 +804,7 @@
                         this.isCanValidateBacklink = false;
                     }
                 } else {
-                    this.this.isCanValidateBacklink = false;
+                    this.isCanValidateBacklink = false;
                 }
             },
 
@@ -806,13 +822,6 @@
             UnInterestedValidated() {
                 let self = this;
 
-                let ctr = 0;
-                for(var index in this.checkIds) {
-                    if(this.listBackLink.data[index].status !== 'To Be Validated') {
-                        ctr++;
-                    }
-                }
-
                 // check if selected is none
                 if(this.checkIds.length === 0) {
                     swal.fire(
@@ -823,8 +832,10 @@
                     return false;
                 }
 
+                let allToBeValidated = self.checkIds.every(item => item.status === 'To Be Validated')
+
                 // check if status is not 'To Be Validated'
-                if(ctr > 0) {
+                if(!allToBeValidated) {
                     swal.fire(
                         self.$t('message.follow_backlinks.alert_invalid'),
                         self.$t('message.follow_backlinks.alert_selection_note'),
@@ -833,35 +844,48 @@
                     return false;
                 }
 
-                axios.post('/api/buy-uninterested-multiple', {
-                    ids: this.checkIds
-                }).then((response) => {
-                    swal.fire(
-                        self.$t('message.follow_backlinks.alert_success'),
-                        self.$t('message.follow_backlinks.alert_remove_success'),
-                        'success'
-                    )
+                let ids = self.checkIds.map(a => a.id);
 
-                    this.getBackLinkList();
+                swal.fire({
+                    title : "Are you sure you want to invalidate the selected orders?",
+                    icon : "question",
+                    showCancelButton : true,
+                    confirmButtonText : self.$t('message.article.yes'),
+                    cancelButtonText : self.$t('message.article.no')
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let loader = this.$loading.show();
 
-                    this.checkIds = [];
-                }).catch((error) => {
-                    swal.fire(
-                        self.$t('message.follow_backlinks.alert_error'),
-                        self.$t('message.follow_backlinks.alert_error_request'),
-                        'error'
-                    )
+                        axios.post('/api/buy-uninterested-multiple', {
+                            ids: ids
+                        }).then((response) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_success'),
+                                "Selected orders successfully invalidated",
+                                'success'
+                            )
+
+                            this.getBackLinkList();
+
+                            this.checkIds = [];
+                        }).catch((error) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_error'),
+                                "There were some errors while invalidating the selected orders",
+                                'error'
+                            )
+                        });
+                    }
                 });
             },
 
-            buyValidated() {
+            validateSelected() {
                 let self = this;
-                let ctr = 0;
-                for(var index in this.checkIds) {
-                    if(this.listBackLink.data[index].status !== 'To Be Validated') {
-                        ctr++;
-                    }
-                }
 
                 // check if selected is none
                 if(this.checkIds.length === 0) {
@@ -873,8 +897,10 @@
                     return false;
                 }
 
+                let allToBeValidated = self.checkIds.every(item => item.status === 'To Be Validated')
+
                 // check if status is not 'To Be Validated'
-                if(ctr > 0) {
+                if(!allToBeValidated) {
                     swal.fire(
                         self.$t('message.follow_backlinks.alert_invalid'),
                         self.$t('message.follow_backlinks.alert_selection_note'),
@@ -883,19 +909,10 @@
                     return false;
                 }
 
-                // loop buy
-                for(var index in this.checkIds) {
-                    this.buyMultiple(this.listBackLink.data[index])
-                }
+                let ids = self.checkIds.map(a => a.id);
 
+                self.validateSubBuyerOrder(ids)
 
-                swal.fire(
-                    self.$t('message.follow_backlinks.alert_bought'),
-                    self.$t('message.follow_backlinks.alert_bought_successfully'),
-                    'success'
-                );
-
-                this.getBackLinkList();
                 this.checkIds = [];
             },
 
@@ -943,13 +960,13 @@
             selectAll() {
                 this.checkIds = [];
                 if (!this.allSelected) {
-                    for (var index in this.listBackLink.data) {
-                        if(this.listBackLink.data[index].status === 'To Be Validated' && !this.user.isAdmin) {
-                            this.checkIds.push(this.listBackLink.data[index].id);
+                    for (let index in this.listBackLink.data) {
+                        if(this.listBackLink.data[index].status === 'To Be Validated') {
+                            this.checkIds.push(this.listBackLink.data[index]);
                         }
 
                         if(this.user.isAdmin) {
-                            this.checkIds.push(this.listBackLink.data[index].id);
+                            this.checkIds.push(this.listBackLink.data[index]);
                         }
                     }
                     this.isDisabled = false;
@@ -1112,6 +1129,8 @@
                 this.isSearching = false;
 
                 this.getTotalAmount()
+
+                this.$root.$refs.AppHeader.liveGetWallet()
 
             }, 200),
 
@@ -1308,27 +1327,92 @@
                 }
             },
 
+            validateSubBuyerOrder (ids) {
+                let self = this;
+                let idArray = [];
+
+                if (!Array.isArray(ids)) {
+                    idArray.push(ids)
+                }
+
+                swal.fire({
+                    title : "Are you sure that you want to validate this order?",
+                    icon : "question",
+                    showCancelButton : true,
+                    confirmButtonText : self.$t('message.article.yes'),
+                    cancelButtonText : self.$t('message.article.no')
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let loader = this.$loading.show();
+
+                        axios.post('/api/buy-order-validate', {
+                            ids : idArray.length ? idArray : ids,
+                            credit : self.$root.$refs.AppHeader.money.credit
+                        }).then((response) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_bought'),
+                                "Order successfully validated",
+                                'success'
+                            );
+
+                            this.closeModalBacklink()
+                            this.getBackLinkList();
+                            this.$root.$refs.AppHeader.liveGetWallet()
+                        }).catch((error) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_error'),
+                                "There were some errors while validating the order",
+                                'error'
+                            )
+                        });
+                    }
+                });
+            },
+
             uninterest() {
                 let self = this;
-                axios.post('/api/buy-uninterested', {
-                    backlink_id : this.modelBaclink.id,
-                    publisher_id : this.modelBaclink.publisher_id
-                }).then((response) => {
-                    swal.fire(
-                        self.$t('message.follow_backlinks.alert_success'),
-                        self.$t('message.follow_backlinks.alert_remove_success'),
-                        'success'
-                    )
 
-                    this.closeModalBacklink()
+                swal.fire({
+                    title : "Are you sure that you want to invalidate this order?",
+                    icon : "question",
+                    showCancelButton : true,
+                    confirmButtonText : self.$t('message.article.yes'),
+                    cancelButtonText : self.$t('message.article.no')
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        let loader = this.$loading.show();
 
-                    this.getBackLinkList();
-                }).catch((error) => {
-                    swal.fire(
-                        self.$t('message.follow_backlinks.alert_error'),
-                        self.$t('message.follow_backlinks.alert_error_request'),
-                        'error'
-                    )
+                        axios.post('/api/buy-uninterested', {
+                            backlink_id : this.modelBaclink.id,
+                            publisher_id : this.modelBaclink.publisher_id
+                        }).then((response) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_success'),
+                                "Order successfully invalidated",
+                                'success'
+                            )
+
+                            this.closeModalBacklink()
+
+                            this.getBackLinkList();
+                        }).catch((error) => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.follow_backlinks.alert_error'),
+                                "There were some errors while invalidating the order",
+                                'error'
+                            )
+                        });
+                    }
                 });
             },
         },

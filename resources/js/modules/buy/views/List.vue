@@ -1873,8 +1873,8 @@ export default {
         selectAll : function () {
             this.checkIds = [];
             if (!this.allSelected) {
-                for (var buy in this.listBuy.data) {
-                    this.checkIds.push(this.listBuy.data[buy].id);
+                for (let buy in this.listBuy.data) {
+                    this.checkIds.push(buy);
                 }
                 this.isDisabled = false;
                 this.allSelected = true;
