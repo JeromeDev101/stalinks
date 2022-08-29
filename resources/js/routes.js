@@ -93,6 +93,8 @@ import Manual from '@/modules/purchases/views/Manual.vue'
 import Summary from '@/modules/purchases/views/Summary.vue'
 import PurchaseTools from '@/modules/purchases/views/Tools.vue'
 
+import store from './store';
+
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
 
 const routes = [
@@ -243,6 +245,13 @@ const routes = [
                 path : '/validate-writer',
                 name : 'validate-writer',
                 component : ValidateWriter,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isOurs === 0) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/backlink-prospect',

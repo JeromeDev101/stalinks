@@ -1,5 +1,5 @@
 <template>
-    <div class="error-page" >
+    <div>
         <svg width="380px" height="500px" viewBox="0 0 837 1045">
             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
                 <path d="M353,9 L626.664028,170 L626.664028,487 L353,642 L79.3359724,487 L79.3359724,170 L353,9 Z" id="Polygon-1" stroke="#007FB2" stroke-width="6" sketch:type="MSShapeGroup"></path>
@@ -9,9 +9,12 @@
                 <path d="M281,801 L383,861.025276 L383,979.21169 L281,1037 L179,979.21169 L179,861.025276 L281,801 Z" id="Polygon-5" stroke="#36B455" stroke-width="6" sketch:type="MSShapeGroup"></path>
             </g>
         </svg>
-        <div class="message-box">
-            <h1 :class="textColor">{{ error.code }}</h1>
-            <h3 :class="textColor"><i class="fa fa-warning"></i> aaaaaaaaaaaaaaa</h3>
+        <div class="message-box" style="width: 500px !important;">
+            <h1 class="text-danger">
+                <i class="fas fa-exclamation-triangle"></i>
+                Access Denied
+            </h1>
+            <h3 :class="textColor"><i class="fa fa-warning"></i>Sorry, you do not have the specific permission to access this page.</h3>
             <div class="buttons-con">
               <div class="action-link-wrap">
                   <div class="btn btn-primary btn-flat buttonBold" @click="$router.go(-1)">
