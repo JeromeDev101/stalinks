@@ -1,5 +1,5 @@
 <template>
-    <div v-if="user.isOurs === 0">
+    <div v-if="user.isOurs === 0 || (user.isOurs === 1 && user.role_id === 4)">
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">

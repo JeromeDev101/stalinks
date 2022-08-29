@@ -246,7 +246,7 @@ const routes = [
                 name : 'validate-writer',
                 component : ValidateWriter,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isOurs === 0) {
+                    if(store.state.storeAuth.currentUser.isOurs === 0 || (store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
                         next();
                     } else {
                         next('*');
