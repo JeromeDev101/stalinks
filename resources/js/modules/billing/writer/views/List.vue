@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group">
+                        <div class="input-group" v-if="user.isOurs != 1">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle"
                                         :disabled="isDisabled"
@@ -132,7 +132,7 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
-                                    <th>{{ $t('message.writer_billing.wb_select') }}</th>
+                                    <th v-if="user.isOurs != 1">{{ $t('message.writer_billing.wb_select') }}</th>
                                     <th>{{ $t('message.writer_billing.filter_date_completed') }}</th>
                                     <th>{{ $t('message.writer_billing.filter_date_created') }}</th>
                                     <th>{{ $t('message.writer_billing.wb_id_backlink') }}</th>
@@ -146,7 +146,7 @@
                                 <tbody>
                                 <tr v-for="(article, index) in listArticle.data" :key="index">
                                     <td>{{ index + 1 }}</td>
-                                    <td>
+                                    <td v-if="user.isOurs != 1">
                                         <div class="btn-group">
                                             <button class="btn btn-default">
                                                 <input type="checkbox"
@@ -384,6 +384,7 @@ export default {
             listPayment : state => state.storeBillingWriter.listPayment,
             listWriter : state => state.storeArticles.listWriter,
             writerInfo : state => state.storeBillingWriter.writerInfo,
+            user: state => state.storeAuth.currentUser,
         }),
     },
 
