@@ -241,6 +241,42 @@
                                             </b>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            ID Article: 
+                                            <b>{{ info.ids }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.bank_name != null && info.bank_name != ''">
+                                        <td colspan="2">
+                                            Bank Name:
+                                            <b>{{ info.bank_name }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.account_name != null && info.account_name != ''">
+                                        <td colspan="2">
+                                            Account Name:
+                                            <b>{{ info.account_name }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.account_iban != null && info.account_iban != ''">
+                                        <td colspan="2">
+                                            Account IBAN:
+                                            <b>{{ info.account_iban }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.swift_code != null && info.swift_code != ''">
+                                        <td colspan="2">
+                                            Swift Code:
+                                            <b>{{ info.swift_code }}</b>
+                                        </td>
+                                    </tr>
+                                    <tr v-show="info.beneficiary_add != null && info.beneficiary_add != ''">
+                                        <td colspan="2">
+                                            Beneficiary Address:
+                                            <b>{{ info.beneficiary_add }}</b>
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
 
@@ -363,7 +399,13 @@ export default {
                 payment_type_id : '',
                 account : '',
                 amount : '',
-                payment_types: null
+                ids : '',
+                payment_types: null,
+                bank_name: '',
+                account_name: '',
+                account_iban: '',
+                swift_code: '',
+                beneficiary_add: '',
             },
             isDisabledPay : true,
             proof_doc : '',
@@ -421,6 +463,7 @@ export default {
                 let modal = this.$refs.modal_payment;
                 let account = 'Not yet setup';
                 let total_amount = [];
+                let _ids = '';
 
                 this.info.writer = data.username;
                 this.info.payment_types = data.user_payment_types;
@@ -452,6 +495,12 @@ export default {
 
                     if (paymentType) {
                         account = paymentType.account;
+
+                        this.info.bank_name = paymentType.bank_name == null ? '':JSON.parse(paymentType.bank_name)[data.id_payment_type];
+                        this.info.account_name = paymentType.account_name == null ? '':JSON.parse(paymentType.account_name)[data.id_payment_type];
+                        this.info.account_iban = paymentType.account_iban == null ? '':JSON.parse(paymentType.account_iban)[data.id_payment_type];
+                        this.info.swift_code = paymentType.swift_code == null ? '':JSON.parse(paymentType.swift_code)[data.id_payment_type];
+                        this.info.beneficiary_add = paymentType.beneficiary_add == null ? '':JSON.parse(paymentType.beneficiary_add)[data.id_payment_type];
                     }
                 }
 
@@ -464,9 +513,12 @@ export default {
                 for (var index in this.checkIds) {
                     var price = this.computeWriterPrice(this.checkIds[index])
                     total_amount.push(price)
+
+                    _ids += this.checkIds[index].id + ' ';
                 }
 
                 this.info.amount = total_amount.reduce((a, b) => a + b, 0);
+                this.info.ids = _ids
 
                 $(modal).modal('show')
             } else {

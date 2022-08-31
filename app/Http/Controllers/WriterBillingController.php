@@ -33,7 +33,7 @@ class WriterBillingController extends Controller
                         ->with('user:id,name,username')
                         ->orderBy('id', 'desc');
 
-        if (!auth()->user()->isAdmin()) {
+        if (!auth()->user()->isAdmin() && auth()->user()->role_id != 8) {
             $list->where('article.id_writer', auth()->user()->id);
         }
 
