@@ -173,6 +173,13 @@ const routes = [
                 path : '/management/teams',
                 name : 'List User',
                 component : ListUser,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/help',
@@ -235,11 +242,25 @@ const routes = [
                 path : '/dashboard',
                 name : 'dashboard',
                 component : DashboardAdmin,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8, 4, 6, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/articles-list',
                 name : 'articles-list',
                 component : ArticleList,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/validate-writer',
@@ -257,21 +278,49 @@ const routes = [
                 path : '/backlink-prospect',
                 name : 'backlink-prospect',
                 component : BacklinksProspect,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/management/roles',
                 name : 'roles',
                 component : Role,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/management/modules',
                 name : 'modules',
                 component : Module,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/overall-incomes',
                 name : 'overall-incomes',
                 component : OverAllIncomes,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || [11].includes(store.state.storeAuth.currentUser.role_id)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/mails',
@@ -319,6 +368,13 @@ const routes = [
                         component : AutoReply,
                     },
                 ],
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             // {
             //     path: '/sent',
@@ -334,46 +390,109 @@ const routes = [
                 path : '/articles',
                 name : 'articles',
                 component : Article,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.role_id !== 11) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/followup-sales',
                 name : 'followup-sales',
                 component : FollowupSales,
+                beforeEnter: (to, from, next) => {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/wallet-transaction',
                 name : 'wallet-transaction',
                 component : WalletTransaction,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || [7, 8, 5, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/wallet-summary',
                 name : 'wallet-summary',
                 component : WalletSummary,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || [7, 8, 5, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/buyer-billing',
                 name : 'buyer-billing',
                 component : BillingBuyer,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/writer-billing',
                 name : 'writer-billing',
                 component : BillingWriter,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || [4, 8, 10, 9].includes(store.state.storeAuth.currentUser.role_id)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/publisher',
                 name : 'publisher',
                 component : Publisher,
+                beforeEnter: (to, from, next) => {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/seller-billing',
                 name : 'seller-billing',
                 component : BillingSeller,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || [6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/purchase',
                 name : 'purchase',
                 component : Purchase,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/profile/:id',
@@ -384,66 +503,157 @@ const routes = [
                 path : '/url-prospect',
                 name : 'ExtDomain',
                 component : ExtDomain,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/ext/alexa',
                 name : 'AlexaDomain',
                 component : AlexaDomain,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/followup-backlinks',
                 name : 'BackLink',
                 component : BackLink,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/list-backlinks',
                 name : 'list-backlinks',
                 component : Buy,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/incomes',
                 name : 'incomes',
                 component : Incomes,
+                beforeEnter: (to, from, next) => {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/accounts',
                 name : 'Registration',
                 component : Registration,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([3, 5, 6, 7, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/survey-dashboard',
                 name : 'survey-dashboard',
                 component : AdminSurvey,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'intdomains',
                 name : 'int-domains',
                 component : IntDomain,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'hostings',
                 name : 'hostings',
                 component : Hosting,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/management/logs',
                 name : 'logs',
                 component : Log,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'hostings/:id',
                 name : 'detail-hosting',
                 component : DetailHosting,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'domains',
                 name : 'domains',
                 component : Domain,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'domains/:id',
                 name : 'detail-domains',
                 component : DetailDomain,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             /*{
                 path : 'system',
@@ -454,16 +664,37 @@ const routes = [
                 path : 'system/it',
                 name : 'system-it',
                 component : IT,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'system/finance',
                 name : 'system-finance',
                 component : Finance,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'system/dev',
                 name : 'system-dev',
                 component : Devs,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             // {
             //     path: 'mail-template',
@@ -474,51 +705,121 @@ const routes = [
                 path : '/management/mail-logs',
                 name : 'mail-logs',
                 component : Maillog,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : 'generate-list',
                 name : 'generate-list',
                 component : GenerateList,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/management/tools',
                 name : 'tools',
                 component : Tools,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/purchases/config',
                 name : 'purchases-config',
                 component : Config,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/purchases/summary',
                 name : 'purchases-summary',
                 component : Summary,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/purchases/tools',
                 name : 'purchases-tools',
                 component : PurchaseTools,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/purchases/manual',
                 name : 'purchases-manual',
                 component : Manual,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/survey/:set',
                 name : 'survey',
                 component : Survey,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/seller/survey/:set',
                 name : 'survey-seller',
                 component : SurveySeller,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 6) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '/writer/survey/:set',
                 name : 'survey-writer',
                 component : WriterSurvey,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 4) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
             },
             {
                 path : '*',
