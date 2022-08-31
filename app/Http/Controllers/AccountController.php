@@ -49,7 +49,11 @@ class AccountController extends Controller
             'account_name',
             'account_iban',
             'swift_code',
-            'beneficiary_add'
+            'beneficiary_add',
+            'account_holder',
+            'account_type',
+            'routing_num',
+            'wire_routing_num'
         );
 
         if( Auth::user()->role_id == 8 || Auth::user()->role_id == 1 || Auth::user()->role_id == 3 ) {
@@ -147,6 +151,10 @@ class AccountController extends Controller
                             'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban):null,
                             'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code):null,
                             'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add):null,
+                            'account_holder' => count($request->account_holder) > 0 ? json_encode($request->account_holder):null,
+                            'account_type' => count($request->account_type) > 0 ? json_encode($request->account_type):null,
+                            'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num):null,
+                            'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num):null,
                             'is_default' => $key == $request->id_payment_type ? 1:0,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now()

@@ -945,7 +945,11 @@
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
-                                                payment_method.account_iban
+                                                payment_method.account_iban || 
+                                                payment_method.account_holder || 
+                                                payment_method.account_type || 
+                                                payment_method.routing_num || 
+                                                payment_method.wire_routing_num
                                             "
                                             >
                                                 <h6 class="text-primary">Other Details:</h6>
@@ -971,6 +975,22 @@
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
                                                         <label>Beneficiary Address:</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.beneficiary_add[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_holder">
+                                                        <label>Account Holder:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_holder[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_type">
+                                                        <label>Account Type:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_type[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.routing_num">
+                                                        <label>Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.routing_num[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.wire_routing_num">
+                                                        <label>Wire Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1660,7 +1680,11 @@
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
-                                                payment_method.account_iban
+                                                payment_method.account_iban || 
+                                                payment_method.account_holder || 
+                                                payment_method.account_type || 
+                                                payment_method.routing_num || 
+                                                payment_method.wire_routing_num
                                             "
                                             >
                                                 <h6 class="text-primary">Other Details:</h6>
@@ -1686,6 +1710,22 @@
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
                                                         <label>Beneficiary Address:</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.beneficiary_add[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_holder">
+                                                        <label>Account Holder:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_holder[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_type">
+                                                        <label>Account Type:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_type[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.routing_num">
+                                                        <label>Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.routing_num[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.wire_routing_num">
+                                                        <label>Wire Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1947,6 +1987,10 @@ export default {
                 account_iban: [],
                 swift_code: [],
                 beneficiary_add: [],
+                account_holder: [],
+                account_type: [],
+                routing_num: [],
+                wire_routing_num: [],
             },
 
             filterModel : {
@@ -2014,6 +2058,10 @@ export default {
                 account_iban: [],
                 swift_code: [],
                 beneficiary_add: [],
+                account_holder: [],
+                account_type: [],
+                routing_num: [],
+                wire_routing_num: [],
             },
 
             isPopupLoading : false,
@@ -3320,6 +3368,10 @@ export default {
                         var acc_account_iban = JSON.parse(account.user.user_payment_types[index].account_iban)
                         var acc_swift_code = JSON.parse(account.user.user_payment_types[index].swift_code)
                         var acc_beneficiary_add = JSON.parse(account.user.user_payment_types[index].beneficiary_add)
+                        var acc_account_holder = JSON.parse(account.user.user_payment_types[index].account_holder)
+                        var acc_account_type = JSON.parse(account.user.user_payment_types[index].account_type)
+                        var acc_routing_num = JSON.parse(account.user.user_payment_types[index].routing_num)
+                        var acc_wire_routing_num = JSON.parse(account.user.user_payment_types[index].wire_routing_num)
 
                         this.accountUpdate.update_method_payment_type[payment_id] = account.user.user_payment_types[index].account
                         this.accountUpdate.bank_name[payment_id] = account.user.user_payment_types[index].bank_name == null ? '':acc_bank_name[payment_id]
@@ -3327,6 +3379,10 @@ export default {
                         this.accountUpdate.account_iban[payment_id] = account.user.user_payment_types[index].account_iban == null ? '':acc_account_iban[payment_id]
                         this.accountUpdate.swift_code[payment_id] = account.user.user_payment_types[index].swift_code == null ? '':acc_swift_code[payment_id]
                         this.accountUpdate.beneficiary_add[payment_id] = account.user.user_payment_types[index].beneficiary_add == null ? '':acc_beneficiary_add[payment_id]
+                        this.accountUpdate.account_holder[payment_id] = account.user.user_payment_types[index].account_holder == null ? '':acc_account_holder[payment_id]
+                        this.accountUpdate.account_type[payment_id] = account.user.user_payment_types[index].account_type == null ? '':acc_account_type[payment_id]
+                        this.accountUpdate.routing_num[payment_id] = account.user.user_payment_types[index].routing_num == null ? '':acc_routing_num[payment_id]
+                        this.accountUpdate.wire_routing_num[payment_id] = account.user.user_payment_types[index].wire_routing_num == null ? '':acc_wire_routing_num[payment_id]
                     }
                 } else {
                     this.accountUpdate.update_method_payment_type = [];

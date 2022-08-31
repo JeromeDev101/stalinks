@@ -239,6 +239,42 @@
                                         <input type="checkbox" class="form-control" v-model="paymentUpdate.beneficiary_add">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Account Holder</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.account_holder">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Account Type</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.account_type">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Routing Number</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.routing_num">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="align-middle">
+                                        <label>Wire Routing Number</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>Show</label>
+                                        <input type="checkbox" class="form-control" v-model="paymentUpdate.wire_routing_num">
+                                    </td>
+                                </tr>
                             </table>
                         </div>
 

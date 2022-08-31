@@ -25,7 +25,11 @@ class PaymentType extends Model
         'account_iban',
         'bank_name',
         'swift_code',
-        'beneficiary_add'
+        'beneficiary_add',
+        'account_holder',
+        'account_type',
+        'routing_num',
+        'wire_routing_num'
     ];
 
     public function payment_type_image() {

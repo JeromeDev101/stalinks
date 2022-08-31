@@ -388,7 +388,11 @@
                                                     payment_method.bank_name ||
                                                     payment_method.swift_code ||
                                                     payment_method.beneficiary_add ||
-                                                    payment_method.account_iban
+                                                    payment_method.account_iban || 
+                                                    payment_method.account_holder || 
+                                                    payment_method.account_type || 
+                                                    payment_method.routing_num || 
+                                                    payment_method.wire_routing_num
                                                 "
                                                 >
                                                 <h6 class="text-primary">Other Details:</h6>
@@ -414,6 +418,22 @@
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
                                                         <label for="">Beneficiary Address:</label>
                                                         <input type="text" class="form-control" v-model="billing.beneficiary_add[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_holder">
+                                                        <label for="">Account Holder:</label>
+                                                        <input type="text" class="form-control" v-model="billing.account_holder[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_type">
+                                                        <label for="">Account Type:</label>
+                                                        <input type="text" class="form-control" v-model="billing.account_type[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.routing_num">
+                                                        <label for="">Routing Number:</label>
+                                                        <input type="text" class="form-control" v-model="billing.routing_num[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.wire_routing_num">
+                                                        <label for="">Wire Routing Number:</label>
+                                                        <input type="text" class="form-control" v-model="billing.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>
                                             </div>
@@ -789,6 +809,10 @@ export default {
                 account_iban: [],
                 swift_code: [],
                 beneficiary_add: [],
+                account_holder: [],
+                account_type: [],
+                routing_num: [],
+                wire_routing_num: [],
             },
             new_password: '',
             c_password: '',
@@ -1135,6 +1159,10 @@ export default {
                             var account_iban = this.currentUser.user_payment_types[index].account_iban == null ? '':JSON.parse(this.currentUser.user_payment_types[index].account_iban)
                             var swift_code = this.currentUser.user_payment_types[index].swift_code == null ? '':JSON.parse(this.currentUser.user_payment_types[index].swift_code)
                             var beneficiary_add = this.currentUser.user_payment_types[index].beneficiary_add == null ? '':JSON.parse(this.currentUser.user_payment_types[index].beneficiary_add)
+                            var account_holder = this.currentUser.user_payment_types[index].account_holder == null ? '':JSON.parse(this.currentUser.user_payment_types[index].account_holder)
+                            var account_type = this.currentUser.user_payment_types[index].account_type == null ? '':JSON.parse(this.currentUser.user_payment_types[index].account_type)
+                            var routing_num = this.currentUser.user_payment_types[index].routing_num == null ? '':JSON.parse(this.currentUser.user_payment_types[index].routing_num)
+                            var wire_routing_num = this.currentUser.user_payment_types[index].wire_routing_num == null ? '':JSON.parse(this.currentUser.user_payment_types[index].wire_routing_num)
 
                             this.billing.payment_type[payment_id] = this.currentUser.user_payment_types[index].account
 
@@ -1142,7 +1170,11 @@ export default {
                             this.billing.account_name[payment_id] = account_name[payment_id] == null ? '':account_name[payment_id];
                             this.billing.account_iban[payment_id] = account_iban[payment_id] == null ? '':account_iban[payment_id];
                             this.billing.swift_code[payment_id] = swift_code[payment_id] == null ? '':swift_code[payment_id];
-                            this.billing.beneficiary_add[payment_id] = bank_name[payment_id] == null ? '':beneficiary_add[payment_id];
+                            this.billing.beneficiary_add[payment_id] = beneficiary_add[payment_id] == null ? '':beneficiary_add[payment_id];
+                            this.billing.account_holder[payment_id] = account_holder[payment_id] == null ? '':account_holder[payment_id];
+                            this.billing.account_type[payment_id] = account_type[payment_id] == null ? '':account_type[payment_id];
+                            this.billing.routing_num[payment_id] = routing_num[payment_id] == null ? '':routing_num[payment_id];
+                            this.billing.wire_routing_num[payment_id] = wire_routing_num[payment_id] == null ? '':wire_routing_num[payment_id];
                         }
                     }
                 }
@@ -1198,6 +1230,10 @@ export default {
                 this.user.account_iban = this.billing.account_iban;
                 this.user.swift_code = this.billing.swift_code;
                 this.user.beneficiary_add = this.billing.beneficiary_add;
+                this.user.account_holder = this.billing.account_holder;
+                this.user.account_type = this.billing.account_type;
+                this.user.routing_num = this.billing.routing_num;
+                this.user.wire_routing_num = this.billing.wire_routing_num;
                 this.user.id_payment_type = this.billing.payment_default;
                 this.user.user_type.company_type = this.company_type;
                 this.user.user_type.country_id = this.country_id;
