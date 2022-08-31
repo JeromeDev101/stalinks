@@ -159,6 +159,39 @@
                 <!-- form -->
                 <form class="row" action="" style="font-size: .875rem !important;">
 
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withCcDraft"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="withCcDraft = !withCcDraft">
+                                        With Cc
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
+                                            v-model="withBccDraft"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="withBccDraft = !withBccDraft">
+                                        {{ $t('message.inbox.cm_bcc') }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+
                     <div class="col-md-12 py-0 my-0">
                         <div class="form-group">
 
@@ -196,14 +229,73 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-12" v-show="withCcDraft">
                         <div class="form-group">
-                            <input
-                                v-model="draftContent.cc"
-                                type="text"
-                                :placeholder="$t('message.inbox.cm_bcc_title')"
-                                class="form-control form-control-sm"
-                                required="required">
+                            <small
+                                v-if="draftContent.cc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="draftContent.cc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="draftCc"
+                                placeholder="Cc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="draftContent.cc"
+
+                                @tags-changed="newTagsCc => draftContent.cc = newTagsCc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.cc"
+                                v-for="err in messageForms.errors.cc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
+                                The cc field must contain valid emails
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" v-show="withBccDraft">
+                        <div class="form-group">
+                            <small
+                                v-if="draftContent.bcc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="draftContent.bcc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="draftBcc"
+                                placeholder="Bcc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="draftContent.bcc"
+
+                                @tags-changed="newTagsBcc => draftContent.bcc = newTagsBcc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.bcc"
+                                v-for="err in messageForms.errors.bcc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
+                                The bcc field must contain valid emails
+                            </span>
                         </div>
                     </div>
 
@@ -323,7 +415,8 @@ export default {
 
             draftContent: {
                 id: '',
-                cc: '',
+                cc: [],
+                bcc: [],
                 email: [],
                 title: '',
                 content: ''
@@ -353,6 +446,11 @@ export default {
             attached_files: {
                 draft: 0
             },
+
+            draftCc: '',
+            draftBcc: '',
+            withCcDraft: false,
+            withBccDraft: false,
         }
     },
 
@@ -401,13 +499,15 @@ export default {
         async sendDraft () {
             let self = this;
             let cc = '';
+            let bcc = '';
             let appendEmail = '';
             let appendTitle = '';
             let appendContent = '';
             let attachments = [];
             let forwardAttachments = [];
 
-            cc = (typeof (this.draftContent.cc) == "undefined") ? "" : this.draftContent.cc;
+            cc = JSON.stringify(this.draftContent.cc);
+            bcc = JSON.stringify(this.draftContent.bcc);
             appendTitle = this.draftContent.title;
             appendContent = this.draftContent.content;
             appendEmail = JSON.stringify(this.draftContent.email);
@@ -416,6 +516,7 @@ export default {
             // request body
             this.formData = new FormData();
             this.formData.append('cc', cc);
+            this.formData.append('bcc', bcc);
             this.formData.append('email', appendEmail);
             this.formData.append('title', appendTitle);
             this.formData.append('work_mail', this.user.work_mail_orig);
@@ -531,11 +632,33 @@ export default {
             this.draftContent.id  = draft.id;
             this.draftContent.email = [];
             this.draftContent.title = draft.subject ? draft.subject : '';
-            this.draftContent.cc = draft.bcc ? draft.bcc : '';
+            this.draftContent.cc = [];
+            this.draftContent.bcc = [];
 
             // add recipient
             if (draft.received) {
                 this.draftContent.email = createTags(draft.received.replace(/\s/g, '')
+                    .split(/[|,]/g)
+                    .filter(function (email) {
+                        return email !== '';
+                    }))
+            }
+
+            // cc and bcc
+            if (draft.cc) {
+                this.withCcDraft = true;
+
+                this.draftContent.cc = createTags(draft.cc.replace(/\s/g, '')
+                    .split(/[|,]/g)
+                    .filter(function (email) {
+                        return email !== '';
+                    }))
+            }
+
+            if (draft.bcc) {
+                this.withBccDraft = true;
+
+                this.draftContent.bcc = createTags(draft.bcc.replace(/\s/g, '')
                     .split(/[|,]/g)
                     .filter(function (email) {
                         return email !== '';
@@ -551,6 +674,8 @@ export default {
 
         closeBalloon () {
             this.$refs.draftBalloon.close();
+            this.withCcDraft = false;
+            this.withBccDraft = false;
         },
 
         selectAllIds () {
@@ -592,13 +717,20 @@ export default {
         clearModel () {
             this.draftContent = {
                 id: '',
-                cc : '',
+                cc : [],
+                bcc: [],
                 email : [],
                 title : '',
                 content : ''
             }
 
             this.attached_files.draft = 0
+        },
+
+        checkCcBccValidationError(error, mod) {
+            return Object.keys(error).some(function (err) {
+                return ~err.indexOf(mod)
+            })
         },
     },
 }

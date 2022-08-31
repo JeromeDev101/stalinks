@@ -1830,6 +1830,109 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input
+                                                    v-model="withCcProspect"
+                                                    type="checkbox"
+                                                    class="form-check-input"
+
+                                                    @click="withCcProspect = !withCcProspect">
+                                                With Cc
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input
+                                                    v-model="withBccProspect"
+                                                    type="checkbox"
+                                                    class="form-check-input"
+
+                                                    @click="withBccProspect = !withBccProspect">
+                                                {{ $t('message.inbox.cm_bcc') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12" v-show="withCcProspect">
+                                <div class="form-group">
+                                    <small
+                                        v-if="modelMail.cc.length"
+                                        class="text-primary small"
+                                        style="cursor: pointer"
+
+                                        @click="modelMail.cc = []">
+                                        {{ $t('message.inbox.cm_remove_all_emails') }}
+                                    </small>
+
+                                    <vue-tags-input
+                                        v-model="prospectCc"
+                                        placeholder="Cc"
+                                        :max-tags="10"
+                                        :allow-edit-tags="true"
+                                        :separators="separators"
+                                        :tags="modelMail.cc"
+
+                                        @tags-changed="newTagsCc => modelMail.cc = newTagsCc"
+                                    />
+
+                                    <span
+                                        v-if="messageFormsMail.errors.cc"
+                                        v-for="err in messageFormsMail.errors.cc"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+
+                                    <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'cc.')" class="text-danger">
+                                        The cc field must contain valid emails
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-show="withBccProspect">
+                                <div class="form-group">
+                                    <small
+                                        v-if="modelMail.bcc.length"
+                                        class="text-primary small"
+                                        style="cursor: pointer"
+
+                                        @click="modelMail.bcc = []">
+                                        {{ $t('message.inbox.cm_remove_all_emails') }}
+                                    </small>
+
+                                    <vue-tags-input
+                                        v-model="prospectBcc"
+                                        placeholder="Bcc"
+                                        :max-tags="10"
+                                        :allow-edit-tags="true"
+                                        :separators="separators"
+                                        :tags="modelMail.bcc"
+
+                                        @tags-changed="newTagsBcc => modelMail.bcc = newTagsBcc"
+                                    />
+
+                                    <span
+                                        v-if="messageFormsMail.errors.bcc"
+                                        v-for="err in messageFormsMail.errors.bcc"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+
+                                    <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'bcc.')" class="text-danger">
+                                        The bcc field must contain valid emails
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}"
                                      class="form-group">
@@ -2432,6 +2535,8 @@ export default {
                 }
             },
             modelMail : {
+                cc: [],
+                bcc: [],
                 title : '',
                 content : '',
                 mail_name : '',
@@ -2545,6 +2650,11 @@ export default {
 
             multipleUpdateStatusExistingUrls: [],
             showAllExistingUrls: false,
+
+            prospectCc: '',
+            prospectBcc: '',
+            withCcProspect: false,
+            withBccProspect: false,
         };
     },
     async created() {
@@ -3131,7 +3241,7 @@ export default {
         modalCloser() {
             let self = this;
 
-            if (this.modelMail.title || this.modelMail.content) {
+            if (this.modelMail.title || this.modelMail.content || this.modelMail.cc.length !== 0 || this.modelMail.bcc.length !== 0) {
 
                 swal.fire({
                     title : self.$t('message.url_prospect.swal_sure'),
@@ -3156,6 +3266,9 @@ export default {
                 this.clearMailModel()
                 this.closeModal()
             }
+
+            this.withCcProspect = false;
+            this.withBccProspect = false;
         },
 
         closeModal() {
@@ -3165,6 +3278,8 @@ export default {
 
         clearMailModel() {
             this.modelMail = {
+                cc: [],
+                bcc: [],
                 title : '',
                 content : '',
                 mail_name : '',
@@ -4141,7 +4256,8 @@ export default {
             // create form data
 
             let formData = new FormData();
-            formData.append('cc', '');
+            formData.append('cc', JSON.stringify(this.modelMail.cc));
+            formData.append('bcc', JSON.stringify(this.modelMail.bcc));
             formData.append('email', JSON.stringify(this.urlEmails));
             formData.append('title', this.modelMail.title);
             formData.append('content', this.modelMail.content);
@@ -4177,11 +4293,16 @@ export default {
 
                 if (this.mailInfo.tpl === 0) {
                     this.modelMail = {
+                        cc: [],
+                        bcc: [],
                         title : '',
                         content : '',
                         mail_name : '',
                     }
                 }
+
+                this.withCcProspect = false;
+                this.withBccProspect = false;
 
                 // this.getStatus();
                 let result = true;
@@ -4555,6 +4676,12 @@ export default {
             .catch((err) => {
                 console.log(err)
                 loader.hide();
+            })
+        },
+
+        checkCcBccValidationError(error, mod) {
+            return Object.keys(error).some(function (err) {
+                return ~err.indexOf(mod)
             })
         },
     },

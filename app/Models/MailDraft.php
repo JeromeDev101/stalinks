@@ -12,6 +12,7 @@ class MailDraft extends Model
     use SoftDeletes, Loggable;
 
     protected $fillable = [
+        'cc',
         'bcc',
         'body',
         'mode',

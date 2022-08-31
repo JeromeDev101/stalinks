@@ -518,7 +518,10 @@
 
                                     <!-- reply -->
                                     <span
-                                        v-if="($route.name === 'Inbox' || $route.name === 'Sent' || $route.name === 'Starred') && email.is_sent === 0"
+                                        v-if="($route.name === 'Inbox'
+                                        || $route.name === 'Sent'
+                                        || $route.name === 'Starred')
+                                        && email.is_sent === 0"
                                         class="mr-2"
                                         title="Reply"
                                         style="cursor: pointer"
@@ -526,6 +529,21 @@
                                         @click="doReply($route.name, email)">
 
                                         <i class="fa fa-reply"></i>
+                                    </span>
+
+                                    <!-- reply all -->
+                                    <span
+                                        v-if="($route.name === 'Inbox'
+                                        || $route.name === 'Sent'
+                                        || $route.name === 'Starred')
+                                        && (email.bcc || email.cc)"
+                                        class="mr-2"
+                                        :title="email.is_sent === 0 ? 'Reply All' : 'Follow up All'"
+                                        style="cursor: pointer"
+
+                                        @click="doReply($route.name, email, 'all')">
+
+                                        <i class="fas fa-reply-all" :class="email.is_sent !== 0 ? 'fa-flip-horizontal' : ''"></i>
                                     </span>
 
                                     <!-- forward -->
@@ -807,6 +825,20 @@
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input
+                                            v-model="withCcCompose"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleCc('Send')">
+                                        With Cc
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
                                             v-model="withBccCompose"
                                             type="checkbox"
                                             class="form-check-input"
@@ -956,14 +988,73 @@
                         </div>
                     </div>
 
+                    <div class="col-md-12" v-show="withCcCompose">
+                        <div class="form-group">
+                            <small
+                                v-if="emailContent.cc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="emailContent.cc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagCc"
+                                placeholder="Cc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="emailContent.cc"
+
+                                @tags-changed="newTagsCc => emailContent.cc = newTagsCc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.cc"
+                                v-for="err in messageForms.errors.cc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
+                                The cc field must contain valid emails
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="col-md-12" v-show="withBccCompose">
                         <div class="form-group">
-                            <input
-                                v-model="emailContent.cc"
-                                type="text"
-                                :placeholder="$t('message.inbox.cm_bcc_title')"
-                                class="form-control form-control-sm"
-                                required="required">
+                            <small
+                                v-if="emailContent.bcc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="emailContent.bcc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagBcc"
+                                placeholder="Bcc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="emailContent.bcc"
+
+                                @tags-changed="newTagsBcc => emailContent.bcc = newTagsBcc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.bcc"
+                                v-for="err in messageForms.errors.bcc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
+                                The bcc field must contain valid emails
+                            </span>
                         </div>
                     </div>
 
@@ -1069,6 +1160,20 @@
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input
+                                            v-model="withCcReply"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleCc('Reply')">
+                                        With Cc
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
                                             v-model="withBccReply"
                                             type="checkbox"
                                             class="form-check-input"
@@ -1077,8 +1182,8 @@
                                         {{ $t('message.inbox.cm_bcc') }}
                                     </label>
                                 </div>
-                                <hr>
                             </div>
+
                             <div class="col-md-3">
                                 <div class="form-check">
                                     <label class="form-check-label">
@@ -1091,7 +1196,6 @@
                                         {{ $t('message.inbox.cm_temp') }}
                                     </label>
                                 </div>
-                                <hr>
                             </div>
 <!--                            <div class="col-md-3" v-show="withTemplateReply">-->
 <!--                                <div class="form-check">-->
@@ -1106,6 +1210,7 @@
 <!--                                <hr>-->
 <!--                            </div>-->
                         </div>
+                        <hr>
                     </div>
 
                     <div class="col-md-12" v-show="withTemplateReply">
@@ -1206,14 +1311,73 @@
                         </div>
                     </div>
 
+                    <div class="col-md-12" v-show="withCcReply">
+                        <div class="form-group">
+                            <small
+                                v-if="replyContent.cc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="replyContent.cc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagCc"
+                                placeholder="Cc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="replyContent.cc"
+
+                                @tags-changed="newTagsCc => replyContent.cc = newTagsCc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.cc"
+                                v-for="err in messageForms.errors.cc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
+                                The cc field must contain valid emails
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="col-md-12" v-show="withBccReply">
                         <div class="form-group">
-                            <input
-                                v-model="replyContent.cc"
-                                type="text"
-                                :placeholder="$t('message.inbox.cm_bcc_title')"
-                                class="form-control form-control-sm"
-                                required="required">
+                            <small
+                                v-if="replyContent.bcc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="replyContent.bcc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagBcc"
+                                placeholder="Bcc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="replyContent.bcc"
+
+                                @tags-changed="newTagsBcc => replyContent.bcc = newTagsBcc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.bcc"
+                                v-for="err in messageForms.errors.bcc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
+                                The bcc field must contain valid emails
+                            </span>
                         </div>
                     </div>
 
@@ -1301,6 +1465,20 @@
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input
+                                            v-model="withCcReply"
+                                            type="checkbox"
+                                            class="form-check-input"
+
+                                            @click="toggleCc('Forward')">
+                                        With Cc
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input
                                             v-model="withBccForward"
                                             type="checkbox"
                                             class="form-check-input"
@@ -1309,9 +1487,9 @@
                                         {{ $t('message.inbox.cm_bcc') }}
                                     </label>
                                 </div>
-                                <hr>
                             </div>
                         </div>
+                        <hr>
                     </div>
 
                     <div class="col-md-12 py-0 my-0">
@@ -1350,14 +1528,73 @@
                         </div>
                     </div>
 
+                    <div class="col-md-12" v-show="withCcForward">
+                        <div class="form-group">
+                            <small
+                                v-if="forwardContent.cc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="forwardContent.cc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagCc"
+                                placeholder="Cc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="forwardContent.cc"
+
+                                @tags-changed="newTagsCc => forwardContent.cc = newTagsCc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.cc"
+                                v-for="err in messageForms.errors.cc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
+                                The cc field must contain valid emails
+                            </span>
+                        </div>
+                    </div>
+
                     <div class="col-md-12" v-show="withBccForward">
                         <div class="form-group">
-                            <input
-                                v-model="forwardContent.cc"
-                                type="text"
-                                :placeholder="$t('message.inbox.cm_bcc_title')"
-                                class="form-control form-control-sm"
-                                required="required">
+                            <small
+                                v-if="forwardContent.bcc.length"
+                                class="text-primary small"
+                                style="cursor: pointer"
+
+                                @click="forwardContent.bcc = []">
+                                {{ $t('message.inbox.cm_remove_all_emails') }}
+                            </small>
+
+                            <vue-tags-input
+                                v-model="tagBcc"
+                                placeholder="Bcc"
+                                :max-tags="10"
+                                :allow-edit-tags="true"
+                                :separators="separators"
+                                :tags="forwardContent.bcc"
+
+                                @tags-changed="newTagsBcc => forwardContent.bcc = newTagsBcc"
+                            />
+
+                            <span
+                                v-if="messageForms.errors.bcc"
+                                v-for="err in messageForms.errors.bcc"
+                                class="text-danger">
+                                {{ err }}
+                            </span>
+
+                            <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
+                                The bcc field must contain valid emails
+                            </span>
                         </div>
                     </div>
 
@@ -1467,19 +1704,22 @@ export default {
         return {
             search_mail : '',
             emailContent : {
-                cc : '',
+                cc : [],
+                bcc: [],
                 email : [],
                 title : '',
                 content : ''
             },
             replyContent : {
-                cc : '',
+                cc : [],
+                bcc: [],
                 email : [],
                 title : '',
                 content : ''
             },
             forwardContent : {
-                cc : '',
+                cc : [],
+                bcc: [],
                 email : [],
                 title : '',
                 is_sent : 0,
@@ -1541,6 +1781,9 @@ export default {
                 ' '
             ],
 
+            tagCc: '',
+            tagBcc: '',
+
             // for attachments
             attached_files: {
                 reply: 0,
@@ -1548,7 +1791,10 @@ export default {
                 forward: 0
             },
 
-            // bcc and template
+            // cc, bcc and template
+            withCcCompose : false,
+            withCcReply : false,
+            withCcForward : false,
 
             withBccCompose : false,
             withBccReply : false,
@@ -1755,7 +2001,8 @@ export default {
                 if (this.emailContent.content
                     || this.emailContent.email.length !== 0
                     || this.emailContent.title
-                    || this.emailContent.cc) {
+                    || this.emailContent.cc.length !== 0
+                    || this.emailContent.bcc.length !== 0) {
 
                     swal.fire({
                         title : self.$t('message.inbox.alert_save_draft'),
@@ -1802,7 +2049,8 @@ export default {
                 if (this.forwardContent.content
                     || this.forwardContent.email.length !== 0
                     || this.forwardContent.title
-                    || this.forwardContent.cc) {
+                    || this.forwardContent.bcc.length !== 0
+                    || this.forwardContent.cc.length !== 0) {
 
                     swal.fire({
                         title : self.$t('message.inbox.alert_save_draft'),
@@ -1840,7 +2088,8 @@ export default {
 
             } else {
                 if (this.replyContent.content
-                    || this.replyContent.cc) {
+                    || this.replyContent.cc.length !== 0
+                    || this.replyContent.bcc.length !== 0) {
 
                     swal.fire({
                         title : self.$t('message.inbox.alert_save_draft'),
@@ -1885,10 +2134,16 @@ export default {
         closeModal(mode) {
             if (mode === 'Send' || mode === 'compose') {
                 this.$refs.emailBalloon.close()
+                this.withCcCompose = false;
+                this.withBccCompose = false;
             } else if (mode === 'Forward' || mode === 'forward') {
                 this.$refs.emailForwardBalloon.close()
+                this.withCcForward = false;
+                this.withBccForward = false;
             } else if (mode === 'Reply' || mode === 'reply') {
                 this.$refs.emailReplyBalloon.close()
+                this.withCcReply = false;
+                this.withBccReply = false;
             }
         },
 
@@ -1896,7 +2151,8 @@ export default {
             if (mode === 'Send' || mode === 'compose') {
 
                 this.emailContent = {
-                    cc : '',
+                    cc : [],
+                    bcc: [],
                     email : [],
                     title : '',
                     content : ''
@@ -1907,7 +2163,8 @@ export default {
             } else if (mode === 'Forward' || mode === 'forward') {
 
                 this.forwardContent = {
-                    cc : '',
+                    cc : [],
+                    bcc: [],
                     email : [],
                     title : '',
                     is_sent : 0,
@@ -1920,7 +2177,8 @@ export default {
             } else if (mode === 'Reply' || mode === 'reply') {
 
                 this.replyContent = {
-                    cc : '',
+                    cc : [],
+                    bcc: [],
                     email : [],
                     title : '',
                     content : ''
@@ -1993,7 +2251,7 @@ export default {
             return result;
         },
 
-        doReply(route, info = null) {
+        doReply(route, info = null, type = null) {
 
             this.clearMessageform();
             // this.replyContent.email.push(this.viewContent.from_mail);
@@ -2009,38 +2267,62 @@ export default {
 
             // add email
             if (route !== 'Trash') {
+                if (this.viewContentThread.inbox.is_sent === 1) {
 
-                // if (route !== 'Starred') {
+                    let rec = info
+                        ? info.is_sent === 1
+                            ? info.received
+                            : info.sender
+                        : this.viewContentThread.inbox.received
 
-                    if (this.viewContentThread.inbox.is_sent === 1) {
+                    this.replyContent.email = createTags(rec.replace(/\s/g, '')
+                        .split(/[|,]/g)
+                        .filter(function (email) {
+                            return email !== '';
+                        }))
+                } else {
+                    let tag_email = (this.viewContentThread.inbox.from_mail === ''
+                        || this.viewContentThread.inbox.from_mail === '<>')
+                        ? this.viewContentThread.inbox.sender
+                        : this.viewContentThread.inbox.from_mail;
 
-                        let rec = info ? info.sender : this.viewContentThread.inbox.received
+                    let tag = createTag(tag_email, [tag_email]);
 
-                        this.replyContent.email = createTags(rec.replace(/\s/g, '')
-                            .split(/[|,]/g)
-                            .filter(function (email) {
-                                return email !== '';
-                            }))
-                    } else {
-                        let tag_email = (this.viewContentThread.inbox.from_mail === ''
-                            || this.viewContentThread.inbox.from_mail === '<>')
-                            ? this.viewContentThread.inbox.sender
-                            : this.viewContentThread.inbox.from_mail;
+                    this.$nextTick(() => {
+                        this.$refs.replyTag.addTag(tag);
+                    });
+                }
 
-                        let tag = createTag(tag_email, [tag_email]);
+                // add bcc and cc
+                if (type && info) {
+                    if (info.bcc) {
+                        let bccFinal = this.extractBccCc('bcc', info)
 
-                        this.$nextTick(() => {
-                            this.$refs.replyTag.addTag(tag);
-                        });
+                        if (bccFinal) {
+                            this.withBccReply = true;
+
+                            this.replyContent.bcc = createTags(bccFinal.replace(/\s/g, '')
+                                .split(/[|,]/g)
+                                .filter(function (email) {
+                                    return email !== '';
+                                }))
+                        }
                     }
 
-                // } else {
-                //     this.replyContent.email = createTags(info.sender.replace(/\s/g, '')
-                //         .split(/[|,]/g)
-                //         .filter(function (email) {
-                //             return email !== '';
-                //         }))
-                // }
+                    if (info.cc) {
+                        let ccFinal = this.extractBccCc('cc', info)
+
+                        if (ccFinal) {
+                            this.withCcReply = true;
+
+                            this.replyContent.cc = createTags(ccFinal.replace(/\s/g, '')
+                                .split(/[|,]/g)
+                                .filter(function (email) {
+                                    return email !== '';
+                                }))
+                        }
+                    }
+                }
             } else {
 
                 if (this.viewContent.is_sent === 1) {
@@ -2143,6 +2425,16 @@ export default {
                 this.withBccReply = !this.withBccReply;
             } else {
                 this.withBccForward = !this.withBccForward;
+            }
+        },
+
+        toggleCc(mode) {
+            if (mode === 'Send') {
+                this.withCcCompose = !this.withCcCompose;
+            } else if (mode === 'Reply') {
+                this.withCcReply = !this.withCcReply;
+            } else {
+                this.withCcForward = !this.withCcForward;
             }
         },
 
@@ -2903,28 +3195,35 @@ export default {
             let self = this;
 
             let cc = '';
+            let bcc = '';
             let appendEmail = '';
             let appendTitle = '';
             let appendContent = '';
             let attachments = [];
             let forwardAttachments = [];
 
-            if (type == 'reply') {
-                cc = (typeof (this.replyContent.cc) == "undefined") ? "" : this.replyContent.cc;
+            if (type === 'reply') {
+                // cc = (typeof (this.replyContent.cc) == "undefined") ? "" : this.replyContent.cc;
+                cc = JSON.stringify(this.replyContent.cc);
+                bcc = JSON.stringify(this.replyContent.bcc);
                 appendTitle = this.replyContent.title;
                 appendContent = this.replyContent.content;
                 appendEmail = JSON.stringify(this.replyContent.email);
 
                 attachments = this.$refs.file_reply.files;
-            } else if (type == 'forward') {
-                cc = (typeof (this.forwardContent.cc) == "undefined") ? "" : this.forwardContent.cc;
+            } else if (type === 'forward') {
+                // cc = (typeof (this.forwardContent.cc) == "undefined") ? "" : this.forwardContent.cc;
+                cc = JSON.stringify(this.forwardContent.cc);
+                bcc = JSON.stringify(this.forwardContent.bcc);
                 appendTitle = this.forwardContent.title;
                 appendContent = this.forwardContent.content;
                 appendEmail = JSON.stringify(this.forwardContent.email);
 
                 attachments = this.$refs.file_forward.files;
             } else {
-                cc = (typeof (this.emailContent.cc) == "undefined") ? "" : this.emailContent.cc;
+                // cc = (typeof (this.emailContent.cc) == "undefined") ? "" : this.emailContent.cc;
+                cc = JSON.stringify(this.emailContent.cc);
+                bcc = JSON.stringify(this.emailContent.bcc);
                 appendTitle = this.emailContent.title;
                 appendContent = this.emailContent.content;
                 appendEmail = JSON.stringify(this.emailContent.email);
@@ -2935,6 +3234,7 @@ export default {
             // request body
             this.formData = new FormData();
             this.formData.append('cc', cc);
+            this.formData.append('bcc', bcc);
             this.formData.append('email', appendEmail);
             this.formData.append('title', appendTitle);
             this.formData.append('type', type);
@@ -2998,13 +3298,22 @@ export default {
                     this.countryMailIdCompose = '';
                     this.mailInfoCompose = {};
 
+                    this.withCcCompose = false;
+                    this.withBccCompose = false;
+
                 } else if (type === 'reply') {
                     this.$refs.file_reply.value = ""
 
                     this.countryMailIdReply = '';
                     this.mailInfoReply = {};
+
+                    this.withCcReply = false;
+                    this.withBccReply = false;
                 } else {
                     this.$refs.file_forward.value = ""
+
+                    this.withCcForward = false;
+                    this.withBccForward = false;
                 }
 
                 // clear attachment count
@@ -3088,6 +3397,12 @@ export default {
         checkEmailValidationError(error) {
             return Object.keys(error).some(function (err) {
                 return ~err.indexOf("email.")
+            })
+        },
+
+        checkCcBccValidationError(error, mod) {
+            return Object.keys(error).some(function (err) {
+                return ~err.indexOf(mod)
             })
         },
 
@@ -3185,6 +3500,50 @@ export default {
                 });
             });
         },
+
+        extractBccCc (mod, data) {
+            let self = this;
+            let emails = mod === 'bcc' ? data.bcc : data.cc;
+            let emailsNoSpace = emails.replace(/\s/g, '');
+
+            if (emailsNoSpace) {
+                if (data.email_to) {
+                    if (data.email === '%recipient%') {
+                        let checker = data.is_sent === 1 ? data.received : self.user.work_mail;
+                        let temp = emailsNoSpace.split(',')
+                        let received = data.received.replace(/\s/g, '').split(',')
+                        let combined = temp.concat(received).filter(function(item) {
+                            return item !== checker
+                        })
+
+                        if (combined.length) {
+                            let final = [...new Set(combined)];
+
+                            return final.join(',')
+                        } else {
+                            return null;
+                        }
+                    } else {
+                        let checker = data.is_sent === 1 ? data.received : self.user.work_mail;
+                        let temp = emailsNoSpace.split(',')
+                        let email_to = data.email_to.replace(/\s/g, '').split(',')
+                        let combined = temp.concat(email_to).filter(function(item) {
+                            return item !== checker
+                        })
+
+                        if (combined.length) {
+                            let final = [...new Set(combined)];
+
+                            return final.join(',')
+                        } else {
+                            return null;
+                        }
+                    }
+                }
+            } else {
+                return null;
+            }
+        }
     }
 }
 </script>

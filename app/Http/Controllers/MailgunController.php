@@ -45,6 +45,14 @@ class MailgunController extends Controller
             $request['email'] = json_decode($request->email, true) ?? $request->email;
         }
 
+        if (!is_array($request->cc)) {
+            $request['cc'] = json_decode($request->cc, true) ?? $request->cc;
+        }
+
+        if (!is_array($request->bcc)) {
+            $request['bcc'] = json_decode($request->bcc, true) ?? $request->bcc;
+        }
+
         $emailRule = [];
 
         if (is_array($request->email)) {
@@ -55,6 +63,8 @@ class MailgunController extends Controller
 
         $rules = [
             'email.*.text' => 'required|email',
+            'bcc.*.text' => 'required|email',
+            'cc.*.text' => 'required|email',
             'title'        => 'required',
             'content'      => 'required',
         ];
@@ -124,14 +134,26 @@ class MailgunController extends Controller
 
         $email_to = $request->email;
 
-        if (is_array($email_to)) {
-            $myArray = array_column($email_to, 'text');
-        } else {
-            if (strpos($request->email, '|') !== false) {
-                $email_to = str_replace("|", ",", $request->email);
-            }
+        $myArray = $this->prepareMultipleEmails($email_to, $request);
+        $myCc = null;
+        $myCcString = null;
+        $myBcc = null;
+        $myBccString = null;
 
-            $myArray = explode(',', $email_to);
+        if ($request->cc) {
+            $myCc = $this->prepareMultipleEmails($request->cc, $request);
+
+            if (is_array($myCc)) {
+                $myCcString = implode(",", $myCc);
+            }
+        }
+
+        if ($request->bcc) {
+            $myBcc = $this->prepareMultipleEmails($request->bcc, $request);
+
+            if (is_array($myBcc)) {
+                $myBccString = implode(",", $myBcc);
+            }
         }
 
         //add current email another associalte array
@@ -180,7 +202,8 @@ class MailgunController extends Controller
             'from'                => $work_mail,
             'to'                  => array($str),
             'subject'             => $request->title,
-            'cc'                 => $request->cc ?: null,
+            'cc'                  => $myCcString,
+            'bcc'                 => $myBccString,
             'html'                => view('send_email', $data)->render(),
             'recipient-variables' => json_encode($object),
             'attachment'          => $final_attachments,
@@ -190,9 +213,9 @@ class MailgunController extends Controller
             'o:tracking-clicks'   => 'yes',
         ];
 
-        if (isset($request->cc) && $request->cc != "") {
-            $params['bcc'] = $request->cc;
-        }
+//        if (isset($request->cc) && $request->cc != "") {
+//            $params['bcc'] = $request->cc;
+//        }
 
         $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
@@ -264,6 +287,9 @@ class MailgunController extends Controller
             $sendEmail = Reply::create([
                 'sender'          => $work_mail,
                 'subject'         => $request->title,
+                'cc'              => $myCcString,
+                'bcc'             => $myBccString,
+                'email_to'        => $str,
                 'is_sent'         => 1,
                 'is_viewed'       => 1,
                 'label_id'        => 0,
@@ -1419,5 +1445,21 @@ class MailgunController extends Controller
         }
 
         return implode(',', $new_array);
+    }
+
+    public function prepareMultipleEmails ($emails, $request) {
+        $emailArray = [];
+
+        if (is_array($emails)) {
+            $emailArray = array_column($emails, 'text');
+        } else {
+            if (strpos($request->email, '|') !== false) {
+                $temp = str_replace("|", ",", $request->email);
+            }
+
+            $emailArray = explode(',', $temp);
+        }
+
+        return $emailArray;
     }
 }

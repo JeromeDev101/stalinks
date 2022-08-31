@@ -1256,6 +1256,109 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input
+                                                    v-model="withCcRegistration"
+                                                    type="checkbox"
+                                                    class="form-check-input"
+
+                                                    @click="withCcRegistration = !withCcRegistration">
+                                                With Cc
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input
+                                                    v-model="withBccRegistration"
+                                                    type="checkbox"
+                                                    class="form-check-input"
+
+                                                    @click="withBccRegistration = !withBccRegistration">
+                                                {{ $t('message.inbox.cm_bcc') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </div>
+
+                            <div class="col-md-12" v-show="withCcRegistration">
+                                <div class="form-group">
+                                    <small
+                                        v-if="modelMail.cc.length"
+                                        class="text-primary small"
+                                        style="cursor: pointer"
+
+                                        @click="modelMail.cc = []">
+                                        {{ $t('message.inbox.cm_remove_all_emails') }}
+                                    </small>
+
+                                    <vue-tags-input
+                                        v-model="registrationCc"
+                                        placeholder="Cc"
+                                        :max-tags="10"
+                                        :allow-edit-tags="true"
+                                        :separators="separators"
+                                        :tags="modelMail.cc"
+
+                                        @tags-changed="newTagsCc => modelMail.cc = newTagsCc"
+                                    />
+
+                                    <span
+                                        v-if="messageFormsMail.errors.cc"
+                                        v-for="err in messageFormsMail.errors.cc"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+
+                                    <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'cc.')" class="text-danger">
+                                        The cc field must contain valid emails
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" v-show="withBccRegistration">
+                                <div class="form-group">
+                                    <small
+                                        v-if="modelMail.bcc.length"
+                                        class="text-primary small"
+                                        style="cursor: pointer"
+
+                                        @click="modelMail.bcc = []">
+                                        {{ $t('message.inbox.cm_remove_all_emails') }}
+                                    </small>
+
+                                    <vue-tags-input
+                                        v-model="registrationBcc"
+                                        placeholder="Bcc"
+                                        :max-tags="10"
+                                        :allow-edit-tags="true"
+                                        :separators="separators"
+                                        :tags="modelMail.bcc"
+
+                                        @tags-changed="newTagsBcc => modelMail.bcc = newTagsBcc"
+                                    />
+
+                                    <span
+                                        v-if="messageFormsMail.errors.bcc"
+                                        v-for="err in messageFormsMail.errors.bcc"
+                                        class="text-danger">
+                                        {{ err }}
+                                    </span>
+
+                                    <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'bcc.')" class="text-danger">
+                                        The bcc field must contain valid emails
+                                    </span>
+                                </div>
+                            </div>
+
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.title}" class="form-group">
                                     <label style="color: #333">{{ $t('message.registration_accounts.se_title_text') }}</label>
@@ -1276,17 +1379,12 @@
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.content}" class="form-group">
                                     <label style="color: #333">{{ $t('message.registration_accounts.se_content') }}</label>
 
-                                    <!--                                    <textarea-->
-                                    <!--                                        v-model="modelMail.content"-->
-                                    <!--                                        value=""-->
-                                    <!--                                        rows="10"-->
-                                    <!--                                        type="text"-->
-                                    <!--                                        required="required"-->
-                                    <!--                                        class="form-control">-->
+                                    <tiny-editor
+                                        v-model="modelMail.content"
+                                        ref="registrationEmailEditor"
+                                        editor-id="registrationEmailEditor">
 
-                                    <!--                                    </textarea>-->
-
-                                    <tiny-editor editor-id="registrationEmailEditor" v-model="modelMail.content" ref="registrationEmailEditor"></tiny-editor>
+                                    </tiny-editor>
 
                                     <span
                                         v-if="messageFormsMail.errors.content"
@@ -1945,7 +2043,8 @@ export default {
             },
 
             modelMail : {
-                cc: null,
+                cc: [],
+                bcc: [],
                 mode: 'send',
                 title : '',
                 content : '',
@@ -1977,6 +2076,11 @@ export default {
             },
 
             isAdvanceSearching: false,
+
+            registrationCc: '',
+            registrationBcc: '',
+            withCcRegistration: false,
+            withBccRegistration: false,
         }
     },
 
@@ -2537,7 +2641,7 @@ export default {
 
         modalCloser() {
             let self = this;
-            if (this.modelMail.title || this.modelMail.content) {
+            if (this.modelMail.title || this.modelMail.content || this.modelMail.cc.length !== 0 || this.modelMail.bcc.length !== 0) {
 
                 swal.fire({
                     title : self.$t('message.registration_accounts.alert_save_as_draft'),
@@ -2580,6 +2684,9 @@ export default {
                 this.clearMailModel()
                 this.closeModal()
             }
+
+            this.withCcProspect = false;
+            this.withBccProspect = false;
         },
 
         closeModal() {
@@ -2589,6 +2696,8 @@ export default {
 
         clearMailModel() {
             this.modelMail = {
+                cc: [],
+                bcc: [],
                 title : '',
                 content : '',
                 mail_name : '',
@@ -2719,7 +2828,8 @@ export default {
             // create form data
 
             let formData = new FormData();
-            formData.append('cc', '');
+            formData.append('cc', JSON.stringify(this.modelMail.cc));
+            formData.append('bcc', JSON.stringify(this.modelMail.bcc));
             formData.append('email', JSON.stringify(this.registrationEmails));
             formData.append('title', this.modelMail.title);
             formData.append('content', this.modelMail.content);
@@ -2753,12 +2863,16 @@ export default {
                 this.$refs.registrationEmailEditor.deleteImages('Removed');
 
                 this.modelMail = {
-                    cc: null,
+                    cc: [],
+                    bcc: [],
                     mode: 'send',
                     title : '',
                     content : '',
                     mail_name : '',
                 }
+
+                this.withBccRegistration = false;
+                this.withCcRegistration = false;
 
                 $("#modal-email-registration").modal('hide')
 
@@ -3395,6 +3509,12 @@ export default {
             }
 
             return frags.join(' ');
+        },
+
+        checkCcBccValidationError(error, mod) {
+            return Object.keys(error).some(function (err) {
+                return ~err.indexOf(mod)
+            })
         },
 
         advanceSearch: __.debounce(function () {

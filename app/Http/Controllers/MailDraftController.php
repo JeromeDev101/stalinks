@@ -27,9 +27,12 @@ class MailDraftController extends Controller
 
     public function store(Request $request) {
         $received = $this->getReceived($request->email);
+        $bcc = $this->getReceived($request->bcc);
+        $cc = $this->getReceived($request->cc);
 
         Auth::user()->drafts()->create([
-            'bcc' => $request->cc,
+            'cc' => $cc ?: null,
+            'bcc' => $bcc ?: null,
             'body' => $request->content,
             'subject' => $request->title,
             'received' => $received ?: null,
