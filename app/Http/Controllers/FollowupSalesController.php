@@ -9,6 +9,7 @@ use App\Events\BacklinkStatusChangedEvent;
 use App\Events\SellerConfirmationEvent;
 use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Notifications\BacklinkLiveSeller;
+use App\Notifications\BacklinkOrderCanceled;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -210,6 +211,11 @@ class FollowupSalesController extends Controller
         } else if ($input['status'] == 'Issue') {
             if ($backlink->article) {
                 $backlink->article->update(['status_writer' => 'Issue']);
+            }
+        } else if ($input['status'] == 'Canceled') {
+            // notify buyer of order cancellation
+            if ($backlink->status !== 'Canceled') {
+                $backlink->user->notify(new BacklinkOrderCanceled($backlink));
             }
         } else {
             $input['live_date'] = null;
