@@ -945,10 +945,10 @@
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
-                                                payment_method.account_iban || 
-                                                payment_method.account_holder || 
-                                                payment_method.account_type || 
-                                                payment_method.routing_num || 
+                                                payment_method.account_iban ||
+                                                payment_method.account_holder ||
+                                                payment_method.account_type ||
+                                                payment_method.routing_num ||
                                                 payment_method.wire_routing_num
                                             "
                                             >
@@ -1680,10 +1680,10 @@
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
-                                                payment_method.account_iban || 
-                                                payment_method.account_holder || 
-                                                payment_method.account_type || 
-                                                payment_method.routing_num || 
+                                                payment_method.account_iban ||
+                                                payment_method.account_holder ||
+                                                payment_method.account_type ||
+                                                payment_method.routing_num ||
                                                 payment_method.wire_routing_num
                                             "
                                             >
@@ -2740,6 +2740,22 @@ export default {
         closeModal() {
             let element = this.$refs.modalEmailRegistration
             $(element).modal('hide')
+
+            this.templateTypeAndCategory = {
+                type: '',
+                category: ''
+            };
+
+            this.mailInfo = {
+                tpl : 0,
+                ids : '',
+                receiver_text : '',
+                country : {
+                    id : 0,
+                    name : '',
+                    code : ''
+                }
+            };
         },
 
         clearMailModel() {
@@ -2861,8 +2877,13 @@ export default {
 
         async doChangeEmailTemplate() {
             let that = this;
-            this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
-            this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
+            let temp = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+
+            if (temp) {
+                this.modelMail.mail_name = temp.mail_name;
+                this.modelMail.title = temp.title;
+                this.modelMail.content = this.convertLineBreaks(temp.content);
+            }
         },
 
         convertLineBreaks(str) {
@@ -2910,13 +2931,18 @@ export default {
                 // remove all images inserted on editor
                 this.$refs.registrationEmailEditor.deleteImages('Removed');
 
-                this.modelMail = {
-                    cc: [],
-                    bcc: [],
-                    mode: 'send',
-                    title : '',
-                    content : '',
-                    mail_name : '',
+                if (this.mailInfo.tpl === 0) {
+                    this.modelMail = {
+                        cc: [],
+                        bcc: [],
+                        title : '',
+                        content : '',
+                        mail_name : '',
+                    }
+                } else {
+                    this.modelMail.cc = [];
+                    this.modelMail.bcc = [];
+                    this.modelMail.mode = 'send';
                 }
 
                 this.withBccRegistration = false;

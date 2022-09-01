@@ -3251,15 +3251,15 @@ export default {
                     confirmButtonText : 'Yes',
                     cancelButtonText : 'No'
                 })
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            // remove all images inserted on editor
-                            this.$refs.urlEmailEditor.deleteImages('All');
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        // remove all images inserted on editor
+                        this.$refs.urlEmailEditor.deleteImages('All');
 
-                            this.closeModal()
-                            this.clearMailModel()
-                        }
-                    });
+                        this.closeModal()
+                        this.clearMailModel()
+                    }
+                });
 
             } else {
                 this.$refs.urlEmailEditor.deleteImages('All');
@@ -3272,6 +3272,22 @@ export default {
         },
 
         closeModal() {
+            this.templateTypeAndCategory = {
+                type: '',
+                category: ''
+            };
+
+            this.mailInfo = {
+                tpl : 0,
+                ids : '',
+                receiver_text : '',
+                country : {
+                    id : 0,
+                    name : '',
+                    code : ''
+                }
+            };
+
             let element = this.$refs.modalEmail
             $(element).modal('hide')
         },
@@ -4493,8 +4509,13 @@ export default {
 
         async doChangeEmailTemplate() {
             let that = this;
-            this.modelMail = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
-            this.modelMail.content = this.convertLineBreaks(this.modelMail.content)
+            let temp = this.listMailTemplate.data.filter(item => item.id === that.mailInfo.tpl)[0];
+
+            if (temp) {
+                this.modelMail.mail_name = temp.mail_name;
+                this.modelMail.title = temp.title;
+                this.modelMail.content = this.convertLineBreaks(temp.content);
+            }
         },
 
         convertLineBreaks(str) {
