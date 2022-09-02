@@ -113,6 +113,7 @@
                                 <thead>
                                 <tr class="label-primary">
                                     <th>#</th>
+                                    <th>ID Buyer</th>
                                     <th>{{ $t('message.wallet_summary.filter_buyer') }}</th>
                                     <th>{{ $t('message.wallet_summary.ws_deposit') }}</th>
                                     <th>{{ $t('message.wallet_summary.ws_orders') }}</th>
@@ -126,6 +127,7 @@
                                 <tbody>
                                 <tr v-for="(summary, index) in summaryData" :key="index">
                                     <td>{{ index + 1 }}</td>
+                                    <td>{{ summary.id }}</td>
                                     <td>{{ summary.username == null ? summary.name : summary.username }}</td>
                                     <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
                                     <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
