@@ -28,7 +28,7 @@
                                         <option v-for="option
                                      in
                                      listBuyerTransactions.data" v-bind:value="option.id">
-                                            {{ option.username }}
+                                            {{ option.username ? option.username : option.name }}
                                         </option>
                                     </select>
                                 </div>

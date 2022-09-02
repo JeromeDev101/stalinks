@@ -36,6 +36,34 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label>Search ID Buyer</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name=""
+                                        v-model="filterModel.buyer_id"
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.overall_incomes.type')">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Buyer</label>
+                                    <v-select
+                                        v-model="filterModel.buyer"
+                                        multiple
+                                        label="username"
+                                        class="style-chooser"
+                                        :searchable="true"
+                                        :reduce="buyer => buyer.id"
+                                        :options="overallIncomeBuyers.data"
+                                        :placeholder="$t('message.url_prospect.all')"/>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label>{{ $t('message.overall_incomes.filter_date_completed') }}</label>
 
                                     <date-range-picker
@@ -138,6 +166,8 @@
                                 <tr class="label-primary">
                                     <th>#</th>
                                     <th v-show="tblOptIncomesAdmin.backlink_id">{{ $t('message.overall_incomes.i_id_backlink') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.buyer_id">Buyer ID</th>
+                                    <th v-show="tblOptIncomesAdmin.buyer">Buyer</th>
                                     <th v-show="tblOptIncomesAdmin.live_date">{{ $t('message.overall_incomes.filter_date_completed') }}</th>
                                     <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">
                                         {{ $t('message.overall_incomes.i_seller_price') }}
@@ -156,6 +186,16 @@
                                 <tr v-for="(incomes_admin, index) in listIncomesAdmin.data" :key="index">
                                     <td>{{ index + 1 }}</td>
                                     <td v-show="tblOptIncomesAdmin.backlink_id">{{ incomes_admin.id }}</td>
+                                    <td v-show="tblOptIncomesAdmin.buyer_id">{{ incomes_admin.user_id }}</td>
+                                    <td v-show="tblOptIncomesAdmin.buyer">
+                                        {{
+                                            incomes_admin.user
+                                                ? incomes_admin.user.username
+                                                    ? incomes_admin.user.username
+                                                    : incomes_admin.user.name
+                                                : 'N/A'
+                                        }}
+                                    </td>
                                     <td v-show="tblOptIncomesAdmin.live_date">{{ incomes_admin.live_date }}</td>
                                     <td v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">$
                                         {{
@@ -252,6 +292,24 @@
                                 <label>
                                     <input
                                         type="checkbox"
+                                        :checked="tblOptIncomesAdmin.buyer_id ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.buyer_id">
+                                    ID Buyer
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        :checked="tblOptIncomesAdmin.buyer ? 'checked':''"
+                                        v-model="tblOptIncomesAdmin.buyer">
+                                    Buyer
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label>
+                                    <input
+                                        type="checkbox"
                                         :checked="tblOptIncomesAdmin.selling_price ? 'checked':''"
                                         v-model="tblOptIncomesAdmin.selling_price">
                                     {{ $t('message.overall_incomes.sd_selling_price') }}
@@ -341,6 +399,7 @@
 import {mapState} from 'vuex';
 import _ from 'lodash';
 import {dateRange} from "../../../../mixins/dateRange";
+import axios from "axios";
 
 export default {
     mixins: [dateRange],
@@ -356,6 +415,8 @@ export default {
             ],
             isSearchLoading : false,
             filterModel : {
+                buyer_id: '',
+                buyer: '',
                 paginate : this.$route.query.paginate || '50',
                 backlink_id : this.$route.query.backlink_id || '',
                 date_completed : {
@@ -365,11 +426,14 @@ export default {
             },
             isSearchingLoading : false,
             totalContentCharges: 0,
+
+            overallIncomeBuyers: [],
         }
     },
 
     async created() {
         this.getListIncomesAdmin();
+        this.getOverallIncomesBuyers();
     },
 
     computed : {
@@ -481,6 +545,8 @@ export default {
 
             this.getListIncomesAdmin({
                 params : {
+                    buyer_id: this.filterModel.buyer_id,
+                    buyer: this.filterModel.buyer,
                     paginate : this.filterModel.paginate,
                     backlink_id : this.filterModel.backlink_id,
                     date_completed : this.filterModel.date_completed,
@@ -490,6 +556,8 @@ export default {
 
         clearSearch() {
             this.filterModel = {
+                buyer_id: '',
+                buyer: '',
                 paginate : '50',
                 backlink_id : '',
                 date_completed : {
@@ -503,10 +571,16 @@ export default {
             this.$router.replace({'query' : null});
         },
 
+        getOverallIncomesBuyers () {
+            axios.get('/api/incomes-admin-buyers')
+            .then((res) => {
+                this.overallIncomeBuyers = res.data
+            })
+        },
+
         clearMessageform() {
             this.$store.dispatch('clearMessageformIncomesAdmin');
         },
-
     },
 }
 </script>

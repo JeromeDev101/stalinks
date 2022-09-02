@@ -227,6 +227,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Incomes Admin
     Route::name('get-incomes-admin')->get('incomes-admin', 'IncomesAdminController@getList');
+    Route::name('get-incomes-admin-buyers')->get('/incomes-admin-buyers', 'IncomesAdminController@getOverallIncomesBuyers');
 
     // Followup Sales
     Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');

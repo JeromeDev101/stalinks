@@ -32,7 +32,11 @@ class WalletSummaryController extends Controller
                     ->where('users.status', 'active')
                     ->where('registration.is_sub_account', 0)
                     ->when(isset($request->buyer), function($query) use ($request) {
-                        return $query->where('users.id', $request->buyer);
+                        if (is_array($request->buyer)) {
+                            return $query->whereIn('users.id', $request->buyer);
+                        } else {
+                            return $query->where('users.id', $request->buyer);
+                        }
                     })
                     ->when(isset($request->year), function($query) use ($request) {
                         return $query->whereYear('wallet_transactions.date', '=', $request->year);

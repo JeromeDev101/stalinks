@@ -24,12 +24,15 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.wallet_summary.filter_buyer') }}</label>
-                                    <select name="" class="form-control" v-model="filterModel.buyer">
-                                        <option value="">{{ $t('message.wallet_summary.all') }}</option>
-                                        <option v-for="option in summaryData" v-bind:value="option.id">
-                                            {{ option.username }}
-                                        </option>
-                                    </select>
+                                    <v-select
+                                        v-model="filterModel.buyer"
+                                        multiple
+                                        label="username"
+                                        class="style-chooser"
+                                        :searchable="true"
+                                        :reduce="buyer => buyer.id"
+                                        :options="summaryData"
+                                        :placeholder="$t('message.url_prospect.all')"/>
                                 </div>
                             </div>
 

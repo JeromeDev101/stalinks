@@ -17,6 +17,8 @@ const state = {
     },
     messageForms: { action: '', message: '', errors: {} },
     tblOptIncomesAdmin: {
+        buyer_id: true,
+        buyer: true,
         backlink_id: true,
         selling_price: true,
         price: true,

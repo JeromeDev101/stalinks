@@ -37,6 +37,14 @@ class IncomesAdminController extends Controller
             $list = $list->where('backlinks.id', $filter['backlink_id']);
         }
 
+        if( isset($filter['buyer_id']) && $filter['buyer_id'] != ''){
+            $list = $list->where('backlinks.user_id', $filter['buyer_id']);
+        }
+
+        if( isset($filter['buyer']) && $filter['buyer'] != '' && is_array($filter['buyer'])){
+            $list = $list->whereIn('backlinks.user_id', $filter['buyer']);
+        }
+
         if (isset($filter['date_completed'])) {
             $filter['date_completed'] = \GuzzleHttp\json_decode($filter['date_completed'], true);
 
@@ -104,6 +112,19 @@ class IncomesAdminController extends Controller
         }
 
         return $affiliate_buyer_ids;
+    }
+
+    public function getOverallIncomesBuyers () {
+        $list = Backlink::select('users.id', 'users.name', 'users.email', 'users.username')
+            ->join('users', 'backlinks.user_id', 'users.id')
+            ->orderBy('users.username')
+            ->groupBy('backlinks.user_id', 'users.id', 'users.name', 'users.email')
+            ->where('backlinks.status', 'Live')
+            ->get();
+
+        return response()->json([
+            'data' => $list
+        ]);
     }
 
     protected function writeIncomesQuery ()
