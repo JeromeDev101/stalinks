@@ -70,7 +70,7 @@ export default {
     sc_yes_perm_article: '記事は、永久に使用できます.',
 
     // deleted by seller
-    dbs_filter: '売り手によって削除されたショー',
+    dbs_filter: 'セーラーによって削除済みを表示',
     dbs_table: '売り手によって削除されました',
 
     // alerts

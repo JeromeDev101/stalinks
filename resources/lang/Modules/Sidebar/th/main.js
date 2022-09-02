@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'ผู้ขาย',
     list_publisher: 'รายชื่อผู้โฆษณา',
-    follow_up_sale: 'ติดตามการขาย',
+    follow_up_sale: 'ติดตามการสั่งซื้อ',
     incomes: 'รายได้',
 
     // buyer

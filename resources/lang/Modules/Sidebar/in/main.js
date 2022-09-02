@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'विक्रेता',
     list_publisher: 'सूची प्रकाशक',
-    follow_up_sale: 'बिक्री का पालन करें',
+    follow_up_sale: 'आदेश का पालन करें',
     incomes: 'आय',
 
     // buyer

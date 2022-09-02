@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'Penjual',
     list_publisher: 'Daftar Penerbit',
-    follow_up_sale: 'Tindak Lanjut penjualan',
+    follow_up_sale: 'Pesanan Tindak Lanjut',
     incomes: 'Pendapatan',
 
     // buyer

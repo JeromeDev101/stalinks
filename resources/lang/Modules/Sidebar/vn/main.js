@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'Người bán',
     list_publisher: 'Danh sách nhà xuất bản',
-    follow_up_sale: 'Theo dõi Bán hàng',
+    follow_up_sale: 'Theo dõi đơn hàng',
     incomes: 'Thu nhập',
 
     // buyer

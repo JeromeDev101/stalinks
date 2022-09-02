@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'Seller',
     list_publisher: 'List Publisher',
-    follow_up_sale: 'Follow up Sale',
+    follow_up_sale: 'Follow up Order',
     incomes: 'Incomes',
 
     // buyer

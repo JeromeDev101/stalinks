@@ -48,7 +48,7 @@ export default {
     // seller
     seller: 'セーラー',
     list_publisher: 'パブリッシャーリスト',
-    follow_up_sale: 'セーラーフォローアップ',
+    follow_up_sale: 'フォローアップ注文',
     incomes: '収入',
 
     // buyer
