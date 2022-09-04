@@ -296,7 +296,7 @@
                                                 <a class="dropdown-item" @click="editData();">
                                                     {{ $t('message.backlink_prospect.edit') }}
                                                 </a>
-                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin">
+                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin || user.role_id == 8">
                                                     {{ $t('message.backlink_prospect.delete') }}
                                                 </a>
                                             </div>
