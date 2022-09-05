@@ -1021,7 +1021,7 @@
                 let link = (element.backlink) ? element.backlink.link: ''
                 let anchor_text = (element.backlink) ? element.backlink.anchor_text: ''
                 let _content = element.content
-                let body = _content.replace('src="/storage/uploads', 'src=https://tools.stalinks.com/storage/uploads')
+                let body = _content.replaceAll('src="/storage/uploads', 'src=https://tools.stalinks.com/storage/uploads')
                 filename = title
                 let content = `
                     <b>Article ID: </b> <br>`+ element.id +` <br><br>
