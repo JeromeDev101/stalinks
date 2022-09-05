@@ -1020,6 +1020,8 @@
                 let title = (element.backlink) ? element.backlink.title: ''
                 let link = (element.backlink) ? element.backlink.link: ''
                 let anchor_text = (element.backlink) ? element.backlink.anchor_text: ''
+                let _content = element.content
+                let body = _content.replace('src="/storage/uploads', 'src=https://tools.stalinks.com/storage/uploads')
                 filename = title
                 let content = `
                     <b>Article ID: </b> <br>`+ element.id +` <br><br>
@@ -1030,7 +1032,7 @@
                     <b>Note: </b> <br>`+ element.note +` <br><br>
                     <b>Link To: </b> <br>`+ link +` <br><br><br>
                     <b>Content: </b><br>
-                    <p>`+ element.content +`</p> <br>
+                    <p>`+ body +`</p> <br>
                 `;
                 let html = preHtml+content+postHtml;
 
