@@ -1030,7 +1030,7 @@
                     <b>Note: </b> <br>`+ element.note +` <br><br>
                     <b>Link To: </b> <br>`+ link +` <br><br><br>
                     <b>Content: </b><br>
-                    <p>`+ element.contentnohtml +`</p> <br>
+                    <p>`+ element.content +`</p> <br>
                 `;
                 let html = preHtml+content+postHtml;
 
