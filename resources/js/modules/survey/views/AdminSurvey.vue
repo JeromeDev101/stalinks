@@ -1141,7 +1141,8 @@
                                     <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
                                         <td>
                                             <span v-if="survey.user">
-                                                {{ survey.user.username }}
+                                                {{ survey.user.username }} <br> 
+                                                <span class="text-primary">{{ survey.user.email }}</span>
                                             </span>
 
                                             <span v-else class="badge badge-danger">
