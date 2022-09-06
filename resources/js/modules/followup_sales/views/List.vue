@@ -200,7 +200,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $t('message.follow.fus_title') }}</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.sidebar.follow_up_sale') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>

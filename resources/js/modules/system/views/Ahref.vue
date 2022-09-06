@@ -12,6 +12,7 @@
 
                 <b>{{ $t('message.IT.a_used') }}: </b> {{ rows_consume }} <br/>
                 <b>{{ $t('message.IT.a_remaining') }}: </b> {{ rows_remaining }} <br/>
+                <b>Limit reset date: </b> Every 10th of the month<br/>
             </div>
 
             <button class="btn btn-link pull-right" @click="getSubscriptionInfo">

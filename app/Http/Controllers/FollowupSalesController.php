@@ -152,7 +152,7 @@ class FollowupSalesController extends Controller
             move_file_to_storage($request->file, 'images/followup', $filename);
         }
 
-        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed', 'anchor_text');
+        $input = $request->only('status', 'url_from', 'link_from', 'sales', 'title', 'reason', 'reason_detailed', 'anchor_text', 'live_date');
 
         // add file to input
 
@@ -205,19 +205,23 @@ class FollowupSalesController extends Controller
                 }
             }
 
-            $input['live_date'] = date('Y-m-d');
+            if ($backlink->live_date === null) {
+                $input['live_date'] = date('Y-m-d');
+            }
         } else if ($input['status'] == 'Pending') {
             $input['live_date'] = null;
         } else if ($input['status'] == 'Issue') {
             if ($backlink->article) {
                 $backlink->article->update(['status_writer' => 'Issue']);
             }
+
+            $input['live_date'] = null;
         } else if ($input['status'] == 'Canceled') {
             // notify buyer of order cancellation
             if ($backlink->status !== 'Canceled') {
                 $backlink->user->notify(new BacklinkOrderCanceled($backlink));
             }
-        } else {
+        } else if (!in_array($input['status'], ['Canceled', 'Live', 'Nofollow', '404', 'Deleted', 'Refund'])) {
             $input['live_date'] = null;
         }
 
