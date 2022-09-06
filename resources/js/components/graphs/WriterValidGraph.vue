@@ -48,7 +48,7 @@
                             <div class="input-group">
                                 <select v-model="filterModel.writerValid.team_in_charge" class="form-control">
                                     <option value="0">{{ $t('message.admin_dashboard.all') }}</option>
-                                    <option :value="user.id" v-for="user in listTeamInCharge.data" v-if="user.id != 0">
+                                    <option :value="user.id" v-for="user in writerTeamInCharge" v-if="user.id != 0">
                                         {{ user.username }}
                                     </option>
                                 </select>
@@ -121,6 +121,12 @@ export default {
         writerValidChartOptions() {
             return writer_valid.graphSetting();
         },
+
+        writerTeamInCharge () {
+            return this.listTeamInCharge.data.filter((item) => {
+                return item.role_id === 4;
+            });
+        }
     },
 
     methods: {

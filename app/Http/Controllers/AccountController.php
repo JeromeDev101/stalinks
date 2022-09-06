@@ -853,9 +853,9 @@ class AccountController extends Controller
     }
 
     public function getTeamInCharge() {
-        $team_in_charge = [5,6,7,1,8];
+        $team_in_charge = [4,5,6,7,1,8];
 
-        $team = User::select('id','name', 'username')
+        $team = User::select('id','name', 'username', 'role_id')
             ->where('isOurs',0)
             ->whereIn('role_id', $team_in_charge)
             ->orderBy('username', 'asc');
