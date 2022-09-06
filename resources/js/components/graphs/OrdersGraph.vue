@@ -102,7 +102,7 @@ export default {
                     },
                 },
 
-                orderTeam: null
+                orderTeam: 0
             },
             displayModel: {
                 orderTeam: 0,
@@ -122,7 +122,7 @@ export default {
         },
 
         teamInCharge() {
-            if (this.displayModel.orderTeam === 0 || this.displayModel.orderTeam === null) {
+            if (this.displayModel.orderTeam === 0 || this.displayModel.orderTeam === null || this.displayModel.orderTeam === '0') {
                 return 'All';
             } else {
                 return _.where(this.listSellerTeam.data, {
@@ -171,7 +171,7 @@ export default {
                 }
             };
 
-            this.filterModel.orderTeam = null;
+            this.filterModel.orderTeam = 0;
 
             this.getOrdersData();
         },
