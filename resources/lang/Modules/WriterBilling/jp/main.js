@@ -5,6 +5,7 @@ export default {
     filter_writer: 'ライター',
     filter_date_completed: '完了日',
     filter_date_created: '作成日',
+    filter_status: '状態',
 
     // writer billing
     wb_title: 'ライター請求書',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: '支払い状況',
     wb_proof_doc: '証明書類',
     wb_not_paid: '未払い',
+    wb_paid: '有料',
     wb_view_proof_billing: '請求書の証明を表示',
     wb_download_proof: '証明書のダウンロード',
 

@@ -5,6 +5,7 @@ export default {
     filter_writer: 'Penulis',
     filter_date_completed: 'Tanggal Selesai',
     filter_date_created: 'Tanggal Dibuat',
+    filter_status: 'Status',
 
     // writer billing
     wb_title: 'Tagihan Penulis',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: 'Status pembayaran',
     wb_proof_doc: 'Bukti Dokumen',
     wb_not_paid: 'Belum dibayarkan',
+    wb_paid: 'Dibayar',
     wb_view_proof_billing: 'Lihat Bukti Penagihan',
     wb_download_proof: 'Unduh Bukti',
 

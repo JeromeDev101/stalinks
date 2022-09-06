@@ -5,6 +5,7 @@ export default {
     filter_writer: 'लेखक',
     filter_date_completed: 'तारीख पूरी हो गयी है',
     filter_date_created: 'निर्माण की तिथि',
+    filter_status: 'दर्जा',
 
     // writer billing
     wb_title: 'लेखक बिलिंग',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: 'भुगतान की स्थिति',
     wb_proof_doc: 'दस्तावेज़ का सबूत',
     wb_not_paid: 'भुगतान नहीं',
+    wb_paid: 'भुगतान किया गया',
     wb_view_proof_billing: 'बिलिंग का सबूत देखें',
     wb_download_proof: 'सबूत डाउनलोड करें',
 

@@ -45,6 +45,15 @@ class WriterBillingController extends Controller
             $list->where('article.id_writer', $filter['writer']);
         }
 
+        if( isset($filter['status'] ) && $filter['status'] ){
+            if($filter['status'] == 'not paid') {
+                $list->whereNull('article.payment_status');
+            } 
+            if($filter['status'] == 'paid') {
+                $list->where('article.payment_status', $filter['status']);
+            }
+        }
+
         if (isset($filter['date_completed'])) {
             $filter['date_completed'] = json_decode($filter['date_completed']);
         }

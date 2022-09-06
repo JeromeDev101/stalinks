@@ -5,6 +5,7 @@ export default {
     filter_writer: 'นักเขียน',
     filter_date_completed: 'วันที่เสร็จสมบูรณ์',
     filter_date_created: 'วันที่สร้าง',
+    filter_status: 'สถานะ',
 
     // writer billing
     wb_title: 'การเรียกเก็บเงินของนักเขียน',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: 'สถานะการชำระเงิน',
     wb_proof_doc: 'หลักฐานเอกสาร',
     wb_not_paid: 'ยังไม่ชำระเงิน',
+    wb_paid: 'จ่าย',
     wb_view_proof_billing: 'ดูหลักฐานการเรียกเก็บเงิน',
     wb_download_proof: 'ดาวน์โหลดหลักฐาน',
 

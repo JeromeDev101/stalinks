@@ -5,6 +5,7 @@ export default {
     filter_writer: 'Người viết',
     filter_date_completed: 'Ngày hoàn thành',
     filter_date_created: 'Ngày tạo',
+    filter_status: 'Trạng thái',
 
     // writer billing
     wb_title: 'Hóa đơn người viết',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: 'Tình trạng thanh toán',
     wb_proof_doc: 'Tài liệu chứng minh',
     wb_not_paid: 'Không phải trả tiền',
+    wb_paid: 'Trả',
     wb_view_proof_billing: 'Xem Bằng chứng Thanh toán',
     wb_download_proof: 'Tải xuống bằng chứng',
 

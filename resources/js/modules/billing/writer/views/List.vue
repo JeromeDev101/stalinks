@@ -47,6 +47,17 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
+                                    <label>{{ $t('message.writer_billing.filter_status') }}</label>
+                                    <select name="" class="form-control" v-model="filterModel.status">
+                                        <option value="">{{ $t('message.writer_billing.all') }}</option>
+                                        <option value="not paid">{{ $t('message.writer_billing.wb_not_paid')}}</option>
+                                        <option value="paid">{{ $t('message.writer_billing.wb_paid')}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
                                     <label>{{ $t('message.writer_billing.filter_date_completed') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
@@ -383,6 +394,7 @@ export default {
             filterModel : {
                 search_backlink : this.$route.query.search_backlink || '',
                 writer : this.$route.query.writer || '',
+                status : this.$route.query.status || '',
                 date_completed : {
                     startDate : null,
                     endDate : null
@@ -600,6 +612,7 @@ export default {
                     writer : this.filterModel.writer,
                     date_completed : this.filterModel.date_completed,
                     date_created : this.filterModel.date_created,
+                    status : this.filterModel.status,
                 }
             });
         },
@@ -608,6 +621,7 @@ export default {
             this.filterModel = {
                 search_backlink : '',
                 writer : '',
+                status : '',
                 date_completed : {
                     startDate : null,
                     endDate : null

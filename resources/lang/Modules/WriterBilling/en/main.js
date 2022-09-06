@@ -5,6 +5,7 @@ export default {
     filter_writer: 'Writer',
     filter_date_completed: 'Date Completed',
     filter_date_created: 'Date Created',
+    filter_status: 'Status',
 
     // writer billing
     wb_title: 'Writer Billing',
@@ -17,6 +18,7 @@ export default {
     wb_payment_status: 'Payment Status',
     wb_proof_doc: 'Proof Documents',
     wb_not_paid: 'Not Paid',
+    wb_paid: 'Paid',
     wb_view_proof_billing: 'View Proof of Billing',
     wb_download_proof: 'Download Proof',
 
