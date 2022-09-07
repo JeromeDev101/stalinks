@@ -680,7 +680,25 @@ class MailgunController extends Controller
 
 //        DB::table('replies')->insert($data);
 
-        Reply::firstOrCreate($data);
+        Reply::firstOrCreate([
+            'sender'          => $request->sender,
+            'subject'         => $request->subject,
+            'cc'              => $cc,
+            'bcc'             => $bcc,
+            'email_to'        => $to,
+            'body'            => json_encode($request->only('body-plain')),
+            'stripped_html'   => $stripped_html,
+            'body_html'       => $body_html,
+            'attachment'      => json_encode($r_attachment),
+            'stored_attachments'      => $stored_attachments_data,
+            'from_mail'       => $request->from,
+            'date'            => '',
+            'message_id'      => $message_id,
+            'in_reply_to'     => $in_reply_to,
+            'references'      => $references,
+            'received'        => $request->recipient,
+            'references_mail' => '',
+        ], $data);
 
         // send auto reply if on
 
