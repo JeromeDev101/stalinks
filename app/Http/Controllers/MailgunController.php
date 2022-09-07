@@ -1027,24 +1027,61 @@ class MailgunController extends Controller
 
     public function get_mail_list()
     {
-//        $user_email = User::selectRaw('id, role_id, work_mail')
+        // get unread emails count
+
+//        $user_email = User::selectRaw('id, role_id, work_mail, (select count(distinct CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))) as aggregate from replies where is_viewed = 0 and is_sent = 0 and deleted_at is null and replies.received like CONCAT("%", users.work_mail ,"%")) as unread_count')
 //            ->where('work_mail', '!=', '')
 //            ->with('role')
-//            ->with('unreadReplies')
 //            ->orderBy('work_mail', 'asc')
 //            ->groupBy('work_mail')
 //            ->get();
 
-        // get unread emails count
-
-        $user_email = User::selectRaw('id, role_id, work_mail, (select count(distinct CONCAT("Re: ", REPLACE(subject, "Re: ", "")), CONCAT(LEAST(sender, received), "-", GREATEST(sender, received))) as aggregate from replies where is_viewed = 0 and is_sent = 0 and deleted_at is null and replies.received like CONCAT("%", users.work_mail ,"%")) as unread_count')
+        $user_email = User::selectRaw('id, role_id, work_mail')
             ->where('work_mail', '!=', '')
             ->with('role')
             ->orderBy('work_mail', 'asc')
             ->groupBy('work_mail')
             ->get();
 
-        return response()->json($user_email);
+        $unread_count = User::selectRaw("users.id,role_id,work_mail,
+            COUNT(
+                DISTINCT CONCAT(
+                    'Re: ',
+                REPLACE
+                    (SUBJECT, 'Re: ', '')
+                ),
+                CONCAT(
+                    LEAST(sender, received),
+                    '-',
+                    GREATEST(sender, received)
+                )
+            ) AS unread_count")
+            ->join('replies', 'replies.received', 'LIKE', DB::raw("CONCAT('%', users.work_mail, '%')"))
+            ->where('work_mail', '!=', '')
+            ->where('replies.is_viewed', 0)
+            ->where('replies.is_sent', 0)
+            ->whereNull('replies.deleted_at')
+            ->orderBy('work_mail', 'asc')
+            ->groupBy('work_mail')
+            ->get();
+
+
+        $final = [];
+
+        foreach ($user_email->toArray() as $email) {
+            foreach ($unread_count as $unread) {
+                if ($email['id'] === $unread['id']) {
+                    $email['unread_count'] = $unread['unread_count'];
+                    break;
+                } else {
+                    $email['unread_count'] = 0;
+                }
+            }
+
+            $final[] = $email;
+        }
+
+        return response()->json($final);
     }
 
     public function send_validation(Request $request)
