@@ -2265,15 +2265,19 @@ export default {
 
             this.$refs.emailReplyBalloon.open();
 
+            // store reply email value
+            let temp = null;
+
             // add email
             if (route !== 'Trash') {
                 if (this.viewContentThread.inbox.is_sent === 1) {
-
                     let rec = info
                         ? info.is_sent === 1
                             ? info.received
                             : info.sender
                         : this.viewContentThread.inbox.received
+
+                    temp = rec;
 
                     this.replyContent.email = createTags(rec.replace(/\s/g, '')
                         .split(/[|,]/g)
@@ -2286,6 +2290,8 @@ export default {
                         ? this.viewContentThread.inbox.sender
                         : this.viewContentThread.inbox.from_mail;
 
+                    temp = tag_email;
+
                     let tag = createTag(tag_email, [tag_email]);
 
                     this.$nextTick(() => {
@@ -2296,7 +2302,7 @@ export default {
                 // add bcc and cc
                 if (type && info) {
                     if (info.bcc) {
-                        let bccFinal = this.extractBccCc('bcc', info)
+                        let bccFinal = this.extractBccCc('bcc', info, temp)
 
                         if (bccFinal) {
                             this.withBccReply = true;
@@ -2310,7 +2316,7 @@ export default {
                     }
 
                     if (info.cc) {
-                        let ccFinal = this.extractBccCc('cc', info)
+                        let ccFinal = this.extractBccCc('cc', info, temp)
 
                         if (ccFinal) {
                             this.withCcReply = true;
@@ -3193,6 +3199,7 @@ export default {
 
         async sendEmail(type) {
             let self = this;
+            self.sendBtn = true;
 
             let cc = '';
             let bcc = '';
@@ -3323,12 +3330,16 @@ export default {
 
                 // clear message forms
                 this.clearMessageform()
+
+                self.sendBtn = false;
             } else {
                 await swal.fire(
                     self.$t('message.inbox.error'),
                     self.$t('message.inbox.alert_err_sent'),
                     'error'
                 )
+
+                self.sendBtn = false;
             }
         },
 
@@ -3501,19 +3512,23 @@ export default {
             });
         },
 
-        extractBccCc (mod, data) {
+        extractBccCc (mod, data, rec) {
             let self = this;
             let emails = mod === 'bcc' ? data.bcc : data.cc;
             let emailsNoSpace = emails.replace(/\s/g, '');
 
             if (emailsNoSpace) {
                 if (data.email_to) {
-                    if (data.email === '%recipient%') {
-                        let checker = data.is_sent === 1 ? data.received : self.user.work_mail;
+                    if (data.email_to === '%recipient%') {
+                        let checker = rec
+                            ? rec
+                            : data.is_sent === 1
+                                ? data.received
+                                : self.user.work_mail;
                         let temp = emailsNoSpace.split(',')
                         let received = data.received.replace(/\s/g, '').split(',')
                         let combined = temp.concat(received).filter(function(item) {
-                            return item !== checker
+                            return item !== checker && item !== self.user.work_mail;
                         })
 
                         if (combined.length) {
@@ -3524,11 +3539,15 @@ export default {
                             return null;
                         }
                     } else {
-                        let checker = data.is_sent === 1 ? data.received : self.user.work_mail;
+                        let checker = rec
+                            ? rec
+                            : data.is_sent === 1
+                                ? data.received
+                                : self.user.work_mail;
                         let temp = emailsNoSpace.split(',')
                         let email_to = data.email_to.replace(/\s/g, '').split(',')
                         let combined = temp.concat(email_to).filter(function(item) {
-                            return item !== checker
+                            return item !== checker && item !== self.user.work_mail;
                         })
 
                         if (combined.length) {

@@ -205,7 +205,7 @@ class MailgunController extends Controller
             'cc'                  => $myCcString,
             'bcc'                 => $myBccString,
             'html'                => view('send_email', $data)->render(),
-            'recipient-variables' => json_encode($object),
+//            'recipient-variables' => json_encode($object),
             'attachment'          => $final_attachments,
             'o:tag'               => array('test1'),
             'o:tracking'          => 'yes',
@@ -678,7 +678,9 @@ class MailgunController extends Controller
             'message_status'  => 'message received'
         ];
 
-        DB::table('replies')->insert($data);
+//        DB::table('replies')->insert($data);
+
+        Reply::firstOrCreate($data);
 
         // send auto reply if on
 

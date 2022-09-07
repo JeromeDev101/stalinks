@@ -10,7 +10,35 @@ class Reply extends Model
 {
     use Loggable;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'sender',
+        'subject',
+        'cc',
+        'bcc',
+        'email_to',
+        'body',
+        'body_html',
+        'stripped_html',
+        'attachment',
+        'stored_attachments',
+        'from_mail',
+        'date',
+        'message_id',
+        'in_reply_to',
+        'references',
+        'status_code',
+        'message_status',
+        'received',
+        'references_mail',
+        'from',
+        'label_id',
+        'is_viewed',
+        'is_starred',
+        'is_sent',
+        'deleted_at',
+        'created_at',
+        'updated_at',
+    ];
     protected $table = 'replies';
 
     protected $appends = ['clean_date', 'full_clean_date', 'duration_date'];
