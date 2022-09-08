@@ -542,8 +542,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
         // store uploaded csv - remove this after we got a sample file
 
-        $filename = time() . '-' . Auth::user()->id . '-csv.' . $request->file->getClientOriginalExtension();
-        $request->file->move(public_path('/files/csv'), $filename);
+//        $filename = time() . '-' . Auth::user()->id . '-csv.' . $request->file->getClientOriginalExtension();
+//        $request->file->move(public_path('/files/csv'), $filename);
 
         // if records is empty, throw error
         if (count($records) <= 1) {
@@ -744,7 +744,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         foreach ($data as $key => $value){
             $rules[$key . '.url'] = [
                 'required',
-                'unique:publisher,url,NULL,id,user_id,' . $value['user_id'],
+                'unique:publisher,url,NULL,id,user_id,' . $value['user_id'] . ',deleted_at,NULL',
                 new ValidUrl($key)
             ];
 

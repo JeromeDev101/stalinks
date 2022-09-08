@@ -21,3 +21,4 @@ yarn-error.log
 /public/attachment
 .idea
 public/.alexa_credentials
+public/files/
