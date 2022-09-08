@@ -1171,7 +1171,8 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         $topic_list = $this->topic_list;
 
         // remove spaces
-        $topic = preg_replace('/\s+/', '', $topic);
+//        $topic = preg_replace('/\s+/', '', $topic);
+        $topic = trim($topic);
 
         // checking if has comma
         if( strpos($topic, ',') !== false ) {

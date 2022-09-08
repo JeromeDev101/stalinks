@@ -35,8 +35,9 @@ class ValidTopic implements Rule
         $topic_list = $this->list;
 
         // remove spaces
-        $topic = preg_replace('/\s+/', '', $value);
-
+//        $topic = preg_replace('/\s+/', '', $value);
+        $topic = trim($value);
+        
         // checking if has comma
         if( strpos($value, ',') !== false ) {
 
