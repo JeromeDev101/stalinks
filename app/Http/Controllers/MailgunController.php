@@ -1481,7 +1481,7 @@ class MailgunController extends Controller
                 });
 
             })
-            ->orderBy('id', 'ASC')
+            ->orderBy('id', 'DESC')
             ->get()
             ->toArray();
     }
