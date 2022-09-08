@@ -261,6 +261,8 @@ class MailgunController extends Controller
         }
 
         $input['body-plain'] = "<div style='white-space: pre'>" . $request->content . $signature . "</div>";
+        $body_html['body-html'] = view('send_email', $data)->render();
+        $stripped_html['stripped-html'] = view('send_email', $data)->render();
 
         $res = preg_replace("/[<->]/", "", $sender->getId());
 
@@ -295,6 +297,8 @@ class MailgunController extends Controller
                 'label_id'        => 0,
                 'received'        => $address,
                 'body'            => json_encode($input),
+                'body_html'       => json_encode($body_html),
+                'stripped_html'   => json_encode($stripped_html),
                 'from_mail'       => $work_mail,
                 'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
                 'date'            => date('Y-m-d'),
@@ -1477,7 +1481,7 @@ class MailgunController extends Controller
                 });
 
             })
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get()
             ->toArray();
     }
