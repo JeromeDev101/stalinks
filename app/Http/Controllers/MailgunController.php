@@ -625,7 +625,7 @@ class MailgunController extends Controller
         $r_attachment = [];
 
         // log request
-        Log::info('post_reply: ', ['request' => $request->all()]);
+//        Log::info('post_reply: ', ['request' => $request->all()]);
 
         $input = $request->all();
 
@@ -646,6 +646,9 @@ class MailgunController extends Controller
         if (isset($input['body-html']) && $input['body-html']) {
             $body_html = json_encode($request->only('body-html'));
 //            $body_no_html = $this->removeHtmlAndCssTags($request->only('body-html'));
+
+            // log request
+            Log::info('post_reply: ', ['request' => $request->only('body-html')]);
         }
 
         if (isset($input['To']) && $input['To']) {
