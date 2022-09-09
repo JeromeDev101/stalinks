@@ -1533,9 +1533,11 @@ class MailgunController extends Controller
     public function removeHtmlAndCssTags ($html) {
         $text = strip_tags($html,"<style>");
 
-        $substring = substr($text,strpos($text,"<style"),strpos($text,"</style>"));
+//        $substring = substr($text,strpos($text,"<style"),strpos($text,"</style>"));
+//        $text = str_replace($substring,"",$text);
 
-        $text = str_replace($substring,"",$text);
+        $text = preg_replace('/<style[\s\S]+?<\/style>/', '', $text);
+
         $text = str_replace(array("\t","\r","\n"),"",$text);
         return trim($text);
     }
