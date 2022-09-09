@@ -648,7 +648,7 @@ class MailgunController extends Controller
 //            $body_no_html = $this->removeHtmlAndCssTags($request->only('body-html'));
 
             // log request
-            Log::info('post_reply: ', ['request' => $request->only('body-html')]);
+            Log::info('post_reply: ', ['request' => $input['body-html']]);
         }
 
         if (isset($input['To']) && $input['To']) {
