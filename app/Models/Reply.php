@@ -19,6 +19,7 @@ class Reply extends Model
         'body',
         'body_html',
         'stripped_html',
+        'body_no_html',
         'attachment',
         'stored_attachments',
         'from_mail',

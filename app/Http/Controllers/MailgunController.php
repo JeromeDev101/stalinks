@@ -198,6 +198,8 @@ class MailgunController extends Controller
             'signature' => $send_signature,
         ];
 
+//        dd($this->removeHtmlAndCssTags(view('send_email', $data)->render()));
+
         $params = [
             'from'                => $work_mail,
             'to'                  => array($str),
@@ -299,6 +301,7 @@ class MailgunController extends Controller
                 'body'            => json_encode($input),
                 'body_html'       => json_encode($body_html),
                 'stripped_html'   => json_encode($stripped_html),
+                'body_no_html'    => $this->removeHtmlAndCssTags(view('send_email', $data)->render()),
                 'from_mail'       => $work_mail,
                 'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
                 'date'            => date('Y-m-d'),
@@ -614,6 +617,7 @@ class MailgunController extends Controller
         $references = null;
         $stripped_html = null;
         $body_html = null;
+        $body_no_html = null;
         $to = null;
         $bcc = null;
         $cc = null;
@@ -641,6 +645,7 @@ class MailgunController extends Controller
 
         if (isset($input['body-html']) && $input['body-html']) {
             $body_html = json_encode($request->only('body-html'));
+            $body_no_html = $this->removeHtmlAndCssTags(view('send_email', $request->only('body-html'))->render());
         }
 
         if (isset($input['To']) && $input['To']) {
@@ -664,6 +669,7 @@ class MailgunController extends Controller
             'body'            => json_encode($request->only('body-plain')),
             'stripped_html'   => $stripped_html,
             'body_html'       => $body_html,
+            'body_no_html'    => $body_no_html,
             'attachment'      => json_encode($r_attachment),
             'stored_attachments'      => $stored_attachments_data,
             'from_mail'       => $request->from,
@@ -1522,5 +1528,15 @@ class MailgunController extends Controller
         }
 
         return $emailArray;
+    }
+
+    public function removeHtmlAndCssTags ($html) {
+        $text = strip_tags($html,"<style>");
+
+        $substring = substr($text,strpos($text,"<style"),strpos($text,"</style>"));
+
+        $text = str_replace($substring,"",$text);
+        $text = str_replace(array("\t","\r","\n"),"",$text);
+        return trim($text);
     }
 }
