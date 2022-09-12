@@ -396,6 +396,10 @@ class MailgunController extends Controller
                     MAX(replies.received) AS received,
                     MIN(replies.sender) AS min_sender,
                     MIN(replies.received) AS min_received,
+                    MAX(replies.cc) AS cc,
+                    MAX(replies.bcc) AS bcc,
+                    MIN(replies.cc) as min_cc,
+                    MIN(replies.bcc) as min_bcc,
                     MAX(replies.id) AS id,
                     MIN(replies.subject) as subject,
                     CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
@@ -1301,7 +1305,7 @@ class MailgunController extends Controller
         $item_from_mail = $this->getFromMail($item->from_mail);
         $min_item_from_mail = $this->getFromMail($item->min_from_mail);
 
-        return Reply::where(function ($sub) use ($item) {
+        $replies = Reply::where(function ($sub) use ($item) {
                 $sub->orWhere('subject', $item->subject)
                     ->orWhere('subject', $this->getAlternateSubject($item->subject));
             })
@@ -1487,9 +1491,30 @@ class MailgunController extends Controller
                 });
 
             })
-            ->orderBy('id', 'DESC')
-            ->get()
+            ->orderBy('id', 'ASC')
+            ->get();
+
+            return $replies->unique(function ($item) {
+                return $item['subject'].$item['cc'].$item['bcc'].$item['email_to'].$item['body_no_html'].$item['message_id'];
+            })->sortByDesc('id')
+            ->values()
             ->toArray();
+
+//            if ($request->param === 'Sent') {
+//                $replies = $replies->sortByDesc('is_sent')->values();
+//            } else if ($request->param === 'Inbox') {
+//                $replies = $replies->sortBy('is_sent')->values();
+//            }
+//
+//            $unique = $replies->unique(function ($item) {
+//                return $item['subject'].$item['cc'].$item['bcc'].$item['email_to'].$item['body_no_html'].$item['message_id'];
+//            });
+//
+//            $replies = $unique->sortByDesc('id')
+//            ->values()
+//            ->toArray();
+//
+//            return $replies;
     }
 
     public function getAlternateSubject ($subject) {

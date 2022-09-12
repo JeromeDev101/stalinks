@@ -521,7 +521,7 @@
                                         v-if="($route.name === 'Inbox'
                                         || $route.name === 'Sent'
                                         || $route.name === 'Starred')
-                                        && email.is_sent === 0"
+                                        && email.sender !== user.work_mail"
                                         class="mr-2"
                                         title="Reply"
                                         style="cursor: pointer"
@@ -538,12 +538,12 @@
                                         || $route.name === 'Starred')
                                         && (email.bcc || email.cc)"
                                         class="mr-2"
-                                        :title="email.is_sent === 0 ? 'Reply All' : 'Follow up All'"
+                                        :title="email.sender !== user.work_mail ? 'Reply All' : 'Follow up All'"
                                         style="cursor: pointer"
 
                                         @click="doReply($route.name, email, 'all')">
 
-                                        <i class="fas fa-reply-all" :class="email.is_sent !== 0 ? 'fa-flip-horizontal' : ''"></i>
+                                        <i class="fas fa-reply-all" :class="email.sender === user.work_mail ? 'fa-flip-horizontal' : ''"></i>
                                     </span>
 
                                     <!-- forward -->
@@ -2270,33 +2270,90 @@ export default {
 
             // add email
             if (route !== 'Trash') {
-                if (this.viewContentThread.inbox.is_sent === 1) {
-                    let rec = info
-                        ? info.is_sent === 1
-                            ? info.received
-                            : info.sender
-                        : this.viewContentThread.inbox.received
 
-                    temp = rec;
+                if (info) {
+                    if (info.sender === this.user.work_mail) {
+                        // if is sent = 1
+                        let rec = info.received;
 
-                    this.replyContent.email = createTags(rec.replace(/\s/g, '')
-                        .split(/[|,]/g)
-                        .filter(function (email) {
-                            return email !== '';
-                        }))
+                        // get cc and bcc array - remove from recipient
+                        let ccArray = info.cc ? this.emailsToArray(info.cc) : [];
+                        let bccArray = info.bcc ? this.emailsToArray(info.bcc) : [];
+                        let finalCcBcc = [...new Set([...ccArray ,...bccArray])]
+
+                        let tagsFinal = rec.replace(/\s/g, '')
+                            .split(/[|,]/g)
+                            .filter(function (email) {
+                                if (finalCcBcc) {
+                                    return email !== '' && !finalCcBcc.includes(email);
+                                } else {
+                                    return email !== '';
+                                }
+                            })
+
+                        temp = tagsFinal;
+
+                        this.replyContent.email = createTags(tagsFinal)
+                    } else {
+                        let from = this.getFromMail(info.from_mail);
+
+                        let tag_email = (from === ''
+                            || from === '<>')
+                            ? info.sender
+                            : from;
+
+                        temp = tag_email;
+
+                        let tag = createTag(tag_email, [tag_email]);
+
+                        this.$nextTick(() => {
+                            this.$refs.replyTag.addTag(tag);
+                        });
+                    }
                 } else {
-                    let tag_email = (this.viewContentThread.inbox.from_mail === ''
-                        || this.viewContentThread.inbox.from_mail === '<>')
-                        ? this.viewContentThread.inbox.sender
-                        : this.viewContentThread.inbox.from_mail;
+                    if (this.viewContentThread.inbox.is_sent === 1) {
+                        let rec = info
+                            ? info.is_sent === 1
+                                ? info.received
+                                : info.sender
+                            : this.viewContentThread.inbox.received
 
-                    temp = tag_email;
+                        // get cc and bcc array - remove from recipient
+                        let finalCcBcc = [];
 
-                    let tag = createTag(tag_email, [tag_email]);
+                        if (info) {
+                            let ccArray = info.cc ? this.emailsToArray(info.cc) : [];
+                            let bccArray = info.bcc ? this.emailsToArray(info.bcc) : [];
+                            finalCcBcc = [...new Set([...ccArray ,...bccArray])]
+                        }
 
-                    this.$nextTick(() => {
-                        this.$refs.replyTag.addTag(tag);
-                    });
+                        let tagsFinal = rec.replace(/\s/g, '')
+                            .split(/[|,]/g)
+                            .filter(function (email) {
+                                if (finalCcBcc) {
+                                    return email !== '' && !finalCcBcc.includes(email);
+                                } else {
+                                    return email !== '';
+                                }
+                            })
+
+                        temp = tagsFinal;
+
+                        this.replyContent.email = createTags(tagsFinal)
+                    } else {
+                        let tag_email = (this.viewContentThread.inbox.from_mail === ''
+                            || this.viewContentThread.inbox.from_mail === '<>')
+                            ? this.viewContentThread.inbox.sender
+                            : this.viewContentThread.inbox.from_mail;
+
+                        temp = tag_email;
+
+                        let tag = createTag(tag_email, [tag_email]);
+
+                        this.$nextTick(() => {
+                            this.$refs.replyTag.addTag(tag);
+                        });
+                    }
                 }
 
                 // add bcc and cc
@@ -3504,12 +3561,22 @@ export default {
         // drafts methods
 
         saveMessageAsDraft(data) {
+            let self = this;
+
             axios.post('/api/mail/save-draft', data).then((response) => {
                 swal.fire({
                     title: self.$t('message.inbox.alert_saved_draft'),
                     icon: 'success'
                 });
             });
+        },
+
+        emailsToArray (emails) {
+            return emails.replace(/\s/g, '')
+                .split(/[|,]/g)
+                .filter(function (email) {
+                    return email !== '';
+                })
         },
 
         extractBccCc (mod, data, rec) {
@@ -3528,7 +3595,7 @@ export default {
                         let temp = emailsNoSpace.split(',')
                         let received = data.received.replace(/\s/g, '').split(',')
                         let combined = temp.concat(received).filter(function(item) {
-                            return item !== checker && item !== self.user.work_mail;
+                            return !checker.includes(item) && item !== self.user.work_mail;
                         })
 
                         if (combined.length) {
@@ -3547,7 +3614,7 @@ export default {
                         let temp = emailsNoSpace.split(',')
                         let email_to = data.email_to.replace(/\s/g, '').split(',')
                         let combined = temp.concat(email_to).filter(function(item) {
-                            return item !== checker && item !== self.user.work_mail;
+                            return !checker.includes(item) && item !== self.user.work_mail;
                         })
 
                         if (combined.length) {
