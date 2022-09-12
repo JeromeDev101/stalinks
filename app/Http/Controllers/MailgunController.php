@@ -178,7 +178,7 @@ class MailgunController extends Controller
             $list_emails[$key] = $value;
         }
 
-        $str = implode(", ", $list_emails);
+        $str = implode(",", $list_emails);
 
         // work mail and email signature
 
