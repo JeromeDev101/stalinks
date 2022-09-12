@@ -1495,7 +1495,8 @@ class MailgunController extends Controller
             ->get();
 
             return $replies->unique(function ($item) {
-                return $item['subject'].$item['cc'].$item['bcc'].$item['email_to'].$item['body_no_html'].$item['message_id'];
+//                return $item['subject'].$item['cc'].$item['bcc'].$item['email_to'].$item['body_no_html'].$item['message_id'];
+                return $item['subject'].$item['cc'].$item['bcc'].$item['body_no_html'].$item['message_id'];
             })->sortByDesc('id')
             ->values()
             ->toArray();
@@ -1536,7 +1537,9 @@ class MailgunController extends Controller
             }
         }
 
-        return implode(',', $new_array);
+        $str = implode(',', $new_array);
+
+        return preg_replace('/\s+/', '', $str);
     }
 
     public function prepareMultipleEmails ($emails, $request) {
