@@ -49,7 +49,7 @@ export default {
     b_title: 'ซื้อแบคลิงก์',
     b_anchor_text: 'ข้อความสมอ',
     b_link_to: 'ลิงค์ไปยัง',
-    b_url_advertiser: 'ผู้ลงโฆษณา URL',
+    b_url_advertiser: 'ชื่อโดเมน',
 
     // interested`
     i_title: 'แบคลิงก์ที่น่าสนใจ',

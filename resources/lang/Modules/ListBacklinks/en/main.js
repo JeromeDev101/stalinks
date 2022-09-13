@@ -49,7 +49,7 @@ export default {
     b_title: 'Buy Backlink',
     b_anchor_text: 'Anchor Text',
     b_link_to: 'Link To',
-    b_url_advertiser: 'URL Advertiser',
+    b_url_advertiser: 'Domain Name',
 
     // interested`
     i_title: 'Interested Backlink',

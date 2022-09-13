@@ -49,7 +49,7 @@ export default {
     b_title: 'バックリンクの購入',
     b_anchor_text: 'アンカーテキスト',
     b_link_to: 'リンクへ',
-    b_url_advertiser: 'URLアドバタイザー',
+    b_url_advertiser: 'ドメイン名',
 
     // interested`
     i_title: 'バックリンクに興味が有る',

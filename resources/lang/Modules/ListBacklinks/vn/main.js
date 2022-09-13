@@ -49,7 +49,7 @@ export default {
     b_title: 'Mua Backlinks',
     b_anchor_text: 'Anchor Text',
     b_link_to: 'Liên kết đến',
-    b_url_advertiser: 'URL Nhà quảng cáo',
+    b_url_advertiser: 'Tên miền',
 
     // interested`
     i_title: 'Quan tâm Backlink',

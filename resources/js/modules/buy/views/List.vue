@@ -382,9 +382,9 @@
                                             <a class="dropdown-item " @click="interestedSelected">
                                                 {{ $t('message.list_backlinks.bb_interested') }}
                                             </a>
-                                            <a class="dropdown-item " @click="uninterestedSelected">
-                                                Uninterested
-                                            </a>
+<!--                                            <a class="dropdown-item " @click="uninterestedSelected">-->
+<!--                                                Uninterested-->
+<!--                                            </a>-->
                                             <a class="dropdown-item " @click="notInterestedSelected">
                                                 {{ $t('message.list_backlinks.bb_not_interested') }}
                                             </a>

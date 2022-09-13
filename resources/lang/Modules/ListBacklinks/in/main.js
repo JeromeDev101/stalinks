@@ -49,7 +49,7 @@ export default {
     b_title: 'बैकलिंक खरीदें',
     b_anchor_text: 'एंकर टेक्स्ट',
     b_link_to: 'करने के लिए लिंक',
-    b_url_advertiser: 'यूआरएल विज्ञापनदाता',
+    b_url_advertiser: 'डोमेन नाम',
 
     // interested`
     i_title: 'इच्छुक बैकलिंक',

@@ -49,7 +49,7 @@ export default {
     b_title: 'Beli Backlink',
     b_anchor_text: 'Teks Anchor',
     b_link_to: 'Tautan ke',
-    b_url_advertiser: 'Pengiklan URL',
+    b_url_advertiser: 'Nama domain',
 
     // interested`
     i_title: 'Backlink yang menarik',
