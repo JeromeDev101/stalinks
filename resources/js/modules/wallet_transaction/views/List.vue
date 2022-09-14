@@ -453,6 +453,7 @@
                                         <option value="Not Paid">{{ $t('message.wallet_transaction.uw_not_paid') }}</option>
                                         <option value="Refund processing">{{ $t('message.wallet_transaction.uw_refund_processing') }}</option>
                                         <option value="Refunded">{{ $t('message.wallet_transaction.uw_refunded') }}</option>
+                                        <option value="Refund Order">{{ $t('message.wallet_transaction.uw_refund_order') }}</option>
                                     </select>
 
                                     <span

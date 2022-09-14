@@ -66,6 +66,7 @@ export default {
     alert_deleted: 'ถูกลบ!',
     alert_selected_deleted: 'แบคลิงก์ที่เลือกจะถูกลบเรียบร้อยแล้ว',
     alert_deleted_successfully: 'ลบแบคลิงก์เรียบร้อยแล้ว',
+    alert_accept_note: 'อัปเดตลิงก์ย้อนกลับ?',
 
     // others
     type: 'พิมพ์ที่นี่',

@@ -66,6 +66,7 @@ export default {
     alert_deleted: 'हटाए गए!',
     alert_selected_deleted: 'चयनित बैकलिंक्स सफलतापूर्वक हटा दिए गए हैं।',
     alert_deleted_successfully: 'बैकलिंक सफलतापूर्वक हटा दिया गया।',
+    alert_accept_note: 'बैकलिंक्स अपडेट करें?',
 
     // others
     type: 'यहाँ टाइप करें',

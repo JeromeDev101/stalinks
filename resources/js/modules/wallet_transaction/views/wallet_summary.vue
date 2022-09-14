@@ -119,12 +119,13 @@
                                     <th>ID Buyer</th>
                                     <th>{{ $t('message.wallet_summary.filter_buyer') }}</th>
                                     <th>{{ $t('message.wallet_summary.ws_deposit') }}</th>
-                                    <th>{{ $t('message.wallet_summary.ws_orders') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_orders') }} <span class="fa fa-exclamation-circle text-primary" title="All Orders - (Orders Cancelled + Valid Orders + Refund Orders)"></span></th>
                                     <th>{{ $t('message.wallet_summary.ws_orders_cancelled') }}</th>
-                                    <th>{{ $t('message.wallet_summary.ws_valid_orders') }}</th>
-                                    <th>{{ $t('message.wallet_summary.ws_credit_left') }}</th>
-                                    <th>{{ $t('message.wallet_summary.ws_purchase') }}</th>
-                                    <th>{{ $t('message.wallet_summary.ws_wallet') }}</th>
+                                    <th>{{ $t('message.wallet_summary.ws_valid_orders') }} <span class="fa fa-exclamation-circle text-primary" title="Valid Orders are Live, Processing, Content In Writing/Done/Sent, Live in Process, Issue and Pending"></span></th>
+                                    <th>{{ $t('message.wallet_summary.ws_credit_left') }} <span class="fa fa-exclamation-circle text-primary" title="Credit Left - (Deposit - Valid Orders + Refund Orders)"></span></th>
+                                    <th>{{ $t('message.wallet_summary.ws_purchase') }} <span class="fa fa-exclamation-circle text-primary" title="Purchase is only LIVE status"></span></th>
+                                    <th>Refund Orders</th>
+                                    <th>{{ $t('message.wallet_summary.ws_wallet') }} <span class="fa fa-exclamation-circle text-primary" title="Wallet - (Deposit - Purchase + Refund Orders)"></span></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -138,6 +139,7 @@
                                     <td>{{ '$ ' + (summary.valid_orders).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
+                                    <td>{{ '$ ' + (summary.order_refund).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
                                 </tr>
                                 </tbody>

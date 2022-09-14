@@ -66,6 +66,7 @@ export default {
     alert_deleted: '削除!',
     alert_selected_deleted: '選択されたバックリンクは正常に削除されました',
     alert_deleted_successfully: 'バックリンクは正常に削除されました',
+    alert_accept_note: 'バックリンクを更新しますか?',
 
     // others
     type: 'ここに入力してください',

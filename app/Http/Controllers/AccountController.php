@@ -810,9 +810,11 @@ class AccountController extends Controller
 
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
-                    ->whereIn('admin_confirmation', ['Paid'])
+                    ->whereIn('admin_confirmation', ['Paid', 'Refund Order'])
                     ->get();
 
+
+        // refund coming from profile deposit
         $wallet_transaction_refunded = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
                     ->where('user_id', $user_id)
                     ->whereIn('admin_confirmation', ['Refunded'])

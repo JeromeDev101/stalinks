@@ -3,8 +3,8 @@ export default {
 
     // formula
     for_title: 'Formula for External Buyer',
-    for_additional: 'Additional',
-    for_percentage: 'Percentage',
+    for_additional: 'Additional per Article',
+    for_percentage: 'Profit Percentage',
     for_with_article: 'WITH ARTICLE',
     for_com_no: 'Commission = No',
     for_formula_remain: 'Formula:',

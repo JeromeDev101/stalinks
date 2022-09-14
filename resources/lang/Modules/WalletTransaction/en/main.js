@@ -36,6 +36,7 @@ export default {
     uw_not_paid: 'Not Paid',
     uw_refund_processing: 'Refund processing',
     uw_refunded: 'Refunded',
+    uw_refund_order: 'Refund Order',
 
     // alerts
     alert_success: 'Success',

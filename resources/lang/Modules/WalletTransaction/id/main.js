@@ -36,6 +36,7 @@ export default {
     uw_not_paid: 'Belum dibayar',
     uw_refund_processing: 'Pemrosesan pengembalian dana',
     uw_refunded: 'Dikembalikan',
+    uw_refund_order: 'Pesanan Pengembalian Dana',
 
     // alerts
     alert_success: 'Berhasil',

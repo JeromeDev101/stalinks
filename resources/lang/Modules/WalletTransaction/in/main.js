@@ -36,6 +36,7 @@ export default {
     uw_not_paid: 'भुगतान नहीं',
     uw_refund_processing: 'धनवापसी प्रसंस्करण',
     uw_refunded: 'वापसी की गई है',
+    uw_refund_order: 'वापसी आदेश',
 
     // alerts
     alert_success: 'सफलता',

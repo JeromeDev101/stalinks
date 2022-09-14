@@ -1283,7 +1283,36 @@
                 $(element).modal('hide')
             },
 
-            async submitEditBacklink () {
+            submitEditBacklink () {
+                let self = this;
+                
+                if(this.modelBaclink.status === 'Nofollow' || 
+                    this.modelBaclink.status === '404' ||
+                    this.modelBaclink.status === 'Deleted' ||
+                    this.modelBaclink.status === 'Refund'
+                ) {
+
+                    swal.fire({
+                        title : self.$t('message.follow_backlinks.alert_confirm'),
+                        text : self.$t('message.follow_backlinks.alert_accept_note'),
+                        icon : "question",
+                        showCancelButton : true,
+                        confirmButtonText : self.$t('message.follow_backlinks.yes'),
+                        cancelButtonText : self.$t('message.follow_backlinks.no')
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            this.sendUpdate();
+                        }
+                    });
+                } else {
+                    this.sendUpdate();
+                }
+
+                            
+            },
+
+            async sendUpdate() {
                 await this.$store.dispatch('actionSaveBacklink', {
                     params: this.modelBaclink
                 })

@@ -66,6 +66,7 @@ export default {
     alert_deleted: 'Đã xóa!',
     alert_selected_deleted: 'Các backlink được chọn đã được xóa thành công',
     alert_deleted_successfully: 'Đã xóa thành công Backlink',
+    alert_accept_note: 'Cập nhật liên kết ngược?',
 
     // others
     type: 'Nhập ở đây',

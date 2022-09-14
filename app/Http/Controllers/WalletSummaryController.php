@@ -18,7 +18,10 @@ class WalletSummaryController extends Controller
             'users.id',
             'users.name',
             'users.username',
-            DB::raw('SUM(CASE WHEN wallet_transactions.admin_confirmation = "Paid" THEN wallet_transactions.amount_usd ELSE NULL END) as deposit'),
+            DB::raw('
+            SUM(CASE WHEN wallet_transactions.admin_confirmation = "Paid"
+            THEN wallet_transactions.amount_usd ELSE NULL END) as deposit
+            '),
         ];
 
         $checkAdmin = Auth::user()->type != 10 && Auth::user()->role_id != 8;
@@ -60,11 +63,12 @@ class WalletSummaryController extends Controller
                     ->get();
 
         foreach($user_buyers as $key => $user_buyer) {
+            $user_buyers[$key]['order_refund'] = $this->getTotalPurchase($user_buyer->id, 'order_refund', $request->year, $request->month);
             $user_buyers[$key]['orders'] = $this->getTotalPurchase($user_buyer->id, 'orders', $request->year, $request->month);
             $user_buyers[$key]['order_live'] = $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
             $user_buyers[$key]['order_cancel'] = $this->getTotalPurchase($user_buyer->id, 'order_cancel', $request->year, $request->month);
-            $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month);
-            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month) - $this->getTotalRefunded($user_buyer->id);
+            $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month) + $this->getTotalPurchase($user_buyer->id, 'order_refund', $request->year, $request->month);
+            $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month) - $this->getTotalRefunded($user_buyer->id) + $this->getTotalPurchase($user_buyer->id, 'order_refund', $request->year, $request->month);
             $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
 
         }
@@ -115,6 +119,10 @@ class WalletSummaryController extends Controller
                 if ($type == 'order_live') {
                     return $query->where('status', 'Live');
 //                        ->where('payment_status', 'Paid');
+                }
+
+                if($type == 'order_refund') {
+                    return $query->where('status', 'Refund');
                 }
 
                 if ($type == 'order_cancel') {

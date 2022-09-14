@@ -66,6 +66,7 @@ export default {
     alert_deleted: 'Deleted!',
     alert_selected_deleted: 'Selected backlinks are successfully deleted.',
     alert_deleted_successfully: 'Backlink successfully deleted.',
+    alert_accept_note: 'Update Backlinks?',
 
     // others
     type: 'Type here',

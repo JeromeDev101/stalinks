@@ -484,7 +484,7 @@
                                             v-model="updateModel.status"
                                             style="height: 37px;"
                                             class="form-control pull-right"
-                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && (user.role_id != 8 || user.role_id != 6) && user.isOurs != 0 && !user.isAdmin)"
+                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && (user.role_id != 8 || user.role_id != 6) && user.isOurs != 0 && !user.isAdmin) || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund'"
 
                                             @change="checkStatus()">
 

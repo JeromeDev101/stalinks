@@ -66,6 +66,7 @@ export default {
     alert_deleted: 'Dihapus!',
     alert_selected_deleted: 'Backlinks yang dipilih berhasil dihapus.',
     alert_deleted_successfully: 'Backlinks balik berhasil dihapus.',
+    alert_accept_note: 'Perbarui Backlink?',
 
     // others
     type: 'Ketik disini',

@@ -13,6 +13,7 @@ use App\Repositories\Contracts\CountryRepositoryInterface;
 use App\Models\Article;
 use App\Models\User;
 use App\Models\Registration;
+use App\Models\WalletTransaction;
 use App\Events\ArticleEvent;
 use Illuminate\Support\Facades\DB;
 
@@ -201,6 +202,27 @@ class BackLinkController extends Controller
 
         if (!$backlink) {
             return response()->json($response);
+        }
+
+        // update wallet_transaction of buyer when 'Refund'
+        if( isset($input['status']) && !empty($input['status']) && $input['status'] == 'Refund'){
+
+            //check if sub buyer and refund to master buyer
+            $user = User::where('id', $input['user_id'])->first();
+            $registration = Registration::where('email', $user->email)
+                ->where('type', 'Buyer')
+                ->where('is_sub_account',1)
+                ->first();
+
+            $data = [
+                'user_id' => $registration ? $registration->team_in_charge :$input['user_id'],
+                'payment_via_id' => 1, // default 1 but not good
+                'amount_usd' => $request->prices,
+                'proof_doc' => '/',
+                'date' => date('Y-m-d'),
+                'admin_confirmation' => 'Refund Order'
+            ];
+            WalletTransaction::create($data);
         }
 
 //        event(new ArticleEvent("Article is now LIVE", $seller->user_id));

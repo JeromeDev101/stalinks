@@ -36,6 +36,7 @@ export default {
     uw_not_paid: 'Không phải trả tiền',
     uw_refund_processing: 'Xử lý hoàn lại tiền',
     uw_refunded: 'Đã hoàn lại',
+    uw_refund_order: 'Hoàn lại tiền cho đơn đặt hàng',
 
     // alerts
     alert_success: 'Thành công',

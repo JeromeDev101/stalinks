@@ -659,6 +659,14 @@
                                            placeholder="">
                                 </div>
                             </div>
+                            <!-- <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>You Provide Article?</label>
+                                    <v-select
+                                        :searchable="true"
+                                        :options="['Yes','No']"/>
+                                </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="modal-footer">

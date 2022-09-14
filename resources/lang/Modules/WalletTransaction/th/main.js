@@ -36,6 +36,7 @@ export default {
     uw_not_paid: 'ยังไม่ชำระเงิน',
     uw_refund_processing: 'การดำเนินการคืนเงิน',
     uw_refunded: 'คืนเงินแล้ว',
+    uw_refund_order: 'คำสั่งคืนเงิน',
 
     // alerts
     alert_success: 'สำเร็จ',

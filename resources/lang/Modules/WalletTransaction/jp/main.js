@@ -36,6 +36,7 @@ export default {
     uw_not_paid: '未払い',
     uw_refund_processing: '払い戻し処理',
     uw_refunded: '返金済み',
+    uw_refund_order: '返金注文',
 
     // alerts
     alert_success: '成功しました',
