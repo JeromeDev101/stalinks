@@ -1657,7 +1657,17 @@
                                 <!-- payment for seller and writer -->
                                 <table class="table table-hover" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
                                     <tr>
-                                        <td></td>
+                                        <td>
+                                            <button
+                                                v-if="user.isOurs === 0 && selectedUserID !== 0"
+                                                class="btn btn-primary btn-sm"
+
+                                                @click="getPaymentSolutionHistory">
+
+                                                <i class="fas fa-history"></i>
+                                                Show history
+                                            </button>
+                                        </td>
                                         <td>{{ $t('message.registration_accounts.filter_default') }}</td>
                                     </tr>
                                     <tr v-for="(payment_method, index) in paymentMethodListSendPayment" :key="index" >
@@ -1854,7 +1864,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" @click="selectedUserID = 0">
                                 {{ $t('message.registration_accounts.close') }}
                             </button>
                             <button type="button" @click="submitUpdate" class="btn btn-primary">
@@ -1921,6 +1931,146 @@
             </div>
         </div>
         <!-- End of Multiple Update In Charge -->
+
+        <!-- Modal Payment Solution History -->
+        <div
+            class="modal fade"
+            ref="modalPaymentSolutionHistory"
+            style="display: none;"
+            id="modalPaymentSolutionHistory">
+
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">
+                            Payment Information History
+                        </h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table
+                                        id="tbl_payment_solutions"
+                                        style="font-size: 0.75rem"
+                                        class="table table-bordered">
+
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Account</th>
+                                                <th>Default</th>
+                                                <th>Status</th>
+                                                <th>Dates</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <template v-for="solution in paymentSolutionHistory">
+                                                <tr>
+                                                    <td>{{ solution.id }}</td>
+                                                    <td>
+                                                        <span class="font-weight-bold mb-2">{{ solution.account }}</span>
+                                                        <br>
+                                                        <small>{{ solution.payment_type.type }}</small>
+
+                                                        <small
+                                                            v-if="solution.payment_type.id === 10
+                                                            || solution.payment_type.type === 'Bank Transfer'"
+                                                            style="cursor: pointer;"
+                                                            class="text-primary font-italic accordion-toggle"
+                                                            aria-expanded="true"
+                                                            data-toggle="collapse"
+                                                            :ref="'solution-collapse-' + solution.id"
+                                                            :aria-controls="'solution-collapse' + solution.id"
+
+                                                            @click="viewBankTransferDetails(solution)">
+
+                                                            <u>View Details</u>
+                                                        </small>
+                                                    </td>
+                                                    <td>
+                                                        <span :class="solution.is_default === 1
+                                                        ? 'badge badge-primary'
+                                                        : 'badge badge-secondary'">
+
+                                                            {{ solution.is_default === 1 ? 'YES' : 'NO' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span :class="solution.deleted_at === null
+                                                        ? 'badge badge-success'
+                                                        : 'badge badge-danger'">
+
+                                                            {{ solution.deleted_at === null ? 'ACTIVE' : 'DELETED' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span>
+                                                            <i
+                                                                class="fas fa-calendar-plus text-success"
+                                                                title="Date created">
+                                                            </i>
+                                                            {{ solution.created_at }}
+                                                        </span>
+                                                        <br>
+                                                        <span v-if="solution.deleted_at">
+                                                            <i
+                                                                class="fas fa-calendar-times text-danger"
+                                                                title="Date deleted">
+                                                            </i>
+                                                            {{ solution.deleted_at }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+
+                                                <tr
+                                                    v-if="solution.payment_type.id === 10
+                                                    || solution.payment_type.type === 'Bank Transfer'">
+
+                                                    <td colspan="12" class="p-0" style="background: #629aa957">
+                                                        <div
+                                                            class="accordion-body collapse m-3"
+                                                            :id="'solution-collapse' + solution.id">
+
+                                                            <div class="card">
+                                                                <div v-if="returnSolutionDetailsObject(paymentSolutionDetailValues, solution.id) !== undefined" class="card-body">
+                                                                    <table
+                                                                        style="background: #f5f8fa"
+                                                                        class="table table-hover"
+                                                                        :id="'tbl-solution-details-' + solution.id">
+                                                                        <tbody>
+                                                                            <template v-for="(detail, key) in returnSolutionDetailsObject(paymentSolutionDetailValues, solution.id)">
+                                                                                <tr v-if="key !== 'id'">
+                                                                                    <th>{{ key.replaceAll('_', ' ') }}</th>
+                                                                                    <td>
+                                                                                        <span v-if="detail === undefined || detail === null" class="badge badge-danger">
+                                                                                            N/A
+                                                                                        </span>
+                                                                                        <span v-else>{{ detail }}</span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </template>
+
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Payment Solution History -->
 
         <terms-and-conditions></terms-and-conditions>
     </div>
@@ -2129,6 +2279,23 @@ export default {
             registrationBcc: '',
             withCcRegistration: false,
             withBccRegistration: false,
+
+            // payment solution history
+            selectedUserID: 0,
+            paymentSolutionHistory: [],
+            paymentSolutionDetails: {
+                id: '',
+                bank_name: '',
+                account_name: '',
+                account_iban: '',
+                swift_code: '',
+                beneficiary_add: '',
+                account_holder: '',
+                account_type: '',
+                routing_num: '',
+                wire_routing_num: '',
+            },
+            paymentSolutionDetailValues: [],
         }
     },
 
@@ -2661,7 +2828,6 @@ export default {
 
         sendDepositEmailFunction (accounts) {
             let self = this;
-            console.log(accounts)
 
             let loader = this.$loading.show();
 
@@ -3319,6 +3485,8 @@ export default {
 
                 loader.hide();
             }
+
+            this.selectedUserID = 0;
         },
 
         async getTeamInCharge() {
@@ -3384,6 +3552,8 @@ export default {
             // console.log(that)
 
             if(typeof account.user != "undefined" && account.user){
+                this.selectedUserID = account.user.id
+
                 if(account.user.user_payment_types.length > 0) {
                     this.accountUpdate.update_method_payment_type = [];
 
@@ -3597,6 +3767,78 @@ export default {
             return Object.keys(error).some(function (err) {
                 return ~err.indexOf(mod)
             })
+        },
+
+        getPaymentSolutionHistory () {
+            let loader = this.$loading.show();
+
+            axios.get('/api/users-payment-type/history/' + this.selectedUserID)
+            .then((res) => {
+                this.paymentSolutionHistory = res.data
+
+                let element = this.$refs.modalPaymentSolutionHistory
+                $(element).modal('show')
+
+                loader.hide();
+            }).catch((err) => {
+                console.log(err)
+                loader.hide();
+            })
+
+        },
+
+        viewBankTransferDetails (details) {
+            let self = this;
+            const keys = {
+                id: '',
+                bank_name: '',
+                account_name: '',
+                account_iban: '',
+                swift_code: '',
+                beneficiary_add: '',
+                account_holder: '',
+                account_type: '',
+                routing_num: '',
+                wire_routing_num: '',
+            };
+
+            let temp = {};
+
+            for (let key of Object.keys(keys)) {
+
+                if (key === 'id') {
+                    temp[key] = details[key];
+                } else {
+                    temp[key] = Array.isArray(JSON.parse(details[key]))
+                        ? self.returnNotNullInArray(JSON.parse(details[key]))
+                        : '';
+                }
+            }
+
+            this.paymentSolutionDetailValues.push(temp);
+
+            this.paymentSolutionDetailValues = this.paymentSolutionDetailValues.filter((value, index, self) =>
+                index === self.findIndex((t) => (
+                    t.id === value.id
+                ))
+            )
+
+            let collapseId = '#solution-collapse' + details.id
+            $(collapseId).collapse('toggle');
+        },
+
+        returnNotNullInArray (arr) {
+            return arr.find(element => {
+                return element !== null && element !== '';
+            });
+        },
+
+        returnSolutionDetailsObject (data, id) {
+            let values = data.find(element => {
+                return element.id === id;
+            });
+
+            return values;
         },
 
         advanceSearch: __.debounce(function () {

@@ -447,6 +447,9 @@ Route::middleware('auth:api')->group(function () {
     // generate article for follow up sales
     Route::name('generate-article')->post('/generate-article', 'FollowupSalesController@generateArticle');
     Route::name('update-publisher-inc-article')->post('/update-publisher-inc-article', 'FollowupSalesController@updatePublisherIncArticle');
+
+    // users payment type
+    Route::name('users-payment-type-history')->get('/users-payment-type/history/{id}','UsersPaymentTypeController@getHistory');
 });
 
 //Mailgun external

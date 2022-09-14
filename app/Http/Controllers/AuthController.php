@@ -178,8 +178,8 @@ class AuthController extends Controller
         }
 
         // Insert users payments types
-        $users_payment_type = UsersPaymentType::where('user_id', $input['id']);
-        $users_payment_type->delete();
+//        $users_payment_type = UsersPaymentType::where('user_id', $input['id']);
+//        $users_payment_type->delete();
 
         $insert_input_users_payment_type = [];
 
@@ -191,18 +191,16 @@ class AuthController extends Controller
                             'user_id' => $input['id'],
                             'payment_id' => $key,
                             'account' => $types,
-                            'bank_name' => count($request->bank_name) > 0 ? json_encode($request->bank_name):null,
-                            'account_name' => count($request->account_name) > 0 ? json_encode($request->account_name):null,
-                            'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban):null,
-                            'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code):null,
-                            'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add):null,
-                            'account_holder' => count($request->account_holder) > 0 ? json_encode($request->account_holder):null,
-                            'account_type' => count($request->account_type) > 0 ? json_encode($request->account_type):null,
-                            'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num):null,
-                            'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num):null,
+                            'bank_name' => count($request->bank_name) > 0 ? json_encode($request->bank_name) : null,
+                            'account_name' => count($request->account_name) > 0 ? json_encode($request->account_name) : null,
+                            'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban): null,
+                            'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code): null,
+                            'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add): null,
+                            'account_holder' => count($request->account_holder) > 0 ? json_encode($request->account_holder): null,
+                            'account_type' => count($request->account_type) > 0 ? json_encode($request->account_type): null,
+                            'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num): null,
+                            'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num): null,
                             'is_default' => $key == $input['id_payment_type'] ? 1:0,
-                            'created_at' => Carbon::now(),
-                            'updated_at' => Carbon::now()
                         ]);
                     }
                 }
@@ -210,7 +208,37 @@ class AuthController extends Controller
         }
 
         if (count($insert_input_users_payment_type)) {
-            UsersPaymentType::insert($insert_input_users_payment_type);
+            foreach ($insert_input_users_payment_type as $insert) {
+                UsersPaymentType::firstOrCreate($insert);
+            }
+
+            // delete payment info that is not included anymore
+
+            // get all ids
+            $all_ids = UsersPaymentType::where('user_id', $user->id)->get()->pluck('id')->toArray();
+
+            // get existing ids
+            $existing_ids = [];
+
+            foreach ($insert_input_users_payment_type as $insert) {
+                $temp = UsersPaymentType::select('id')->where($insert)->first();
+
+                if ($temp) {
+                    $existing_ids[] = $temp->id;
+                }
+            }
+
+            // get difference
+            $diff_ids = array_diff($all_ids, $existing_ids);
+
+            // delete items
+            if (count($diff_ids)) {
+                foreach ($diff_ids as $diff) {
+                    $delete = UsersPaymentType::find($diff);
+
+                    $delete->delete();
+                }
+            }
         }
 
         $response['success'] = true;
