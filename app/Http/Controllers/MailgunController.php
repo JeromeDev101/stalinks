@@ -492,7 +492,7 @@ class MailgunController extends Controller
                     }
 
                     $inbox = $inbox->groupBy('subject', 'sender', 'received')
-                        ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
+//                        ->havingRaw('subject = REPLACE(replies.subject, "Re: ", "")')
                         ->orderBy('id', 'desc')
                         ->paginate(10);
 
