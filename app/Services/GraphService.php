@@ -13,19 +13,29 @@ class GraphService
     public function urlValidationQuery($request)
     {
         $query = Publisher::select(DB::raw('
-            CONCAT(MONTHNAME(MAX(created_at)), " ", YEAR(MAX(created_at))) as xaxis,
+            CONCAT(MONTHNAME(MAX(publisher.created_at)), " ", YEAR(MAX(publisher.created_at))) as xaxis,
             COUNT(IF(valid = \'valid\', 1, NULL)) AS valid,
             COUNT(IF(valid = \'invalid\', 1, NULL)) AS invalid,
-            COUNT(id) AS total
-        '))
-            ->groupBy(DB::raw('MONTH(created_at)'))
-            ->groupBy(DB::raw('YEAR(created_at)'))
-            ->orderBy(DB::raw('YEAR(created_at)'))
-            ->orderBy(DB::raw('MONTH(created_at)'));
+            COUNT(publisher.id) AS total
+        '));
+
+        $query->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
+            ->leftJoin('registration', 'A.email', '=', 'registration.email')
+            ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
+            ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
+            ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
+            ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
+            ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
+            ->has('user')
+            ->where('registration.account_validation', 'valid')
+            ->groupBy(DB::raw('MONTH(publisher.created_at)'))
+            ->groupBy(DB::raw('YEAR(publisher.created_at)'))
+            ->orderBy(DB::raw('YEAR(publisher.created_at)'))
+            ->orderBy(DB::raw('MONTH(publisher.created_at)'));
 
         if (isset($request['start_date']) && $request['start_date'] != 'null') {
-            $query->where('created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-            $query->where('created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+            $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->where('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
         return $query->get();
