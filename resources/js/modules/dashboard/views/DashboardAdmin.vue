@@ -60,7 +60,7 @@
 
             <writer-valid-graph
                 :list-team-in-charge="listIncharge"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isQc || isCs">
 
             </writer-valid-graph>
