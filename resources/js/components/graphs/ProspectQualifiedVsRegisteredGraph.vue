@@ -72,9 +72,11 @@
 <script>
 import prospect_qualified_register from "../../graph_settings/prospect_qualified_register";
 import axios from "axios";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "ProspectQualifiedVsRegisteredGraph",
+    mixins: [dateRange],
 
     props : [
         'dateRanges'
@@ -112,12 +114,14 @@ export default {
                 null &&
                 this.filterModel.prospectQualifiedRegistered.dateRange.endDate !=
                 null) {
-                this.filterModel.prospectQualifiedRegistered.dateRange.startDate =
-                    new
-                    Date(this.filterModel.prospectQualifiedRegistered.dateRange.startDate).toJSON();
-                this.filterModel.prospectQualifiedRegistered.dateRange.endDate =
-                    new
-                    Date(this.filterModel.prospectQualifiedRegistered.dateRange.endDate).toJSON();
+                // this.filterModel.prospectQualifiedRegistered.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.prospectQualifiedRegistered.dateRange.startDate).toJSON();
+                // this.filterModel.prospectQualifiedRegistered.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.prospectQualifiedRegistered.dateRange.endDate).toJSON();
+
+                this.filterModel.prospectQualifiedRegistered.dateRange = this.formatFilterDates(this.filterModel.prospectQualifiedRegistered.dateRange)
             }
 
             this.getProspectQualifiedRegistered(this.filterModel.prospectQualifiedRegistered.dateRange.startDate, this.filterModel.prospectQualifiedRegistered.dateRange.endDate);

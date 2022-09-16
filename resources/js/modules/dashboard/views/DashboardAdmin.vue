@@ -13,47 +13,47 @@
         <div class="row">
             <orders-graph
                 :list-seller-team="listSellerTeam"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isQc">
 
             </orders-graph>
 
             <seller-valid-graph
                 :list-seller-team="listSellerTeam"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isQc || isCs">
 
             </seller-valid-graph>
 
             <url-valid-graph
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isQc">
 
             </url-valid-graph>
 
             <url-valid-price-graph
                 :list-seller-team="listSellerTeam"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isCs">
 
             </url-valid-price-graph>
 
             <url-seller-statistics-graph
                 :list-seller-team="listSellerTeam"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isCs">
 
             </url-seller-statistics-graph>
 
             <prospect-qualified-vs-registered-graph
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isCs">
 
             </prospect-qualified-vs-registered-graph>
 
             <buyer-valid-graph
                 :list-team-in-charge="listIncharge"
-                :date-ranges="dateRanges"
+                :date-ranges="generateDefaultDateRange()"
                 v-if="user.isAdmin || isQc || isCs">
 
             </buyer-valid-graph>
@@ -80,10 +80,12 @@ import UrlSellerStatisticsGraph from "../../../components/graphs/UrlSellerStatis
 import ProspectQualifiedVsRegisteredGraph from "../../../components/graphs/ProspectQualifiedVsRegisteredGraph";
 import BuyerValidGraph from "../../../components/graphs/BuyerValidGraph";
 import WriterValidGraph from "../../../components/graphs/WriterValidGraph";
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
 
     name : 'Dashboard',
+    mixins: [dateRange],
     components : {
         LineChart,
         OrdersGraph,

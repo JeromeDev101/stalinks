@@ -116,9 +116,11 @@ import url_valid_price from "../../graph_settings/url_valid_price";
 import axios from "axios";
 import _ from 'underscore';
 import __ from 'lodash';
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "UrlValidPriceGraph",
+    mixins: [dateRange],
 
     props : [
         'dateRanges',
@@ -208,12 +210,14 @@ export default {
             (this.filterModel.urlValidPrice.dateRange.startDate !=
                 null &&
                 this.filterModel.urlValidPrice.dateRange.endDate != null) {
-                this.filterModel.urlValidPrice.dateRange.startDate =
-                    new
-                    Date(this.filterModel.urlValidPrice.dateRange.startDate).toJSON();
-                this.filterModel.urlValidPrice.dateRange.endDate =
-                    new
-                    Date(this.filterModel.urlValidPrice.dateRange.endDate).toJSON();
+                // this.filterModel.urlValidPrice.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.urlValidPrice.dateRange.startDate).toJSON();
+                // this.filterModel.urlValidPrice.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.urlValidPrice.dateRange.endDate).toJSON();
+
+                this.filterModel.urlValidPrice.dateRange = this.formatFilterDates(this.filterModel.urlValidPrice.dateRange)
             }
 
             this.filterNumbers();

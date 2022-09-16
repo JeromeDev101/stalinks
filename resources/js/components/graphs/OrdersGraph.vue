@@ -83,10 +83,11 @@ import {mapState} from "vuex";
 import orders from "../../graph_settings/orders";
 import axios from "axios";
 import _ from "underscore";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "OrdersGraph",
-
+    mixins: [dateRange],
     props: [
         'dateRanges',
         'listSellerTeam'
@@ -151,12 +152,14 @@ export default {
             if (this.filterModel.orders.dateRange.startDate !=
                 null &&
                 this.filterModel.orders.dateRange.endDate != null) {
-                this.filterModel.orders.dateRange.startDate =
-                    new
-                    Date(this.filterModel.orders.dateRange.startDate).toJSON();
-                this.filterModel.orders.dateRange.endDate =
-                    new
-                    Date(this.filterModel.orders.dateRange.endDate).toJSON();
+                // this.filterModel.orders.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.orders.dateRange.startDate).toJSON();
+                // this.filterModel.orders.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.orders.dateRange.endDate).toJSON();
+
+                this.filterModel.orders.dateRange = this.formatFilterDates(this.filterModel.orders.dateRange)
             }
 
             this.getOrdersData(this.filterModel.orders.dateRange.startDate, this.filterModel.orders.dateRange.endDate, this.filterModel.orderTeam);

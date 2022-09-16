@@ -88,9 +88,11 @@
 <script>
 import writer_valid from "../../graph_settings/writer_valid";
 import axios from "axios";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "WriterValidGraph",
+    mixins: [dateRange],
 
     props:[
         'dateRanges',
@@ -132,12 +134,14 @@ export default {
     methods: {
         filterWriterValid() {
             if (this.filterModel.writerValid.dateRange.startDate != null && this.filterModel.writerValid.dateRange.endDate != null) {
-                this.filterModel.writerValid.dateRange.startDate =
-                    new
-                    Date(this.filterModel.writerValid.dateRange.startDate).toJSON();
-                this.filterModel.writerValid.dateRange.endDate =
-                    new
-                    Date(this.filterModel.writerValid.dateRange.endDate).toJSON();
+                // this.filterModel.writerValid.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.writerValid.dateRange.startDate).toJSON();
+                // this.filterModel.writerValid.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.writerValid.dateRange.endDate).toJSON();
+
+                this.filterModel.writerValid.dateRange = this.formatFilterDates(this.filterModel.writerValid.dateRange)
             }
 
             this.getWriterValidData(this.filterModel.writerValid.dateRange.startDate, this.filterModel.writerValid.dateRange.endDate);

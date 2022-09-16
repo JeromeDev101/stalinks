@@ -120,9 +120,11 @@
 
 <script>
 import url_seller_statistics from "../../graph_settings/url_prospect_status";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "UrlSellerStatisticsGraph",
+    mixins: [dateRange],
 
     props : [
         'dateRanges',
@@ -163,12 +165,14 @@ export default {
                 null &&
                 this.filterModel.urlSellerStatistics.dateRange.endDate !=
                 null) {
-                this.filterModel.urlSellerStatistics.dateRange.startDate =
-                    new
-                    Date(this.filterModel.urlSellerStatistics.dateRange.startDate).toJSON();
-                this.filterModel.urlSellerStatistics.dateRange.endDate =
-                    new
-                    Date(this.filterModel.urlSellerStatistics.dateRange.endDate).toJSON();
+                // this.filterModel.urlSellerStatistics.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.urlSellerStatistics.dateRange.startDate).toJSON();
+                // this.filterModel.urlSellerStatistics.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.urlSellerStatistics.dateRange.endDate).toJSON();
+
+                this.filterModel.urlSellerStatistics.dateRange = this.formatFilterDates(this.filterModel.urlSellerStatistics.dateRange)
             }
 
             this.getUrlSellerStatisticsData(this.filterModel.urlSellerStatistics.dateRange.startDate, this.filterModel.urlSellerStatistics.dateRange.endDate);

@@ -60,10 +60,11 @@
 <script>
 import url_valid from "../../graph_settings/url_valid";
 import axios from "axios";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "UrlValidGraph",
-
+    mixins: [dateRange],
     props : [
         'dateRanges'
     ],
@@ -97,12 +98,14 @@ export default {
             if (this.filterModel.urlValid.dateRange.startDate !=
                 null &&
                 this.filterModel.urlValid.dateRange.endDate != null) {
-                this.filterModel.urlValid.dateRange.startDate =
-                    new
-                    Date(this.filterModel.urlValid.dateRange.startDate).toJSON();
-                this.filterModel.urlValid.dateRange.endDate =
-                    new
-                    Date(this.filterModel.urlValid.dateRange.endDate).toJSON();
+                // this.filterModel.urlValid.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.urlValid.dateRange.startDate).toJSON();
+                // this.filterModel.urlValid.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.urlValid.dateRange.endDate).toJSON();
+
+                this.filterModel.urlValid.dateRange = this.formatFilterDates(this.filterModel.urlValid.dateRange)
             }
 
             this.getUrlValidData(this.filterModel.urlValid.dateRange.startDate, this.filterModel.urlValid.dateRange.endDate);

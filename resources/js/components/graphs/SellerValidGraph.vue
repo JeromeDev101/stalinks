@@ -116,9 +116,11 @@ import seller_valid from "../../graph_settings/seller_valid";
 import axios from "axios";
 import __ from "lodash";
 import _ from "underscore";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "SellerValidGraph",
+    mixins: [dateRange],
 
     props:[
         'dateRanges',
@@ -205,12 +207,14 @@ export default {
 
         filterSellerValid() {
             if (this.filterModel.sellerValid.dateRange.startDate != null && this.filterModel.sellerValid.dateRange.endDate != null) {
-                this.filterModel.sellerValid.dateRange.startDate =
-                    new
-                    Date(this.filterModel.sellerValid.dateRange.startDate).toJSON();
-                this.filterModel.sellerValid.dateRange.endDate =
-                    new
-                    Date(this.filterModel.sellerValid.dateRange.endDate).toJSON();
+                // this.filterModel.sellerValid.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.sellerValid.dateRange.startDate).toJSON();
+                // this.filterModel.sellerValid.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.sellerValid.dateRange.endDate).toJSON();
+
+                this.filterModel.sellerValid.dateRange = this.formatFilterDates(this.filterModel.sellerValid.dateRange)
             }
 
             this.filterNumbers();

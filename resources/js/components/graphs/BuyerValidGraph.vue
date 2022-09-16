@@ -88,9 +88,11 @@
 <script>
 import buyer_valid from "../../graph_settings/buyer_valid";
 import axios from "axios";
+import {dateRange} from "../../mixins/dateRange";
 
 export default {
     name : "BuyerValidGraph",
+    mixins: [dateRange],
 
     props:[
         'dateRanges',
@@ -126,12 +128,14 @@ export default {
     methods: {
         filterBuyerValid() {
             if (this.filterModel.buyerValid.dateRange.startDate != null && this.filterModel.buyerValid.dateRange.endDate != null) {
-                this.filterModel.buyerValid.dateRange.startDate =
-                    new
-                    Date(this.filterModel.buyerValid.dateRange.startDate).toJSON();
-                this.filterModel.buyerValid.dateRange.endDate =
-                    new
-                    Date(this.filterModel.buyerValid.dateRange.endDate).toJSON();
+                // this.filterModel.buyerValid.dateRange.startDate =
+                //     new
+                //     Date(this.filterModel.buyerValid.dateRange.startDate).toJSON();
+                // this.filterModel.buyerValid.dateRange.endDate =
+                //     new
+                //     Date(this.filterModel.buyerValid.dateRange.endDate).toJSON();
+
+                this.filterModel.buyerValid.dateRange = this.formatFilterDates(this.filterModel.buyerValid.dateRange)
             }
 
             this.getSellerValidData(this.filterModel.buyerValid.dateRange.startDate, this.filterModel.buyerValid.dateRange.endDate);
