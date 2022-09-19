@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\UsersPaymentType;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Rules\PaymentInfoExists;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -171,7 +172,8 @@ class AuthController extends Controller
         // validate payment info
         if (isset($request->payment_type) && $request->payment_type && $user) {
             $request->validate([
-                'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                'payment_type.*' => [new PaymentInfoExists($user->id)],
             ], [
                 'payment_type.*.unique' => 'Payment solution :input is already taken by another user.',
             ]);

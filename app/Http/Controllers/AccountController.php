@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\TeamInChargeUpdatedEvent;
 use App\Mail\SendResetPasswordEmail;
 use App\Repositories\Contracts\AccountRepositoryInterface;
+use App\Rules\PaymentInfoExists;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
@@ -134,7 +135,8 @@ class AccountController extends Controller
                 // validate payment info
                 if (isset($request->add_method_payment_type) && $request->add_method_payment_type && $user) {
                     $request->validate([
-                        'add_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                        'add_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                        'add_method_payment_type.*' => [new PaymentInfoExists($user->id)],
                     ], [
                         'add_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
                     ]);
@@ -415,7 +417,8 @@ class AccountController extends Controller
         // validate payment info
         if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
             $request->validate([
-                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
             ], [
                 'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
             ]);
