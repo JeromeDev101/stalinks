@@ -3641,6 +3641,7 @@ export default {
             $("#tbl_account").DataTable({
                 paging : false,
                 searching : false,
+                info: false,
                 columnDefs : [
                     {orderable : true, targets : 0},
                     {orderable : true, targets : 3},

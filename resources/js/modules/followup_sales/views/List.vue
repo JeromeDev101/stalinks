@@ -365,6 +365,14 @@
                                 </tbody>
                             </table>
                         </div>
+
+                        <pagination
+                            :limit="8"
+                            :data="listSales"
+
+                            @pagination-change-page="getListSales">
+
+                        </pagination>
                     </div>
                 </div>
             </div>
@@ -1267,7 +1275,7 @@
                 await this.$store.dispatch('actionGetListCountries', params);
             },
 
-            async getListSales(params){
+            async getListSales(page = 1){
 
                 // change the format of date
                 this.filterModel.process_date = this.formatFilterDates(this.filterModel.process_date)
@@ -1311,7 +1319,8 @@
                             country_id: this.filterModel.country_id,
                             date_completed: this.filterModel.date_completed,
                             process_date: this.filterModel.process_date,
-                            deleted_by_seller: this.filterModel.deleted_by_seller
+                            deleted_by_seller: this.filterModel.deleted_by_seller,
+                            page: page
                         }
 
                     });
@@ -1358,6 +1367,8 @@
                 }
 
                 $('#tbl-followupsales').DataTable({
+                    order: [],
+                    info: false,
                     autoWidth: false,
                     paging: false,
                     searching: false,
