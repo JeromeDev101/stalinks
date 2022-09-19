@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'Affiliates',
     r_ive_read: 'I\'ve read and accept the',
     r_terms: 'Terms and Condition',
+    r_type_of_buyer: 'Type of Buyer',
 
     // setting default
     sd_title: 'Setting Default',

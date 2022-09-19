@@ -105,6 +105,33 @@ class FollowupSalesController extends Controller
             $list->where('publisher.url', 'like', '%' . $filter['search'] . '%');
         }
 
+        if (isset($filter['code'])) {
+            if (is_array($filter['code'])) {
+                $list->where(function ($q) use ($filter) {
+                    foreach ($filter['code'] as $key => $code) {
+                        if ($key == 0) {
+                            $q->whereRaw('ROUND(
+                                (
+                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                        } else {
+                            $q->orWhere(function ($query) use ($code) {
+                                $query->whereRaw('ROUND(
+                                    (
+                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                                    ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                            });
+                        }
+                    }
+                });
+            } else {
+                $list->whereRaw('ROUND(
+                    (
+                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+                    ) / LENGTH("A")) = ' . rtrim($filter['code'], 'A'));
+            }
+        }
+
         if (isset($filter['process_date'])) {
             $filter['process_date'] = \GuzzleHttp\json_decode($filter['process_date'], true);
             if (!empty($filter['process_date']) && $filter['process_date']['startDate'] != null) {

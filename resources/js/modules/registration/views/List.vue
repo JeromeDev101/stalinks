@@ -932,12 +932,12 @@
                                             </div>
 
                                             <span
-                                                v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
-                                                v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
-                                                class="text-danger">
+                                                    v-if="messageForms.errors.hasOwnProperty('add_method_payment_type.'+ payment_method.id)"
+                                                    v-for="err in messageForms.errors['add_method_payment_type.'+ payment_method.id]"
+                                                    class="text-danger">
 
-                                            {{ err }}
-                                        </span>
+                                                {{ err }}
+                                            </span>
 
 
                                             <div class="px-5"
@@ -1083,6 +1083,18 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-6" v-show="accountModel.type == 'Buyer' && user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_type_of_buyer') }}</label>
+                                        <select class="form-control" name="" v-model="accountModel.buyer_type">
+                                            <option value="Basic">Basic</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Premium">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="modal-footer d-flex align-items-center justify-content-between">
@@ -1861,6 +1873,17 @@
                                     </div>
                                 </div>
 
+                                <div class="col-sm-6" v-show="accountUpdate.type == 'Buyer' && user.isAdmin">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.r_type_of_buyer') }}</label>
+                                        <select class="form-control" name="" v-model="accountUpdate.buyer_type">
+                                            <option value="Basic">Basic</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="Premium">Premium</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -2141,6 +2164,7 @@ export default {
                 account_type: [],
                 routing_num: [],
                 wire_routing_num: [],
+                buyer_type: 'Basic',
             },
 
             filterModel : {
@@ -2212,6 +2236,7 @@ export default {
                 account_type: [],
                 routing_num: [],
                 wire_routing_num: [],
+                buyer_type: '',
             },
 
             isPopupLoading : false,
@@ -3544,6 +3569,7 @@ export default {
             this.accountUpdate.status = that.status
             this.accountUpdate.credit_auth = that.credit_auth
             this.accountUpdate.affiliate = that.affiliate_id;
+            this.accountUpdate.buyer_type = that.buyer_type;
             this.accountUpdate.team_in_charge = that.team_in_charge == null ? '' : that.team_in_charge.id;
             this.accountUpdate.account_validation = that.account_validation
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;

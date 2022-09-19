@@ -177,6 +177,21 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- for QC and Dev only for report purposes -->
+                            <div v-if="user.isOurs === 0 && (user.role_id === 8 || user.role_id === 3)" class="col-md-2">
+                                <div class="form-group">
+                                    <label>Code Combination</label>
+                                    <v-select
+                                        v-model="filterModel.code"
+                                        multiple
+                                        :placeholder="$t('message.publisher.all')"
+                                        :options="listCode"
+                                        :searchable="false"
+                                    />
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="row mb-3">
@@ -191,6 +206,7 @@
                                 </button>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -1108,9 +1124,17 @@
                     reason: '',
                     reason_detailed: '',
                 },
+                listCode : [
+                    '4A',
+                    '3A',
+                    '2A',
+                    '1A',
+                    '0A'
+                ],
                 isPopupLoading: false,
                 filterModel: {
                     backlink_id: this.$route.query.backlink_id || '',
+                    code: this.$route.query.code || '',
                     search: this.$route.query.search || '',
                     status: this.$route.query.status || '',
                     seller: this.$route.query.seller || '',
@@ -1294,6 +1318,7 @@
                             status: this.filterModel.status,
                             seller: this.filterModel.seller,
                             buyer: this.filterModel.buyer,
+                            code: this.filterModel.code,
                             paginate: 1000000,
                             article: this.filterModel.article,
                             in_charge: this.filterModel.in_charge,
@@ -1312,6 +1337,7 @@
                             search: this.filterModel.search,
                             status: this.filterModel.status,
                             seller: this.filterModel.seller,
+                            code: this.filterModel.code,
                             buyer: this.filterModel.buyer,
                             paginate: this.filterModel.paginate,
                             article: this.filterModel.article,
@@ -1452,6 +1478,7 @@
                         status: this.filterModel.status,
                         seller: this.filterModel.seller,
                         buyer: this.filterModel.buyer,
+                        code: this.filterModel.code,
                         paginate: this.filterModel.paginate,
                         article: this.filterModel.article,
                         country_id: this.filterModel.country_id,
@@ -1471,6 +1498,7 @@
                 this.filterModel = {
                     backlink_id: '',
                     search: '',
+                    code: '',
                     status: '',
                     seller: '',
                     buyer: '',

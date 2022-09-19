@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'सहबद्धों',
     r_ive_read: 'मैंने पढ़ लिया है और स्वीकार कर लिया है',
     r_terms: 'नियम व शर्तें',
+    r_type_of_buyer: 'खरीदार का प्रकार',
 
     // setting default
     sd_title: 'डिफ़ॉल्ट सेटिंग',

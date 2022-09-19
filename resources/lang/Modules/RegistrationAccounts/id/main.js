@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'Afiliasi',
     r_ive_read: 'Saya telah membaca dan menyetujui ',
     r_terms: 'Syarat dan ketentuan',
+    r_type_of_buyer: 'Tipe Pembeli',
 
     // setting default
     sd_title: 'Pengaturan awal',

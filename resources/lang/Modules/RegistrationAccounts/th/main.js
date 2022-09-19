@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'พันธมิตร',
     r_ive_read: 'ฉันได้อ่านและยอมรับ',
     r_terms: 'ข้อกำหนดและเงื่อนไข',
+    r_type_of_buyer: 'ประเภทผู้ซื้อ',
 
     // setting default
     sd_title: 'การตั้งค่าเริ่มต้น',

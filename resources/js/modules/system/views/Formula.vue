@@ -29,6 +29,39 @@
                                           class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
+                            <h6 class="mt-4 text-primary">Buyer Type Discount</h6>
+                            <hr/>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Basic</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" v-model="updateFormula.basic">
+                                    <span v-if="messageForms.errors.basic"
+                                          v-for="err in messageForms.errors.basic"
+                                          class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Medium</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" v-model="updateFormula.medium">
+                                    <span v-if="messageForms.errors.medium"
+                                          v-for="err in messageForms.errors.medium"
+                                          class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Premium</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" v-model="updateFormula.premium">
+                                    <span v-if="messageForms.errors.premium"
+                                          v-for="err in messageForms.errors.premium"
+                                          class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
+
                         </form>
                         <hr/>
                     </div>
@@ -83,6 +116,9 @@ export default {
                 id : '',
                 additional : '',
                 percentage : '',
+                basic : '',
+                medium : '',
+                premium : '',
             },
         }
     },

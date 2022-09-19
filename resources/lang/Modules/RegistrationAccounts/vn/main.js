@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'Đại Lý',
     r_ive_read: 'Tôi đã đọc và chấp nhận',
     r_terms: 'Điều Khoản và Điều Kiện',
+    r_type_of_buyer: 'Loại người mua',
 
     // setting default
     sd_title: 'Đặt mặc định',

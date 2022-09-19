@@ -56,7 +56,8 @@ class Registration extends Model
         'deposit_reminded_at',
         'survey_code',
         'email_via_others',
-        'facebook'
+        'facebook',
+        'buyer_type'
     ];
 
     public function team_in_charge() {

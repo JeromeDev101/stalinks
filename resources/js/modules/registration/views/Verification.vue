@@ -245,6 +245,61 @@
 
                                                 {{ err }}
                                             </span>
+
+                                            <div class="px-5"
+                                                 v-show="payment_method.account_name ||
+                                                payment_method.bank_name ||
+                                                payment_method.swift_code ||
+                                                payment_method.beneficiary_add ||
+                                                payment_method.account_iban ||
+                                                payment_method.account_holder ||
+                                                payment_method.account_type ||
+                                                payment_method.routing_num ||
+                                                payment_method.wire_routing_num
+                                            "
+                                            >
+                                                <h6 class="text-primary">Other Details:</h6>
+                                                <hr/>
+
+                                                <div class="row">
+                                                    <div class="col-sm-12" v-show="payment_method.bank_name">
+                                                        <label>Bank Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.bank_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_name">
+                                                        <label>Account Name:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_name[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_iban">
+                                                        <label>Account IBAN:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_iban[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.swift_code">
+                                                        <label>SWIFT Code:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.swift_code[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.beneficiary_add">
+                                                        <label>Beneficiary Address:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.beneficiary_add[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_holder">
+                                                        <label>Account Holder:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_holder[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.account_type">
+                                                        <label>Account Type:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_type[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.routing_num">
+                                                        <label>Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.routing_num[payment_method.id]">
+                                                    </div>
+                                                    <div class="col-sm-12" v-show="payment_method.wire_routing_num">
+                                                        <label>Wire Routing Number:</label>
+                                                        <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.wire_routing_num[payment_method.id]">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td style="width: 50px;vertical-align:middle;" class="text-center">
                                             <input type="radio" class="btn-radio-custom" name="payment_default" v-bind:value="payment_method.id" v-model="regModel.id_payment_type">
@@ -347,6 +402,15 @@
                     writer_price: '',
                     rate_type: '',
                     payment_type: [],
+                    bank_name: [],
+                    account_name: [],
+                    account_iban: [],
+                    swift_code: [],
+                    beneficiary_add: [],
+                    account_holder: [],
+                    account_type: [],
+                    routing_num: [],
+                    wire_routing_num: [],
                 },
                 countryList: [],
                 errorMessage: [],

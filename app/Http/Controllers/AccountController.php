@@ -502,7 +502,19 @@ class AccountController extends Controller
 
 
     public function updateRegistrationAccount(Request $request) {
-        $input = $request->except('company_type');
+        $input = $request->except(
+            'company_type',
+            'payment_type',
+            'bank_name',
+            'account_name',
+            'account_iban',
+            'swift_code',
+            'beneficiary_add',
+            'account_holder',
+            'account_type',
+            'routing_num',
+            'wire_routing_num'
+        );
 
         $request->validate([
             'country_id' => 'required',
@@ -589,6 +601,15 @@ class AccountController extends Controller
                             'user_id' => $user['id'],
                             'payment_id' => $key,
                             'account' => $types,
+                            'bank_name' => count($request->bank_name) > 0 ? json_encode($request->bank_name):null,
+                            'account_name' => count($request->account_name) > 0 ? json_encode($request->account_name):null,
+                            'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban):null,
+                            'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code):null,
+                            'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add):null,
+                            'account_holder' => count($request->account_holder) > 0 ? json_encode($request->account_holder):null,
+                            'account_type' => count($request->account_type) > 0 ? json_encode($request->account_type):null,
+                            'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num):null,
+                            'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num):null,
                             'is_default' => $key == $request->id_payment_type ? 1:0,
                             'created_at' => Carbon::now(),
                             'updated_at' => Carbon::now()
@@ -976,7 +997,6 @@ class AccountController extends Controller
     }
 
     public function updateSubAccount(Request $request) {
-        // dd($request->all());
         $input = $request->only('username', 'name', 'status', 'credit_auth');
         $inputRegistration = $request->only('username', 'name', 'status', 'credit_auth', 'can_validate_backlink');
 

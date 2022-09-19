@@ -95,6 +95,7 @@ export default {
     r_affiliates: 'アフィリエイト',
     r_ive_read: 'を読み、同意します。',
     r_terms: 'ご利用規約',
+    r_type_of_buyer: 'バイヤーのタイプ',
 
     // setting default
     sd_title: '下書きに設定する',
