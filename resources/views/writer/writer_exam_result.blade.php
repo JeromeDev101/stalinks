@@ -148,6 +148,16 @@
                         </p> <br/>
 
                         <p style="margin: 0;">
+                            Please take note of the following instructions:
+                        </p> <br/>
+
+                        <p style="margin: 0;">
+                            1. Use the given anchor text as your keyword. Add the correct hyperlink to your anchor text.  <br/>
+                            2. Avoid plagiarism at all times. We do not approve stolen content.  <br/>
+                            3. Add 1 to 2 images in your article. Make sure that the images are non-copyrighted. Please include the links of images used at the bottom of your article.  <br/>
+                        </p> <br />
+
+                        <p style="margin: 0;">
                             Thank you for your cooperation. Have a nice day!
                         </p> <br />
                     @else
