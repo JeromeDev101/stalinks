@@ -1264,7 +1264,10 @@
 
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}" class="form-group">
-                                    <label style="color: #333">{{ $t('message.registration_accounts.ra_email') }}</label>
+<!--                                    <label style="color: #333">{{ $t('message.registration_accounts.ra_email') }}</label>-->
+                                    <label style="color: #333">
+                                        {{ registrationEmails.length > 1 ? 'Email Automatic Individual' : $t('message.registration_accounts.ra_email') }}
+                                    </label>
 
                                     <vue-tags-input
                                         v-model="email_to"
@@ -3084,6 +3087,7 @@ export default {
         async submitSendMail() {
             let self = this;
             this.allowSending = false;
+            let loader = this.$loading.show();
 
             // create form data
 
@@ -3141,6 +3145,8 @@ export default {
 
                 $("#modal-email-registration").modal('hide')
 
+                loader.hide();
+
                 await swal.fire(
                     self.$t('message.registration_accounts.alert_success'),
                     self.$t('message.registration_accounts.alert_email_sent'),
@@ -3158,6 +3164,8 @@ export default {
 
                 this.clearMessageFormMail()
             } else {
+                loader.hide();
+
                 await swal.fire(
                     self.$t('message.registration_accounts.alert_error'),
                     self.$t('message.registration_accounts.alert_error_send_email'),

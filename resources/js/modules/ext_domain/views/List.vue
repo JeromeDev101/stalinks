@@ -1808,7 +1808,9 @@
                             <div class="col-md-12" style="margin-top: 15px;">
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}"
                                      class="form-group">
-                                    <label style="color: #333">{{ $t('message.url_prospect.filter_email') }}</label>
+                                    <label style="color: #333">
+                                        {{ urlEmails.length > 1 ? 'Email Automatic Individual' : $t('message.url_prospect.filter_email') }}
+                                    </label>
 
                                     <vue-tags-input
                                         v-model="email_to"
@@ -4268,6 +4270,7 @@ export default {
             let self = this;
             this.allowSending = false;
             this.isPopupLoading = true;
+            let loader = this.$loading.show();
 
             // create form data
 
@@ -4317,6 +4320,8 @@ export default {
                     }
                 }
 
+                loader.hide();
+
                 this.withCcProspect = false;
                 this.withBccProspect = false;
 
@@ -4339,6 +4344,8 @@ export default {
 
                 await this.$store.dispatch('clearMessageForm');
             } else {
+                loader.hide();
+
                 swal.fire(
                     self.$t('message.url_prospect.swal_err'),
                     self.$t('message.url_prospect.swal_err_send'),

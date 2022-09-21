@@ -198,28 +198,28 @@ class MailgunController extends Controller
             'signature' => $send_signature,
         ];
 
-//        dd($this->removeHtmlAndCssTags(view('send_email', $data)->render()));
+        $message_ids = [];
 
-        $params = [
-            'from'                => $work_mail,
-            'to'                  => array($str),
-            'subject'             => $request->title,
-            'cc'                  => $myCcString,
-            'bcc'                 => $myBccString,
-            'html'                => view('send_email', $data)->render(),
+        foreach ($list_emails as $address) {
+            $params = [
+                'from'                => $work_mail,
+                'to'                  => $address,
+                'subject'             => $request->title,
+                'cc'                  => $myCcString,
+                'bcc'                 => $myBccString,
+                'html'                => view('send_email', $data)->render(),
 //            'recipient-variables' => json_encode($object),
-            'attachment'          => $final_attachments,
-            'o:tag'               => array('test1'),
-            'o:tracking'          => 'yes',
-            'o:tracking-opens'    => 'yes',
-            'o:tracking-clicks'   => 'yes',
-        ];
+                'attachment'          => $final_attachments,
+                'o:tag'               => array('test1'),
+                'o:tracking'          => 'yes',
+                'o:tracking-opens'    => 'yes',
+                'o:tracking-clicks'   => 'yes',
+            ];
 
-//        if (isset($request->cc) && $request->cc != "") {
-//            $params['bcc'] = $request->cc;
-//        }
+            $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
 
-        $sender = $this->mg->messages()->send(config('gun.mail_domain'), $params);
+            $message_ids[$address] = preg_replace("/[<->]/", "", $sender->getId());
+        }
 
         // saving attachments to database
         $attac_object = null;
@@ -266,25 +266,6 @@ class MailgunController extends Controller
         $body_html['body-html'] = view('send_email', $data)->render();
         $stripped_html['stripped-html'] = view('send_email', $data)->render();
 
-        $res = preg_replace("/[<->]/", "", $sender->getId());
-
-//        $sendEmail = Reply::create([
-//            'sender'          => $work_mail,
-//            'subject'         => $request->title,
-//            'is_sent'         => 1,
-//            'is_viewed'       => 1,
-//            'label_id'        => 0,
-//            'received'        => $str,
-//            'body'            => json_encode($input),
-//            'from_mail'       => $work_mail,
-//            'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
-//            'date'            => date('Y-m-d'),
-//            'message_id'      => $res,
-//            'references_mail' => '',
-//            'status_code'     => 0,
-//            'message_status'  => '',
-//        ]);
-
         // save emails to db one by one
 
         foreach ($list_emails as $address) {
@@ -293,7 +274,7 @@ class MailgunController extends Controller
                 'subject'         => $request->title,
                 'cc'              => $myCcString,
                 'bcc'             => $myBccString,
-                'email_to'        => $str,
+                'email_to'        => $address,
                 'is_sent'         => 1,
                 'is_viewed'       => 1,
                 'label_id'        => 0,
@@ -305,7 +286,7 @@ class MailgunController extends Controller
                 'from_mail'       => $work_mail,
                 'attachment'      => $attac_object == null ? '' : json_encode($attac_object),
                 'date'            => date('Y-m-d'),
-                'message_id'      => $res,
+                'message_id'      => $message_ids[$address],
                 'references_mail' => '',
                 'status_code'     => 0,
                 'message_status'  => '',
@@ -317,7 +298,7 @@ class MailgunController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => $sender
+            'message' => $message_ids
         ], 200);
     }
 
