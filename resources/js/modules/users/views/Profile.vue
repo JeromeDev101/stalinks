@@ -91,7 +91,11 @@
                                     <td><b>{{ $t('message.profile.p_pricing_type') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
-                                            <select class="form-control" disabled>
+                                            <div class="alert alert-info">
+                                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                                            </div>
+
+                                            <select v-model="user.user_type.rate_type" class="form-control">
                                                 <option value="ppw">{{ $t('message.profile.p_ppw') }}</option>
                                                 <option value="ppa">{{ $t('message.profile.p_ppa') }}</option>
                                             </select>
@@ -101,19 +105,19 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="currentUser.isOurs == 1 && (user.user_type != null && user.user_type.type == 'Writer')">
-                                    <td><b>{{ $t('message.profile.p_writer_price') }}</b></td>
-                                    <td>
-                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">
-                                            <input type="number" class="form-control" disabled value="" required="required" :placeholder="$t('message.profile.p_enter_price')">
-                                            <span
-                                                v-if="messageForms.errors.writer_price"
-                                                class="text-danger">
-                                                {{ $t('message.profile.p_price_error') }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
+<!--                                <tr v-if="currentUser.isOurs == 1 && (user.user_type != null && user.user_type.type == 'Writer')">-->
+<!--                                    <td><b>{{ $t('message.profile.p_writer_price') }}</b></td>-->
+<!--                                    <td>-->
+<!--                                        <div :class="{'form-group': true, 'has-error': messageForms.errors.writer_price}" class="form-group">-->
+<!--                                            <input type="number" class="form-control" disabled value="" required="required" :placeholder="$t('message.profile.p_enter_price')">-->
+<!--                                            <span-->
+<!--                                                v-if="messageForms.errors.writer_price"-->
+<!--                                                class="text-danger">-->
+<!--                                                {{ $t('message.profile.p_price_error') }}-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
                                 <tr v-if="currentUser.isOurs == 1">
                                     <td><b>{{ $t('message.profile.p_company_type') }}</b></td>
                                     <td v-if="user.user_type">
@@ -388,10 +392,10 @@
                                                     payment_method.bank_name ||
                                                     payment_method.swift_code ||
                                                     payment_method.beneficiary_add ||
-                                                    payment_method.account_iban || 
-                                                    payment_method.account_holder || 
-                                                    payment_method.account_type || 
-                                                    payment_method.routing_num || 
+                                                    payment_method.account_iban ||
+                                                    payment_method.account_holder ||
+                                                    payment_method.account_type ||
+                                                    payment_method.routing_num ||
                                                     payment_method.wire_routing_num
                                                 "
                                                 >

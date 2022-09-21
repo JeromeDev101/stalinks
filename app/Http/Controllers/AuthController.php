@@ -148,6 +148,16 @@ class AuthController extends Controller
         if(isset($request->user_type)) {
             $registered = Registration::where('email', $input['email'])->first();
 
+            $writer_price = $request->user_type['writer_price'];
+
+            if ($request->user_type['type'] === 'Writer') {
+                if($request->user_type['rate_type'] == 'ppw') {
+                    $writer_price = '0.02';
+                } else {
+                    $writer_price = '12';
+                }
+            }
+
             $dataRegistered = [
                 'skype' => $request->skype,
                 'company_name' => $request->user_type['company_name'],
@@ -159,7 +169,8 @@ class AuthController extends Controller
                 'is_freelance' => $request->user_type['company_type'] == 'Company' ? 0:1,
                 'country_id' => $request->user_type['country_id'],
                 'id_payment_type' => $request->id_payment_type,
-                'writer_price' => $request->user_type['writer_price'],
+                'rate_type' => $request->user_type['rate_type'],
+                'writer_price' => $writer_price,
             ];
 
             if( isset($input['password']) ){

@@ -200,7 +200,38 @@
                                         </span>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div v-if="regModel.type === 'Writer'" class="mt-4">
+                                <h4 class="text-primary">Writer Pricing</h4>
+                                <hr/>
+
+                                <div class="alert alert-info">
+                                    <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" v-if="regModel.type === 'Writer'">
+                                        <div class="form-group">
+                                            <label>
+                                                {{ $t('message.registration_accounts.r_pricing_type') }}
+                                                <span class="text-danger">*</span>
+                                            </label>
+
+                                            <select class="form-control" v-model="regModel.rate_type">
+                                                <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
+                                                <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
+                                            </select>
+
+                                            <span
+                                                v-if="errorMessage.rate_type"
+                                                v-for="err in errorMessage.rate_type"
+                                                class="text-danger">
+                                                {{ err }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">

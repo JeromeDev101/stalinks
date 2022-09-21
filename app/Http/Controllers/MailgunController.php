@@ -633,7 +633,7 @@ class MailgunController extends Controller
 
         $input = $request->all();
 
-        DB::table('test_replies')->insert(['alldata' => json_encode($input)]);
+//        DB::table('test_replies')->insert(['alldata' => json_encode($input)]);
 
         if (isset($input['In-Reply-To']) && $input['In-Reply-To']) {
             $in_reply_to = preg_replace("/[<>]/", "", $input['In-Reply-To']);

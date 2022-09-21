@@ -80,7 +80,7 @@ export default {
     r_required_lang: 'Required to select language',
     r_address: 'Address',
     r_info: 'Info',
-    r_reminder_ppw: 'Reminder: Pay Per Words (PPW) is only maximum of 600 words. If exceeded still the same price.',
+    r_reminder_ppw: 'Reminder: Pay Per Words (PPW) rate calculation only has a maximum of 600 words. Any excess words would not be calculated.',
     r_pricing_type: 'Pricing type',
     r_ppw: 'Pay Per Words (PPW)',
     r_ppa: 'Pay Per Article (PPA)',

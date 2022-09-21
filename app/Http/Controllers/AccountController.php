@@ -519,8 +519,7 @@ class AccountController extends Controller
         $request->validate([
             'country_id' => 'required',
             'language_id' => 'required_if:type,==,Writer',
-            // 'rate_type' => 'required_if:type,==,Writer',
-
+            'rate_type' => 'required_if:type,==,Writer',
             'company_name' => 'required_if:company_type,==,Company',
             // 'paypal_account' => 'required_if:id_payment_type,==,1',
             // 'btc_account' => 'required_if:id_payment_type,==,3',
@@ -545,6 +544,12 @@ class AccountController extends Controller
         }
 
         if ($input['type'] === 'Writer') {
+            if($input['rate_type'] == 'ppw') {
+                $input['writer_price'] = '0.02';
+            } else {
+                $input['writer_price'] = '12';
+            }
+
             $input['language_id'] = json_encode($input['language_id']);
         }
 
