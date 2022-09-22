@@ -16,6 +16,7 @@ use App\Models\Registration;
 use App\Models\WalletTransaction;
 use App\Events\ArticleEvent;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\BacklinkOrderRefund;
 
 class BackLinkController extends Controller
 {
@@ -223,6 +224,11 @@ class BackLinkController extends Controller
                 'admin_confirmation' => 'Refund Order'
             ];
             WalletTransaction::create($data);
+
+            // notify the buyer
+            if ($backlink->status !== 'Refund') {
+                $backlink->user->notify(new BacklinkOrderRefund($backlink));
+            }
         }
 
 //        event(new ArticleEvent("Article is now LIVE", $seller->user_id));

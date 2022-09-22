@@ -10,6 +10,7 @@ use App\Events\SellerConfirmationEvent;
 use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Notifications\BacklinkLiveSeller;
 use App\Notifications\BacklinkOrderCanceled;
+use App\Notifications\BacklinkOrderRefund;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -247,6 +248,11 @@ class FollowupSalesController extends Controller
             // notify buyer of order cancellation
             if ($backlink->status !== 'Canceled') {
                 $backlink->user->notify(new BacklinkOrderCanceled($backlink));
+            }
+        } else if ($input['status'] == 'Refund') {
+            // notify buyer of order refund
+            if ($backlink->status !== 'Refund') {
+                $backlink->user->notify(new BacklinkOrderRefund($backlink));
             }
         } else if (!in_array($input['status'], ['Canceled', 'Live', 'Nofollow', '404', 'Deleted', 'Refund'])) {
             $input['live_date'] = null;
