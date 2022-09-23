@@ -382,6 +382,7 @@ class MailgunController extends Controller
                     MIN(replies.cc) as min_cc,
                     MIN(replies.bcc) as min_bcc,
                     MAX(replies.id) AS id,
+                    MAX(replies.is_viewed) AS is_viewed,
                     MIN(replies.subject) as subject,
                     CONCAT("Re: ", REPLACE(subject, "Re: ", "")) AS subject2,
                     CONCAT(LEAST(sender, received), "-", GREATEST(sender, received)) as concat_result,

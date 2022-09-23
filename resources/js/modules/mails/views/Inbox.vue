@@ -2919,6 +2919,10 @@ export default {
                         }
                     })
                 }
+
+                if (email.is_viewed === compare) {
+                    ids.push(email.id)
+                }
             })
 
             return {
@@ -3101,6 +3105,10 @@ export default {
                     self.records.data[inbox_index].thread[index].is_viewed = 1
                 }
             });
+
+            if (self.viewContentThread.inbox.is_viewed === 0) {
+                viewed_emails.push(self.viewContentThread.inbox.id)
+            }
 
             // is_viewed function
             if (viewed_emails.length !== 0) {
