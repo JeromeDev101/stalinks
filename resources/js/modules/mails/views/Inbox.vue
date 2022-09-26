@@ -326,13 +326,13 @@
 
                             <div v-if="viewContent.cc">
                                 <small class="text-muted">
-                                    CC: {{ viewContent.cc }}
+                                    CC: {{ displayBccCc(viewContent.cc) }}
                                 </small>
                             </div>
 
                             <div v-if="viewContent.bcc">
                                 <small class="text-muted">
-                                    BCC: {{ viewContent.bcc }}
+                                    BCC: {{ displayBccCc(viewContent.bcc) }}
                                 </small>
                             </div>
                         </div>
@@ -572,13 +572,13 @@
 
                             <div v-if="email.cc">
                                 <small class="text-muted">
-                                    CC: {{ email.cc }}
+                                    CC: {{ displayBccCc(email.cc) }}
                                 </small>
                             </div>
 
                             <div v-if="email.bcc">
                                 <small class="text-muted">
-                                    BCC: {{ email.bcc }}
+                                    BCC: {{ displayBccCc(email.bcc) }}
                                 </small>
                             </div>
 
@@ -2358,17 +2358,19 @@ export default {
 
                 // add bcc and cc
                 if (type && info) {
-                    if (info.bcc) {
-                        let bccFinal = this.extractBccCc('bcc', info, temp)
+                    if (info.sender === this.user.work_mail) {
+                        if (info.bcc) {
+                            let bccFinal = this.extractBccCc('bcc', info, temp)
 
-                        if (bccFinal) {
-                            this.withBccReply = true;
+                            if (bccFinal) {
+                                this.withBccReply = true;
 
-                            this.replyContent.bcc = createTags(bccFinal.replace(/\s/g, '')
-                                .split(/[|,]/g)
-                                .filter(function (email) {
-                                    return email !== '';
-                                }))
+                                this.replyContent.bcc = createTags(bccFinal.replace(/\s/g, '')
+                                    .split(/[|,]/g)
+                                    .filter(function (email) {
+                                        return email !== '';
+                                    }))
+                            }
                         }
                     }
 
@@ -3637,7 +3639,23 @@ export default {
             } else {
                 return null;
             }
-        }
+        },
+
+        displayBccCc (data) {
+            let self = this;
+            let array = data.split(',')
+            let finalArray = [];
+
+            array.forEach((item, index) => {
+                if (item === self.user.work_mail) {
+                    finalArray[index] = 'Me';
+                } else {
+                    finalArray[index] = item;
+                }
+            })
+
+            return finalArray.join(',');
+        },
     }
 }
 </script>
