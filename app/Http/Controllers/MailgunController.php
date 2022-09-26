@@ -693,6 +693,7 @@ class MailgunController extends Controller
             'in_reply_to'     => $in_reply_to,
             'references'      => $references,
             'received'        => $request->recipient,
+            'is_sent'        => 0,
             'references_mail' => '',
         ], $data);
 
