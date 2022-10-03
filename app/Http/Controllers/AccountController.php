@@ -1115,7 +1115,7 @@ class AccountController extends Controller
         }
 
         $registered->update([
-            'verification_code' => ''
+            'verification_code' => null
         ]);
 
         $role_id = 0;
