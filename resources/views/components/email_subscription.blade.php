@@ -37,7 +37,7 @@
                                 <td class="sub-image" align="center" width="30%">
                                     <div>
                                         <img
-                                            src="{{ asset('/images/mailsub.png') }}"
+                                            src="{{ asset('/images/mail.png') }}"
                                             style="background-repeat: no-repeat;background-attachment: fixed;background-size: cover; max-width: 500px; width: 100%; height: auto;" >
                                     </div>
                                 </td>

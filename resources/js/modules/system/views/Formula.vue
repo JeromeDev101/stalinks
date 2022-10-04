@@ -20,7 +20,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
+                            <!-- <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">{{ $t('message.finance.for_percentage') }}</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.percentage">
@@ -28,13 +28,13 @@
                                           v-for="err in messageForms.errors.percentage"
                                           class="text-danger">{{ err }}</span>
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <h6 class="mt-4 text-primary">Buyer Type Discount</h6>
-                            <hr/>
+                            <!-- <h6 class="mt-4 text-primary">Buyer Type Discount</h6>
+                            <hr/> -->
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Basic</label>
+                                <label class="col-sm-2 col-form-label">Basic Account</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.basic">
                                     <span v-if="messageForms.errors.basic"
@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Medium</label>
+                                <label class="col-sm-2 col-form-label">Medium Account</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.medium">
                                     <span v-if="messageForms.errors.medium"
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Premium</label>
+                                <label class="col-sm-2 col-form-label">Premium Account</label>
                                 <div class="col-sm-10">
                                     <input type="number" class="form-control" v-model="updateFormula.premium">
                                     <span v-if="messageForms.errors.premium"
