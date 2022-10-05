@@ -593,13 +593,6 @@
                                                         ? account.affiliate.username
                                                         : 'N/A'
                                             }}
-
-                                            <span
-                                                v-if="account.team_in_charge !== null && account.team_in_charge.status === 'inactive'"
-                                                class="badge badge-danger">
-
-                                                {{ $t('message.registration_accounts.filter_inactive') }}
-                                            </span>
                                         </td>
                                         <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
                                         <td v-show="tblAccountsOpt.name">{{ account.name }}</td>

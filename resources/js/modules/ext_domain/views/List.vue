@@ -59,22 +59,39 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>{{ $t('message.publisher.filter_continent') }}</label>
+                                    <v-select
+                                        v-model="filterModel.continent_id"
+                                        multiple
+                                        label="name"
+                                        class="style-chooser"
+                                        :placeholder="$t('message.publisher.all')"
+                                        :options="listContinent.data"
+                                        :searchable="true"
+                                        :reduce="continent => continent.id"/>
+                                </div>
+                            </div>
+
                             <div v-if="tableShow.country" class="col-md-3">
                                 <div class="form-group">
                                     <label style="color: #333">{{ $t('message.url_prospect.filter_country') }}</label>
-                                    <!-- <select v-model="filterModel.country_id_temp" class="form-control pull-right">
-                                       <option v-for="(option, index) in filterModel.countryList.data" v-bind:value="option.id">
-                                           {{ option.name }}
-                                       </option>
-                                       </select> -->
+
                                     <v-select
-                                        v-model="filterModel.country_id_temp"
+                                        v-model="filterModel.country_id"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.url_prospect.all')"
-                                        :options="listCountryAll.data"
-                                        :reduce="name => name.name"
+                                        :options="filterCountrySelect"
+                                        :reduce="country => country.id"
                                         :searchable="true"/>
+
+                                    <small class="font-italic text-primary" v-if="country_continent_filter_info">
+                                        <i class="fa fa-exclamation-circle"></i>
+                                        {{ country_continent_filter_info }}
+                                    </small>
                                 </div>
                             </div>
 
@@ -95,6 +112,7 @@
                                         v-model="filterModel.domain_zone"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.url_prospect.all')"
                                         :options="listDomainZones.data"
                                         :searchable="true"
@@ -107,6 +125,7 @@
                                     <label style="color: #333">{{ $t('message.url_prospect.filter_status') }}</label>
                                     <v-select
                                         multiple
+                                        class="style-chooser"
                                         v-model="filterModel.status_temp"
                                         :options="objectToArrayWithCustomSort(listStatusText)"
                                         :reduce="status => status.id"
@@ -136,6 +155,7 @@
                                         :options="listSellerTeam.data"
                                         :reduce="username => username.username"
                                         label="username"
+                                        class="style-chooser"
                                         :searchable="false"
                                         :placeholder="$t('message.url_prospect.all')"/>
                                 </div>
@@ -188,6 +208,7 @@
                                         v-model="filterModel.from"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.url_prospect.all')"
                                         :options="['Alexa', 'Backlinks', 'Manual']"
                                         :searchable="true"/>
@@ -548,6 +569,18 @@
                                             {{ $t('message.url_prospect.t_inactive') }}
                                         </span>
                                     </span>
+                                </template>
+
+                                <template
+                                    slot-scope="scope"
+                                    slot="continentData">
+                                    {{
+                                        (scope.row.country == null)
+                                            ? 'N/A'
+                                            : scope.row.country.continent == null
+                                                ? 'N/A'
+                                                : scope.row.country.continent.name
+                                    }}
                                 </template>
 
                                 <template
@@ -1339,6 +1372,7 @@
                                     <v-select
                                         v-model="publisherAdd.seller"
                                         label="username"
+                                        class="style-chooser"
                                         :searchable="true"
                                         :options="getSellerTeamInCharge(listSeller.data)"
                                         :reduce="seller => seller.id"/>
@@ -1505,6 +1539,11 @@
                                 <label><input type="checkbox"
                                               @change="toggleColumn(3, tableShow.employee)"
                                               :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">{{ $t('message.url_prospect.filter_emp') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(5, tableShow.continent)"
+                                              :checked="tableShow.continent ? 'checked':''" v-model="tableShow.continent">{{ $t('message.publisher.filter_continent') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
@@ -2222,6 +2261,7 @@
                                                 <v-select
                                                     v-model="updateStatus.seller"
                                                     label="username"
+                                                    class="style-chooser"
                                                     :disabled="!isTheSameEmployeeInCharge"
                                                     :searchable="true"
                                                     :options="getSellersViaInChargeMultipleStatusUpdate()"
@@ -2467,7 +2507,20 @@ export default {
             filterModel : {
                 id : this.$route.query.id || '',
                 id_temp : this.$route.query.id_temp || '',
-                country_id : this.$route.query.country_id || 0,
+                continent_id: this.$route.query.continent_id
+                    ? Array.isArray(this.$route.query.continent_id)
+                        ? this.$route.query.continent_id.map(function (val) {
+                            return parseInt(val, 10);
+                        })
+                        : [parseInt(this.$route.query.continent_id)]
+                    : '',
+                country_id : this.$route.query.country_id
+                    ? Array.isArray(this.$route.query.country_id)
+                        ? this.$route.query.country_id.map(function (val) {
+                            return parseInt(val, 10);
+                        })
+                        : [parseInt(this.$route.query.country_id)]
+                    : '',
                 country_id_temp : this.$route.query.country_id || '',
                 countryList : {data : [], total : 0},
                 domain : this.$route.query.domain || '',
@@ -2657,12 +2710,15 @@ export default {
             prospectBcc: '',
             withCcProspect: false,
             withBccProspect: false,
+
+            country_continent_filter_info: '',
         };
     },
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', {vue : this});
         this.updateUserPermission();
         this.getUserList();
+        this.getListContinents();
         this.getListCountriesInt();
         this.getExtList({
             params : this.filterModel
@@ -2708,6 +2764,7 @@ export default {
             listSellerTeam : state => state.storeExtDomain.listSellerTeam,
             listLanguages : state => state.storePublisher.listLanguages,
             listDomainZones : state => state.storePublisher.listDomainZones,
+            listContinent: state => state.storePublisher.listContinent,
         }),
 
         pagination() {
@@ -2786,6 +2843,14 @@ export default {
                     sortable : true,
                     width : 150,
                     isHidden : false
+                },
+                {
+                    prop : '_action',
+                    name : this.$t('message.publisher.filter_continent'),
+                    // sortable: true,
+                    actionName : 'continentData',
+                    width: 100,
+                    isHidden: !this.tableShow.continent
                 },
                 {
                     prop : 'country.name',
@@ -3213,6 +3278,17 @@ export default {
 
             return Object.values(self.updateStatus).every(x => x != null && x !== '')
         },
+
+        filterCountrySelect() {
+            return (this.filterModel.continent_id == null
+                || this.filterModel.continent_id === ''
+                || this.filterModel.continent_id === 0
+                || this.filterModel.continent_id.length === 0
+                || this.filterModel.continent_id.includes(0))
+
+                ? this.listCountryAll.data
+                : this.listCountryAll.data.filter(item => this.filterModel.continent_id.includes(item.continent_id))
+        },
     },
     mounted() {
         let that = this;
@@ -3239,6 +3315,48 @@ export default {
             $(this).attr('class', m_class);
         });
     },
+
+    watch: {
+        'filterModel.continent_id': function() {
+            if (this.filterModel.country_id != null
+                && this.filterModel.country_id !== ''
+                && this.filterModel.continent_id !== 0
+                && this.filterModel.continent_id !== ''
+                && this.filterModel.country_id.length !== 0
+                && this.filterModel.continent_id.length !== 0
+                && this.filterModel.continent_id.includes(0) === false) {
+
+                // get all the countries within the selected continent
+                let filtered = this.listCountryAll.data
+                    .filter(item => this.filterModel.continent_id
+                        .includes(item.continent_id))
+
+                console.log(filtered)
+
+                // extract id to array
+                let continentCountries = filtered.map(e => e.id);
+
+                // check if every id of country is included on the filtered countries according to continent
+                let is_gone = this.filterModel.country_id.every( country => continentCountries.includes(country) );
+
+                // extract id of removed countries
+                let removedCountries = this.filterModel.country_id.filter(e => !continentCountries.includes(e))
+
+                // remove id of country filter value that is removed from filtered countries via continent
+                let filteredCountryIds = this.filterModel.country_id.filter(e => !removedCountries.includes(e))
+
+                // display message
+                this.country_continent_filter_info = is_gone
+                    ? ''
+                    : this.$t('message.publisher.alert_some_countries');
+
+                this.filterModel.country_id = is_gone
+                    ? this.filterModel.country_id
+                    : filteredCountryIds.length !== 0 ? filteredCountryIds : '';
+            }
+        },
+    },
+
     methods : {
         modalCloser() {
             let self = this;
@@ -3271,6 +3389,10 @@ export default {
 
             this.withCcProspect = false;
             this.withBccProspect = false;
+        },
+
+        async getListContinents(params) {
+            await this.$store.dispatch('actionGetListContinents', params);
         },
 
         closeModal() {
@@ -3646,7 +3768,6 @@ export default {
         async doSearchList() {
             let that = this;
             that.checkIds = [];
-            that.filterModel.country_id = that.filterModel.country_id_temp;
             that.filterModel.status = that.filterModel.status_temp;
             that.filterModel.domain = that.filterModel.domain_temp;
             that.filterModel.id = that.filterModel.id_temp;
@@ -3662,6 +3783,7 @@ export default {
             this.getExtList({
                 params : {
                     country_id : that.filterModel.country_id,
+                    continent_id : that.filterModel.continent_id,
                     status : that.filterModel.status,
                     domain : that.filterModel.domain,
                     email : that.filterModel.email,
@@ -3693,6 +3815,7 @@ export default {
                 params : {
                     page : pageNum,
                     country_id : that.filterModel.country_id,
+                    continent_id : that.filterModel.continent_id,
                     status : that.filterModel.status,
                     domain : that.filterModel.domain,
                     id : that.filterModel.id,
@@ -4590,7 +4713,8 @@ export default {
             this.filterModel = {
                 id : '',
                 id_temp : '',
-                country_id : 0,
+                country_id : '',
+                continent_id : '',
                 country_id_temp : '',
                 countryList : {data : [], total : 0},
                 domain : '',
@@ -4624,6 +4748,8 @@ export default {
             this.getExtListTotals()
 
             this.$refs.sortComponent.resetSort();
+
+            this.country_continent_filter_info = '';
 
             this.$router.replace({'query' : null});
         },

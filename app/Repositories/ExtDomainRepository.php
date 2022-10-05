@@ -421,14 +421,28 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             $query->where('ext_domains.id', $input['id']);
         }
 
+        // continent filter
+        if (isset($input['continent_id']) && !empty($input['continent_id'])) {
+            $query = $query->where(function ($query) use ($input) {
+                if (($key = array_search(0, $input['continent_id'])) !== false) {
+                    unset($input['continent_id'][$key]);
+                    $query->orWhere(function ($subs) {
+                        $subs->orWhere('countries.continent_id', null);
+                    });
+                }
+
+                if (!empty($input['continent_id'])) {
+                    $query->orWhereIn('countries.continent_id', $input['continent_id']);
+                }
+            });
+        }
+
         // Country Filter
         if (isset($input['country_id']) && $input['country_id'] != '0') {
             if (is_array($input['country_id'])) {
-                $countryIds = Country::whereIn('name', $input['country_id'])->get()->pluck('id');
-                $query->whereIn('country_id', $countryIds);
+                $query->whereIn('country_id', $input['country_id']);
             } else {
-                $countryId = Country::where('name', $input['country_id'])->first()->id;
-                $query->where('country_id', $countryId);
+                $query->where('country_id', $input['country_id']);
             }
         }
 
@@ -495,6 +509,8 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
 
         // Include relationships
         $query->with(['country' => function($query) {
+            $query->select(['id', 'name', 'code', 'continent_id']);
+        }, 'country.continent' => function($query) {
             $query->select(['id', 'name', 'code']);
         }, 'users' => function($query) {
             $query->select('id','username', 'status');

@@ -61,6 +61,7 @@ const state = {
         employee: true,
         from: true,
         alexa_created_at: true,
+        continent: true,
         country: true,
         domain: true,
         email: true,

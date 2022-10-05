@@ -219,7 +219,8 @@ class ExtDomainController extends Controller
             ->selectRaw("count(case when status = 60 then 1 end) as Refused")
             ->selectRaw("count(case when status = 70 then 1 end) as InTouched")
             ->selectRaw("count(case when status = 90 then 1 end) as Unqualified")
-            ->selectRaw("count(case when status = 100 then 1 end) as Qualified");
+            ->selectRaw("count(case when status = 100 then 1 end) as Qualified")
+            ->leftJoin('countries', 'ext_domains.country_id', '=', 'countries.id');
 
         // Employee Filter
         if (isset($input['employee_id']) && !empty($input['employee_id'])) {
@@ -243,14 +244,28 @@ class ExtDomainController extends Controller
             $totals = $totals->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
         }
 
+        // continent filter
+        if (isset($input['continent_id']) && !empty($input['continent_id'])) {
+            $totals = $totals->where(function ($query) use ($input) {
+                if (($key = array_search(0, $input['continent_id'])) !== false) {
+                    unset($input['continent_id'][$key]);
+                    $query->orWhere(function ($subs) {
+                        $subs->orWhere('countries.continent_id', null);
+                    });
+                }
+
+                if (!empty($input['continent_id'])) {
+                    $query->orWhereIn('countries.continent_id', $input['continent_id']);
+                }
+            });
+        }
+
         // Country Filter
         if (isset($input['country_id']) && $input['country_id'] != '0') {
             if (is_array($input['country_id'])) {
-                $countryIds = Country::whereIn('name', $input['country_id'])->get()->pluck('id');
-                $totals = $totals->whereIn('country_id', $countryIds);
+                $totals = $totals->whereIn('country_id', $input['country_id']);
             } else {
-                $countryId = Country::where('name', $input['country_id'])->first()->id;
-                $totals = $totals->where('country_id', $countryId);
+                $totals = $totals->where('country_id', $input['country_id']);
             }
         }
 
