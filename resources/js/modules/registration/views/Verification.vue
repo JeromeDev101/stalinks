@@ -207,7 +207,7 @@
                                 <hr/>
 
                                 <div class="alert alert-info">
-                                    <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                                    {{ $t('message.registration_accounts.r_reminder_ppw') }}
                                 </div>
 
                                 <div class="row">

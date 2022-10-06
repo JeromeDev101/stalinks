@@ -152,9 +152,9 @@ class AuthController extends Controller
 
             if ($request->user_type['type'] === 'Writer') {
                 if($request->user_type['rate_type'] == 'ppw') {
-                    $writer_price = '0.02';
+                    $writer_price = '0.0085';
                 } else {
-                    $writer_price = '12';
+                    $writer_price = '10';
                 }
             }
 

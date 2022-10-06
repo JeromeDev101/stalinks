@@ -80,7 +80,7 @@ export default {
     r_required_lang: 'Diperlukan untuk memilih bahasa',
     r_address: 'Alamat',
     r_info: 'Info',
-    r_reminder_ppw: 'Reminder: Pay Per Words (PPW) hanya maksimal 600 kata. Jika melebihi harga akan tetap sama.',
+    r_reminder_ppw: 'Informasi: Anda bisa mendapatkan $8 hingga $12, dengan minimal 1000 kata per artikel.',
     r_pricing_type: 'Jenis harga',
     r_ppw: 'Pembayaran Per Kata (PPW)',
     r_ppa: 'Pembayaran Per Artikel (PPA)',

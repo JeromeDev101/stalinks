@@ -77,9 +77,9 @@ class AccountController extends Controller
         // if writer
         if($input['type'] == 'Writer') {
             if($input['rate_type'] == 'ppw') {
-                $input['writer_price'] = '0.02';
+                $input['writer_price'] = '0.0085';
             } else {
-                $input['writer_price'] = '12';
+                $input['writer_price'] = '10';
             }
 
             $input['language_id'] = json_encode($input['language_id']);
@@ -543,11 +543,12 @@ class AccountController extends Controller
             $input['account_validation'] = 'valid';
         }
 
+        //default pricing for writer
         if ($input['type'] === 'Writer') {
             if($input['rate_type'] == 'ppw') {
-                $input['writer_price'] = '0.02';
+                $input['writer_price'] = '0.0085';
             } else {
-                $input['writer_price'] = '12';
+                $input['writer_price'] = '10';
             }
 
             $input['language_id'] = json_encode($input['language_id']);
@@ -681,7 +682,7 @@ class AccountController extends Controller
         // if writer default rate_type and writer_price
         if ($input['type'] === 'Writer') {
             $input['rate_type'] = 'ppw';
-            $input['writer_price'] = '0.02';
+            $input['writer_price'] = '0.0085';
             $input['survey_code'] =  md5(uniqid(rand(), true));
         }
 
@@ -1102,7 +1103,7 @@ class AccountController extends Controller
 
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
-                'writer_price' => 'required_if:type,==,Writer',
+                // 'writer_price' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
                 'id_payment_type' => 'required',
                 'company_name' => 'required_if:company_type,==,Company'

@@ -80,7 +80,7 @@ export default {
     r_required_lang: 'Bắt buộc chọn ngôn ngữ',
     r_address: 'Địa chỉ',
     r_info: 'Thông tin',
-    r_reminder_ppw: 'Nhắc nhở: Giá tiền mỗi từ (Pay Per Words -PPW) chỉ thanh toán tối đa 600 từ. Nếu vượt quá số từ vẫn giữ nguyên giá.',
+    r_reminder_ppw: 'Thông tin: Bạn có thể kiếm được 8 đô la lên đến 12 đô la, với tối thiểu 1000 từ mỗi bài viết.',
     r_pricing_type: 'Loại định giá',
     r_ppw: 'Trả tiền cho mỗi từ (PPW)',
     r_ppa: 'Trả tiền cho mỗi bài viết (PPA)',

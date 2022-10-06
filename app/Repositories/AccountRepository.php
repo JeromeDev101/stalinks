@@ -56,11 +56,11 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             // if writer
             if($input['type'] == 'Writer') {
                 if($input['rate_type'] == 'ppw') {
-                    $inputs['writer_price'] = '0.02';
-                    $input['writer_price'] = '0.02';
+                    $inputs['writer_price'] = '0.0085';
+                    $input['writer_price'] = '0.0085';
                 } else {
-                    $inputs['writer_price'] = '12';
-                    $input['writer_price'] = '12';
+                    $inputs['writer_price'] = '10';
+                    $input['writer_price'] = '10';
                 }
             }
 

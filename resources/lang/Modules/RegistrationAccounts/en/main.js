@@ -80,7 +80,7 @@ export default {
     r_required_lang: 'Required to select language',
     r_address: 'Address',
     r_info: 'Info',
-    r_reminder_ppw: 'Reminder: Pay Per Words (PPW) rate calculation only has a maximum of 600 words. Any excess words would not be calculated.',
+    r_reminder_ppw: 'Information: You can earn $8 up to $12, with a minimum of 1000 words per article.',
     r_pricing_type: 'Pricing type',
     r_ppw: 'Pay Per Words (PPW)',
     r_ppa: 'Pay Per Article (PPA)',

@@ -80,7 +80,7 @@ export default {
     r_required_lang: '言語選択は必須項目です',
     r_address: '住所',
     r_info: '情報',
-    r_reminder_ppw: '注意:文字支払い(Pay Per Word)は最大600字までです。超えた場合も同じ価格です。',
+    r_reminder_ppw: '情報: 記事ごとに最低 1000 ワードで、8 ドルから 12 ドルを獲得できます。',
     r_pricing_type: '価格設定種類',
     r_ppw: '文字に対しての支払い',
     r_ppa: '記事に対しての支払い',
