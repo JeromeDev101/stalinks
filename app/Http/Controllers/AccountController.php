@@ -405,7 +405,7 @@ class AccountController extends Controller
 
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
-                // 'writer_price' => 'required_if:type,==,Writer',
+                'writer_price' => 'required_if:type,==,Writer',
                 'language_id' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
             ]);
@@ -1103,7 +1103,7 @@ class AccountController extends Controller
 
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
-                // 'writer_price' => 'required_if:type,==,Writer',
+                'writer_price' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
                 'id_payment_type' => 'required',
                 'company_name' => 'required_if:company_type,==,Company'

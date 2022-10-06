@@ -92,10 +92,16 @@
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
                                             <div class="alert alert-info">
-                                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                                                <i class="fas fa-info-circle"></i>
+                                                {{ $t('message.registration_accounts.r_reminder_ppw') }}
                                             </div>
 
-                                            <select v-model="user.user_type.rate_type" class="form-control">
+                                            <div class="alert alert-info">
+                                                <i class="fas fa-info-circle"></i>
+                                                Contact an administrator to change your pricing type.
+                                            </div>
+
+                                            <select v-model="user.user_type.rate_type" disabled class="form-control">
                                                 <option value="ppw">{{ $t('message.profile.p_ppw') }}</option>
                                                 <option value="ppa">{{ $t('message.profile.p_ppa') }}</option>
                                             </select>

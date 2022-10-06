@@ -3331,8 +3331,6 @@ export default {
                     .filter(item => this.filterModel.continent_id
                         .includes(item.continent_id))
 
-                console.log(filtered)
-
                 // extract id to array
                 let continentCountries = filtered.map(e => e.id);
 

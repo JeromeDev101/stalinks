@@ -53,15 +53,18 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         if (!$account) {
             return response()->json($response);
         } else {
+
             // if writer
             if($input['type'] == 'Writer') {
-                if($input['rate_type'] == 'ppw') {
-                    $inputs['writer_price'] = '0.0085';
-                    $input['writer_price'] = '0.0085';
-                } else {
-                    $inputs['writer_price'] = '10';
-                    $input['writer_price'] = '10';
-                }
+//                if($input['rate_type'] == 'ppw') {
+//                    $inputs['writer_price'] = '0.0085';
+//                    $input['writer_price'] = '0.0085';
+//                } else {
+//                    $inputs['writer_price'] = '10';
+//                    $input['writer_price'] = '10';
+//                }
+
+                $inputs['writer_price'] = $input['writer_price'];
             }
 
             if(isset($inputs['writer_price'])) {

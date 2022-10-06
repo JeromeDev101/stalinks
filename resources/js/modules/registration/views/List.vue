@@ -1639,14 +1639,34 @@
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>{{ $t('message.registration_accounts.r_pricing_type') }}</label>
-                                        <select class="form-control" v-model="accountUpdate.rate_type">
+                                        <select class="form-control" v-model="accountUpdate.rate_type" @change="checkPriceTypeChange()">
                                             <option value="ppw">{{ $t('message.registration_accounts.r_ppw') }}</option>
                                             <option value="ppa">{{ $t('message.registration_accounts.r_ppa') }}</option>
                                         </select>
                                         <span v-if="messageForms.errors.rate_type" v-for="err in messageForms.errors.rate_type" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="row" v-if="updateDisplayWriterPrice">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Price Rate</label>
+                                        <input
+                                            v-model="accountUpdate.writer_price"
+                                            type="number"
+                                            role="presentation"
+                                            autocomplete="off"
+                                            class="form-control"
+
+                                            @wheel="$event.target.blur()">
+
+                                        <small class="text-primary" v-if="accountUpdate.rate_type !== writerPriceTypeTemp">
+                                            The price rate has been changed to the default rate according to the selected pricing type.
+                                        </small>
+                                        <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div v-if="accountUpdate.type !== 'Affiliate'">
@@ -1883,7 +1903,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" @click="selectedUserID = 0">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" @click="selectedUserID = 0; writerPriceTypeTemp = null;">
                                 {{ $t('message.registration_accounts.close') }}
                             </button>
                             <button type="button" @click="submitUpdate" class="btn btn-primary">
@@ -2317,6 +2337,8 @@ export default {
                 wire_routing_num: '',
             },
             paymentSolutionDetailValues: [],
+
+            writerPriceTypeTemp: null,
         }
     },
 
@@ -3255,6 +3277,10 @@ export default {
             if (role == 'Writer') {
                 this.addDisplayWriterPrice = true;
                 this.updateDisplayWriterPrice = true;
+
+                if (method === 'update') {
+                    this.writerPriceTypeTemp = this.accountUpdate.rate_type;
+                }
             } else {
                 this.addDisplayWriterPrice = false;
                 this.updateDisplayWriterPrice = false;
@@ -3268,6 +3294,10 @@ export default {
                 .then((res) => {
                     this.listTeamIncharge = res.data
                 })
+        },
+
+        checkPriceTypeChange () {
+            this.accountUpdate.writer_price = this.accountUpdate.rate_type === 'ppa' ? 10 : 0.0085;
         },
 
         checkTeamInchargeMultiple(role) {
