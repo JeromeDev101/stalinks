@@ -152,7 +152,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-3" v-if="!isQc">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label>{{ $t('message.publisher.filter_inc_art') }}</label>
                                         <select class="form-control" v-model="filterModel.inc_article">
