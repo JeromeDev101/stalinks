@@ -1209,6 +1209,7 @@ export default {
                 'N/A',
                 'Adult',
                 'Art',
+                'Automotive',
                 'Beauty',
                 'CBD',
                 'Charity',
@@ -1608,7 +1609,7 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : this.$t('message.list_backlinks.filter_price'),
+                    name : !this.user.isAdmin && this.user.role_id == 5 ? this.$t('message.list_backlinks.t_prices'):this.$t('message.list_backlinks.t_price'),
                     actionName : 'priceData',
                     // sortable: true,
                     // prefix: '$',
@@ -1622,7 +1623,7 @@ export default {
                     // sortable: true,
                     // prefix: '$',
                     width : 100,
-                    isHidden : !this.user.isAdmin || !this.tblBuyOptions.prices
+                    isHidden : (!this.user.isAdmin && this.user.role_id != 8) || !this.tblBuyOptions.prices
                 },
                 {
                     prop : '_action',
@@ -2210,11 +2211,23 @@ export default {
             let selling_price = price
             let percent = parseFloat(this.formula.data[0].percentage);
             let additional = parseFloat(this.formula.data[0].additional);
+            let buyer_type_basic = parseFloat(this.formula.data[0].basic);
+            let buyer_type_medium = parseFloat(this.formula.data[0].medium);
+            let buyer_type_premium = parseFloat(this.formula.data[0].premium);
 
             if (activeUser.user_type) { //check if has user_type value
 
                 let type = activeUser.user_type.type
+                let buyer_type = activeUser.user_type.buyer_type
                 let commission = (activeUser.user_type.commission).toLowerCase()
+
+                if(buyer_type == 'Basic') {
+                    percent = buyer_type_basic;
+                } else if (buyer_type == 'Medium') {
+                    percent = buyer_type_medium;
+                } else {
+                    percent = buyer_type_premium;
+                }
 
                 if (price != '' && price != null) { // check if price has a value
 

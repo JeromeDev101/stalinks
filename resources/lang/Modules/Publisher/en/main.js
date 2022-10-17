@@ -61,7 +61,7 @@ export default {
     t_qc_valid: 'QC Valid',
     t_url: 'URL',
     t_https: 'Https',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_inc_article: 'Inc Article',
     t_kw_anchor: 'KW Anchor',

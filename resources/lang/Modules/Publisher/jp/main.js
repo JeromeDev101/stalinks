@@ -61,7 +61,7 @@ export default {
     t_qc_valid: '品質管理の検証',
     t_url: 'URL',
     t_https: 'Https',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_inc_article: '記事を含む',
     t_kw_anchor: 'キーワードアンカー',

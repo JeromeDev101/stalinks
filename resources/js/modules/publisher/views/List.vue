@@ -1623,6 +1623,7 @@ export default {
                     'N/A',
                     'Adult',
                     'Art',
+                    'Automotive',
                     'Beauty',
                     'CBD',
                     'Charity',
@@ -1652,6 +1653,7 @@ export default {
                 topic: [
                     'Adult',
                     'Art',
+                    'Automotive',
                     'Beauty',
                     'CBD',
                     'Charity',

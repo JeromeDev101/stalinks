@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'यूआरएल विज्ञापनदाता',
     t_link_from: 'से लिंक करें',
     t_link_to: 'करने के लिए लिंक',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'कोड संयोजन',
     t_code_price: 'कोड मूल्य',

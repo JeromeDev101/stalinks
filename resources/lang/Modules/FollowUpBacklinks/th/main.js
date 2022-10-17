@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'ผู้ลงโฆษณา URL',
     t_link_from: 'ลิงค์จาก',
     t_link_to: 'ลิงค์ไปยัง',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'การรวมรหัส',
     t_code_price: 'รหัสราคา',

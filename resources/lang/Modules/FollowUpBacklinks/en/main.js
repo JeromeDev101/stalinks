@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'URL Advertiser',
     t_link_from: 'Link From',
     t_link_to: 'Link To',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'Code Comb',
     t_code_price: 'Code Price',

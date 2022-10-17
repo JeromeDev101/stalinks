@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'पश्च',
     t_ref_dom: 'रेफरी डोमेन',
     t_ratio: 'अनुपात',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'स्थिति',
     t_code_comb: 'कोड संयोजन',

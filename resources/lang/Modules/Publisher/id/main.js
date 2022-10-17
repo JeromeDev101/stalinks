@@ -61,7 +61,7 @@ export default {
     t_qc_valid: 'QC Valid',
     t_url: 'Alamat website',
     t_https: 'Https',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_inc_article: 'Termasuk Artikel',
     t_kw_anchor: 'Kata kunci Anchor',

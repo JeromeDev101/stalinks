@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'Blinks',
     t_ref_dom: 'Ref Domain',
     t_ratio: 'Ratio',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'Status',
     t_code_comb: 'Code Comb',

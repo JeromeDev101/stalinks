@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'แบคลิงก์',
     t_ref_dom: 'โดเมนอ้างอิง',
     t_ratio: 'อัตราส่วน',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'สถานะ',
     t_code_comb: 'การรวมรหัส',

@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'バックリンク',
     t_ref_dom: '参考ドメイン',
     t_ratio: '割合',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'ステータス',
     t_code_comb: 'コードの組み合わせ',

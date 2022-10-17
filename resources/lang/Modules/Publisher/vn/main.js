@@ -61,7 +61,7 @@ export default {
     t_qc_valid: 'QC hợp lệ',
     t_url: 'URL',
     t_https: 'Https',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_inc_article: 'Bao gồm bài viết',
     t_kw_anchor: 'KW Anchor',

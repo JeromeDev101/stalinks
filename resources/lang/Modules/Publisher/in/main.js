@@ -61,7 +61,7 @@ export default {
     t_qc_valid: 'क्यूसी मान्य',
     t_url: 'यूआरएल',
     t_https: 'हटीटीपीएस के',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_inc_article: 'इंक लेख',
     t_kw_anchor: 'केडब्ल्यू एंकर',

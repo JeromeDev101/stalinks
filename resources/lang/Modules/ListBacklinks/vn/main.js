@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'Backlinks',
     t_ref_dom: 'Tên miền giới thiệu',
     t_ratio: 'Tỉ lệ',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'Trạng thái',
     t_code_comb: 'Kết hợp mã',

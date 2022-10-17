@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'URL Nhà quảng cáo',
     t_link_from: 'Liên kết Từ',
     t_link_to: 'Liên kết đến',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'Kết hợp mã',
     t_code_price: 'Mã giá',

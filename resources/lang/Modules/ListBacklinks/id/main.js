@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'Backlink',
     t_ref_dom: 'Referensi domain',
     t_ratio: 'Perbandingan',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_status: 'Status',
     t_code_comb: 'Kombinasi Kode',

@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'URLアドバタイザー',
     t_link_from: 'リンクから',
     t_link_to: 'リンクへ',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'コードの組み合わせ',
     t_code_price: '価格コード',

@@ -28,7 +28,7 @@ export default {
     t_url_ad: 'Pengiklan URL',
     t_link_from: 'Tautan dari',
     t_link_to: 'Tautan ke',
-    t_price: 'Price',
+    t_price: 'Seller Price',
     t_prices: 'Prices',
     t_code_comb: 'Kombinasi Kode',
     t_code_price: 'Kode Harga',
