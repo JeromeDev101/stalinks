@@ -34,8 +34,8 @@ class GraphService
             ->orderBy(DB::raw('MONTH(publisher.created_at)'));
 
         if (isset($request['start_date']) && $request['start_date'] != 'null') {
-            $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-            $query->where('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+            $query->whereDate('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->whereDate('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
         return $query->get();
@@ -56,8 +56,8 @@ class GraphService
                 ->orderBy(DB::raw('MONTH(publisher.created_at)'));
 
             if (isset($request['start_date']) && $request['start_date'] != 'null') {
-                $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-                $query->where('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+                $query->whereDate('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+                $query->whereDate('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
             }
 
             if (isset($request['team_in_charge']) && $request['team_in_charge'] > 0) {
@@ -80,8 +80,8 @@ class GraphService
                 ->orderBy(DB::raw('xaxis'));
 
             if (isset($request['start_date']) && $request['start_date'] != 'null') {
-                $query->where('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-                $query->where('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+                $query->whereDate('publisher.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+                $query->whereDate('publisher.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
             }
         }
 
@@ -185,8 +185,8 @@ class GraphService
             $start_date = Carbon::create($request['start_date'])->format('Y-m-d');
             $end_date   = Carbon::create($request['end_date'])->format('Y-m-d');
 
-            $query->whereRaw("$date >= '$start_date'");
-            $query->whereRaw("$date <= '$end_date'");
+            $query->whereRaw("DATE($date) >= '$start_date'");
+            $query->whereRaw("DATE($date) <= '$end_date'");
         }
 
         if (isset($request['team_in_charge']) && $request['team_in_charge'] > 0 && $request['scope'] !== 'team') {
@@ -245,8 +245,8 @@ class GraphService
         }
 
         if (isset($request['start_date']) && $request['start_date'] != 'null') {
-            $query->where('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
-            $query->where('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
+            $query->whereDate('ext_domains.created_at', '>=', Carbon::create($request['start_date'])->format('Y-m-d'));
+            $query->whereDate('ext_domains.created_at', '<=', Carbon::create($request['end_date'])->format('Y-m-d'));
         }
 
         return $query->get();
@@ -285,8 +285,8 @@ class GraphService
             ->leftJoin('users', 'registration.team_in_charge', 'users.id')
             ->leftJoin('users as u2', 'registration.email', 'u2.email')
             ->where('registration.type', 'Seller')
-            ->where('registration.created_at', '>=', $request['start_date'])
-            ->where('registration.created_at', '<=', $request['end_date'])
+            ->whereDate('registration.created_at', '>=', $request['start_date'])
+            ->whereDate('registration.created_at', '<=', $request['end_date'])
             ->where('users.role_id', 6)
             ->where('users.isOurs', 0);
 
