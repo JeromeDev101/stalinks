@@ -278,6 +278,7 @@ Route::middleware('auth:api')->group(function () {
         Route::name('add-language')->post('/language', 'ConfigController@storeLanguage');
         Route::name('get-language')->get('/language', 'ConfigController@getLanguage');
         Route::name('update-language')->put('/language', 'ConfigController@updateLanguage');
+        Route::name('update-language-price-rates')->post('/language-price-rates', 'ConfigController@updateLanguagePriceRates');
         Route::name('update-country')->put('/countries', 'CountryController@edit');
         Route::name('get-configs')->get('/configs', 'ConfigController@getList');
         Route::name('update-configs')->put('/configs', 'ConfigController@edit');

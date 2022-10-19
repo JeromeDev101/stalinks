@@ -340,4 +340,20 @@ class ConfigController extends Controller
 
         return 'OK';
     }
+
+    public function updateLanguagePriceRates (Request $request) {
+        $request->validate([
+            'ppa_rate' => 'required',
+            'ppw_rate' => 'required',
+        ]);
+
+        $language = Language::findOrFail($request->id);
+
+        $language->update([
+            'ppa_rate' => $request->ppa_rate,
+            'ppw_rate' => $request->ppw_rate,
+        ]);
+
+        return response()->json(['success' => true],200);
+    }
 }

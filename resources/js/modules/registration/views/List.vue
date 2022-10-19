@@ -873,8 +873,8 @@
 
                             <hr v-show="addDisplayWriterPrice"/>
                             <h4 class="text-primary" v-show="addDisplayWriterPrice">Writer Pricing</h4>
-                            <div v-show="addDisplayWriterPrice" class="alert alert-info">
-                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
+                            <div v-show="addDisplayWriterPrice && accountModel.rate_type && accountModel.language_id.length" class="alert alert-info">
+                                {{ $t('message.others.possible_earnings_writer', { from: writerEarningsRegistration.from, to: writerEarningsRegistration.to}) }}
                             </div>
                             <hr v-show="addDisplayWriterPrice"/>
 
@@ -1606,7 +1606,9 @@
                                             :options="listLanguages.data"
                                             :reduce="name => name.id"
                                             :searchable="true"
-                                            :placeholder="$t('message.registration_accounts.filter_select_lang')"/>
+                                            :placeholder="$t('message.registration_accounts.filter_select_lang')"
+
+                                            @input="checkWriterLanguageChange"/>
 
                                         <span v-if="messageForms.errors.language_id" v-for="err in messageForms.errors.language_id" class="text-danger">{{ err }}</span>
                                     </div>
@@ -1630,9 +1632,9 @@
 
                             <hr v-show="updateDisplayWriterPrice"/>
                             <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
-                            <div v-show="updateDisplayWriterPrice" class="alert alert-info">
-                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>
-                            </div>
+<!--                            <div v-show="updateDisplayWriterPrice" class="alert alert-info">-->
+<!--                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>-->
+<!--                            </div>-->
                             <hr v-show="updateDisplayWriterPrice"/>
 
                             <div class="row" v-show="updateDisplayWriterPrice">
@@ -1651,21 +1653,44 @@
                             <div class="row" v-if="updateDisplayWriterPrice">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>Price Rate</label>
-                                        <input
-                                            v-model="accountUpdate.writer_price"
-                                            type="number"
-                                            role="presentation"
-                                            autocomplete="off"
-                                            class="form-control"
-
-                                            @wheel="$event.target.blur()">
-
-                                        <small class="text-primary" v-if="accountUpdate.rate_type !== writerPriceTypeTemp">
-                                            The price rate has been changed to the default rate according to the selected pricing type.
-                                        </small>
-                                        <span v-if="messageForms.errors.writer_price" v-for="err in messageForms.errors.writer_price" class="text-danger">{{ err }}</span>
+                                        <label>Price Rate Per Language</label>
                                     </div>
+
+                                    <div
+                                        v-for="(language_rates , index) in accountUpdate.writer_language_price_rates"
+                                        class="form-group row"
+                                        :key="index">
+
+                                        <label
+                                            class="col-sm-2 col-form-label"
+                                            :for="'writerLanguageRate' + language_rates.id">
+                                            {{ language_rates.name }}
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <input
+                                                v-model="language_rates.rate"
+                                                type="number"
+                                                role="presentation"
+                                                autocomplete="off"
+                                                class="form-control"
+                                                :id="'writerLanguageRate' + language_rates.id"
+
+                                                @wheel="$event.target.blur()">
+                                        </div>
+
+                                        <span
+                                            v-if="messageForms.errors.hasOwnProperty('writer_language_price_rates.'+ index + '.rate')"
+                                            v-for="err in messageForms.errors['writer_language_price_rates.'+ index + '.rate']"
+                                            class="text-danger">
+
+                                            {{ err }}
+                                        </span>
+                                    </div>
+
+                                    <small class="text-primary" v-if="accountUpdate.rate_type !== writerPriceTypeTemp">
+                                        The price rates has been changed to the default rate according to the
+                                        selected pricing type.
+                                    </small>
                                 </div>
                             </div>
 
@@ -2253,6 +2278,7 @@ export default {
                 routing_num: [],
                 wire_routing_num: [],
                 buyer_type: '',
+                writer_language_price_rates: [],
             },
 
             isPopupLoading : false,
@@ -2339,6 +2365,8 @@ export default {
             paymentSolutionDetailValues: [],
 
             writerPriceTypeTemp: null,
+            writerPriceRatesTemp: [],
+            writerPriceRatesTemp2: [],
         }
     },
 
@@ -2455,6 +2483,33 @@ export default {
                     }
                 })
         },
+
+        writerEarningsRegistration () {
+            let self = this;
+
+            if (self.accountModel.language_id && self.accountModel.language_id.length) {
+                let languages = self.listLanguages.data.filter(obj => {
+                    return self.accountModel.language_id.includes(obj.id);
+                });
+
+                let newArray =  languages.map(a => { return Object.values({
+                    ppa_rate: Math.floor(a.ppa_rate),
+                    ppw_rate: Math.floor((a.ppw_rate * 1000)),
+                    ppw_rate_max: Math.floor((a.ppw_rate * 1500))
+                })
+                }).flat();
+
+                return {
+                    from: Math.min(...newArray),
+                    to: Math.max(...newArray)
+                }
+            } else {
+                return {
+                    from: 0,
+                    to: 0
+                }
+            }
+        }
     },
 
     methods : {
@@ -3296,8 +3351,94 @@ export default {
                 })
         },
 
+        checkPriceRate (rate) {
+            return rate % 1 !== 0 ? rate * 1 : Math.trunc(rate);
+        },
+
         checkPriceTypeChange () {
-            this.accountUpdate.writer_price = this.accountUpdate.rate_type === 'ppa' ? 10 : 0.0085;
+            let self = this;
+
+            self.accountUpdate.writer_price = self.accountUpdate.rate_type === 'ppa' ? 10 : 0.0085;
+
+            if (self.accountUpdate.rate_type !== self.writerPriceTypeTemp) {
+                const newArray = [];
+
+                self.accountUpdate.writer_language_price_rates.forEach((o) => {
+                    let languageRate = self.listLanguages.data.find(p => p.id === o.id);
+
+                    newArray.push({
+                        id: o.id,
+                        name: o.name,
+                        type: self.accountUpdate.rate_type,
+                        rate: self.accountUpdate.rate_type === 'ppa'
+                            ? self.checkPriceRate(languageRate.ppa_rate)
+                            : self.checkPriceRate(languageRate.ppw_rate)
+                    })
+                });
+
+                self.accountUpdate.writer_language_price_rates = newArray;
+            } else {
+                self.accountUpdate.writer_language_price_rates = self.writerPriceRatesTemp2;
+
+                self.checkWriterLanguageChange();
+            }
+
+            // extract removed languages
+            self.accountUpdate.writer_language_price_rates = self.accountUpdate.writer_language_price_rates.filter(function(obj) {
+                return self.accountUpdate.language_id.includes(obj.id);
+            })
+        },
+
+        checkWriterLanguageChange () {
+            let self = this;
+
+            if (self.accountUpdate.type === 'Writer') {
+                if (self.accountUpdate.language_id.length) {
+                    let rates = self.accountUpdate.writer_language_price_rates.map(a => a.id);
+
+                    // include added languages
+                    self.accountUpdate.language_id.forEach((id) => {
+                        if (!rates.includes(id)) {
+                            let extract = self.listLanguages.data.find(o => o.id === id);
+                            let existed = self.writerPriceRatesTemp.find(o => o.id === id);
+
+                            // if added language is already added but removed and added again
+                            if (existed) {
+                                self.accountUpdate.writer_language_price_rates.push({
+                                    id: existed.id,
+                                    name: existed.name,
+                                    rate: self.writerPriceTypeTemp !== self.accountUpdate.rate_type
+                                        ? self.accountUpdate.rate_type === 'ppw'
+                                            ? self.checkPriceRate(extract.ppw_rate)
+                                            : self.checkPriceRate(extract.ppa_rate)
+                                        : self.checkPriceRate(existed.rate),
+                                    type: existed.type
+                                })
+                            } else {
+                                self.accountUpdate.writer_language_price_rates.push({
+                                    id: extract.id,
+                                    name: extract.name,
+                                    rate: self.accountUpdate.rate_type === 'ppw'
+                                        ? self.checkPriceRate(extract.ppw_rate)
+                                        : self.checkPriceRate(extract.ppa_rate),
+                                    type: self.accountUpdate.rate_type
+                                })
+                            }
+                        }
+                    })
+
+                    // extract removed languages
+                    self.accountUpdate.writer_language_price_rates = self.accountUpdate.writer_language_price_rates.filter(function(obj) {
+                        return self.accountUpdate.language_id.includes(obj.id);
+                    })
+                } else {
+                    self.accountUpdate.writer_language_price_rates = [];
+                }
+
+                if (self.writerPriceTypeTemp === self.accountUpdate.rate_type) {
+                    self.writerPriceRatesTemp2 = self.accountUpdate.writer_language_price_rates
+                }
+            }
         },
 
         checkTeamInchargeMultiple(role) {
@@ -3576,6 +3717,7 @@ export default {
 
         doUpdateAccount(account) {
             this.clearMessageform();
+            let self = this;
             let that = JSON.parse(JSON.stringify(account))
 
             this.accountUpdate.id = that.id
@@ -3640,6 +3782,26 @@ export default {
                 } else {
                     this.accountUpdate.update_method_payment_type = [];
                     this.accountUpdate.id_payment_type = ''
+                }
+
+                // writer language price rates
+                if (account.type === 'Writer') {
+                    let writerLanguages = [];
+
+                    if (account.user.languages.length > 0) {
+                        account.user.languages.forEach((language) => {
+                            writerLanguages.push({
+                                id: language.id,
+                                name: language.name,
+                                type: language.pivot.type,
+                                rate: self.checkPriceRate(language.pivot.rate),
+                            })
+                        })
+                    }
+
+                    this.accountUpdate.writer_language_price_rates = writerLanguages;
+                    this.writerPriceRatesTemp = writerLanguages;
+                    self.writerPriceRatesTemp2 = writerLanguages;
                 }
             }
 

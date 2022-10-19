@@ -345,34 +345,87 @@ class ArticlesController extends Controller
     public function updateContent(Request $request, NotificationInterface $notification){
         $user_id = Auth::user()->id;
         $article = Article::find($request->get('content')['id']);
-        $price_id = null;
+        $price_id = $article->id_writer_price ?: null;
+        $price = null;
 
-        if($article->price){
-            $article->price->update([
-                'price' => $request->get('content')['price']
-            ]);
-
-            $price_id = $article->price->id;
-        }else{
-            $price = Price::create([
-                'price' => $request->get('content')['price'],
-                'id_user' => $user_id,
-                'id_language' => $article->id_language,
-                'id_article' => $article->id,
-                'type' => 'writer'
-            ]);
-
-            $price_id = $price->id;
-        }
+//        if($article->price){
+//            $article->price->update([
+//                'price' => $request->get('content')['price']
+//            ]);
+//
+//            $price_id = $article->price->id;
+//        }else{
+//            $price = Price::create([
+//                'price' => $request->get('content')['price'],
+//                'id_user' => $user_id,
+//                'id_language' => $article->id_language,
+//                'id_article' => $article->id,
+//                'type' => 'writer'
+//            ]);
+//
+//            $price_id = $price->id;
+//        }
 
         $backlink = Backlink::find($article->id_backlink);
         if( $request->content['status'] == 'Done' ){
-            if( $backlink->status != 'Live' ){
+            if ( $backlink->status != 'Live' ) {
                 $backlink->update(['status' => 'Content Done']);
+
+                // save article price
+                if ($article->status_writer !== 'Done') {
+
+                    // calculate price
+                    if (count($article->user->languages)) {
+                        // calculate price based on writer language price rate
+                        $main = $article->user->languages->first(function ($value) use ($article) {
+                            return $value->id === $article->id_language;
+                        })->pivot->toArray();
+
+                        if ($main) {
+                            if ($article->user->registration->rate_type === 'ppa') {
+                                $price = $main['rate'];
+                            } else {
+                                if ($request->content['num_words'] <= 1500) {
+                                    $price = $main['rate'] * $request->content['num_words'];
+                                } else {
+                                    $price = $main['rate'] * 1500;
+                                }
+                            }
+                        }
+                    } else {
+                        // calculate price based on language default
+                        if ($article->user->registration->rate_type === 'ppa') {
+                            $price = $article->language->ppa_rate;
+                        } else {
+                            if ($request->content['num_words'] <= 1500) {
+                                $price = $article->language->ppw_rate * $request->content['num_words'];
+                            } else {
+                                $price = $article->language->ppw_rate * 1500;
+                            }
+                        }
+                    }
+
+                    if ($article->price) {
+                        $article->price->update([
+                            'price' => round($price, 2)
+                        ]);
+
+                        $price_id = $article->price->id;
+                    } else {
+                        $price = Price::create([
+                            'price' => round($price, 2),
+                            'id_user' => $user_id,
+                            'id_language' => $article->id_language,
+                            'id_article' => $article->id,
+                            'type' => 'writer'
+                        ]);
+
+                        $price_id = $price->id;
+                    }
+                }
             }
 
             event(new ArticleDoneEvent($article, auth()->user()));
-
         }
 
         if( $request->content['status'] == 'In Writing' ){

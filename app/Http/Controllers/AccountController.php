@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TeamInChargeUpdatedEvent;
 use App\Mail\SendResetPasswordEmail;
+use App\Models\Language;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use App\Rules\PaymentInfoExists;
 use Carbon\Carbon;
@@ -167,6 +168,23 @@ class AccountController extends Controller
 
             if (count($insert_input_users_payment_type)) {
                  UsersPaymentType::insert($insert_input_users_payment_type);
+            }
+
+            // insert language writer price rate
+            if (isset($request->language_id)) {
+                if ($request->type === 'Writer') {
+                    $languages = Language::whereIn('id', $request->language_id)
+                        ->get();
+
+                    $languages_temp = $languages->mapWithKeys(function ($language) use ($request){
+                        return [$language->id => [
+                            'type' => $request->rate_type,
+                            'rate' => $request->rate_type === 'ppa' ? $language->ppa_rate : $language->ppw_rate
+                        ]];
+                    });
+
+                    $user->languages()->sync($languages_temp->all());
+                }
             }
 
         if($user && $registration) {
@@ -363,6 +381,7 @@ class AccountController extends Controller
             $query->with(['userPaymentTypes' => function($sub) {
                 $sub->with('paymentType');
             }])
+            ->with('languages')
             ->withCount('wallet_transactions');
         }])
         ->with('affiliate:id,name,username')
@@ -408,8 +427,10 @@ class AccountController extends Controller
                 'writer_price' => 'required_if:type,==,Writer',
                 'language_id' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
+                'writer_language_price_rates.*.rate' => 'required_if:type,==,Writer',
+            ], [
+                'writer_language_price_rates.*.required_if' =>  'The language price rate must not be empty if account type is Writer.',
             ]);
-
         }
 
         $user = User::where('email', $request->email)->first();
@@ -626,6 +647,23 @@ class AccountController extends Controller
 
             if (count($insert_input_users_payment_type)) {
                 UsersPaymentType::insert($insert_input_users_payment_type);
+            }
+
+            // insert language writer price rate
+            if (isset($request->language_id)) {
+                if ($request->type === 'Writer') {
+                    $languages = Language::whereIn('id', $request->language_id)
+                        ->get();
+
+                    $languages_temp = $languages->mapWithKeys(function ($language) use ($request){
+                        return [$language->id => [
+                            'type' => $request->rate_type,
+                            'rate' => $request->rate_type === 'ppa' ? $language->ppa_rate : $language->ppw_rate
+                        ]];
+                    });
+
+                    $user->languages()->sync($languages_temp->all());
+                }
             }
 
         if($user && $registration) {
@@ -1104,9 +1142,13 @@ class AccountController extends Controller
         if( $request->account_validation != 'invalid' ) {
             $request->validate([
                 'writer_price' => 'required_if:type,==,Writer',
+                'language_id' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
                 'id_payment_type' => 'required',
-                'company_name' => 'required_if:company_type,==,Company'
+                'company_name' => 'required_if:company_type,==,Company',
+                'writer_language_price_rates.*.rate' => 'required_if:type,==,Writer',
+            ], [
+                'writer_language_price_rates.*.required_if' =>  'The language price rate must not be empty if account type is Writer.',
             ]);
         }
 
@@ -1147,6 +1189,11 @@ class AccountController extends Controller
         // update registration and user account
 
         $inputs = $request->all();
+
+        if(isset($request->language_id)) {
+            $inputs['language_id'] = json_encode($request->language_id);
+        }
+
         $this->accountRepository->updateAccount($inputs);
 
         return response()->json(['success' => true]);

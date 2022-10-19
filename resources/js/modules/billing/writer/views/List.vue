@@ -174,7 +174,14 @@
                                     <td>{{ article.id_backlink }}</td>
                                     <td>{{ article.id }}</td>
                                     <td>{{ article.user.username == null ? article.user.name : article.user.username }}</td>
-                                    <td>{{ '$ ' + computeWriterPrice(article) }}</td>
+                                    <td>
+                                        <span v-if="article.price.price">
+                                            {{ '$' + article.price.price }}
+                                        </span>
+                                        <span v-else>
+                                            N/A
+                                        </span>
+                                    </td>
                                     <td>{{ article.payment_status == null ? $t('message.writer_billing.wb_not_paid') : article.payment_status }}</td>
                                     <td>
                                         <div class="btn-group">
@@ -254,7 +261,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            ID Article: 
+                                            ID Article:
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
@@ -445,18 +452,37 @@ export default {
     methods : {
 
         computeWriterPrice(article) {
-            var rate_type = (article.rate_type == null || article.rate_type == '') ? 'ppw' : (article.rate_type).toLowerCase();
-            var content = article.contentnohtml
-            var writer_price = parseFloat(article.writer_price);
-            var price = 0;
+            let rate_type = (article.rate_type == null || article.rate_type == '') ? 'ppw' : (article.rate_type).toLowerCase();
+            let content = article.contentnohtml
+            let writer_price = parseFloat(article.writer_price);
+            let price = 0;
+            let language = article.id_language;
 
-            if (rate_type == 'ppw') {
-                price = writer_price * this.countWords(content)
+            if (article.user.languages.length) {
+                let main = article.user.languages.find((item) => {
+                    return item.id === language;
+                })
+
+                if (main.pivot) {
+                    if (rate_type === 'ppa') {
+                        price = Number(main.pivot.rate);
+                    } else {
+                        if (this.countWords(content) <= 1500) {
+                            price = Number(main.pivot.rate * this.countWords(content));
+                        } else {
+                            price = Number(main.pivot.rate * 1500);
+                        }
+                    }
+                }
             } else {
-                price = writer_price
+                if (rate_type === 'ppw') {
+                    price = this.countWords(content) <= 1500 ? writer_price * this.countWords(content) : writer_price * 1500;
+                } else {
+                    price = writer_price;
+                }
             }
 
-            return price;
+            return Math.round((price + Number.EPSILON) * 100) / 100;
         },
 
         countWords(str) {
@@ -522,14 +548,14 @@ export default {
 
                 this.info.account = account;
 
-                for (var index in this.checkIds) {
-                    var price = this.computeWriterPrice(this.checkIds[index])
+                for (let index in this.checkIds) {
+                    let price = this.checkIds[index].price.price ? Number(this.checkIds[index].price.price) : 0;
                     total_amount.push(price)
 
                     _ids += this.checkIds[index].id + ' ';
                 }
 
-                this.info.amount = total_amount.reduce((a, b) => a + b, 0);
+                this.info.amount = Math.round((total_amount.reduce((a, b) => a + b, 0) + Number.EPSILON) * 100) / 100;
                 this.info.ids = _ids
 
                 $(modal).modal('show')

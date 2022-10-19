@@ -33,7 +33,6 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
     public function updateAccount($data)
     {
-
         $response['success'] = false;
         $input_2 = collect($data)->only('update_method_payment_type')->toArray();
         $input = collect($data)->except('company_type', 'user', 'isVerified', 'bank_name', 'account_name', 'account_iban', 'swift_code', 'beneficiary_add', 'account_holder', 'account_type', 'routing_num', 'wire_routing_num')->toArray();
@@ -302,6 +301,20 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
 
                         $delete->delete();
                     }
+                }
+            }
+
+            // insert language writer price rate
+            if($input['type'] == 'Writer') {
+                if (count($input['writer_language_price_rates'])) {
+                    $languages_temp = collect($input['writer_language_price_rates'])->mapWithKeys(function ($language) {
+                        return [$language['id'] => [
+                            'type' => $language['type'],
+                            'rate' => $language['rate']
+                        ]];
+                    });
+
+                    $user->languages()->sync($languages_temp->all());
                 }
             }
         }

@@ -91,9 +91,9 @@
                                     <td><b>{{ $t('message.profile.p_pricing_type') }}</b></td>
                                     <td>
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.rate_type}">
-                                            <div class="alert alert-info">
+                                            <div v-if="user.languages.length" class="alert alert-info">
                                                 <i class="fas fa-info-circle"></i>
-                                                {{ $t('message.registration_accounts.r_reminder_ppw') }}
+                                                {{ $t('message.others.possible_earnings_writer', { from: writerEarningsProfile.from, to: writerEarningsProfile.to}) }}
                                             </div>
 
                                             <div class="alert alert-info">
@@ -880,6 +880,31 @@ export default {
 
         paymentMethodListReceivePayment: function() {
             return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
+        },
+
+        writerEarningsProfile () {
+            let self = this;
+
+            if (self.user.languages.length) {
+
+                let newArray =  self.user.languages.map(a => { return Object.values({
+                        ppa_rate: a.pivot.type === 'ppa' ? Math.floor(a.pivot.rate) : Math.floor(a.ppa_rate),
+                        ppw_rate: a.pivot.type === 'ppw' ? Math.floor((a.pivot.rate * 1000)) : Math.floor((a.ppw_rate * 1000)),
+                        ppw_rate_max: a.pivot.type === 'ppw' ? Math.floor((a.pivot.rate * 1500)) : Math.floor((a.ppw_rate * 1500))
+                    })
+                }).flat();
+
+                return {
+                    from: Math.min(...newArray),
+                    to: Math.max(...newArray)
+                }
+
+            } else {
+                return {
+                    from: 0,
+                    to: 0
+                }
+            }
         },
     },
 

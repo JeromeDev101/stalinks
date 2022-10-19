@@ -30,7 +30,8 @@ class WriterBillingController extends Controller
                         ->where('article.status_writer', 'Done')
                         ->where('users.role_id', 4)
                         ->where('users.isOurs', 1)
-                        ->with('user:id,name,username')
+                        ->with('user.languages')
+                        ->with('price')
                         ->orderBy('id', 'desc');
 
         if (!auth()->user()->isAdmin() && auth()->user()->role_id != 8) {
@@ -48,7 +49,7 @@ class WriterBillingController extends Controller
         if( isset($filter['status'] ) && $filter['status'] ){
             if($filter['status'] == 'not paid') {
                 $list->whereNull('article.payment_status');
-            } 
+            }
             if($filter['status'] == 'paid') {
                 $list->where('article.payment_status', $filter['status']);
             }

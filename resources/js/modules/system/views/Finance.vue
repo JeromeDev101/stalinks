@@ -22,6 +22,10 @@
             <div class="col-sm-12">
                 <payment-method :is-popup-loading="isPopupLoading" :message-forms="messageForms"></payment-method>
             </div>
+
+            <div class="col-12">
+                <language-price-rate></language-price-rate>
+            </div>
         </div>
 
         <!-- <div class="row">
@@ -53,6 +57,7 @@ import Btc from "./Btc";
 import Eth from "./Eth";
 import {mapState} from "vuex";
 import Config from "./Config";
+import LanguagePriceRate from "./LanguagePriceRate";
 
 export default {
     name : "Finance",
@@ -69,7 +74,8 @@ export default {
         Usdt,
         Btc,
         Eth,
-        Config
+        Config,
+        LanguagePriceRate,
     },
 
     created() {

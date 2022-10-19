@@ -206,8 +206,8 @@
                                 <h4 class="text-primary">Writer Pricing</h4>
                                 <hr/>
 
-                                <div class="alert alert-info">
-                                    {{ $t('message.registration_accounts.r_reminder_ppw') }}
+                                <div v-if="regModel.rate_type && regModel.language_id.length" class="alert alert-info">
+                                    {{ $t('message.others.possible_earnings_writer', { from: writerEarnings.from, to: writerEarnings.to}) }}
                                 </div>
 
                                 <div class="row">
@@ -475,6 +475,33 @@
             paymentMethodListReceivePayment: function() {
                 return this.paymentMethodList.filter(i => i.receive_payment === 'yes')
             },
+
+            writerEarnings () {
+                let self = this;
+
+                if (self.regModel.language_id && self.regModel.language_id.length) {
+                    let languages = self.listLanguages.data.filter(obj => {
+                        return self.regModel.language_id.includes(obj.id);
+                    });
+
+                    let newArray =  languages.map(a => { return Object.values({
+                            ppa_rate: Math.floor(a.ppa_rate),
+                            ppw_rate: Math.floor((a.ppw_rate * 1000)),
+                            ppw_rate_max: Math.floor((a.ppw_rate * 1500))
+                        })
+                    }).flat();
+
+                    return {
+                        from: Math.min(...newArray),
+                        to: Math.max(...newArray)
+                    }
+                } else {
+                    return {
+                        from: 0,
+                        to: 0
+                    }
+                }
+            }
         },
 
         watch : {

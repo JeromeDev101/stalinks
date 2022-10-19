@@ -219,4 +219,10 @@ class User extends Authenticatable
     {
         return env('LOG_SLACK_WEBHOOK_URL');
     }
+
+    public function languages () {
+        return $this->belongsToMany(Language::class, 'language_user', 'user_id', 'language_id')
+            ->withPivot('type', 'rate')
+            ->withTimestamps();
+    }
 }

@@ -232,7 +232,7 @@
                                 </tr>
                                 <tr>
                                     <td class="align-middle">
-                                        <label>Benificiary Address</label>
+                                        <label>Beneficiary Address</label>
                                     </td>
                                     <td class="text-center">
                                         <label>Show</label>
