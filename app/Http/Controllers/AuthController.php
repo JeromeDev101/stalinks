@@ -109,7 +109,8 @@ class AuthController extends Controller
             'account_holder',
             'account_type',
             'routing_num',
-            'wire_routing_num'
+            'wire_routing_num',
+            'languages'
         );
 
 
