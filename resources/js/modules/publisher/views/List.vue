@@ -446,7 +446,7 @@
                                             {{ $t('message.publisher.pu_account_info') }}
                                         </li>
                                         <li v-if="isAccountInvalid">
-                                            {{ $t('message.publisher.pu_account_status') }}
+                                            {{ $t('message.publisher.pu_account_`status`') }}
                                             <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
                                         </li>
                                     </ul>

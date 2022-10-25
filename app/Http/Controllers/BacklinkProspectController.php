@@ -20,7 +20,7 @@ class BacklinkProspectController extends Controller
                                         return $query->where('referring_domain', 'like', '%'.$filter['referring_domain'].'%');
                                     })
                                     ->with('prospect');
-        
+
         if (isset($filter['ur']) && !empty($filter['ur'])) {
             if ($filter['ur_direction'] === 'Above') {
                 $backlink_prospects->where('ur' , '>=', intval($filter['ur']));
@@ -65,6 +65,14 @@ class BacklinkProspectController extends Controller
             $backlink_prospects->where('status', $filter['status']);
         }
 
+        if (isset($filter['status2']) && !empty($filter['status2'])) {
+            $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
+                $q->where('status', $filter['status2']);
+            });
+        }
+
+        $backlink_prospects = $backlink_prospects->orderBy('created_at', 'desc');
+
         if(isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
                 'data' => $backlink_prospects->get(),
@@ -73,7 +81,7 @@ class BacklinkProspectController extends Controller
         } else {
             return $backlink_prospects->paginate($paginate);
         }
-        
+
         return response()->json(['data' => $backlink_prospects],200);
     }
 
@@ -95,7 +103,7 @@ class BacklinkProspectController extends Controller
             // dd(count($line));
             // break;
 
-            if(count($line) > 10 || count($line) < 10){
+            if(count($line) > 11 || count($line) < 11){
                 $message = "Please check the header: Referring Domain, UR, DR, Backlinks, Org Kw, Org Traffic, Ref Domain, Category, Status and Note.";
                 $file_message = "Invalid Header format. ".$message;
                 $result = false;
@@ -113,6 +121,7 @@ class BacklinkProspectController extends Controller
                 $category = $line[7];
                 $status = $line[8];
                 $note = $line[9];
+                $date_created = $line[10];
 
                 if( trim($referring_domain, " ") != '' ){
 
@@ -131,9 +140,10 @@ class BacklinkProspectController extends Controller
                                 'category' => $category,
                                 'status' => $status,
                                 'note' => $note,
+                                'date_created' => $date_created,
                             ]);
                         }
-                    } 
+                    }
                 }
             }
 
@@ -155,7 +165,7 @@ class BacklinkProspectController extends Controller
     private function checkRefDomainExist($domain) {
         $ref_domain = BacklinkProspect::where('referring_domain', $domain)->count();
 
-        return $ref_domain > 0 ? true:false; 
+        return $ref_domain > 0 ? true:false;
     }
 
     public function moveToUrlProspect(Request $request) {
@@ -192,7 +202,7 @@ class BacklinkProspectController extends Controller
             $ext_domain->update([
                 'backlink_prospect_id' => $request->id,
                 'from' => 'Backlinks'
-            ]); 
+            ]);
             $result = 'false';
         }
 

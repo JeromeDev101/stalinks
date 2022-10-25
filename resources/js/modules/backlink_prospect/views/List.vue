@@ -128,7 +128,7 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>{{ $t('message.backlink_prospect.filter_status') }}</label>
+                                    <label>Status 3rd Party</label>
                                     <select class="form-control" v-model="filterModel.status">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
@@ -140,8 +140,8 @@
 
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <label>{{ $t('message.backlink_prospect.filter_status_url_prospect') }}</label>
-                                    <select class="form-control" v-model="filterModel.status">
+                                    <label>Status StaLinks URL Prospect</label>
+                                    <select class="form-control" v-model="filterModel.status2">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status2" v-bind:value="option.value" :key="option.value">
                                             {{ option.text }}
@@ -409,22 +409,28 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('message.backlink_prospect.t_category') }}</label>
-                                    <select class="form-control" v-model="updateModel.category">
-                                        <option value="">{{ $t('message.backlink_prospect.choose_category') }}</option>
-                                        <option v-for="option in category" v-bind:value="option" :key="option">
-                                            {{ option }}
+                                    <label>Status StaLinks URL Prospect</label>
+                                    <input v-model="updateModel.status2" disabled type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Status 3rd Party</label>
+                                    <select class="form-control" v-model="updateModel.status">
+                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
+                                        <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
+                                            {{ option.text }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('message.backlink_prospect.filter_status') }}</label>
-                                    <select class="form-control" v-model="updateModel.status">
-                                        <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
-                                        <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
-                                            {{ option.text }}
+                                    <label>{{ $t('message.backlink_prospect.t_category') }}</label>
+                                    <select class="form-control" v-model="updateModel.category">
+                                        <option value="">{{ $t('message.backlink_prospect.choose_category') }}</option>
+                                        <option v-for="option in category" v-bind:value="option" :key="option">
+                                            {{ option }}
                                         </option>
                                     </select>
                                 </div>
@@ -536,6 +542,7 @@ export default {
                 org_kw: '',
                 org_traffic: '',
                 status: '',
+                status2: '',
                 date_upload: {
                     startDate : null,
                     endDate : null
@@ -569,6 +576,7 @@ export default {
                 category: '',
                 status: '',
                 note: '',
+                status2: '',
             },
 
             total_summary: [],
@@ -610,8 +618,8 @@ export default {
 
             return [
                 {
-                    prop : '_index',
-                    name : '#',
+                    prop : 'id',
+                    name : 'ID',
                     width : '50',
                     isHidden : false
                 },
@@ -677,13 +685,13 @@ export default {
                 },
                 {
                     prop : 'status',
-                    name : self.$t('message.backlink_prospect.filter_status'),
+                    name : 'Status 3rd Party',
                     sortable : true,
                     isHidden : false
                 },
                 {
                     prop : '_action',
-                    name : self.$t('message.backlink_prospect.filter_status_url_prospect'),
+                    name : 'Status StaLinks URL Prospect',
                     sortable : true,
                     actionName : 'actionStatusProspect',
                     isHidden : false
@@ -746,6 +754,18 @@ export default {
                     text: self.$t('message.backlink_prospect.s_contacted_via_form'),
                     value: 'Contacted Via Form'
                 },
+                {
+                    text: 'In-touched',
+                    value: 'In-touched'
+                },
+                {
+                    text: 'Refused',
+                    value: 'Refused'
+                },
+                {
+                    text: 'No Answer',
+                    value: 'NoAnswer'
+                },
             ];
         },
 
@@ -754,28 +774,32 @@ export default {
 
             return [
                 {
+                    text: 'Contact Null',
+                    value: 20,
+                },
+                {
                     text: self.$t('message.backlink_prospect.s_contacted'),
-                    value: 'Contacted',
+                    value: 50,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_contacted_via_form'),
-                    value: 'Contacted Via Form',
+                    value: 120,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_in_touched'),
-                    value: 'In-touched',
+                    value: 70,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_qualified'),
-                    value: 'Qualified',
+                    value: 100,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_refused'),
-                    value: 'Refused',
+                    value: 60,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_no_answer'),
-                    value: 'No Answer',
+                    value: 55,
                 },
             ];
         }
@@ -785,12 +809,14 @@ export default {
 
         excelExportData() {
             this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
+
             axios.get('/api/backlink-prospect', {
                 params : {
                     referring_domain : this.filterModel.referring_domain,
                     ur : this.filterModel.ur,
                     dr : this.filterModel.dr,
                     status : this.filterModel.status,
+                    status2 : this.filterModel.status2,
                     paginate : 'All',
                     org_kw : this.filterModel.org_kw,
                     org_traffic : this.filterModel.org_traffic,
@@ -823,6 +849,9 @@ export default {
                 'fa fa-user',
                 'fas fa-envelope-open-text',
                 'fas fa-newspaper',
+                'fas fa-comments',
+                'fas fa-handshake-alt-slash',
+                'fas fa-phone-slash'
             ];
             let bg_colors = [
                 'small-box bg-info',
@@ -832,7 +861,10 @@ export default {
                 'small-box bg-olive',
                 'small-box bg-gradient-purple',
                 'small-box bg-navy',
-                'small-box bg-gradient-orange'
+                'small-box bg-secondary',
+                'small-box bg-purple',
+                'small-box bg-maroon',
+                'small-box bg-orange',
             ];
             for(let i in this.status1) {
                 _prop = {
@@ -950,9 +982,12 @@ export default {
                         this.getBacklinkProspect()
 
                     } else {
-
+                        swal.fire(
+                            self.$t('message.publisher.alert_failed'),
+                            self.$t('message.publisher.alert_upload_fail'),
+                            'error'
+                        )
                     }
-                    console.log(res)
                 });
 
         },
@@ -967,6 +1002,7 @@ export default {
                     ur : this.filterModel.ur,
                     dr : this.filterModel.dr,
                     status : this.filterModel.status,
+                    status2 : this.filterModel.status2,
                     paginate : this.filterModel.paginate,
                     org_kw : this.filterModel.org_kw,
                     org_traffic : this.filterModel.org_traffic,
@@ -1035,7 +1071,8 @@ export default {
                 referring_domain: backlink_prospect.referring_domain,
                 category: backlink_prospect.category,
                 status: backlink_prospect.status,
-                note: backlink_prospect.note
+                note: backlink_prospect.note,
+                status2: backlink_prospect.status2
             }
 
             $('#modal-update-backlink_prospect').modal({
@@ -1055,6 +1092,7 @@ export default {
                 paginate : 50,
                 referring_domain : '',
                 status : '',
+                status2 : '',
                 ur : '',
                 dr : '',
                 org_kw : '',
