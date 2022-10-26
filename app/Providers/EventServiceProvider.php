@@ -45,9 +45,11 @@ use App\Listeners\WriterExamProcessedListener;
 use App\Listeners\WriterPaidListener;
 use App\Listeners\TeamInChargeUpdatedListener;
 use App\Models\Backlink;
+use App\Models\ExtDomain;
 use App\Models\Registration;
 use App\Models\User;
 use App\Observers\BacklinkObserver;
+use App\Observers\ExtDomainObserver;
 use App\Observers\RegistrationObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\Event;
@@ -174,5 +176,6 @@ class EventServiceProvider extends ServiceProvider
 
         Backlink::observe(BacklinkObserver::class);
         Registration::observe(RegistrationObserver::class);
+        ExtDomain::observe(ExtDomainObserver::class);
     }
 }

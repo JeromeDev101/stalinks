@@ -8,6 +8,7 @@ use App\Models\ExtDomain;
 use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BacklinkProspectController extends Controller
 {
@@ -65,7 +66,7 @@ class BacklinkProspectController extends Controller
             $backlink_prospects->where('status', $filter['status']);
         }
 
-        if (isset($filter['status2']) && !empty($filter['status2'])) {
+        if (isset($filter['status2'])) {
             $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
                 $q->where('status', $filter['status2']);
             });
@@ -203,6 +204,26 @@ class BacklinkProspectController extends Controller
                 'backlink_prospect_id' => $request->id,
                 'from' => 'Backlinks'
             ]);
+
+            // update the 3rd party status (apacaff) automatically based on the status of url prospect
+            $prospect_statuses = [
+                10 => 'To be contacted',
+                20 => 'To be contacted',
+                30 => 'To be contacted',
+                110 => 'To be contacted',
+                100 => 'Qualified',
+                90 => 'Unqualified',
+                50 => 'Contacted',
+                120 => 'Contacted Via Form',
+                70 => 'In-touched',
+                60 => 'Refused',
+                55 => 'No Answer',
+            ];
+
+            if (array_key_exists($ext_domain->status, $prospect_statuses)) {
+                $backlink_prospect->update(['status' => $prospect_statuses[$ext_domain->status]]);
+            }
+
             $result = 'false';
         }
 
@@ -246,5 +267,39 @@ class BacklinkProspectController extends Controller
         ]);
 
         return response()->json(['success' => true], 200);
+    }
+
+    public function getTotals () {
+        $totals = DB::table('backlink_prospect')
+            ->selectRaw("count(case when status = 'New' then 1 end) as New")
+            ->selectRaw("count(case when status = 'Qualified' then 1 end) as Qualified")
+            ->selectRaw("count(case when status = 'Unqualified' then 1 end) as Unqualified")
+            ->selectRaw("count(case when status = 'Hosting Expired' then 1 end) as Hosting")
+            ->selectRaw("count(case when status = 'Free Submission' then 1 end) as Free")
+            ->selectRaw("count(case when status = 'To be contacted' then 1 end) as ToBeContacted")
+            ->selectRaw("count(case when status = 'Contacted' then 1 end) as Contacted")
+            ->selectRaw("count(case when status = 'Contacted Via Form' then 1 end) as ContactedViaForm")
+            ->selectRaw("count(case when status = 'In-touched' then 1 end) as Intouched")
+            ->selectRaw("count(case when status = 'Refused' then 1 end) as Refused")
+            ->selectRaw("count(case when status = 'No Answer' then 1 end) as NoAnswer")
+            ->first();
+
+        return response()->json($totals);
+    }
+
+    public function getTotalsStatus2 () {
+        $totals = DB::table('backlink_prospect')
+            ->selectRaw("count(case when ext_domains.status = 0 then 1 end) as New")
+            ->selectRaw("count(case when ext_domains.status = 20 then 1 end) as ContactNull")
+            ->selectRaw("count(case when ext_domains.status = 50 then 1 end) as Contacted")
+            ->selectRaw("count(case when ext_domains.status = 120 then 1 end) as ContactedViaForm")
+            ->selectRaw("count(case when ext_domains.status = 70 then 1 end) as Intouched")
+            ->selectRaw("count(case when ext_domains.status = 100 then 1 end) as Qualified")
+            ->selectRaw("count(case when ext_domains.status = 60 then 1 end) as Refused")
+            ->selectRaw("count(case when ext_domains.status = 55 then 1 end) as NoAnswer")
+            ->leftJoin('ext_domains', 'backlink_prospect.id', '=', 'ext_domains.backlink_prospect_id')
+            ->first();
+
+        return response()->json($totals);
     }
 }

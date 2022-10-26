@@ -117,6 +117,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('backlink-prospect-edit')->post('backlink-prospect-edit', 'BacklinkProspectController@editMultiple');
     Route::name('backlink-prospect-move')->post('backlink-prospect-move', 'BacklinkProspectController@moveToUrlProspect');
     Route::name('backlink-prospect-update')->post('backlink-prospect-update', 'BacklinkProspectController@update');
+    Route::name('backlink-prospect-totals')->get('backlink-prospect-totals', 'BacklinkProspectController@getTotals');
+    Route::name('backlink-prospect-totals-2')->get('backlink-prospect-totals-2', 'BacklinkProspectController@getTotalsStatus2');
 
     //Buy
     Route::name('get-buy')->get('buy','BuyController@getList');

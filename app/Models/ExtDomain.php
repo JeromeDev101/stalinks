@@ -53,4 +53,8 @@ class ExtDomain extends Model
         }
     }
 
+    public function prospect()
+    {
+        return $this->belongsTo('App\Models\BacklinkProspect', 'backlink_prospect_id');
+    }
 }
