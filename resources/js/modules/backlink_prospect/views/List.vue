@@ -843,6 +843,10 @@ export default {
 
             return [
                 {
+                    text: 'N/A',
+                    value: 'null',
+                },
+                {
                     text: 'New',
                     value: 0,
                 },
@@ -1153,6 +1157,8 @@ export default {
         moveToUrlProspect(backlink_prospect) {
             let self = this;
 
+            let loader = self.$loading.show();
+
             axios.post('/api/backlink-prospect-move', {
                 id : backlink_prospect.id,
                 referring_domain: backlink_prospect.referring_domain
@@ -1160,12 +1166,16 @@ export default {
                 console.log(res.data)
 
                 if(res.data) {
+                    loader.hide();
+
                     swal.fire(
                         self.$t('message.backlink_prospect.alert_success'),
                         self.$t('message.backlink_prospect.alert_moved_successfully'),
                         'success'
                     )
                 } else {
+                    loader.hide();
+
                     swal.fire(
                         self.$t('message.backlink_prospect.alert_success'),
                         self.$t('message.backlink_prospect.alert_domain_exists'),
@@ -1309,7 +1319,7 @@ export default {
                 category: backlink_prospect.category,
                 status: backlink_prospect.status,
                 note: backlink_prospect.note,
-                status2: backlink_prospect.status2
+                status2: backlink_prospect.prospect ? this.listStatusText[backlink_prospect.prospect.status].text : 'N/A'
             }
 
             $('#modal-update-backlink_prospect').modal({

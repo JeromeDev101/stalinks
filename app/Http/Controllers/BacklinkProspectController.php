@@ -67,9 +67,13 @@ class BacklinkProspectController extends Controller
         }
 
         if (isset($filter['status2'])) {
-            $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
-                $q->where('status', $filter['status2']);
-            });
+            if ($filter['status2'] === 'null') {
+                $backlink_prospects->has('prospect', '<', 1);
+            } else {
+                $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
+                    $q->where('status', $filter['status2']);
+                });
+            }
         }
 
         $backlink_prospects = $backlink_prospects->orderBy('created_at', 'desc');
