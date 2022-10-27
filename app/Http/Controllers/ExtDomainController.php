@@ -208,6 +208,7 @@ class ExtDomainController extends Controller
 
 
         $totals = DB::table('ext_domains')
+            ->selectRaw("count(*) as Total")
             ->selectRaw("count(case when status = 0 then 1 end) as New")
             ->selectRaw("count(case when status = 10 then 1 end) as CrawlFailed")
             ->selectRaw("count(case when status = 50 then 1 end) as Contacted")
@@ -222,111 +223,111 @@ class ExtDomainController extends Controller
             ->selectRaw("count(case when status = 100 then 1 end) as Qualified")
             ->leftJoin('countries', 'ext_domains.country_id', '=', 'countries.id');
 
-        // Employee Filter
-        if (isset($input['employee_id']) && !empty($input['employee_id'])) {
-            if (is_array($input['employee_id'])) {
-                $totals = $totals->where(function ($q) use ($input) {
-                    foreach ($input['employee_id'] as $name) {
-                        if ($name == 'N/A') {
-                            $q->orWhere('user_id', null);
-                        } else {
-                            $user = User::where('username', 'like', '%' . $name . '%')->first();
-
-                            $q->orWhere('user_id', $user->id);
-                        }
-                    }
-                });
-            }
-        }
-
-        // Email Filter
-        if (isset($input['email'])) {
-            $totals = $totals->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
-        }
-
-        // continent filter
-        if (isset($input['continent_id']) && !empty($input['continent_id'])) {
-            $totals = $totals->where(function ($query) use ($input) {
-                if (($key = array_search(0, $input['continent_id'])) !== false) {
-                    unset($input['continent_id'][$key]);
-                    $query->orWhere(function ($subs) {
-                        $subs->orWhere('countries.continent_id', null);
-                    });
-                }
-
-                if (!empty($input['continent_id'])) {
-                    $query->orWhereIn('countries.continent_id', $input['continent_id']);
-                }
-            });
-        }
-
-        // Country Filter
-        if (isset($input['country_id']) && $input['country_id'] != '0') {
-            if (is_array($input['country_id'])) {
-                $totals = $totals->whereIn('country_id', $input['country_id']);
-            } else {
-                $totals = $totals->where('country_id', $input['country_id']);
-            }
-        }
-
-        // Email Required filter
-        if (isset($input['required_email']) && $input['required_email'] > 0) {
-            $totals = $totals->where('ext_domains.email', '!=', '');
-        }
-
-        // Domain Filter
-        if (isset($input['domain'])) {
-            $totals = $totals->where('domain', 'like', '%' . $input['domain'] . '%');
-        }
-
-        // From Filter
-        if (isset($input['from'])) {
-            if (is_array($input['from'])) {
-                $totals = $totals->whereIn('from', $input['from']);
-            } else {
-                $totals = $totals->where('from', $input['from']);
-            }
-        }
-
-        // Status Filter
-        if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
-            if (is_array($input['status'])) {
-                $totals = $totals->whereIn('ext_domains.status', $input['status']);
-            } else {
-                $totals = $totals->where('ext_domains.status', $input['status']);
-            }
-        }
-
-        // Alexa Rank Filter
-        if (isset($input['alexa_rank_from']) && !empty($input['alexa_rank_from']) && isset($input['alexa_rank_to']) && !empty($input['alexa_rank_to']) ) {
-            $totals = $totals->whereBetween('alexa_rank',[$input['alexa_rank_from'], $input['alexa_rank_to']]);
-        }
-
-        // Domain Zone
-        if (isset($input['domain_zone']) && !empty($input['domain_zone'])) {
-            if (is_array($input['domain_zone'])) {
-
-                $regs = implode(",", $input['domain_zone']);
-                $regs = str_replace('.', '', $regs);
-                $regs = explode(",", $regs);
-
-                $totals = $totals->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','')"), $regs);
-
-            } else {
-
-                $regs = str_replace('.', '', $input['domain_zone']);
-
-                $totals = $totals->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','') = '$regs'");
-            }
-        }
-
-        // Date upload filter
-        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
-
-        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
-            $totals = $totals->whereDate('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
-            $totals = $totals->whereDate('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
-        }
+//        // Employee Filter
+//        if (isset($input['employee_id']) && !empty($input['employee_id'])) {
+//            if (is_array($input['employee_id'])) {
+//                $totals = $totals->where(function ($q) use ($input) {
+//                    foreach ($input['employee_id'] as $name) {
+//                        if ($name == 'N/A') {
+//                            $q->orWhere('user_id', null);
+//                        } else {
+//                            $user = User::where('username', 'like', '%' . $name . '%')->first();
+//
+//                            $q->orWhere('user_id', $user->id);
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//
+//        // Email Filter
+//        if (isset($input['email'])) {
+//            $totals = $totals->where('ext_domains.email', 'like', '%' . $input['email'] . '%');
+//        }
+//
+//        // continent filter
+//        if (isset($input['continent_id']) && !empty($input['continent_id'])) {
+//            $totals = $totals->where(function ($query) use ($input) {
+//                if (($key = array_search(0, $input['continent_id'])) !== false) {
+//                    unset($input['continent_id'][$key]);
+//                    $query->orWhere(function ($subs) {
+//                        $subs->orWhere('countries.continent_id', null);
+//                    });
+//                }
+//
+//                if (!empty($input['continent_id'])) {
+//                    $query->orWhereIn('countries.continent_id', $input['continent_id']);
+//                }
+//            });
+//        }
+//
+//        // Country Filter
+//        if (isset($input['country_id']) && $input['country_id'] != '0') {
+//            if (is_array($input['country_id'])) {
+//                $totals = $totals->whereIn('country_id', $input['country_id']);
+//            } else {
+//                $totals = $totals->where('country_id', $input['country_id']);
+//            }
+//        }
+//
+//        // Email Required filter
+//        if (isset($input['required_email']) && $input['required_email'] > 0) {
+//            $totals = $totals->where('ext_domains.email', '!=', '');
+//        }
+//
+//        // Domain Filter
+//        if (isset($input['domain'])) {
+//            $totals = $totals->where('domain', 'like', '%' . $input['domain'] . '%');
+//        }
+//
+//        // From Filter
+//        if (isset($input['from'])) {
+//            if (is_array($input['from'])) {
+//                $totals = $totals->whereIn('from', $input['from']);
+//            } else {
+//                $totals = $totals->where('from', $input['from']);
+//            }
+//        }
+//
+//        // Status Filter
+//        if (isset($input['status']) && !empty($input['status']) && $input['status'] != '-1') {
+//            if (is_array($input['status'])) {
+//                $totals = $totals->whereIn('ext_domains.status', $input['status']);
+//            } else {
+//                $totals = $totals->where('ext_domains.status', $input['status']);
+//            }
+//        }
+//
+//        // Alexa Rank Filter
+//        if (isset($input['alexa_rank_from']) && !empty($input['alexa_rank_from']) && isset($input['alexa_rank_to']) && !empty($input['alexa_rank_to']) ) {
+//            $totals = $totals->whereBetween('alexa_rank',[$input['alexa_rank_from'], $input['alexa_rank_to']]);
+//        }
+//
+//        // Domain Zone
+//        if (isset($input['domain_zone']) && !empty($input['domain_zone'])) {
+//            if (is_array($input['domain_zone'])) {
+//
+//                $regs = implode(",", $input['domain_zone']);
+//                $regs = str_replace('.', '', $regs);
+//                $regs = explode(",", $regs);
+//
+//                $totals = $totals->whereIn(DB::raw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','')"), $regs);
+//
+//            } else {
+//
+//                $regs = str_replace('.', '', $input['domain_zone']);
+//
+//                $totals = $totals->whereRaw("REPLACE(REPLACE(SUBSTRING_INDEX(domain, '.', -1),' ',''),'/','') = '$regs'");
+//            }
+//        }
+//
+//        // Date upload filter
+//        $input['alexa_date_upload'] = \GuzzleHttp\json_decode($input['alexa_date_upload'], true);
+//
+//        if (isset($input['alexa_date_upload']) && $input['alexa_date_upload']['startDate'] != null && $input['alexa_date_upload']['endDate'] != null) {
+//            $totals = $totals->whereDate('ext_domains.created_at', '>=', Carbon::create($input['alexa_date_upload']['startDate'])->format('Y-m-d'));
+//            $totals = $totals->whereDate('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
+//        }
 
         $totals = $totals->whereNull('deleted_at')->first();
 

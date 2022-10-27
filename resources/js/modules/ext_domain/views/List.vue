@@ -240,7 +240,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box rounded bg-aqua">
                     <div class="inner">
-                        <h3>{{ listExt.total }}</h3>
+                        <h3>{{ extListTotals['Total'] }}</h3>
                         <p>{{ $t('message.url_prospect.s_total') }}</p>
                     </div>
                     <div class="icon">
