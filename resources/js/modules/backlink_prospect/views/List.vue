@@ -200,7 +200,7 @@
                             <div class="col-lg-3 col-6">
                                 <div class="small-box rounded bg-aqua">
                                     <div class="inner">
-                                        <h3>{{ backinkProspectList.total }}</h3>
+                                        <h3>{{ backlinkProspectTotals.Total }}</h3>
                                         <p>{{ $t('message.url_prospect.s_total') }}</p>
                                     </div>
                                     <div class="icon">
@@ -1415,10 +1415,10 @@ export default {
         },
 
         calculatePercentage (number) {
-            if (this.backinkProspectList.total === 0) {
+            if (this.backlinkProspectTotals.Total === 0) {
                 return 0;
             } else {
-                return ((number / this.backinkProspectList.total) * 100).toFixed(2);
+                return ((number / this.backlinkProspectTotals.Total) * 100).toFixed(2);
             }
         },
     }

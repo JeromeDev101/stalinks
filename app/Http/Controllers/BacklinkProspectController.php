@@ -271,6 +271,7 @@ class BacklinkProspectController extends Controller
 
     public function getTotals () {
         $totals = DB::table('backlink_prospect')
+            ->selectRaw("count(*) as Total")
             ->selectRaw("count(case when status = 'New' then 1 end) as New")
             ->selectRaw("count(case when status = 'Qualified' then 1 end) as Qualified")
             ->selectRaw("count(case when status = 'Unqualified' then 1 end) as Unqualified")
