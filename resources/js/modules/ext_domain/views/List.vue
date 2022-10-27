@@ -3756,10 +3756,10 @@ export default {
         },
 
         calculatePercentage (number) {
-            if (this.listExt.total === 0) {
+            if (this.extListTotals['Total'] === 0) {
                 return 0;
             } else {
-                return ((number / this.listExt.total) * 100).toFixed(2);
+                return ((number / this.extListTotals['Total']) * 100).toFixed(2);
             }
         },
 
