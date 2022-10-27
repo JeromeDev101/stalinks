@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-body collapse" id="collapseExample">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.filter_search_ref_domain') }}</label>
                                     <input type="text"
@@ -41,7 +41,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.filter_ur') }}</label>
                                     <div class="input-group mb-3">
@@ -62,7 +62,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.filter_dr') }}</label>
                                     <div class="input-group mb-3">
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.filter_org_kw') }}</label>
                                     <div class="input-group mb-3">
@@ -104,7 +104,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.filter_org_traffic') }}</label>
                                     <div class="input-group mb-3">
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Status 3rd Party</label>
                                     <select class="form-control" v-model="filterModel.status">
@@ -138,7 +138,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label>Status StaLinks URL Prospect</label>
                                     <select class="form-control" v-model="filterModel.status2">
@@ -168,6 +168,16 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Is Moved?</label>
+                                    <select class="form-control" v-model="filterModel.is_moved">
+                                        <option value="">All</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -175,7 +185,7 @@
                                 <button class="btn btn-default" @click="clearSearch()">
                                     {{ $t('message.backlink_prospect.clear') }}
                                 </button>
-                                <button class="btn btn-default" @click="getBacklinkProspect()">
+                                <button class="btn btn-default" @click="getBacklinkProspect(1)">
                                     {{ $t('message.backlink_prospect.search') }}
                                     <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
@@ -243,6 +253,18 @@
                     </div>
                     <div class="card-body">
                         <div v-if="Object.keys(backlinkProspectTotalsStatus2).length !== 0" class="row">
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box rounded bg-aqua">
+                                    <div class="inner">
+                                        <h3>{{ calculateStatusTotal(backlinkProspectTotalsStatus2) }}</h3>
+                                        <p>{{ $t('message.url_prospect.s_total') }}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div v-for="total in status2Totals" class="col-lg-3 col-6">
                                 <div class="small-box rounded" :class="total.badge">
                                     <div class="inner">
@@ -606,6 +628,7 @@ export default {
                     endDate : null
                 },
                 paginate: 50,
+                is_moved: '',
             },
             category: [
                 'News',
@@ -651,10 +674,8 @@ export default {
     },
 
     async created() {
-        this.getBacklinkProspect();
+        this.getBacklinkProspect(this.$route.query.page);
         // this.excelExportData();
-        this.getExtListTotals();
-        this.getExtListTotalsStatus2();
     },
 
     computed : {
@@ -800,16 +821,12 @@ export default {
                     value: 'Qualified'
                 },
                 {
-                    text: self.$t('message.backlink_prospect.s_unqualified'),
-                    value: 'Unqualified'
+                    text: self.$t('message.url_prospect.s_in_touched'),
+                    value: 'In-touched'
                 },
                 {
-                    text: self.$t('message.backlink_prospect.s_hosting_expired'),
-                    value: 'Hosting Expired'
-                },
-                {
-                    text: self.$t('message.backlink_prospect.s_free_sub'),
-                    value: 'Free Submission'
+                    text: self.$t('message.url_prospect.s_refused'),
+                    value: 'Refused'
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_to_be_contacted'),
@@ -824,16 +841,20 @@ export default {
                     value: 'Contacted Via Form'
                 },
                 {
-                    text: 'In-touched',
-                    value: 'In-touched'
-                },
-                {
-                    text: 'Refused',
-                    value: 'Refused'
-                },
-                {
-                    text: 'No Answer',
+                    text: self.$t('message.url_prospect.s_no_answer'),
                     value: 'No Answer'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_unqualified'),
+                    value: 'Unqualified'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_hosting_expired'),
+                    value: 'Hosting Expired'
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_free_sub'),
+                    value: 'Free Submission'
                 },
             ];
         },
@@ -847,12 +868,36 @@ export default {
                     value: 'null',
                 },
                 {
-                    text: 'New',
+                    text: self.$t('message.url_prospect.s_new'),
                     value: 0,
                 },
                 {
-                    text: 'Contact Null',
+                    text: self.$t('message.backlink_prospect.s_qualified'),
+                    value: 100,
+                },
+                {
+                    text: self.$t('message.backlink_prospect.s_in_touched'),
+                    value: 70,
+                },
+                {
+                    text: self.$t('message.url_prospect.s_refused'),
+                    value: 60,
+                },
+                {
+                    text: self.$t('message.url_prospect.s_got_contacts'),
+                    value: 30,
+                },
+                {
+                    text: self.$t('message.url_prospect.s_got_email'),
+                    value: 110,
+                },
+                {
+                    text: self.$t('message.url_prospect.s_contact_null'),
                     value: 20,
+                },
+                {
+                    text: self.$t('message.url_prospect.s_crawl_failed'),
+                    value: 10,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_contacted'),
@@ -861,18 +906,6 @@ export default {
                 {
                     text: self.$t('message.backlink_prospect.s_contacted_via_form'),
                     value: 120,
-                },
-                {
-                    text: self.$t('message.backlink_prospect.s_in_touched'),
-                    value: 70,
-                },
-                {
-                    text: self.$t('message.backlink_prospect.s_qualified'),
-                    value: 100,
-                },
-                {
-                    text: self.$t('message.backlink_prospect.s_refused'),
-                    value: 60,
                 },
                 {
                     text: self.$t('message.backlink_prospect.s_no_answer'),
@@ -890,7 +923,7 @@ export default {
                     total: self.backlinkProspectTotals['New'],
                     badge: 'bg-primary',
                     icon: 'fas fa-asterisk',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['New'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['New'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -898,55 +931,7 @@ export default {
                     total: self.backlinkProspectTotals['Qualified'],
                     badge: 'bg-olive',
                     icon: 'fas fa-certificate',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Qualified'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_unqualified'),
-                    total: self.backlinkProspectTotals['Unqualified'],
-                    badge: 'bg-dark',
-                    icon: 'fas fa-ban',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Unqualified'])
-                },
-
-                {
-                    text: 'Hosting Expired',
-                    total: self.backlinkProspectTotals['Hosting'],
-                    badge: 'bg-danger',
-                    icon: 'fas fa-hourglass-end',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Hosting'])
-                },
-
-                {
-                    text: 'Free Submission',
-                    total: self.backlinkProspectTotals['Free'],
-                    badge: 'bg-gradient-teal',
-                    icon: 'fas fa-box-open',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Free'])
-                },
-
-                {
-                    text: 'To Be Contacted',
-                    total: self.backlinkProspectTotals['ToBeContacted'],
-                    badge: 'bg-warning',
-                    icon: 'fas fa-phone',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['ToBeContacted'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_contacted'),
-                    total: self.backlinkProspectTotals['Contacted'],
-                    badge: 'bg-success',
-                    icon: 'fas fa-check-circle',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Contacted'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_contacted_via_form'),
-                    total: self.backlinkProspectTotals['ContactedViaForm'],
-                    badge: 'bg-secondary',
-                    icon: 'fab fa-wpforms',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['ContactedViaForm'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Qualified'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -954,7 +939,7 @@ export default {
                     total: self.backlinkProspectTotals['Intouched'],
                     badge: 'bg-purple',
                     icon: 'fas fa-comments',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Intouched'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Intouched'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -962,7 +947,31 @@ export default {
                     total: self.backlinkProspectTotals['Refused'],
                     badge: 'bg-maroon',
                     icon: 'fas fa-handshake-alt-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Refused'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Refused'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: 'To Be Contacted',
+                    total: self.backlinkProspectTotals['ToBeContacted'],
+                    badge: 'bg-warning',
+                    icon: 'fas fa-phone',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['ToBeContacted'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_contacted'),
+                    total: self.backlinkProspectTotals['Contacted'],
+                    badge: 'bg-success',
+                    icon: 'fas fa-check-circle',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Contacted'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_contacted_via_form'),
+                    total: self.backlinkProspectTotals['ContactedViaForm'],
+                    badge: 'bg-secondary',
+                    icon: 'fab fa-wpforms',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['ContactedViaForm'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -970,7 +979,31 @@ export default {
                     total: self.backlinkProspectTotals['NoAnswer'],
                     badge: 'bg-orange',
                     icon: 'fas fa-phone-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['NoAnswer'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['NoAnswer'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_unqualified'),
+                    total: self.backlinkProspectTotals['Unqualified'],
+                    badge: 'bg-dark',
+                    icon: 'fas fa-ban',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Unqualified'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: 'Hosting Expired',
+                    total: self.backlinkProspectTotals['Hosting'],
+                    badge: 'bg-danger',
+                    icon: 'fas fa-hourglass-end',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Hosting'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: 'Free Submission',
+                    total: self.backlinkProspectTotals['Free'],
+                    badge: 'bg-gradient-teal',
+                    icon: 'fas fa-box-open',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Free'], self.backlinkProspectTotals['Total'])
                 },
             ];
         },
@@ -984,39 +1017,7 @@ export default {
                     total: self.backlinkProspectTotalsStatus2['New'],
                     badge: 'bg-primary',
                     icon: 'fas fa-asterisk',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['New'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_contact_null'),
-                    total: self.backlinkProspectTotalsStatus2['ContactNull'],
-                    badge: 'bg-warning',
-                    icon: 'fas fa-comment-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['ContactNull'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_contacted'),
-                    total: self.backlinkProspectTotalsStatus2['Contacted'],
-                    badge: 'bg-success',
-                    icon: 'fas fa-check-circle',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Contacted'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_contacted_via_form'),
-                    total: self.backlinkProspectTotalsStatus2['ContactedViaForm'],
-                    badge: 'bg-secondary',
-                    icon: 'fab fa-wpforms',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['ContactedViaForm'])
-                },
-
-                {
-                    text: self.$t('message.url_prospect.s_in_touched'),
-                    total: self.backlinkProspectTotalsStatus2['Intouched'],
-                    badge: 'bg-purple',
-                    icon: 'fas fa-comments',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Intouched'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['New'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
                 },
 
                 {
@@ -1024,7 +1025,15 @@ export default {
                     total: self.backlinkProspectTotalsStatus2['Qualified'],
                     badge: 'bg-olive',
                     icon: 'fas fa-certificate',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Qualified'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Qualified'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_in_touched'),
+                    total: self.backlinkProspectTotalsStatus2['Intouched'],
+                    badge: 'bg-purple',
+                    icon: 'fas fa-comments',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Intouched'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
                 },
 
                 {
@@ -1032,7 +1041,56 @@ export default {
                     total: self.backlinkProspectTotalsStatus2['Refused'],
                     badge: 'bg-maroon',
                     icon: 'fas fa-handshake-alt-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Refused'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Refused'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_got_contacts'),
+                    total: self.backlinkProspectTotalsStatus2['GotContacts'],
+                    badge: 'bg-gradient-teal',
+                    icon: 'fas fa-address-card',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['GotContacts'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_got_email'),
+                    total: self.backlinkProspectTotalsStatus2['GotEmail'],
+                    badge: 'bg-cyan',
+                    icon: 'fas fa-at',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['GotEmail'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+
+                {
+                    text: self.$t('message.url_prospect.s_contact_null'),
+                    total: self.backlinkProspectTotalsStatus2['ContactNull'],
+                    badge: 'bg-warning',
+                    icon: 'fas fa-comment-slash',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['ContactNull'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_crawl_failed'),
+                    total: self.backlinkProspectTotalsStatus2['CrawlFailed'],
+                    badge: 'bg-danger',
+                    icon: 'fas fa-times-circle',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['CrawlFailed'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_contacted'),
+                    total: self.backlinkProspectTotalsStatus2['Contacted'],
+                    badge: 'bg-success',
+                    icon: 'fas fa-check-circle',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['Contacted'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
+                },
+
+                {
+                    text: self.$t('message.url_prospect.s_contacted_via_form'),
+                    total: self.backlinkProspectTotalsStatus2['ContactedViaForm'],
+                    badge: 'bg-secondary',
+                    icon: 'fab fa-wpforms',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['ContactedViaForm'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
                 },
 
                 {
@@ -1040,7 +1098,7 @@ export default {
                     total: self.backlinkProspectTotalsStatus2['NoAnswer'],
                     badge: 'bg-orange',
                     icon: 'fas fa-phone-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['NoAnswer'])
+                    percentage: self.calculatePercentage(self.backlinkProspectTotalsStatus2['NoAnswer'], self.calculateStatusTotal(self.backlinkProspectTotalsStatus2))
                 },
             ];
         }
@@ -1066,6 +1124,7 @@ export default {
                     org_kw_direction : this.buttonState.org_kw,
                     org_traffic_direction : this.buttonState.org_traffic,
                     date_upload : this.filterModel.date_upload,
+                    is_moved : this.filterModel.is_moved,
                     page : 1,
                 }
             }).then((res) => {
@@ -1184,7 +1243,7 @@ export default {
                 }
 
 
-                this.getBacklinkProspect();
+                this.getBacklinkProspect(this.filterModel.page);
             })
         },
 
@@ -1200,7 +1259,7 @@ export default {
                             'success'
                         )
 
-                        this.getBacklinkProspect();
+                        this.getBacklinkProspect(this.filterModel.page);
                         $('#modal-update-backlink_prospect').modal({
                             show: false
                         });
@@ -1226,7 +1285,7 @@ export default {
 
                         this.$refs.excel.value = '';
                         this.btnUpload = true;
-                        this.getBacklinkProspect()
+                        this.getBacklinkProspect(this.filterModel.page)
 
                     } else {
                         swal.fire(
@@ -1242,6 +1301,7 @@ export default {
         getBacklinkProspect(page = 1) {
             let loader = this.$loading.show();
             this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);
+            this.filterModel.page = page;
 
             axios.get('/api/backlink-prospect', {
                 params : {
@@ -1258,10 +1318,13 @@ export default {
                     dr_direction : this.buttonState.dr,
                     org_kw_direction : this.buttonState.org_kw,
                     org_traffic_direction : this.buttonState.org_traffic,
-                    page : page,
+                    is_moved : this.filterModel.is_moved,
+                    page : this.filterModel.page,
                 }
             }).then((res) => {
                 this.backinkProspectList = res.data
+                this.getProspectTotals();
+                this.getProspectTotals2();
                 loader.hide();
             })
         },
@@ -1307,7 +1370,7 @@ export default {
                     show: false
                 });
 
-                this.getBacklinkProspect();
+                this.getBacklinkProspect(this.filterModel.page);
             })
         },
 
@@ -1336,6 +1399,7 @@ export default {
 
         clearSearch() {
             this.filterModel = {
+                page: 1,
                 paginate : 50,
                 referring_domain : '',
                 status : '',
@@ -1348,10 +1412,11 @@ export default {
                     startDate : null,
                     endDate : null
                 },
+                is_moved: '',
             }
 
             this.$router.replace({'query' : null});
-            this.getBacklinkProspect();
+            this.getBacklinkProspect(1);
             // this.excelExportData();
         },
 
@@ -1380,9 +1445,11 @@ export default {
                         'success'
                     )
 
-                    this.allSelected = true;
-                    this.checkIds = [];
-                    this.getBacklinkProspect();
+                    let page = self.backinkProspectList.data.length <= 1 ? 1 : self.filterModel.page
+
+                    self.allSelected = true;
+                    self.checkIds = [];
+                    self.getBacklinkProspect(page);
                 })
             } else {
                 swal.fire(
@@ -1404,7 +1471,7 @@ export default {
             this.downloadCsvTemplate(headers, 'backlink_prospect_list_data');
         },
 
-        getExtListTotals () {
+        getProspectTotals () {
             axios.get('/api/backlink-prospect-totals')
             .then((res) => {
                 this.backlinkProspectTotals = res.data
@@ -1414,7 +1481,7 @@ export default {
             })
         },
 
-        getExtListTotalsStatus2 () {
+        getProspectTotals2 () {
             axios.get('/api/backlink-prospect-totals-2')
                 .then((res) => {
                     this.backlinkProspectTotalsStatus2 = res.data
@@ -1424,11 +1491,21 @@ export default {
                 })
         },
 
-        calculatePercentage (number) {
-            if (this.backlinkProspectTotals.Total === 0) {
+        calculateStatusTotal (totals) {
+            let sum = 0;
+            for( let el in totals ) {
+                if( totals.hasOwnProperty( el ) ) {
+                    sum += parseFloat( totals[el] );
+                }
+            }
+            return sum;
+        },
+
+        calculatePercentage (number, total) {
+            if (total === 0) {
                 return 0;
             } else {
-                return ((number / this.backlinkProspectTotals.Total) * 100).toFixed(2);
+                return ((number / total) * 100).toFixed(2);
             }
         },
     }

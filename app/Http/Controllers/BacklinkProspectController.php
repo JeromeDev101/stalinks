@@ -66,6 +66,12 @@ class BacklinkProspectController extends Controller
             $backlink_prospects->where('status', $filter['status']);
         }
 
+        if (isset($filter['is_moved']) && !empty($filter['is_moved'])) {
+            $value = $filter['is_moved'] === 'yes' ? 1 : 0;
+
+            $backlink_prospects->where('is_moved', $value);
+        }
+
         if (isset($filter['status2'])) {
             if ($filter['status2'] === 'null') {
                 $backlink_prospects->has('prospect', '<', 1);
@@ -294,14 +300,17 @@ class BacklinkProspectController extends Controller
 
     public function getTotalsStatus2 () {
         $totals = DB::table('backlink_prospect')
-            ->selectRaw("count(case when ext_domains.status = 0 then 1 end) as New")
-            ->selectRaw("count(case when ext_domains.status = 20 then 1 end) as ContactNull")
-            ->selectRaw("count(case when ext_domains.status = 50 then 1 end) as Contacted")
-            ->selectRaw("count(case when ext_domains.status = 120 then 1 end) as ContactedViaForm")
-            ->selectRaw("count(case when ext_domains.status = 70 then 1 end) as Intouched")
-            ->selectRaw("count(case when ext_domains.status = 100 then 1 end) as Qualified")
-            ->selectRaw("count(case when ext_domains.status = 60 then 1 end) as Refused")
-            ->selectRaw("count(case when ext_domains.status = 55 then 1 end) as NoAnswer")
+            ->selectRaw("count(case when ext_domains.status = 0 and ext_domains.deleted_at is null then 1 end) as New")
+            ->selectRaw("count(case when ext_domains.status = 20 and ext_domains.deleted_at is null then 1 end) as ContactNull")
+            ->selectRaw("count(case when ext_domains.status = 50 and ext_domains.deleted_at is null then 1 end) as Contacted")
+            ->selectRaw("count(case when ext_domains.status = 120 and ext_domains.deleted_at is null then 1 end) as ContactedViaForm")
+            ->selectRaw("count(case when ext_domains.status = 70 and ext_domains.deleted_at is null then 1 end) as Intouched")
+            ->selectRaw("count(case when ext_domains.status = 100 and ext_domains.deleted_at is null then 1 end) as Qualified")
+            ->selectRaw("count(case when ext_domains.status = 60 and ext_domains.deleted_at is null then 1 end) as Refused")
+            ->selectRaw("count(case when ext_domains.status = 55 and ext_domains.deleted_at is null then 1 end) as NoAnswer")
+            ->selectRaw("count(case when ext_domains.status = 30 and ext_domains.deleted_at is null then 1 end) as GotContacts")
+            ->selectRaw("count(case when ext_domains.status = 110 and ext_domains.deleted_at is null then 1 end) as GotEmail")
+            ->selectRaw("count(case when ext_domains.status = 10 and ext_domains.deleted_at is null then 1 end) as CrawlFailed")
             ->leftJoin('ext_domains', 'backlink_prospect.id', '=', 'ext_domains.backlink_prospect_id')
             ->first();
 
