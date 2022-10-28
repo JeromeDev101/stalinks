@@ -1762,6 +1762,7 @@ export default {
             allSelected : false,
             sendBtn : false,
             paginate : {
+                current: 0,
                 next : 0,
                 prev : 0,
                 from : 0,
@@ -2588,8 +2589,11 @@ export default {
 
                     axios.post('/api/mail/delete-message-thread', {ids : ids})
                         .then((res) => {
+
+                            let page = self.records.data.length <= 1 ? 1 : self.paginate.current
+
                             self.clearViewing()
-                            self.getInbox()
+                            self.getInbox(page)
                             self.checkIds = [];
                             self.checkSelected()
 
@@ -2655,7 +2659,7 @@ export default {
                     //     }
                     // }
 
-                    this.getInbox()
+                    this.getInbox(this.paginate.current)
 
                     this.checkIds = [];
 
@@ -2677,7 +2681,7 @@ export default {
                     label_id : this.updateModel.label_id
                 })
                     .then((res) => {
-                        self.getInbox()
+                        self.getInbox(this.paginate.current)
                         $("#modal-label-selection").modal('hide')
                     })
             }
@@ -2742,7 +2746,7 @@ export default {
             })
                 .then((res) => {
                     if (is_all) {
-                        this.getInbox();
+                        this.getInbox(this.paginate.current);
                     }
                 })
         },
@@ -2772,7 +2776,7 @@ export default {
             })
                 .then((res) => {
                     if (mod !== 'single') {
-                        self.getInbox();
+                        self.getInbox(this.paginate.current);
                     }
 
                     self.checkIds = [];
@@ -2965,7 +2969,7 @@ export default {
                 this.$parent.setQueryLabel(label);
             }
 
-            this.getInbox();
+            this.getInbox(this.paginate.current);
             this.$parent.getListEmails();
         },
 
@@ -3393,7 +3397,7 @@ export default {
                 // clear attachment count
                 this.attached_files[type] = 0;
 
-                this.getInbox();
+                this.getInbox(this.paginate.current);
 
                 // clear message forms
                 this.clearMessageform()
@@ -3446,6 +3450,7 @@ export default {
                         this.paginate.to = this.records.to == null ? 0 : this.records.to;
                         this.paginate.total = this.records.total == null ? 0 : this.records.total;
                         this.paginate.from = this.records.from == null ? 0 : this.records.from;
+                        this.paginate.current = this.records.current_page;
 
                         if (this.records.next_page_url != null) {
                             let page = this.records.next_page_url.split("=")[1];
@@ -3505,7 +3510,7 @@ export default {
                     'success'
                 )
 
-                this.getInbox();
+                this.getInbox(this.paginate.current);
             });
         },
 

@@ -1597,7 +1597,8 @@ export default {
                     account_validation: this.$route.query.account_validation || 'valid',
                     domain_zone: this.$route.query.domain_zone || '',
                     is_https: this.$route.query.is_https || '',
-                    sort: ''
+                    sort: '',
+                    page : this.$route.query.page || 1,
                 },
                 searchLoading: false,
                 checkIds: [],
@@ -1711,7 +1712,7 @@ export default {
                 this.isGenerating = true;
             }
 
-            this.getPublisherList();
+            this.getPublisherList(this.$route.query.page);
             this.checkAccountType();
             this.getListSeller();
             this.getListSellerIncharge();
@@ -2319,7 +2320,7 @@ export default {
 
             sortPublisher(data) {
                 this.filterModel.sort = data.filter(item => item.sort !== '' && item.hidden !== true)
-                this.getPublisherList();
+                this.getPublisherList(this.filterModel.page);
             },
 
             updateSortOptions(data) {
@@ -2468,6 +2469,7 @@ export default {
                 let loader = this.$loading.show();
                 this.searchLoading = true;
                 this.isSearching = true;
+                this.filterModel.page = page;
 
                 // change the format of date
                 this.filterModel.uploaded = this.formatFilterDates(this.filterModel.uploaded)
@@ -2477,70 +2479,33 @@ export default {
                     this.filterModel.sort = this.getSortData()
                 }
 
-                if(this.filterModel.paginate == 'All')
-                {
-
-                    await this.$store.dispatch('getListPublisher', {
-                        params: {
-                            country_id: this.filterModel.country_id,
-                            continent_id: this.filterModel.continent_id,
-                            search: this.filterModel.search,
-                            language_id: this.filterModel.language_id,
-                            inc_article: this.filterModel.inc_article,
-                            seller: this.filterModel.seller,
-                            paginate: 1000000,
-                            got_ahref: this.filterModel.got_ahref,
-                            date: this.filterModel.date,
-                            uploaded: this.filterModel.uploaded,
-                            valid: this.filterModel.valid,
-                            in_charge: this.filterModel.in_charge,
-                            casino_sites: this.filterModel.casino_sites,
-                            topic: this.filterModel.topic,
-                            kw_anchor: this.filterModel.kw_anchor,
-                            price_basis: this.filterModel.price_basis,
-                            qc_validation: this.filterModel.qc_validation,
-                            page: page,
-                            show_duplicates:
-                            this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation,
-                            domain_zone:
-                            this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https,
-                            sort: this.filterModel.sort
-                        }
-                    });
-                }else{
-                    await this.$store.dispatch('getListPublisher', {
-                        params: {
-                            country_id: this.filterModel.country_id,
-                            continent_id: this.filterModel.continent_id,
-                            search: this.filterModel.search,
-                            language_id: this.filterModel.language_id,
-                            inc_article: this.filterModel.inc_article,
-                            seller: this.filterModel.seller,
-                            paginate: this.filterModel.paginate,
-                            got_ahref: this.filterModel.got_ahref,
-                            date: this.filterModel.date,
-                            uploaded:
-                            this.filterModel.uploaded,
-                            valid: this.filterModel.valid,
-                            in_charge: this.filterModel.in_charge,
-                            casino_sites: this.filterModel.casino_sites,
-                            topic: this.filterModel.topic,
-                            kw_anchor: this.filterModel.kw_anchor,
-                            price_basis: this.filterModel.price_basis,
-                            qc_validation: this.filterModel.qc_validation,
-                            page: page,
-                            show_duplicates:
-                            this.filterModel.show_duplicates,
-                            account_validation: this.filterModel.account_validation,
-                            domain_zone:
-                            this.filterModel.domain_zone,
-                            is_https: this.filterModel.is_https,
-                            sort: this.filterModel.sort
-                        }
-                    });
-                }
+                await this.$store.dispatch('getListPublisher', {
+                    params: {
+                        country_id: this.filterModel.country_id,
+                        continent_id: this.filterModel.continent_id,
+                        search: this.filterModel.search,
+                        language_id: this.filterModel.language_id,
+                        inc_article: this.filterModel.inc_article,
+                        seller: this.filterModel.seller,
+                        paginate: this.filterModel.paginate === 'All' ? 1000000 : this.filterModel.paginate,
+                        got_ahref: this.filterModel.got_ahref,
+                        date: this.filterModel.date,
+                        uploaded: this.filterModel.uploaded,
+                        valid: this.filterModel.valid,
+                        in_charge: this.filterModel.in_charge,
+                        casino_sites: this.filterModel.casino_sites,
+                        topic: this.filterModel.topic,
+                        kw_anchor: this.filterModel.kw_anchor,
+                        price_basis: this.filterModel.price_basis,
+                        qc_validation: this.filterModel.qc_validation,
+                        page: this.filterModel.paginate === 'All' ? 1 : this.filterModel.page,
+                        show_duplicates: this.filterModel.show_duplicates,
+                        account_validation: this.filterModel.account_validation,
+                        domain_zone: this.filterModel.domain_zone,
+                        is_https: this.filterModel.is_https,
+                        sort: this.filterModel.sort
+                    }
+                });
 
                 let columnDefs = [
                         { orderable: true, targets: 0 },
@@ -2691,7 +2656,7 @@ export default {
                             confirmButtonText: self.$t('message.publisher.ok'),
                         });
 
-                        this.getPublisherList();
+                        this.getPublisherList(this.filterModel.page);
 
                     }
                 }
@@ -2717,7 +2682,7 @@ export default {
                         confirmButtonText: self.$t('message.publisher.ok'),
                     });
 
-                    await this.getPublisherList();
+                    await this.getPublisherList(this.filterModel.page);
                 } else {
                     loader.hide();
 
@@ -2832,7 +2797,7 @@ export default {
                 .then((res) => {
                     this.checkIds = [];
 
-                    this.getPublisherList();
+                    this.getPublisherList(this.filterModel.page);
                     this.isDisabled = true;
 
                     swal.fire(
@@ -2856,7 +2821,9 @@ export default {
                         }
                     });
 
-                    this.getPublisherList();
+                    let page = self.listPublish.data.length <= 1 ? 1 : self.filterModel.page
+
+                    this.getPublisherList(page);
                     this.checkIds = []
                     this.isDisabled = true;
                 }
@@ -2871,7 +2838,7 @@ export default {
 
                 if (this.messageForms.action === 'saved'){
                     $("#modal-add-url").modal('hide')
-                    this.getPublisherList();
+                    this.getPublisherList(this.filterModel.page);
 
                     swal.fire(
                         self.$t('message.publisher.alert_saved'),
@@ -2937,7 +2904,7 @@ export default {
                 await this.$store.dispatch('actionUploadCsv', this.formData);
 
                 if (this.messageForms.action === 'uploaded') {
-                    this.getPublisherList();
+                    this.getPublisherList(this.filterModel.page);
                     this.$refs.excel.value = '';
                     // this.$refs.language.value = '';
                     this.showLang = false;
@@ -3015,14 +2982,13 @@ export default {
                     },
                     domain_zone: '',
                     is_https : '',
-                    sort: ''
+                    sort: '',
+                    page: 1
                 }
 
                 this.country_continent_filter_info = '';
 
-                this.getPublisherList({
-                    params: this.filterModel
-                });
+                this.getPublisherList(1);
 
                 this.$refs.sortComponent.resetSort();
 
@@ -3058,12 +3024,12 @@ export default {
 
                                 $("#modal-update-publisher").modal('hide')
                             } else {
-                                this.getPublisherList();
+                                this.getPublisherList(this.filterModel.page);
                             }
                         });
                     } else {
 
-                        this.getPublisherList();
+                        this.getPublisherList(this.filterModel.page);
 
                         swal.fire(
                             self.$t('message.publisher.alert_updated'),
@@ -3129,7 +3095,7 @@ export default {
 
                 this.checkIds = [];
 
-                this.getPublisherList();
+                this.getPublisherList(this.filterModel.page);
             },
 
             doUpdate(publish) {
@@ -3194,7 +3160,9 @@ export default {
                         }
                     });
 
-                    this.getPublisherList();
+                    let page = self.listPublish.data.length <= 1 ? 1 : self.filterModel.page
+
+                    this.getPublisherList(page);
                 }
             },
 
@@ -3213,34 +3181,7 @@ export default {
                     this.filterModel.sort = this.getSortData()
                 }
 
-                this.getPublisherList({
-                    params: {
-                        country_id: this.filterModel.country_id,
-                        continent_id: this.filterModel.continent_id,
-                        search: this.filterModel.search,
-                        language_id: this.filterModel.language_id,
-                        inc_article: this.filterModel.inc_article,
-                        seller: this.filterModel.seller,
-                        paginate: this.filterModel.paginate,
-                        got_ahref: this.filterModel.got_ahref,
-                        date: this.filterModel.date,
-                        uploaded: this.filterModel.uploaded,
-                        valid: this.filterModel.valid,
-                        in_charge: this.filterModel.in_charge,
-                        casino_sites: this.filterModel.casino_sites,
-                        topic: this.filterModel.topic,
-                        kw_anchor: this.filterModel.kw_anchor,
-                        price_basis: this.filterModel.price_basis,
-                        qc_validation: this.filterModel.qc_validation,
-                        show_duplicates:
-                        this.filterModel.show_duplicates,
-                        account_validation: this.filterModel.account_validation,
-                        domain_zone:
-                        this.filterModel.domain_zone,
-                        is_https: this.filterModel.is_https,
-                        sort: this.filterModel.sort
-                    }
-                });
+                this.getPublisherList(1);
             },
 
             getSortData() {
