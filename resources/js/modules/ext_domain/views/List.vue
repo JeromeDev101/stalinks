@@ -3947,6 +3947,7 @@ export default {
             await this.$store.dispatch('updateExt', {
                 ext : this.extUpdate,
                 pub : this.publisherAdd,
+                pub_exists : this.isDomainExistListPublisher
             });
 
             if (this.messageForms.action === 'updated_ext') {

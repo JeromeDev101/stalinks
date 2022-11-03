@@ -595,7 +595,7 @@ class ExtDomainController extends Controller
         $input['email'] = array_column($input['email'], 'text');
 
 
-        if ( $request->ext['status'] == 100){
+        if ( $request->ext['status'] == 100 && !$request->pub_exists){
             $request->validate([
                 'pub.seller' => 'required',
                 'pub.language_id' => 'required',
