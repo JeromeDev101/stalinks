@@ -13,6 +13,7 @@ const LIST_SELLER = 'LIST_SELLER';
 const LIST_SELLER_INCHARGE = 'LIST_SELLER_INCHARGE';
 const PUBLISHER_DOMAIN_SET_LIST_AHERFS = 'PUBLISHER_DOMAIN_SET_LIST_AHERFS';
 const LIST_BEST_PRICE_LOG = 'LIST_BEST_PRICE_LOG';
+const PUBLISHER_CSV_UPLOAD_LOG_STATUS = 'PUBLISHER_CSV_UPLOAD_LOG_STATUS';
 
 const state = {
     totalPublish: 0,
@@ -53,7 +54,8 @@ const state = {
         code_price: true,
     },
     bestPriceGeneratorOn: false,
-    bestPriceLogs: {}
+    bestPriceLogs: {},
+    publisherCsvUploadOngoing: false,
 }
 
 const getters = {
@@ -139,6 +141,10 @@ const mutations = {
     [LIST_BEST_PRICE_LOG](state, listLog) {
         state.bestPriceLogs = listLog;
         state.bestPriceGeneratorOn = listLog[0].status === 'start';
+    },
+
+    [PUBLISHER_CSV_UPLOAD_LOG_STATUS](state, listLogStatus = null) {
+        state.publisherCsvUploadOngoing = listLogStatus;
     },
 
     [LIST_DOMAIN_ZONES](state, listDomainZones) {
@@ -421,6 +427,14 @@ const actions = {
         try {
             let response = await PublisherService.getGeneratorLogsApi();
             commit(LIST_BEST_PRICE_LOG, response.data);
+        } catch (e) {
+        }
+    },
+
+    async getPublisherCsvUploadStatus({commit}) {
+        try {
+            let response = await PublisherService.getPublisherCsvUploadStatusApi();
+            commit(PUBLISHER_CSV_UPLOAD_LOG_STATUS, response.data);
         } catch (e) {
         }
     }

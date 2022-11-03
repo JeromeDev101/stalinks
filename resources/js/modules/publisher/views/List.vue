@@ -350,39 +350,24 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="row">
+                        <div class="row form-divider pb-3">
                             <div class="col-12 col-md-12 col-xl-4 mt-2">
-                                <div class="input-group">
-                                    <input type="file"
-                                           class="form-control"
-                                           v-on:change="checkDataExcel(); checkAccountValidity()"
-                                           enctype="multipart/form-data"
-                                           ref="excel"
-                                           name="file">
+                                <button
+                                    class="btn btn-primary mr-2"
+                                    data-toggle="modal"
+                                    data-target="#modal-upload-csv"
 
-                                        <button
-                                            :title="$t('message.publisher.pu_upload')"
-                                            class="btn btn-primary btn-flat"
-                                            :disabled="isEnableBtn || checkAccountValidity()"
+                                    @click="checkAccountValidity()">
 
-                                            @click="submitUpload">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
+<!--                                    <i class="fas fa-file-upload"></i>-->
+                                    <i :class="{
+                                        'fas fa-file-upload': isCsvUploading === false,
+                                        'fas fa-circle-notch fa-spin': isCsvUploading === true}">
 
-                                        <button
-                                            :title="$t('message.publisher.pu_download')"
-                                            class="btn btn-primary btn-flat"
+                                    </i>
 
-                                            @click="downloadTemplate">
-                                            <i class="fa fa-download"></i>
-                                        </button>
-                                </div>
-
-                                <span v-if="messageForms.errors.file"
-                                      v-for="err in messageForms.errors.file"
-                                      class="text-danger">{{ err }}</span>
-                                <span v-if="messageForms.action == 'uploaded'"
-                                      class="text-success">{{ messageForms.message }}</span>
+                                    {{ isCsvUploading ? "Uploading csv..." : "Upload Urls" }}
+                                </button>
                             </div>
 
                             <div class="col-12 col-md-12 col-xl-8 mt-2">
@@ -431,59 +416,8 @@
                             </div>
                         </div>
 
-                        <div class="row mt-3">
-                            <div class="col-md-12">
-                                <div
-                                    v-if="checkAccountValidity() && showLang"
-                                    class="alert alert-error">
-
-                                    <p class="mb-0">
-                                        <strong>{{ $t('message.publisher.pu_unable_to_add') }}</strong>
-                                    </p>
-
-                                    <ul class="font-italic">
-                                        <li v-if="isAccountPaymentNotComplete">
-                                            {{ $t('message.publisher.pu_account_info') }}
-                                        </li>
-                                        <li v-if="isAccountInvalid">
-                                            {{ $t('message.publisher.pu_account_`status`') }}
-                                            <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
-                                        </li>
-                                    </ul>
-
-                                    <div class="mb-0">
-                                    <span>
-                                        {{ $t('message.publisher.pu_relog') }}
-                                        <span v-if="this.isAccountPaymentNotComplete">
-                                            {{ $t('message.publisher.pu_please') }}
-                                            <router-link :to="{ path: `/profile/${user.id}` }">
-                                                {{ $t('message.publisher.pu_click') }}
-                                            </router-link>
-                                            {{ $t('message.publisher.pu_complete') }}
-                                        </span>
-
-                                        <span v-if="this.isAccountInvalid">
-                                            {{ $t('message.publisher.pu_contact') }}
-                                        </span>
-                                    </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <small v-show="user.isOurs == 0" class="text-secondary">
-                                    {{ $t('message.publisher.pu_reminder') }}
-                                    {{ $t('message.publisher.pu_columns') }}
-                                </small>
-
-                                <small v-show="user.isOurs == 1" class="text-secondary">
-                                    {{ $t('message.publisher.pu_reminder_uploaded') }}
-                                </small>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-8 my-3">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
 
                                 <div class="input-group">
                                     <button
@@ -551,27 +485,10 @@
                                             </a>
                                         </div>
                                     </div>
-
-                                    <export-excel
-                                        :data=masterListDataMethod()
-                                        type="csv"
-                                        name="master_list.xls"
-                                        worksheet="My Worksheet"
-                                        class="btn btn-default">
-
-                                        {{ $t('message.publisher.ab_download_list') }}
-                                    </export-excel>
-
-                                    <i
-                                        class="fa fa-question-circle text-primary"
-                                        :title="$t('message.publisher.ab_download_note')">
-
-                                    </i>
-
                                 </div>
                             </div>
 
-                            <div class="col-md-4 my-3">
+                            <div class="col-md-4">
                                 <div class="input-group justify-content-end">
                                     <Sort
                                         ref="sortComponent"
@@ -944,7 +861,7 @@
                             <div class="col-md-12">
                                 <div
                                     v-if="checkAccountValidity()"
-                                    class="alert alert-error">
+                                    class="alert alert-danger">
 
                                     <p class="mb-0">
                                         <strong>{{ $t('message.publisher.pu_unable_to_add') }}</strong>
@@ -1307,7 +1224,6 @@
         </div>
         <!-- End of Modal Settings -->
 
-
         <!-- Modal Failed to Upload -->
         <div class="modal fade" id="modal-failed-upload">
             <div class="modal-dialog modal-lg">
@@ -1347,7 +1263,6 @@
             </div>
         </div>
         <!-- End Modal Failed to Upload -->
-
 
         <!-- Modal Multiple edit -->
         <div class="modal fade" id="modal-multiple-edit">
@@ -1474,6 +1389,580 @@
             </div>
         </div>
         <!-- End Multiple Edit -->
+
+        <!-- Modal Upload CSV -->
+        <div class="modal fade" id="modal-upload-csv">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title pull-left">Upload URLs</h4>
+
+                        <h4 v-if="isCsvUploading" class="pull-right">
+                            <span class="badge badge-pill badge-warning">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                                Upload CSV ongoing ..
+                            </span>
+                        </h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div>
+                                                    <button
+                                                        class="btn btn-success btn-block"
+                                                        :title="'View Uploads'"
+
+                                                        @click="viewCsvUserUploads(1)">
+
+                                                        <i class="far fa-list-alt"></i>
+                                                        View Uploads
+                                                    </button>
+                                                </div>
+
+                                                <div class="text-center">
+                                                    <small class="text-success">
+                                                        View uploaded valid urls, the upload status, errors, etc
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div>
+                                                    <button
+                                                        class="btn btn-primary btn-block"
+                                                        :title="$t('message.publisher.pu_download')"
+
+                                                        @click="downloadTemplate">
+
+                                                        <i class="fas fa-file-csv"></i>
+                                                        {{ $t('message.publisher.pu_download') }}
+                                                    </button>
+                                                </div>
+
+                                                <div class="text-center">
+                                                    <small class="text-primary">
+                                                        Download the csv template to use for uploading
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div>
+                                                    <export-excel
+                                                        :data=masterListDataMethod()
+                                                        type="csv"
+                                                        name="master_list.xls"
+                                                        worksheet="My Worksheet"
+                                                        class="btn btn-info btn-block">
+
+                                                        <i class="fas fa-tasks"></i>
+                                                        Download Master List
+                                                    </export-excel>
+                                                </div>
+
+                                                <div class="text-center">
+                                                    <small class="text-info">
+                                                        Check the list of countries, languages and topics that
+                                                        the csv upload accepts
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <div class="form-divider pb-2">
+                                    <div class="card">
+                                        <div class="card-body">
+
+
+                                            <div class="input-group mt-3">
+                                                <input
+                                                    type="file"
+                                                    name="file"
+                                                    ref="excel"
+                                                    class="form-control"
+                                                    enctype="multipart/form-data"
+
+                                                    @change="checkDataExcel(); checkAccountValidity()">
+
+                                                <button
+                                                    class="btn btn-primary btn-flat"
+                                                    :title="$t('message.publisher.pu_upload')"
+                                                    :disabled="isEnableBtn || checkAccountValidity() || isCsvUploading"
+
+                                                    @click="submitUpload">
+
+                                                    <i :class="{
+                                                        'fa fa-upload': isCsvUploading === false,
+                                                        'fas fa-circle-notch fa-spin': isCsvUploading === true}">
+                                                    </i>
+                                                </button>
+                                            </div>
+
+                                            <small class="font-italic text-secondary">
+                                                Please follow the instructions below to avoid encountering errors
+                                                while uploading URLs.
+                                            </small>
+
+                                            <div>
+                                                <span v-if="messageForms.errors.file" class="text-danger">
+                                                    {{ messageForms.errors.file }}
+                                                </span>
+
+                                                <span
+                                                    v-if="messageForms.action === 'uploaded'"
+                                                    class="text-success">
+
+                                                    {{ messageForms.message }}
+                                                </span>
+                                            </div>
+
+
+
+                                            <div v-if="checkAccountValidity() && showLang" class="mt-3">
+                                                <div class="alert alert-danger" role="alert">
+
+                                                    <p class="mb-0">
+                                                        <strong>{{ $t('message.publisher.pu_unable_to_add') }}</strong>
+                                                    </p>
+
+                                                    <ul class="font-italic">
+                                                        <li v-if="isAccountPaymentNotComplete">
+                                                            {{ $t('message.publisher.pu_account_info') }}
+                                                        </li>
+                                                        <li v-if="isAccountInvalid">
+                                                            {{ $t('message.publisher.pu_account_status') }}
+                                                            <strong>{{ user.user_type ? user.user_type.account_validation : 'invalid' }}</strong>.
+                                                        </li>
+                                                    </ul>
+
+                                                    <div class="mb-0">
+                                                        <span>
+                                                            {{ $t('message.publisher.pu_relog') }}
+                                                            <span v-if="this.isAccountPaymentNotComplete">
+                                                                {{ $t('message.publisher.pu_please') }}
+                                                                <router-link :to="{ path: `/profile/${user.id}` }">
+                                                                    {{ $t('message.publisher.pu_click') }}
+                                                                </router-link>
+                                                                {{ $t('message.publisher.pu_complete') }}
+                                                            </span>
+
+                                                            <span v-if="this.isAccountInvalid">
+                                                                {{ $t('message.publisher.pu_contact') }}
+                                                            </span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <i class="fas fa-info-circle"></i>
+                                            Instructions:
+                                        </div>
+                                        <ol style="padding-left: 1rem !important; font-size: 80%;">
+                                            <li>
+                                                The required columns for the CSV file are: URL, Price, Inc Article,
+                                                <span v-if="user.isOurs === 0">Seller ID,</span> Accept C&B, Language,
+                                                Topic, Country and KW Anchor. You can also download the template by
+                                                clicking the 'Download CSV Template' button.
+                                            </li>
+                                            <li>
+                                                The maximum items for the file is 500.
+                                            </li>
+                                            <li>
+                                                The price must be in USD.
+                                            </li>
+                                            <li>
+                                                Inc Article, Accept C&B and KW Anchor values must only be Yes/No.
+                                            </li>
+                                            <li>
+                                                For the language column, please select the main language of the website.
+                                            </li>
+                                            <li>
+                                                KW Anchor column should be 'Yes' if you accept KW. Set the column value
+                                                to 'No' if only URL.
+                                            </li>
+                                            <li>
+                                               The file format must be CSV.
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <i class="fas fa-info-circle"></i>
+                                            Column Values:
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="table-responsive">
+                                                    <table class="table" style="font-size: 80%;">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th>Column</th>
+                                                            <th>Description</th>
+                                                            <th>Value</th>
+                                                            <th>Example</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">URL</th>
+                                                            <td>The URL of the website.</td>
+                                                            <td>String/Text</td>
+                                                            <td>stalinks.com</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Price</th>
+                                                            <td>The price of the url.</td>
+                                                            <td>Number/Integer</td>
+                                                            <td>14</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Inc Article</th>
+                                                            <td>If the url includes an article.</td>
+                                                            <td>Yes/No</td>
+                                                            <td>Yes/No</td>
+                                                        </tr>
+                                                        <tr v-if="user.isOurs === 0">
+                                                            <th class="text-primary">Seller ID</th>
+                                                            <td>The user ID of the seller.</td>
+                                                            <td>Number/Integer</td>
+                                                            <td>1234</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Accept C&B</th>
+                                                            <td>If you accept casino and betting sites.</td>
+                                                            <td>Yes/No</td>
+                                                            <td>Yes/No</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Language</th>
+                                                            <td>The main language of the website.</td>
+                                                            <td>
+                                                                You can check the list of accepted languages by downloading
+                                                                our master list.
+                                                            </td>
+                                                            <td>English</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Topic</th>
+                                                            <td>The topic or category of the website.</td>
+                                                            <td>
+                                                                You can check the list of accepted topics by downloading
+                                                                our master list.
+                                                            </td>
+                                                            <td>Education</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">Country</th>
+                                                            <td>The country of the website.</td>
+                                                            <td>
+                                                                You can check the list of accepted countries by downloading
+                                                                our master list.
+                                                            </td>
+                                                            <td>Thailand</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-primary">KW Anchor</th>
+                                                            <td>
+                                                                'Yes' if you accept Keyword Anchor, otherwise,
+                                                                'No' if only URL.
+                                                            </td>
+                                                            <td>Yes/No</td>
+                                                            <td>Yes/No</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Upload CSV -->
+
+        <!-- Modal View CSV Uploads -->
+        <div class="modal fade" id="modal-view-csv-uploads" ref="csvUploads">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">View CSV Uploads</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row px-3 mb-2">
+                            <div class="col-6 px-0 align-self-center">
+                                <b>
+                                    {{ $t('message.others.table_entries', { from: csvUploads.from, to: csvUploads.to, end: csvUploads.total }) }}
+                                </b>
+                            </div>
+                        </div>
+
+                        <div class="row px-3">
+                            <div class="table-responsive mb-2">
+                                <table
+                                    id="tbl_csv_uploads"
+                                    class="table table-hover rlink-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Result</th>
+                                            <th>Message</th>
+                                            <th>Duration</th>
+                                            <th>Uploaded</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr v-for="(upload, index) in csvUploads.data" :key="index">
+                                            <td class="text-center align-middle">
+                                                <div v-if="upload.end !== null">
+                                                    <span :class="{
+                                                        'badge badge-success': upload.status === 1,
+                                                        'badge badge-danger': upload.status === 0}">
+
+                                                        <span class="font-weight-bold">
+                                                            <i class="fas fa-hashtag"></i>
+                                                            {{ upload.id }}
+                                                            {{ upload.status === 1 ? 'Uploaded' : 'Failed' }}
+                                                        </span>
+                                                    </span>
+                                                </div>
+
+                                                <div v-else>
+                                                    <span class="badge badge-warning">
+                                                        <i class="fas fa-circle-notch fa-spin"></i>
+                                                        <i class="fas fa-hashtag"></i>
+                                                        {{ upload.id }}
+                                                        Uploading ..
+                                                    </span>
+                                                </div>
+                                            </td>
+
+                                            <td class="align-middle">
+                                                <div v-if="upload.end !== null">
+                                                    <div v-if="upload.status === 1">
+                                                        <div class="row">
+                                                            <div>
+                                                                <div class="text-success">
+                                                                    <i class="fas fa-check-circle"></i>
+                                                                    added:
+                                                                    {{ upload.valid_count }}
+                                                                </div>
+
+                                                                <div class="text-danger">
+                                                                    <i class="fas fa-times-circle"></i>
+                                                                    invalid:
+                                                                    {{ upload.invalid_count }}
+                                                                </div>
+
+                                                                <div class="text-primary">
+                                                                    <i class="fas fa-equals"></i>
+                                                                    rows:
+                                                                    {{ upload.invalid_count + upload.valid_count }}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="mt-2 w-100">
+                                                                <button
+                                                                    class="btn btn-default btn-sm btn-block"
+
+                                                                    @click="viewCsvUploadResults(upload)">
+                                                                    View
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div v-else>
+                                                        <span class="badge badge-secondary">N/A</span>
+                                                    </div>
+                                                </div>
+
+                                                <div v-else>
+                                                    <span class="badge badge-secondary">N/A</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center align-middle">
+                                                <div v-if="upload.end !== null">
+                                                    <div v-if="upload.status === 1">
+                                                        <span class="badge badge-secondary">N/A</span>
+                                                    </div>
+
+                                                    <div v-else>
+                                                        <span>{{ upload.message }}</span>
+                                                    </div>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="badge badge-secondary">N/A</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center align-middle">
+                                                <div v-if="upload.end !== null">
+                                                    <i class="fas fa-clock text-warning"></i>
+                                                    {{ upload.duration }}
+                                                </div>
+                                                <div v-else>
+                                                    <span class="badge badge-secondary">N/A</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center align-middle">
+                                                <i class="fas fa-calendar-plus text-primary"></i>
+                                                {{ upload.date_only }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <pagination
+                                :data="csvUploads"
+                                :limit="8"
+
+                                @pagination-change-page="viewCsvUserUploads">
+
+                            </pagination>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View CSV Uploads -->
+
+        <!-- Modal View CSV Uploads -->
+        <div class="modal fade" id="modal-view-csv-uploads-results" ref="csvUploadResults">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload # {{ csvUploadResults.id }} Results</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 text-success">
+                                                <i class="fas fa-check-circle"></i>
+                                                Added Rows: {{ csvUploadResults.valid_count }}
+                                            </div>
+
+                                            <div class="col-md-4 text-danger">
+                                                <i class="fas fa-times-circle"></i>
+                                                Invalid Rows: {{ csvUploadResults.invalid_count }}
+                                            </div>
+
+                                            <div class="col-md-4 text-primary">
+                                                <i class="fas fa-equals"></i>
+                                                Total Rows: {{ csvUploadResults.invalid_count + csvUploadResults.valid_count }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-success font-weight-bold p-3 text-center">
+                                                        {{ csvUploadResults.valid_count !== 0 ? 'Added Rows' : 'No Added Rows' }}
+                                                    </li>
+
+                                                    <li
+                                                        v-if="csvUploadResults.valid_count"
+                                                        v-for="(valid, index) in csvUploadResults.valid"
+                                                        class="list-group-item p-3"
+                                                        :key="index">
+
+                                                        {{ valid }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <ul class="list-group">
+                                                    <li class="list-group-item list-group-item-danger font-weight-bold p-3 text-center">
+                                                        {{ csvUploadResults.invalid_count !== 0 ? 'Invalid Rows' : 'No Invalid Rows' }}
+                                                    </li>
+
+                                                    <li
+                                                        v-if="csvUploadResults.invalid_count"
+                                                        v-for="(invalid, index) in csvUploadResults.invalid"
+                                                        class="list-group-item p-3"
+                                                        :key="index">
+
+                                                        {{ invalid }}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View CSV Uploads -->
     </div>
 </template>
 
@@ -1495,6 +1984,15 @@
         white-space: normal;
         text-overflow: initial;
         overflow: hidden;
+    }
+
+    .form-divider {
+        margin-bottom: 10px;
+        border-bottom: 3px solid #ced4da;
+    }
+
+    .form-divider span {
+        margin-bottom: 5px;
     }
 </style>
 
@@ -1702,14 +2200,32 @@ export default {
                 removedItems: [],
 
                 isSubmitAdd: false,
+
+                // csv upload
+                csvUploads: {
+                    data: {}
+                },
+
+                csvUploadResults: {
+                    valid: [],
+                    invalid: [],
+                    valid_count: 0,
+                    invalid_count: 0,
+                },
+
+                isCsvUploading: false,
             }
         },
 
         async created() {
-            await
-                this.$store.dispatch('getGeneratorLogs');
+            await this.$store.dispatch('getGeneratorLogs');
             if (this.isGeneratorOn) {
                 this.isGenerating = true;
+            }
+
+            await this.$store.dispatch('getPublisherCsvUploadStatus');
+            if (this.isUploadCsvOngoing) {
+                this.isCsvUploading = true;
             }
 
             this.getPublisherList(this.$route.query.page);
@@ -1741,12 +2257,10 @@ export default {
 
             pusher.logToConsole = true;
 
-            const channel = pusher.subscribe('private-user.' +
-                this.user.id);
+            const channel = pusher.subscribe('private-user.' + this.user.id);
 
             if (this.user.isAdmin || this.user.role_id == 8) {
-                const channel2 =
-                    pusher.subscribe('BestPriceChannel');
+                const channel2 = pusher.subscribe('BestPriceChannel');
 
                 channel2.bind('bestprices.start', (e) => {
                     this.isGenerating = true;
@@ -1766,6 +2280,20 @@ export default {
                     text: self.$t('message.publisher.alert_completed_best_price'),
                     confirmButtonText: "Ok",
                 });
+            });
+
+            channel.bind('publisher.csv.start', (e) => {
+                this.isCsvUploading = true;
+            });
+
+            channel.bind('publisher.csv.end', (e) => {
+                this.isCsvUploading = false;
+
+                swal.fire(
+                    self.$t('message.publisher.alert_uploaded'),
+                    'Url upload CSV successfully uploaded.',
+                    'success'
+                )
             });
 
             this.setDefaultSettings()
@@ -1886,8 +2414,8 @@ export default {
                 listIncharge: state => state.storeAccount.listIncharge,
                 listLanguages: state => state.storePublisher.listLanguages,
                 formula : state => state.storeSystem.formula,
-                isGeneratorOn: state =>
-                    state.storePublisher.bestPriceGeneratorOn
+                isGeneratorOn: state => state.storePublisher.bestPriceGeneratorOn,
+                isUploadCsvOngoing: state => state.storePublisher.publisherCsvUploadOngoing,
             }),
 
             isQc() {
@@ -2879,6 +3407,7 @@ export default {
                 // clear error messages
 
                 this.isEnableBtn = true;
+                this.isCsvUploading = true;
 
                 this.failedUpload.total = 0;
                 this.failedUpload.message = [];
@@ -2909,24 +3438,30 @@ export default {
                     // this.$refs.language.value = '';
                     this.showLang = false;
 
+                    // swal.fire(
+                    //     self.$t('message.publisher.alert_uploaded'),
+                    //     self.$t('message.publisher.alert_upload_success'),
+                    //     'success'
+                    //     )
+
                     swal.fire(
-                        self.$t('message.publisher.alert_uploaded'),
-                        self.$t('message.publisher.alert_upload_success'),
+                        'The csv upload is successfully added to the queue',
+                        "Please click the 'View Uploads' button to check the upload.",
                         'success'
-                        )
+                    )
 
-                    console.log(this.messageForms.errors)
+                    if (this.messageForms.hasOwnProperty('errors')) {
+                        let cnt_failed = this.messageForms.errors.length;
+                        if (cnt_failed > 0) {
+                            for (let key in this.messageForms.errors ){
+                                this.failedUpload.message.push(this.messageForms.errors[key].message)
+                            }
 
-                    let cnt_failed = this.messageForms.errors.length;
-                    if (cnt_failed > 0){
-                        for (let key in this.messageForms.errors ){
-                            this.failedUpload.message.push(this.messageForms.errors[key].message)
+                            this.failedUpload.total = cnt_failed;
+                            this.failedUpload.valid = this.messageForms.valid;
+                            this.failedUpload.invalid = this.messageForms.invalid;
+                            $("#modal-failed-upload").modal('show')
                         }
-
-                        this.failedUpload.total = cnt_failed;
-                        this.failedUpload.valid = this.messageForms.valid;
-                        this.failedUpload.invalid = this.messageForms.invalid;
-                        $("#modal-failed-upload").modal('show')
                     }
                 } else {
                     swal.fire(
@@ -3261,7 +3796,49 @@ export default {
                 headers.push(rows);
 
                 this.downloadCsvTemplate(headers, 'list_publisher_csv_template');
-            }
+            },
+
+            viewCsvUserUploads (page = 1) {
+                let loader = this.$loading.show();
+
+                axios.get('/api/publisher/view-csv-uploads', {
+                    params: {page: page, pagination: 15}
+                })
+                .then((res) => {
+                    loader.hide();
+
+                    this.csvUploads = res.data
+
+                    let table = $('#tbl_csv_uploads');
+
+                    table.DataTable().destroy();
+
+                    this.$nextTick(() => {
+                        table.DataTable({
+                            paging : false,
+                            searching : false,
+                            order: [],
+                            columnDefs : {orderable : true, targets : '_all'},
+                        });
+                    });
+
+                    // open modal
+                    let element = this.$refs.csvUploads
+                    $(element).modal('show')
+                })
+            },
+
+            viewCsvUploadResults (data) {
+                let temp = data;
+                this.csvUploadResults.valid_count = temp.valid_count;
+                this.csvUploadResults.invalid_count = temp.invalid_count;
+                this.csvUploadResults.valid = temp.valid ? JSON.parse(temp.valid) : [];
+                this.csvUploadResults.invalid = temp.invalid ? JSON.parse(temp.invalid) : [];
+
+                // open modal
+                let element = this.$refs.csvUploadResults
+                $(element).modal('show')
+            },
         }
 
     }

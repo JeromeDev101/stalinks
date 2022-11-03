@@ -18,3 +18,7 @@
 Broadcast::channel('user.{id}', function ($user, $id) {
      return true; //Always return true or false
 });
+
+Broadcast::channel('PublisherCsvChannel', function () {
+    return true; //Always return true or false
+});

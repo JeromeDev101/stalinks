@@ -53,7 +53,7 @@ export default {
     ab_qc_no: 'QC Validation No',
     ab_generate_country: 'Generate Country',
     ab_download_list: 'Download List',
-    ab_download_note: 'Download List is the List of Country, Langauge and Topic were you can use in uploading of your CSV.',
+    ab_download_note: 'Download List is the List of Countries, Languages and Topics were you can use in uploading of your CSV.',
 
     // table
     t_cb: 'Casino & Betting Sites',

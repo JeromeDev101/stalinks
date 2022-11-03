@@ -7,9 +7,12 @@ use App\Events\BestPriceGenerationStart;
 use App\Jobs\GenerateBestPrice;
 use App\Jobs\GenerateCountryByLanguageJob;
 use App\Jobs\SimpleMultipleUpdate;
+use App\Jobs\UploadCsvListPublisher;
+use App\Models\CsvUploadLog;
 use App\Models\DomainZone;
 use App\Notifications\CsvUploaded;
 use App\Services\HttpClient;
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\TransferStats;
 use Illuminate\Http\Request;
@@ -68,25 +71,54 @@ class PublisherController extends Controller
 
         $file = $request->all();
 //        $data = $this->publisherRepository->importExcel($file);
-        $data = $this->publisherRepository->importExcelTwo($request);
+//        $data = $this->publisherRepository->importExcelTwo($request);
 
-        if($data['success'] === false){
-            unset($data['success']);
-            return response()->json($data, 422);
-        } else {
-            // send email to user upload successful
-            if (Auth::user()->email) {
-                auth()->user()->notify(new CsvUploaded(auth()->user()));
-            }
-        }
+        $path = $request->file('file')->getRealPath();
+        $records = array_map('str_getcsv', file($path));
+
+        $log = CsvUploadLog::create([
+            'user_id' => Auth::user()->id,
+            'start' => Carbon::now(),
+        ]);
+
+        UploadCsvListPublisher::dispatch($records, Auth::user(), $log)->onQueue('high');
+
+//        if($data['success'] === false){
+//            unset($data['success']);
+//            return response()->json($data, 422);
+//        } else {
+//            // send email to user upload successful
+//            if (Auth::user()->email) {
+//                auth()->user()->notify(new CsvUploaded(auth()->user()));
+//            }
+//        }
+
+//        return response()->json([
+//            'success' => true,
+//            'data' => $data['exist'],
+//            'valid' => $data['valid'],
+//            'invalid' => $data['invalid']
+//        ], 200);
 
         return response()->json([
             'success' => true,
-            'data' => $data['exist'],
-            'valid' => $data['valid'],
-            'invalid' => $data['invalid']
+            'data' => [],
+            'valid' => [],
+            'invalid' => []
         ], 200);
+    }
 
+    public function viewCsvUploads (Request $request) {
+        return CsvUploadLog::where('user_id', Auth::user()->id)
+            ->with('user')
+            ->orderBy('id', 'DESC')
+            ->paginate($request->pagination);
+    }
+
+    public function viewCsvUploadLog () {
+        return CsvUploadLog::where('user_id', Auth::user()->id)
+            ->whereNull('end')
+            ->first();
     }
 
     public function store(Request $request){

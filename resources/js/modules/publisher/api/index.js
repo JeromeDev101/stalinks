@@ -115,4 +115,9 @@ export default class PublisherService {
             .catch(error => error);
     }
 
+    static getPublisherCsvUploadStatusApi() {
+        return axios.get('/api/publisher/csv-upload/log')
+            .then(response => response)
+            .catch(error => error);
+    }
 }

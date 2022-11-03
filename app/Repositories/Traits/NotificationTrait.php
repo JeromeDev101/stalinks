@@ -7,6 +7,8 @@ use App\Events\BestPriceGenerationStart;
 use App\Events\Buyer\BuyEvent;
 use App\Events\BuyerDebitedEvent;
 use App\Events\GenerateBestPricesDone;
+use App\Events\PublisherCsvUploadEnd;
+use App\Events\PublisherCsvUploadStart;
 use App\Events\SellerPaidEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Models\Notif;
@@ -67,5 +69,15 @@ trait NotificationTrait
     {
         broadcast(new BestPriceGenerationEnd());
 
+    }
+
+    public function startPublisherCsvUpload ($userId)
+    {
+        broadcast(new PublisherCsvUploadStart($userId));
+    }
+
+    public function endPublisherCsvUpload ($userId)
+    {
+        broadcast(new PublisherCsvUploadEnd($userId));
     }
 }

@@ -690,7 +690,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                         $validator = Validator::make(
                             $rows,
                             $this->generateValidationRules($rows),
-                            $this->generateValidationMessages($rows)
+                            $this->generateValidationMessages($rows, Auth::user())
                         );
 
                         if ($validator->fails()) {
@@ -789,7 +789,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $rules;
     }
 
-    public function generateValidationMessages ($data) {
+    public function generateValidationMessages ($data, $user) {
         $messages = [];
 
         foreach ($data as $key => $value){
@@ -797,7 +797,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $messages[$key . '.user_id' . '.in'] = 'Seller ID not found. Check row ' . ($key + 2);
 
             $messages[$key . '.url' . '.required'] = 'The URL field is required. Check row ' . ($key + 2);
-            $messages[$key . '.url' . '.unique'] = Auth::user()->isOurs == 1
+            $messages[$key . '.url' . '.unique'] = $user->isOurs == 1
                 ? 'You have already uploaded this url: :input . Check row ' . ($key + 2)
                 : 'The url and seller already exists. Check row ' . ($key + 2);
 
@@ -1238,7 +1238,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $result;
     }
 
-    private function getLanguage($language)
+    public function getLanguage($language)
     {
         $id = 5;
         $language = Language::where('name', 'like', '%' . $language . '%')->first();
@@ -1249,7 +1249,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $id;
     }
 
-    private function getCountry($country)
+    public function getCountry($country)
     {
         return Country::where('name', 'like', '%' . $country . '%')->first();
     }

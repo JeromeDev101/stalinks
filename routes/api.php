@@ -185,6 +185,8 @@ Route::middleware('auth:api')->group(function () {
     Route::name('publisher-delete')->delete('/publisher', 'PublisherController@delete');
     Route::name('publisher-get-ahrefs')->put('/publisher/ahrefs', 'PublisherController@getAhrefs');
     Route::name('upload-csv')->post('/publisher/upload-csv', 'PublisherController@importExcel');
+    Route::name('view-csv-uploads')->get('/publisher/view-csv-uploads', 'PublisherController@viewCsvUploads');
+    Route::name('csv-upload-log')->get('/publisher/csv-upload/log', 'PublisherController@viewCsvUploadLog');
     Route::name('publisher-get-summary')->get('/publisher/summary', 'PublisherController@getSummary');
     Route::name('publisher-valid')->post('/publisher/valid', 'PublisherController@validData');
     Route::name('best-price-log')->get('publisher/best-prices/log', 'PublisherController@bestPricesGenerationLog');
