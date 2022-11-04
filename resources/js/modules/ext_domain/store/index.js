@@ -77,6 +77,7 @@ const state = {
         ref_domains: false,
         organic_keywords: true,
         organic_traffic: true,
+        status_updated: true,
     },
 };
 

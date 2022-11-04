@@ -507,6 +507,15 @@ class ExtDomainRepository extends BaseRepository implements ExtDomainRepositoryI
             $query->whereDate('ext_domains.created_at', '<=', Carbon::create($input['alexa_date_upload']['endDate'])->format('Y-m-d'));
         }
 
+        // Date status updated filter
+        $input['status_updated'] = \GuzzleHttp\json_decode($input['status_updated'], true);
+
+        if (isset($input['status_updated']) && $input['status_updated']['startDate'] != null && $input['status_updated']['endDate'] != null) {
+            $query->whereDate('ext_domains.status_updated_at', '>=', Carbon::create($input['status_updated']['startDate'])->format('Y-m-d'));
+            $query->whereDate('ext_domains.status_updated_at', '<=', Carbon::create($input['status_updated']['endDate'])->format('Y-m-d'));
+        }
+
+
         // Include relationships
         $query->with(['country' => function($query) {
             $query->select(['id', 'name', 'code', 'continent_id']);

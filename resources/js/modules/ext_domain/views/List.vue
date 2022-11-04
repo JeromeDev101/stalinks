@@ -163,14 +163,30 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label
-                                        style="color: #333">{{ $t('message.url_prospect.filter_date_up') }}
-                                    </label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.filter_date_up') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
                                             opens="left"
                                             v-model="filterModel.alexa_date_upload"
+                                            :ranges="generateDefaultDateRange()"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                            :dateRange="filterModel.alexa_date_upload"
+                                            :linkedCalendars="true"
+                                            style="width: 100%"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label style="color: #333">Date Status Updated</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            ref="picker"
+                                            opens="left"
+                                            v-model="filterModel.status_updated"
                                             :ranges="generateDefaultDateRange()"
                                             :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
                                             :dateRange="filterModel.alexa_date_upload"
@@ -479,7 +495,7 @@
 
                     <div :class="{ 'box-body': true, 'no-padding': true, 'table-responsive': true }" class="mt-3">
 
-                       <span v-if="listExt.total > 10" class="pagination-custom-footer-text" style="margin-left: 0 !important;">
+                       <span v-if="listExt.total > 0" class="pagination-custom-footer-text" style="margin-left: 0 !important;">
                            <b v-if="!isResultCrawled">
                                {{ $t('message.others.table_entries', { from: listExt.from, to: listExt.to, end: listExt.total }) }}
                            </b>
@@ -1537,48 +1553,66 @@
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(3, tableShow.employee)"
-                                              :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">{{ $t('message.url_prospect.filter_emp') }}</label>
-                            </div>
-                            <div class="checkbox col-md-4">
-                                <label><input type="checkbox"
-                                              @change="toggleColumn(5, tableShow.continent)"
-                                              :checked="tableShow.continent ? 'checked':''" v-model="tableShow.continent">{{ $t('message.publisher.filter_continent') }}</label>
-                            </div>
-                            <div class="checkbox col-md-4">
-                                <label><input type="checkbox"
-                                              @change="toggleColumn(5, tableShow.country)"
-                                              :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">{{ $t('message.url_prospect.filter_country') }}</label>
-                            </div>
-                            <div class="checkbox col-md-4">
-                                <label><input type="checkbox"
-                                              @change="toggleColumn(5, tableShow.from)"
+                                              @change="toggleColumn(3, tableShow.from)"
                                               :checked="tableShow.from ? 'checked':''" v-model="tableShow.from">{{ $t('message.url_prospect.simple_from') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(6, tableShow.domain)"
+                                              @change="toggleColumn(4, tableShow.employee)"
+                                              :checked="tableShow.employee ? 'checked':''" v-model="tableShow.employee">{{ $t('message.url_prospect.filter_emp') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label>
+                                    <input
+                                        v-model="tableShow.status_updated"
+                                        type="checkbox"
+                                        :checked="tableShow.status_updated ? 'checked':''"
+
+                                        @change="toggleColumn(6, tableShow.status_updated)">
+
+                                    Status Updated
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(7, tableShow.continent)"
+                                              :checked="tableShow.continent ? 'checked':''" v-model="tableShow.continent">{{ $t('message.publisher.filter_continent') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(8, tableShow.country)"
+                                              :checked="tableShow.country ? 'checked':''" v-model="tableShow.country">{{ $t('message.url_prospect.filter_country') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(9, tableShow.domain)"
                                               :checked="tableShow.domain ? 'checked':''" v-model="tableShow.domain">{{ $t('message.url_prospect.add_domain') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(7, tableShow.email)"
+                                              @change="toggleColumn(10, tableShow.email)"
                                               :checked="tableShow.email ? 'checked':''" v-model="tableShow.email">{{ $t('message.url_prospect.add_email') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(8, tableShow.facebook)"
+                                              @change="toggleColumn(11, tableShow.facebook)"
                                               :checked="tableShow.facebook ? 'checked':''" v-model="tableShow.facebook">{{ $t('message.url_prospect.add_facebook') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(10, tableShow.rank)"
+                                              @change="toggleColumn(12, tableShow.phone)"
+                                              :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">{{ $t('message.url_prospect.add_phone') }}</label>
+                            </div>
+
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox"
+                                              @change="toggleColumn(13, tableShow.rank)"
                                               :checked="tableShow.rank ? 'checked':''"
                                               v-model="tableShow.rank">{{ $t('message.url_prospect.sd_rank') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(11, tableShow.status)"
+                                              @change="toggleColumn(14, tableShow.status)"
                                               :checked="tableShow.status ? 'checked':''" v-model="tableShow.status">{{ $t('message.url_prospect.tb_status') }}</label>
                             </div>
 <!--                            <div class="checkbox col-md-4">-->
@@ -1589,50 +1623,45 @@
 <!--                            </div>-->
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(13, tableShow.ahrefs_rank)"
+                                              @change="toggleColumn(15, tableShow.ahrefs_rank)"
                                               :checked="tableShow.ahrefs_rank ? 'checked':''"
                                               v-model="tableShow.ahrefs_rank">{{ $t('message.url_prospect.tb_ahrefs') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(14, tableShow.no_backlinks)"
+                                              @change="toggleColumn(16, tableShow.no_backlinks)"
                                               :checked="tableShow.no_backlinks ? 'checked':''"
                                               v-model="tableShow.no_backlinks">{{ $t('message.url_prospect.tb_backlinks') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(15, tableShow.url_rating)"
+                                              @change="toggleColumn(17, tableShow.url_rating)"
                                               :checked="tableShow.url_rating ? 'checked':''"
                                               v-model="tableShow.url_rating">{{ $t('message.url_prospect.tb_ur') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(16, tableShow.domain_rating)"
+                                              @change="toggleColumn(18, tableShow.domain_rating)"
                                               :checked="tableShow.domain_rating ? 'checked':''"
                                               v-model="tableShow.domain_rating">{{ $t('message.url_prospect.tb_dr') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(17, tableShow.ref_domains)"
+                                              @change="toggleColumn(19, tableShow.ref_domains)"
                                               :checked="tableShow.ref_domains ? 'checked':''"
                                               v-model="tableShow.ref_domains">{{ $t('message.url_prospect.tb_ref_domains') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(18, tableShow.organic_keywords)"
+                                              @change="toggleColumn(20, tableShow.organic_keywords)"
                                               :checked="tableShow.organic_keywords ? 'checked':''"
                                               v-model="tableShow.organic_keywords">{{ $t('message.url_prospect.tb_org_keywords') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox"
-                                              @change="toggleColumn(19, tableShow.organic_traffic)"
+                                              @change="toggleColumn(21, tableShow.organic_traffic)"
                                               :checked="tableShow.organic_traffic ? 'checked':''"
                                               v-model="tableShow.organic_traffic">{{ $t('message.url_prospect.tb_org_traffic') }}</label>
-                            </div>
-                            <div class="checkbox col-md-4">
-                                <label><input type="checkbox"
-                                              @change="toggleColumn(9, tableShow.phone)"
-                                              :checked="tableShow.phone ? 'checked':''" v-model="tableShow.phone">{{ $t('message.url_prospect.add_phone') }}</label>
                             </div>
                         </div>
                         <div class="overlay" v-if="isPopupLoading"></div>
@@ -2545,6 +2574,10 @@ export default {
                     startDate : null,
                     endDate : null
                 },
+                status_updated : {
+                    startDate : null,
+                    endDate : null
+                },
                 domain_zone : this.$route.query.domain_zone || '',
                 adv_sort: ''
             },
@@ -2845,6 +2878,13 @@ export default {
                     isHidden : false
                 },
                 {
+                    prop : 'status_updated_at',
+                    name : 'Status Updated',
+                    sortable : true,
+                    width : 150,
+                    isHidden : !this.tableShow.status_updated
+                },
+                {
                     prop : '_action',
                     name : this.$t('message.publisher.filter_continent'),
                     // sortable: true,
@@ -2992,6 +3032,12 @@ export default {
                     sort: '',
                     column: 'created_at',
                     hidden: false
+                },
+                {
+                    name: 'Status Updated',
+                    sort: '',
+                    column: 'status_updated_at',
+                    hidden: !this.tableShow.status_updated
                 },
                 {
                     name: this.$t('message.url_prospect.tb_country'),
@@ -3774,6 +3820,7 @@ export default {
 
             // change the format of date
             that.filterModel.alexa_date_upload = this.formatFilterDates(this.filterModel.alexa_date_upload)
+            that.filterModel.status_updated = this.formatFilterDates(this.filterModel.status_updated)
 
             this.$router.push({
                 query : that.filterModel,
@@ -3793,6 +3840,7 @@ export default {
                     alexa_rank_from : that.filterModel.alexa_rank_from,
                     alexa_rank_to : that.filterModel.alexa_rank_to,
                     alexa_date_upload : that.filterModel.alexa_date_upload,
+                    status_updated : that.filterModel.status_updated,
                     domain_zone : that.filterModel.domain_zone,
                     from : that.filterModel.from
                 }
@@ -3805,6 +3853,7 @@ export default {
 
             // change the format of date
             that.filterModel.alexa_date_upload = this.formatFilterDates(this.filterModel.alexa_date_upload)
+            that.filterModel.status_updated = this.formatFilterDates(this.filterModel.status_updated)
 
             this.$router.push({
                 query : that.filterModel,
@@ -3822,6 +3871,7 @@ export default {
                     employee_id : that.filterModel.employee_id,
                     required_email : that.filterModel.required_email,
                     alexa_date_upload : that.filterModel.alexa_date_upload,
+                    status_updated : that.filterModel.status_updated,
                     domain_zone : that.filterModel.domain_zone,
                     from : that.filterModel.from
                 }
@@ -4734,6 +4784,10 @@ export default {
                     startDate : null,
                     endDate : null
                 },
+                status_updated : {
+                    startDate : null,
+                    endDate : null
+                },
                 domain_zone : '',
                 adv_sort: '',
             };
@@ -4813,6 +4867,7 @@ export default {
 
             // change the format of date
             self.filterModel.alexa_date_upload = self.formatFilterDates(self.filterModel.alexa_date_upload)
+            self.filterModel.status_updated = self.formatFilterDates(self.filterModel.status_updated)
 
             axios.post('/api/ext/export-filtered', this.filterModel)
             .then((res) => {
