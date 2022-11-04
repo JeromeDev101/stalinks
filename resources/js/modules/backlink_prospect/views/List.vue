@@ -373,6 +373,9 @@
                                                 {{ $t('message.backlink_prospect.bp_selected_action') }}
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" @click="getAhrefs();">
+                                                    Get Ahref
+                                                </a>
                                                 <a class="dropdown-item" @click="editData();">
                                                     {{ $t('message.backlink_prospect.edit') }}
                                                 </a>
@@ -1105,6 +1108,51 @@ export default {
     },
 
     methods : {
+
+        getAhrefs() {
+
+            let self = this;
+
+            // check if no selected item
+            if( this.checkIds.length == 0 ) {
+                swal.fire(
+                    self.$t('message.backlink_prospect.alert_invalid'),
+                    self.$t('message.backlink_prospect.alert_please_select'),
+                    'error'
+                )
+
+                return false;
+            }
+
+            swal.fire({
+                title : self.$t('message.generate_list.alert_getting_ahrefs'),
+                text : self.$t('message.generate_list.alert_please_wait'),
+                timerProgressBar : true,
+                showConfirmButton : false,
+                allowOutsideClick : false,
+                onBeforeOpen : () => {
+                    swal.showLoading()
+                },
+            });
+
+            axios.post('/api/backlink-prospect/ahrefs', {
+                ids : this.checkIds
+            }).then((res) => {
+
+                console.log(res)
+
+                swal.fire(
+                    self.$t('message.generate_list.alert_success'),
+                    self.$t('message.generate_list.alert_updated_ahref'),
+                    'success'
+                )
+
+                this.allSelected = true;
+                this.checkIds = [];
+                this.getBacklinkProspect(this.filterModel.page);
+            })
+
+        },
 
         excelExportData() {
             this.filterModel.date_upload = this.formatFilterDates(this.filterModel.date_upload);

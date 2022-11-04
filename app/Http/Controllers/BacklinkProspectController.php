@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use GuzzleHttp\Client as GuzzleClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Libs\Ahref;
 
 class BacklinkProspectController extends Controller
 {
@@ -94,6 +95,23 @@ class BacklinkProspectController extends Controller
         }
 
         return response()->json(['data' => $backlink_prospects],200);
+    }
+
+    public function getAhrefs(Request $request) {
+
+        $bp_list = BacklinkProspect::whereIn('id', $request->ids)->get();
+
+        if ($bp_list->count() == 0) {
+            return [];
+        }
+
+        $configs['token'] = '1221d525cb70af4ee61e2561ced8985935920451';
+        $configs['base_url'] = 'https://apiv2.ahrefs.com?mode=subdomains&limit=1&target=';
+
+        $ahrefsInstant = new Ahref($configs);
+        $data = $ahrefsInstant->getAhrefsBpAsync($bp_list);
+
+        return $data;
     }
 
     public function importCsv(Request $request) {

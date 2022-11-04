@@ -271,4 +271,79 @@ class Ahref {
 
         return $dataReturn;
     }
+
+
+    public function getAhrefsBpAsync(Collection $BpList) {
+
+        $getFrom = [
+            'ahrefs_rank',
+            'domain_rating',
+            'metrics',
+            'positions_metrics',
+            'refdomains'
+        ];
+
+        $guzzleClient = new GuzzleClient();
+        $promises = (function () use ($BpList, $guzzleClient, $getFrom) {
+            foreach ($BpList as $list) {
+                foreach($getFrom as $from) {
+                    $url = remove_http($list->referring_domain);
+                    $url = trim_special_characters($url);
+
+                    yield $guzzleClient->requestAsync('GET', $this->getApiUrl($url, $from))
+                        ->then(function(ResponseInterface $response) use ($list) {
+                            $result = json_decode($response->getBody()->getContents(), true);
+
+                            if (isset($result['metrics']) && isset($result['metrics']['backlinks'])) {
+                                $list->backlinks = $result['metrics']['backlinks'];
+                            }
+
+                            if(isset($result['metrics']) && isset($result['metrics']['positions']) ){
+                                $list->org_kw = $result['metrics']['positions'];
+                                $list->org_traffic = number_format((float)$result['metrics']['traffic'], 2, '.', '');
+                            }
+
+                            if(isset($result['domain'])){
+                                $list->dr = $result['domain']['domain_rating'];
+                            }
+
+                            if(isset($result['pages'])){
+                                $list->ur = $result['pages'][0]['ahrefs_rank'];
+                            }
+
+                            if(isset($result['stats'])){
+                                $list->ref_domain_ahref = $result['stats']['refdomains'];
+                            }
+
+                            $list->save();
+
+                            return $list;
+                        });
+                    }
+                }
+        })();
+
+        $dataExt = [];
+        $maxProcess = config('crawler.max_process_ahrefs');
+        $totalCount = 0;
+        $eachPromise = new EachPromise($promises, [
+            'concurrency' => $maxProcess,
+            'fulfilled' => function ($list) use(&$dataExt, &$totalCount) {
+                $dataExt[] = $list;
+                $totalCount++;
+            },
+            'rejected' => function ($reason) {
+                Log::error('reject ', ['error' => $reason]);
+            }
+        ]);
+
+        $eachPromise->promise()->wait();
+        $dataReturn = [];
+
+        foreach($dataExt as $item) {
+            $dataReturn[$item->id] = $item;
+        }
+
+        return $dataReturn;
+    }
 }
