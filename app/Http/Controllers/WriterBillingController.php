@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\WriterPaidEvent;
 use App\Http\Requests\WriterPayRequest;
+use App\Notifications\WriterBillingReuploadDoc;
 use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PaypalInterface;
 use App\Services\InvoiceService;
@@ -88,11 +89,15 @@ class WriterBillingController extends Controller
 
         $new_name = null;
 
-        if ($request->get('id_payment_type') != 1) {
-            $image = $request->file;
-            $new_name = time() . '-billing-writer.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/billing'), $new_name);
-        }
+//        if ($request->get('id_payment_type') != 1) {
+//            $image = $request->file;
+//            $new_name = time() . '-billing-writer.' . $image->getClientOriginalExtension();
+//            $image->move(public_path('images/billing'), $new_name);
+//        }
+
+        $image = $request->file;
+        $new_name = time() . '-billing-writer.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images/billing'), $new_name);
 
         DB::beginTransaction();
         $article_ids = [];
@@ -114,25 +119,25 @@ class WriterBillingController extends Controller
             ]);
         }
 
-        if ($request->get('id_payment_type') == 1) {
-            $writer = User::find($user_id_writer);
-            $paypalResult = $paypal->createPayout([
-                'email' => $writer->email,
-                'amount' => $request->price
-            ]);
-
-            $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
-
-            BillingWriter::where('id_article', $article_id)->update([
-                'fee' => $payoutResult->result->items[0]->payout_item_fee->value
-            ]);
-
-            $invoicePdf = $invoice->generateWriterProof($writer, $article_ids, $request->price, $billing->id, $payoutResult->result->items[0]->payout_item_fee->value);
-
-            $billing->update([
-                'proof_doc_path' =>  $invoicePdf
-            ]);
-        }
+//        if ($request->get('id_payment_type') == 1) {
+//            $writer = User::find($user_id_writer);
+//            $paypalResult = $paypal->createPayout([
+//                'email' => $writer->email,
+//                'amount' => $request->price
+//            ]);
+//
+//            $payoutResult = $paypal->fetchPayout($paypalResult->result->batch_header->payout_batch_id);
+//
+//            BillingWriter::where('id_article', $article_id)->update([
+//                'fee' => $payoutResult->result->items[0]->payout_item_fee->value
+//            ]);
+//
+//            $invoicePdf = $invoice->generateWriterProof($writer, $article_ids, $request->price, $billing->id, $payoutResult->result->items[0]->payout_item_fee->value);
+//
+//            $billing->update([
+//                'proof_doc_path' =>  $invoicePdf
+//            ]);
+//        }
 
         event(new WriterPaidEvent($billing->user, $request->price, $article_ids, $billing->proof_doc_path));
 
@@ -183,5 +188,28 @@ class WriterBillingController extends Controller
         $file = Storage::get('STAL-WRITER-' . $id . '.pdf');
 
         return $file;
+    }
+
+    public function writerBillingReuploadDoc(Request $request) {
+        $request->validate([
+            'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        // reupload new document
+        $filename = time() . '-billing-writer.' . $request->file->getClientOriginalExtension();
+        move_file_to_storage($request->file, 'images/billing', $filename);
+
+        $billing = BillingWriter::find($request->billing_id);
+
+        if ($billing) {
+            $billing->update([
+                'proof_doc_path' => '/images/billing/' . $filename,
+            ]);
+
+            // send email to writer
+            $billing->user->notify(new WriterBillingReuploadDoc($billing, $filename));
+        }
+
+        return response()->json(['success' => true, 'data' => $billing], 200);
     }
 }

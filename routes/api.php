@@ -92,6 +92,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('update-seller-billing')->put('seller-billing/update/multiple', 'SellerBillingController@updateBillings');
     Route::name('get-writer-billing')->get('writer-billing', 'WriterBillingController@getList');
     Route::name('pay-writer-billing')->post('writer-billing', 'WriterBillingController@payBilling');
+    Route::name('reupload-writer-billing-doc')->post('writer-billing-reupload-doc', 'WriterBillingController@writerBillingReuploadDoc');
     Route::name('get-seller-info')->post('get-seller-info', 'SellerBillingController@getSellerInfo');
     Route::name('get-writer-info')->post('get-writer-info', 'WriterBillingController@getWriterInfo');
 

@@ -16,4 +16,8 @@ class BillingWriter extends Model
     {
         return $this->belongsTo('App\Models\User', 'id_user');
     }
+
+    public function article() {
+        return $this->belongsTo('App\Models\Article', 'id_article');
+    }
 }

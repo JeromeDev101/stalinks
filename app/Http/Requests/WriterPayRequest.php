@@ -23,9 +23,9 @@ class WriterPayRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->request->get('id_payment_type') == 1) {
-            return [];
-        }
+//        if ($this->request->get('id_payment_type') == 1) {
+//            return [];
+//        }
 
         return [
             'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',

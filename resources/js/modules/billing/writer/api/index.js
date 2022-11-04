@@ -25,4 +25,10 @@ export default class WriterBillingService {
             .then(response => response)
             .catch(error => error);
     }
+
+    static reUploadBillingDocWriter(params){
+        return axios.post('api/writer-billing-reupload-doc', params)
+            .then(response => response)
+            .catch(error => error);
+    }
 }

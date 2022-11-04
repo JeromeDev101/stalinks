@@ -434,7 +434,6 @@
                                     <th>{{ $t('message.mail_logs.filter_sender') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_subject') }}</th>
                                     <th>{{ $t('message.mail_logs.ml_to') }}</th>
-                                    <th>{{ $t('message.mail_logs.ml_bcc') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_status') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_from') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_date') }}</th>
@@ -455,7 +454,6 @@
                                     <td>{{ log.user_mail }}</td>
                                     <td>{{ log.subject }}</td>
                                     <td v-html="checkEmailTo(log.to)"></td>
-                                    <td></td>
                                     <td>
                                         <span class="badge" :class="statusClass(log.status)">{{ statusLabel(log.status) }}</span>
                                     </td>

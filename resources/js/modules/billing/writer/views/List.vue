@@ -196,6 +196,7 @@
                                                 @click="doShow(article.proof_doc_path)">
                                                 <i class="fa fa-fw fa-eye"></i>
                                             </button>
+
                                             <button
                                                 v-else
                                                 :title="$t('message.writer_billing.wb_download_proof')"
@@ -203,6 +204,18 @@
 
                                                 @click="downloadProof(article.billing_writer_id)">
                                                 <i class="fa fa-fw fa-download"></i>
+                                            </button>
+
+                                            <button
+                                                data-target="#modal-re-upload-doc-writer"
+                                                data-toggle="modal"
+                                                class="btn btn-default px-3 ml-2"
+                                                :title="$t('message.seller_billing.sb_re_upload_proof')"
+                                                :disabled="article.proof_doc_path == null"
+
+                                                @click="doShowReupload(article.proof_doc_path, article.billing_writer_id)">
+
+                                                <i class="fas fa-file-upload"></i>
                                             </button>
                                         </div>
                                     </td>
@@ -298,18 +311,16 @@
                                 </table>
                             </div>
 
-                            <div
-                                class="col-md-12"
-                                v-if="info.payment_type_id != 1">
+                            <div class="col-md-12">
 
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label>{{ $t('message.writer_billing.p_proof_documents') }}</label>
                                     <input
                                         type="file"
-                                       class="form-control"
-                                       enctype="multipart/form-data"
-                                       ref="proof"
-                                       name="file">
+                                        class="form-control"
+                                        enctype="multipart/form-data"
+                                        ref="proof"
+                                        name="file">
 
                                     <small class="text-muted">
                                         {{ $t('message.writer_billing.p_proof_note') }}
@@ -380,6 +391,91 @@
             </div>
         </div>
         <!-- End of Modal Proof Doc -->
+
+        <!-- Modal Re upload Doc -->
+        <div
+            class="modal fade"
+            id="modal-re-upload-doc-writer"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modelTitleId"
+            aria-hidden="true">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $t('message.seller_billing.rud_title') }}</h5>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>{{ $t('message.seller_billing.rud_uploaded') }}</strong>
+                            </div>
+
+                            <div class="cad-body">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <img
+                                            class="img-fluid"
+                                            :src="proof_doc_re_upload_writer"
+                                            :alt="$t('message.seller_billing.pd_proof_billing')">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>{{ $t('message.seller_billing.rud_new') }}</strong>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
+                                        <input
+                                            type="file"
+                                            class="form-control"
+                                            enctype="multipart/form-data"
+                                            ref="proof_reupload_writer"
+                                            name="file">
+
+                                        <small class="text-muted">
+                                            {{ $t('message.seller_billing.p_note') }}
+                                        </small> <br/>
+
+                                        <span
+                                            v-if="messageForms.errors.file"
+                                            v-for="err in messageForms.errors.file"
+                                            class="text-danger">
+                                            {{ err }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.seller_billing.close') }}
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="isDisabledReupload"
+
+                            @click="doReupload">
+
+                            {{ $t('message.seller_billing.rud_re_upload') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Re upload Doc -->
     </div>
 </template>
 
@@ -428,7 +524,13 @@ export default {
             },
             isDisabledPay : true,
             proof_doc : '',
+            proof_doc_re_upload_writer : '',
             isSearching : false,
+
+            reUploadModelWriter: {
+                billing_id: null,
+            },
+            isDisabledReupload: false,
         }
     },
 
@@ -601,24 +703,34 @@ export default {
         },
 
         async doPay() {
+            let loader = this.$loading.show();
             let ids = this.checkIds
+            this.isDisabledPay = true;
             this.formData = new FormData();
             this.formData.append('id_payment_type', this.info.payment_type_id);
             this.formData.append('price', this.info.amount);
             this.formData.append('ids', JSON.stringify(ids));
-
-            if (this.info.payment_type_id != 1) {
-                this.formData.append('file', this.$refs.proof.files[0]);
-            }
+            this.formData.append('file', this.$refs.proof.files[0]);
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionPayWriter', this.formData)
             this.isPopupLoading = false;
 
             if (this.messageForms.action == 'success') {
+                loader.hide();
                 this.getListArticles();
                 this.$refs.proof.value = '';
+                this.checkIds = [];
+
+                swal.fire(
+                    self.$t('message.seller_billing.alert_success'),
+                    self.$t('message.seller_billing.alert_paid_successfully'),
+                    'success'
+                )
             }
+
+            this.isDisabledPay = false;
+            loader.hide();
 
             this.$root.$refs.AppHeader.liveGetWallet()
         },
@@ -699,7 +811,70 @@ export default {
 
                 fileLink.click();
             });
-        }
+        },
+
+        doShowReupload(src, billing_id) {
+            this.proof_doc_re_upload_writer = src;
+            this.reUploadModelWriter.billing_id = billing_id
+        },
+
+        doReupload () {
+            let self = this;
+
+            swal.fire({
+                title : self.$t('message.seller_billing.alert_re_upload'),
+                html : 'Are you sure that you want to update the uploaded document? An automatic email will be sent to the writer.',
+                icon : "warning",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.seller_billing.yes_update'),
+                cancelButtonText : self.$t('message.seller_billing.keep')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    this.submitReupload()
+                }
+            });
+        },
+
+        async submitReupload () {
+            let self = this;
+            let loader = this.$loading.show();
+
+            this.isDisabledReupload = true;
+
+            this.formData = new FormData();
+            this.formData.append('billing_id', this.reUploadModelWriter.billing_id);
+            this.formData.append('file', this.$refs.proof_reupload_writer.files[0]);
+
+            await this.$store.dispatch('actionReuploadWriter', this.formData)
+
+            if (this.messageForms.action === 'success') {
+                $("#modal-re-upload-doc-writer").modal('hide')
+
+                await this.getListArticles();
+
+                this.$refs.proof_reupload_writer.value = '';
+                this.reUploadModelWriter.billing_id = null;
+                this.isDisabledReupload = false;
+
+                loader.hide();
+
+                await swal.fire(
+                    self.$t('message.seller_billing.alert_success'),
+                    self.$t('message.seller_billing.alert_re_upload_success'),
+                    'success'
+                )
+            } else {
+                loader.hide();
+                this.isDisabledReupload = false;
+
+                await swal.fire(
+                    self.$t('message.seller_billing.alert_error'),
+                    self.$t('message.seller_billing.alert_re_upload_error'),
+                    'error'
+                )
+            }
+        },
     },
 }
 </script>
