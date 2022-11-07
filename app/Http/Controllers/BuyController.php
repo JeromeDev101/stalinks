@@ -227,16 +227,25 @@ class BuyController extends Controller
                 $list->where(function ($q) use ($filter) {
                     foreach ($filter['code'] as $key => $code) {
                         if ($key == 0) {
+//                            $q->whereRaw('ROUND(
+//                                (
+//                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+//                                ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+
                             $q->whereRaw('ROUND(
                                 (
-                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
-                                ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                                LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "' . str_split($code)[1] . '", "") )
+                                ) / LENGTH("' . str_split($code)[1] . '")) = ' . str_split($code)[0]);
                         } else {
-                            $q->orWhere(function ($query) use ($code) {
+                            $q->where(function ($query) use ($code) {
+//                                $query->whereRaw('ROUND(
+//                                    (
+//                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
+//                                    ) / LENGTH("A")) = ' . rtrim($code, 'A'));
                                 $query->whereRaw('ROUND(
                                     (
-                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "A", "") )
-                                    ) / LENGTH("A")) = ' . rtrim($code, 'A'));
+                                    LENGTH(publisher.code_comb)- LENGTH( REPLACE (publisher.code_comb, "' . str_split($code)[1] . '", "") )
+                                    ) / LENGTH("' . str_split($code)[1] . '")) = ' . str_split($code)[0]);
                             });
                         }
                     }
