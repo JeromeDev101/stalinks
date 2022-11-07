@@ -929,7 +929,9 @@ class MailgunController extends Controller
                 'replies.stripped_html',
                 'replies.subject',
                 'replies.attachment',
-                'replies.from'
+                'replies.from',
+                'replies.cc',
+                'replies.bcc'
             );
 
         if (isset($request->status) && $request->status != '') {

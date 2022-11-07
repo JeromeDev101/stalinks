@@ -434,6 +434,7 @@
                                     <th>{{ $t('message.mail_logs.filter_sender') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_subject') }}</th>
                                     <th>{{ $t('message.mail_logs.ml_to') }}</th>
+                                    <th>CC/BCC</th>
                                     <th>{{ $t('message.mail_logs.filter_status') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_from') }}</th>
                                     <th>{{ $t('message.mail_logs.filter_date') }}</th>
@@ -454,6 +455,53 @@
                                     <td>{{ log.user_mail }}</td>
                                     <td>{{ log.subject }}</td>
                                     <td v-html="checkEmailTo(log.to)"></td>
+                                    <td>
+                                        <template v-if="log.cc || log.bcc">
+                                            <div v-if="log.cc" class="card">
+                                                <div class="card-header">
+                                                    <div class="card-title">
+                                                        <span>CC</span>
+
+                                                        <span class="badge badge-primary">
+                                                            {{ log.cc.split(',').length }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul>
+                                                        <li v-for="cc in log.cc.split(',')">
+                                                            {{ cc }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <hr v-if="log.cc && log.bcc">
+
+                                            <div v-if="log.bcc" class="card">
+                                                <div class="card-header">
+                                                    <div class="card-title">
+                                                        <span>BCC</span>
+
+                                                        <span class="badge badge-primary">
+                                                            {{ log.bcc.split(',').length }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <ul>
+                                                        <li v-for="bcc in log.bcc.split(',')">
+                                                            {{ bcc }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template v-else>
+                                            <span class="badge badge-secondary">N/A</span>
+                                        </template>
+                                    </td>
                                     <td>
                                         <span class="badge" :class="statusClass(log.status)">{{ statusLabel(log.status) }}</span>
                                     </td>
