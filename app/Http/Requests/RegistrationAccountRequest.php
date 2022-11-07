@@ -28,16 +28,16 @@ class RegistrationAccountRequest extends FormRequest
     {
         return [
             'name' => [ 'required' ],
-            'username' => [ 
+            'username' => [
                 'required',
-                Rule::unique('registration')->ignore($this->id), 
+                Rule::unique('registration')->ignore($this->id),
                 Rule::unique('users')->ignore($this->id),
             ],
             'email' => [
                 'unique:users,email',
                 'required',
                 'between:6,60',
-                'email',
+                'email:strict',
                 new ValidateEmailRule,
                 Rule::unique('registration')->ignore($this->id),
                 Rule::unique('users')->ignore($this->id),

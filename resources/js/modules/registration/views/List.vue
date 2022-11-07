@@ -1281,6 +1281,10 @@
 
                                         {{ err }}
                                     </span>
+
+                                    <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'email.')" class="text-danger">
+                                        {{ $t('message.inbox.cm_valid') }}
+                                    </span>
                                 </div>
                             </div>
 

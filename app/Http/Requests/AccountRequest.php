@@ -39,7 +39,7 @@ class AccountRequest extends FormRequest
                 'unique:users,email',
                 'required',
                 'between:6,60',
-                'email',
+                'email:strict',
 //                new ValidateEmailRule,
             ],
             'phone' => [

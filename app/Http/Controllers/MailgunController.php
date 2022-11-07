@@ -62,9 +62,9 @@ class MailgunController extends Controller
         }
 
         $rules = [
-            'email.*.text' => 'required|email',
-            'bcc.*.text' => 'required|email',
-            'cc.*.text' => 'required|email',
+            'email.*.text' => 'required|email:strict',
+            'bcc.*.text' => 'required|email:strict',
+            'cc.*.text' => 'required|email:strict',
             'title'        => 'required',
             'content'      => 'required',
         ];
