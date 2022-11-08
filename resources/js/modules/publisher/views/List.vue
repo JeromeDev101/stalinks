@@ -490,6 +490,18 @@
 
                             <div class="col-md-4">
                                 <div class="input-group justify-content-end">
+                                    <export-excel
+                                        v-if="user.isOurs === 0"
+                                        :data=sortDataForExportListPublisher(listPublish.data)
+                                        type="csv"
+                                        name="list_publisher.xls"
+                                        worksheet="My Worksheet"
+                                        class="btn btn-primary mr-2">
+
+                                        <i class="fa fa-list"></i>
+                                        {{ $t('message.backlink_prospect.bp_export') }}
+                                    </export-excel>
+
                                     <Sort
                                         ref="sortComponent"
                                         :sorted="isSorted"
@@ -3838,6 +3850,43 @@ export default {
                 // open modal
                 let element = this.$refs.csvUploadResults
                 $(element).modal('show')
+            },
+
+            sortDataForExportListPublisher (data) {
+                let self = this;
+
+                if (data) {
+                    return data.map(function(item) {
+                        return {
+                            id: item.id,
+                            uploaded: item.created_at,
+                            updated: item.updated_at,
+                            language: item.language_name,
+                            country: item.country_name,
+                            continent: item.country_continent === null && item.publisher_continent === null ? 'N/A' : item.publisher_continent ? item.publisher_continent : item.country_continent,
+                            topic: item.topic,
+                            'C&B Sites': item.casino_sites,
+                            'In Charge': item.in_charge === null ? 'N/A' : item.in_charge,
+                            seller: item.username ? item.username : item.user_name,
+                            valid: item.valid,
+                            'QC Valid': item.qc_validation,
+                            url: item.url,
+                            https: item.is_https,
+                            'Seller Price': (item.price === '' || item.price === null) ? '' : self.formatPrice(item.price),
+                            'Buyer Price': (item.price === '' || item.price === null) ? '' : self.computePriceStalinks(item.price, item.inc_article),
+                            'Price Basis': item.price_basis,
+                            'Inc Article': item.inc_article,
+                            'KW Anchor': item.kw_anchor,
+                            ur: item.ur,
+                            dr: item.dr,
+                            backlinks: item.backlinks,
+                            'Ref Domain': item.ref_domain,
+                            'Org Keywords': self.formatPrice(item.org_keywords),
+                            'Org Traffic': self.formatPrice(item.org_traffic),
+                            'Code Price': item.code_price,
+                        };
+                    });
+                }
             },
         }
 
