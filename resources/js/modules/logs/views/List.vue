@@ -328,7 +328,7 @@ export default {
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', {vue : this});
 
-        if (!(this.user.isAdmin || this.user.role_id === 8 || this.user.role_id === 6)) {
+        if (!(this.user.isAdmin || this.user.role_id === 8 || this.user.role_id === 6 || this.user.role_id === 12)) {
             window.location.href = '/';
             return;
         }

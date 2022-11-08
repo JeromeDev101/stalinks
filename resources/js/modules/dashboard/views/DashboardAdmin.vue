@@ -21,7 +21,7 @@
             <seller-valid-graph
                 :list-seller-team="listSellerTeam"
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isQc || isCs">
+                v-if="user.isAdmin || isQc || isCs || isMarketing">
 
             </seller-valid-graph>
 
@@ -34,34 +34,34 @@
             <url-valid-price-graph
                 :list-seller-team="listSellerTeam"
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isCs">
+                v-if="user.isAdmin || isCs || isMarketing">
 
             </url-valid-price-graph>
 
             <url-seller-statistics-graph
                 :list-seller-team="listSellerTeam"
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isCs">
+                v-if="user.isAdmin || isCs || isMarketing">
 
             </url-seller-statistics-graph>
 
             <prospect-qualified-vs-registered-graph
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isCs">
+                v-if="user.isAdmin || isCs || isMarketing">
 
             </prospect-qualified-vs-registered-graph>
 
             <buyer-valid-graph
                 :list-team-in-charge="listIncharge"
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isQc || isCs">
+                v-if="user.isAdmin || isQc || isCs || isMarketing">
 
             </buyer-valid-graph>
 
             <writer-valid-graph
                 :list-team-in-charge="listIncharge"
                 :date-ranges="generateDefaultDateRange()"
-                v-if="user.isAdmin || isQc || isCs">
+                v-if="user.isAdmin || isQc || isCs || isMarketing">
 
             </writer-valid-graph>
         </div>
@@ -179,6 +179,10 @@ export default {
 
         isCs() {
             return this.user.role_id === 6
+        },
+
+        isMarketing () {
+            return this.user.role_id === 12;
         },
 
         dateRanges() {

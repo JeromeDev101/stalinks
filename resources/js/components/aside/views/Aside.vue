@@ -16,7 +16,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-header"
-                        v-if="user.isAdmin || (user.isOurs === 0 && (isManager || isSeller || isBuyer || isQc))">
+                        v-if="user.isAdmin || (user.isOurs === 0 && (isManager || isSeller || isBuyer || isQc || isMarketing))">
                         {{ $t('message.sidebar.admin') }}
                     </li>
 
@@ -82,7 +82,7 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))"
+                        v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))"
                         :class="{
                             'active' :
                                 $route.name == 'roles' ||
@@ -133,7 +133,7 @@
                                 </router-link>
                             </li>
                             <li class="nav-item"
-                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
+                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
                                 <router-link :to="{ path: '/management/mail-logs' }" class="nav-link"
                                              :class="{ active: $route.name == 'mail-logs' }">
                                     <i class="fas fa-envelope nav-icon"></i>
@@ -141,7 +141,7 @@
                                 </router-link>
                             </li>
                             <li class="nav-item"
-                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
+                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
                                 <router-link :to="{ path: '/management/logs' }" class="nav-link"
                                              :class="{ active: $route.name == 'logs' }">
                                     <i class="fas fa-cogs nav-icon"></i>
@@ -172,7 +172,7 @@
                     </li> -->
 
                     <li class="nav-item"
-                        v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller))">
+                        v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller || isMarketing))">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/dashboard' }"
@@ -197,7 +197,7 @@
 
                     <!-- <li class="nav-item"
                         v-if="user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))">
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/mail-logs' }"
@@ -223,7 +223,7 @@
                     <li class="nav-item"
                         v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller))
+                            (user.isOurs == 0 && (isManager || isSeller || isMarketing))
                     ">
                         <router-link
                             class="nav-link"
@@ -238,7 +238,7 @@
                     <li class="nav-item"
                         v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))
                     ">
                         <router-link
                             class="nav-link"
@@ -288,7 +288,7 @@
                         v-if="
                         user.isAdmin ||
                             (user.isOurs == 0 &&
-                                (isManager || isSeller || isPostingWriter))
+                                (isManager || isSeller || isPostingWriter || isMarketing))
                     ">
                         <router-link
                             class="nav-link"
@@ -303,7 +303,7 @@
                     <li class="nav-item"
                         v-if="isPostingWriterExt || isPostingWriter ||
                                 user.isAdmin || isQc || isQcSeller ||
-                                         isQcBilling || (user.isOurs == 0 && isSeller)"
+                                         isQcBilling || (user.isOurs == 0 && isSeller || isMarketing)"
                     >
                         <router-link
                             class="nav-link"
@@ -318,7 +318,7 @@
                     <li class="nav-item"
                         v-if="
                         user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer ))
+                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))
                     ">
                         <router-link
                             class="nav-link"
@@ -343,15 +343,7 @@
                     </li>
 
                     <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            ((isManager ||
-                                    isSeller ||
-                                    isBuyer ||
-                                    isPostingWriter ||
-                                    isQc || isQcSeller ||
-                                     isQcBilling))
-                    "
+                        v-if="user.isAdmin || ((isManager || isSeller || isBuyer || isPostingWriter || isQc || isQcSeller || isQcBilling || isMarketing))"
                         :class="{
                         active:
                             $route.name == 'seller-billing' ||
@@ -373,8 +365,7 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item"
-                                v-if="isSeller || user.isAdmin || isQc || isQcSeller ||
-                                     isQcBilling">
+                                v-if="isSeller || user.isAdmin || isQc || isQcSeller || isQcBilling || isMarketing">
                                 <router-link :to="{ path: '/seller-billing' }"
                                              class="nav-link"
                                              :class="{ active: $route.name == 'seller-billing' }">
@@ -437,8 +428,7 @@
 
                     <li class="nav-item" v-if="
                             user.isAdmin ||
-                                (user.isOurs == 0 &&
-                                    (isManager || isSeller || isQc))
+                                (user.isOurs == 0 && (isManager || isSeller || isQc || isMarketing))
                         "
                         :class="{
                             active:
@@ -456,7 +446,7 @@
                     <li class="nav-item" v-if="
                             user.isAdmin ||
                                 (user.isOurs == 0 &&
-                                    (isManager || isSeller || isQc))
+                                    (isManager || isSeller || isQc || isMarketing))
                         "
                         :class="{
                             active:
@@ -503,12 +493,7 @@
 
                     <li class="nav-item"
                         v-if="
-                            (isSeller ||
-                                user.isAdmin ||
-                                isManager ||
-                                isPostingWriter ||
-                                isQc ||
-                                isQcSeller) && !isExtWriter
+                            (isSeller || user.isAdmin || isManager || isPostingWriter || isQc || isQcSeller || isMarketing) && !isExtWriter
                         "
                         :class="{
                             active:
@@ -787,6 +772,7 @@ export default {
             isQcSeller : false,
             isQcBilling : false,
             isAffiliate: false,
+            isMarketing: false,
         };
     },
     created() {
@@ -879,6 +865,10 @@ export default {
 
             if (that.role.id == 11) {
                 this.isAffiliate = true;
+            }
+
+            if (that.role.id == 12) {
+                this.isMarketing = true;
             }
         }
     }

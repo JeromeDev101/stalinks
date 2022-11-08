@@ -243,7 +243,7 @@ const routes = [
                 name : 'dashboard',
                 component : DashboardAdmin,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8, 4, 6, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8, 4, 6, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -255,7 +255,7 @@ const routes = [
                 name : 'articles-list',
                 component : ArticleList,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -279,7 +279,7 @@ const routes = [
                 name : 'backlink-prospect',
                 component : BacklinksProspect,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -369,7 +369,7 @@ const routes = [
                     },
                 ],
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -403,7 +403,7 @@ const routes = [
                 name : 'followup-sales',
                 component : FollowupSales,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
                         next();
                     } else {
                         next('*');
@@ -463,7 +463,7 @@ const routes = [
                 name : 'publisher',
                 component : Publisher,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
                         next();
                     } else {
                         next('*');
@@ -475,7 +475,7 @@ const routes = [
                 name : 'seller-billing',
                 component : BillingSeller,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.isAdmin || [6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) {
                         next();
                     } else {
                         next('*');
@@ -504,7 +504,7 @@ const routes = [
                 name : 'ExtDomain',
                 component : ExtDomain,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -516,7 +516,7 @@ const routes = [
                 name : 'AlexaDomain',
                 component : AlexaDomain,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -552,7 +552,7 @@ const routes = [
                 name : 'incomes',
                 component : Incomes,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
                         next();
                     } else {
                         next('*');
@@ -564,7 +564,7 @@ const routes = [
                 name : 'Registration',
                 component : Registration,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([3, 5, 6, 7, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([3, 5, 6, 7, 8, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -612,7 +612,7 @@ const routes = [
                 name : 'logs',
                 component : Log,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -706,7 +706,7 @@ const routes = [
                 name : 'mail-logs',
                 component : Maillog,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
@@ -718,7 +718,7 @@ const routes = [
                 name : 'generate-list',
                 component : GenerateList,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
                         next();
                     } else {
                         next('*');
