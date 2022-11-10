@@ -143,6 +143,7 @@ export default {
     no: 'नहीं',
     valid: 'वैध',
     invalid: 'अमान्य',
+    recommended: 'अनुशंसित',
     with: 'साथ',
     without: 'बिना',
     clear: 'स्पष्ट',

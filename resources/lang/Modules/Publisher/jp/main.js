@@ -143,6 +143,7 @@ export default {
     no: 'いいえ',
     valid: '有効',
     invalid: '無効',
+    recommended: 'おすすめされた',
     with: '込み',
     without: '抜き',
     clear: 'クリア',

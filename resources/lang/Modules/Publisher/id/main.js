@@ -143,6 +143,7 @@ export default {
     no: 'Tidak',
     valid: 'Valid',
     invalid: 'Tidak valid',
+    recommended: 'Direkomendasikan',
     with: 'Dengan',
     without: 'Tanpa',
     clear: 'Hapus',

@@ -143,6 +143,7 @@ export default {
     no: 'No',
     valid: 'Valid',
     invalid: 'Invalid',
+    recommended: 'Recommended',
     with: 'With',
     without: 'Without',
     clear: 'Clear',

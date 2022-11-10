@@ -1088,6 +1088,16 @@
                                     </div>
                                 </div>
 
+                                <div class="col-sm-6" v-show="accountModel.type == 'Seller'">
+                                    <div class="form-group">
+                                        <label>Recommended</label>
+                                        <select class="form-control" name="" v-model="accountModel.is_recommended">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="modal-footer d-flex align-items-center justify-content-between">
@@ -1929,6 +1939,16 @@
                                     </div>
                                 </div>
 
+                                <div class="col-sm-6" v-show="accountUpdate.type == 'Seller'">
+                                    <div class="form-group">
+                                        <label>Recommended</label>
+                                        <select class="form-control" name="" v-model="accountUpdate.is_recommended">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -2210,6 +2230,7 @@ export default {
                 routing_num: [],
                 wire_routing_num: [],
                 buyer_type: 'Basic',
+                is_recommended: 'no',
             },
 
             filterModel : {
@@ -3603,6 +3624,7 @@ export default {
                     team_in_charge : '',
                     info : '',
                     address : '',
+                    is_recommended : 'no',
                     country_id : '',
                     add_method_payment_type: []
                 };
@@ -3739,6 +3761,7 @@ export default {
             this.accountUpdate.language_id = that.language_id == "" ? "":JSON.parse(that.language_id)
             this.accountUpdate.address = that.address
             this.accountUpdate.info = that.info
+            this.accountUpdate.is_recommended = that.is_recommended
             this.accountUpdate.id_payment_type = that.id_payment_type
             this.accountUpdate.commission = that.commission
             this.accountUpdate.is_show_price_basis = that.is_show_price_basis == 0 ? 'no':'yes';

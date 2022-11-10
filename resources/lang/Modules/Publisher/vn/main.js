@@ -143,6 +143,7 @@ export default {
     no: 'Không',
     valid: 'Hợp lệ',
     invalid: 'Không hợp lệ',
+    recommended: 'Khuyến khích',
     with: 'Có',
     without: 'Không có',
     clear: 'Xóa bỏ',

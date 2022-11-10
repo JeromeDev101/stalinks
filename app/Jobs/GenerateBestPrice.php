@@ -83,18 +83,42 @@ class GenerateBestPrice implements ShouldQueue
 
                         //If 1 of best price's inc_article is YES, set that as Best Price
                         if ($this->oneUrlHasArticle($publisherIncArticlesByPrice)) {
+
+                            // checking if has a recommended seller
                             $bestPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
+                                ->where('user.registration.is_recommended', 'yes')
                                 ->where('inc_article', 'Yes')
                                 ->sortBy('created_at')
                                 ->first();
+
+                                if(!$bestPrice) {
+                                    $bestPrice = $publisher
+                                        ->where('price', $bestPrice->price)
+                                        ->where('user.registration.account_validation', '!=', 'invalid')
+                                        ->where('inc_article', 'Yes')
+                                        ->sortBy('created_at')
+                                        ->first();
+                                }
+                            
                         } else {
+                            
+                            // checking if has a recommended seller
                             $bestPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
+                                ->where('user.registration.is_recommended', 'yes')
                                 ->sortBy('created_at')
                                 ->first();
+
+                            if(!$bestPrice) {
+                                $bestPrice = $publisher
+                                    ->where('price', $bestPrice->price)
+                                    ->where('user.registration.account_validation', '!=', 'invalid')
+                                    ->sortBy('created_at')
+                                    ->first();
+                            }
                         }
 
                         if ($bestPrice) {

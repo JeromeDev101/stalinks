@@ -143,6 +143,7 @@ export default {
     no: 'ไม่ใช่',
     valid: 'ถูกต้อง',
     invalid: 'ไม่ถูกต้อง',
+    recommended: 'ที่แนะนำ',
     with: 'กับ',
     without: 'ปราศจาก',
     clear: 'ลบ',

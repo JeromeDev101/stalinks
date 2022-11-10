@@ -57,7 +57,8 @@ class Registration extends Model
         'survey_code',
         'email_via_others',
         'facebook',
-        'buyer_type'
+        'buyer_type',
+        'is_recommended'
     ];
 
     public function team_in_charge() {

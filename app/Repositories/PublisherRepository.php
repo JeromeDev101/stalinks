@@ -32,6 +32,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
     private $topic_list = [
         'Adult',
         'Art',
+        'Automotive',
         'Beauty',
         'CBD',
         'Charity',
@@ -93,6 +94,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             'publisher.*',
             'registration.username',
             'registration.account_validation as user_account_validation',
+            'registration.is_recommended',
             'A.name',
             'A.username as user_name',
             'A.isOurs',

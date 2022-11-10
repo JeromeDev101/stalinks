@@ -587,13 +587,23 @@
 
                                 <span
                                     v-if="scope.row.user_account_validation === 'invalid'
-                                && (user.isAdmin
-                                || user.role_id === 8
-                                || user.role_id === 10
-                                || user.role_id === 6)"
-                                    class="badge badge-danger">
-                                {{ $t('message.publisher.invalid') }}
-                            </span>
+                                    && (user.isAdmin
+                                    || user.role_id === 8
+                                    || user.role_id === 10
+                                    || user.role_id === 6)"
+                                        class="badge badge-danger">
+                                    {{ $t('message.publisher.invalid') }}
+                                </span>
+
+                                <span
+                                        v-if="scope.row.is_recommended === 'yes'
+                                    && (user.isAdmin
+                                    || user.role_id === 8
+                                    || user.role_id === 10
+                                    || user.role_id === 6)"
+                                        class="badge badge-warning">
+                                    {{ $t('message.publisher.recommended') }}
+                                </span>
                             </template>
 
                             <template
