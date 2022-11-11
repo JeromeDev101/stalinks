@@ -2690,7 +2690,7 @@ export default {
                         name : this.$t('message.publisher.filter_seller'),
                         actionName : 'usernameData',
                         // sortable: true,
-                        width: 120,
+                        width: 150,
                         isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
