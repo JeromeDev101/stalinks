@@ -295,8 +295,21 @@
                                                 @change="checkSelected">
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.id_backlink">{{ backLink.id }}</td>
-                                        <td v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
-                                            {{ backLink.publisher == null ? 'N/A' : (backLink.publisher.user == null ? 'N/A' : (backLink.publisher.user.username == null ? backLink.publisher.user.name : backLink.publisher.user.username)) }}
+                                        <td
+                                            v-show="tblFollowupBacklinksOpt.seller"
+                                            v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">
+
+                                            <span :class="getSellerBadgeClass(backLink)">
+                                                {{
+                                                    backLink.publisher == null
+                                                        ? 'N/A'
+                                                        : (backLink.publisher.user == null
+                                                            ? 'N/A'
+                                                            : (backLink.publisher.user.username == null
+                                                                ? backLink.publisher.user.name
+                                                                : backLink.publisher.user.username))
+                                                }}
+                                            </span>
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.buyer">
                                             {{
@@ -1285,8 +1298,8 @@
 
             submitEditBacklink () {
                 let self = this;
-                
-                if(this.modelBaclink.status === 'Nofollow' || 
+
+                if(this.modelBaclink.status === 'Nofollow' ||
                     this.modelBaclink.status === '404' ||
                     this.modelBaclink.status === 'Deleted' ||
                     this.modelBaclink.status === 'Refund'
@@ -1309,7 +1322,7 @@
                     this.sendUpdate();
                 }
 
-                            
+
             },
 
             async sendUpdate() {
@@ -1444,6 +1457,18 @@
                     }
                 });
             },
+
+            getSellerBadgeClass (backlink) {
+                if (backlink.publisher != null) {
+                    if (backlink.publisher.user != null) {
+                        if (backlink.publisher.user.registration != null) {
+                            if (backlink.publisher.user.registration.is_recommended === 'yes') {
+                                return 'badge badge-pill badge-success';
+                            }
+                        }
+                    }
+                }
+            }
         },
 
         components: {

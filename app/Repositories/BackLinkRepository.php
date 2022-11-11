@@ -142,10 +142,15 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
 
         if ($filters->full_data === true) {
             $data = $backlink->with(['publisher' => function($query) {
-                                $query->with('user:id,name,username');
-                            }, 'user'])
-                            ->with('article')
-                            ->get();
+//                                $query->with('user:id,name,username');
+                $query->with(['user' => function ($query) {
+                    $query->select('id','name', 'username', 'email');
+                }, 'user.registration' => function ($query) {
+                    $query->select('id', 'email', 'is_recommended');
+                }]);
+            }, 'user'])
+            ->with('article')
+            ->get();
 
             return [
                 'data' => $data,
@@ -154,13 +159,37 @@ class BackLinkRepository extends BaseRepository implements BackLinkRepositoryInt
         }
 
         if( $paginate == 'All' ){
-            $data = $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,name,username'); }, 'user'])->get();
+            $data = $backlink
+                ->with('article')
+                ->with(['publisher' => function($query)
+                    {
+//                        $query->with('user:id,name,username');
+                        $query->with(['user' => function ($query) {
+                            $query->select('id','name', 'username', 'email');
+                        }, 'user.registration' => function ($query) {
+                            $query->select('id', 'email', 'is_recommended');
+                        }]);
+                    }, 'user'])->get();
+
             return [
                 'data' => $data,
                 'total' => $data->count(),
             ];
         }else{
-            return $backlink->with('article')->with(['publisher' => function($query){ $query->with('user:id,name,username'); }, 'user'])->paginate($paginate);
+            return $backlink
+                ->with('article')
+                ->with(['publisher' => function($query)
+                    {
+//                        $query->with('user:id,name,username');
+
+                        $query->with(['user' => function ($query) {
+                            $query->select('id','name', 'username', 'email');
+                        }, 'user.registration' => function ($query) {
+                            $query->select('id', 'email', 'is_recommended');
+                        }]);
+                    },
+                'user'])
+                ->paginate($paginate);
         }
 
     }

@@ -52,6 +52,7 @@ class BuyController extends Controller
             'users.username as user_name',
             'users.isOurs',
             'registration.company_name',
+            'registration.is_recommended',
             'countries.name AS country_name',
             'country_continent.name AS country_continent',
             'publisher_continent.name AS publisher_continent',

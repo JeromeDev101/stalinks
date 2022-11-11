@@ -594,7 +594,11 @@
                                                         : 'N/A'
                                             }}
                                         </td>
-                                        <td v-show="tblAccountsOpt.username">{{ account.username }}</td>
+                                        <td v-show="tblAccountsOpt.username">
+                                            <span :class="{'badge badge-pill badge-success': account.is_recommended === 'yes'}">
+                                                {{ account.username }}
+                                            </span>
+                                        </td>
                                         <td v-show="tblAccountsOpt.name">{{ account.name }}</td>
                                         <td v-show="tblAccountsOpt.country">
                                             {{ account.country === null ? 'N/A' : account.country.name }}

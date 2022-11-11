@@ -479,6 +479,12 @@
                                 }}
                             </template>
 
+                            <template slot-scope="scope" slot="sellerData">
+                                <span :class="{'badge badge-pill badge-success': scope.row.is_recommended === 'yes'}">
+                                    {{ scope.row.user_name }}
+                                </span>
+                            </template>
+
                             <template
                                 slot-scope="scope"
                                 slot="urlData">
@@ -1522,12 +1528,12 @@ export default {
                     isHidden : false
                 },
                 {
-                    prop : 'user_name',
+                    prop : '_action',
                     name : this.$t('message.list_backlinks.filter_seller'),
                     // sortable : true,
-                    width : 100,
-                    isHidden : this.user.role_id == 5 &&
-                        this.user.isOurs == 1
+                    actionName : 'sellerData',
+                    width : 160,
+                    isHidden : this.user.role_id == 5 && this.user.isOurs == 1
                 },
                 {
                     prop : '_action',
