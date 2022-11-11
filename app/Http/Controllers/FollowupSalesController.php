@@ -44,7 +44,14 @@ class FollowupSalesController extends Controller
             ->where('backlinks.status', '!=', 'To Be Validated')
             ->with([
                 'publisher' => function ($query) {
-                    $query->with('user:id,name,username')->with('country:id,name');
+//                    $query->with('user:id,name,username')->with('country:id,name');
+
+                    $query->with(['user' => function ($query) {
+                        $query->select('id','name', 'username', 'email');
+                    }, 'user.registration' => function ($query) {
+                        $query->select('id', 'email', 'is_recommended');
+                    }])
+                    ->with('country:id,name');
                 }
             ])
             ->with('user:id,name,username')

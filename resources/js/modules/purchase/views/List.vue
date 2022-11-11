@@ -213,15 +213,17 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ purchase.id }}</td>
                                     <td v-show="user.isAdmin || user.isOurs === 0">
-                                        {{
-                                            purchase.publisher == null
-                                                ? $t('message.purchase.t_record_deleted')
-                                                : purchase.publisher.user == null
+                                        <span :class="getSellerBadgeClass(purchase)">
+                                            {{
+                                                purchase.publisher == null
+                                                    ? $t('message.purchase.t_record_deleted')
+                                                    : purchase.publisher.user == null
                                                     ? 'N/A'
                                                     : purchase.publisher.user.username
                                                         ? purchase.publisher.user.username
                                                         : purchase.publisher.user.name
-                                        }}
+                                            }}
+                                        </span>
                                     </td>
                                     <td>
                                         {{
@@ -502,6 +504,18 @@
                 this.updateModel.seller = that.publisher.user.name
                 this.updateModel.buyer = that.user.name
             },
+
+            getSellerBadgeClass (purchase) {
+                if (purchase.publisher != null) {
+                    if (purchase.publisher.user != null) {
+                        if (purchase.publisher.user.registration != null) {
+                            if (purchase.publisher.user.registration.is_recommended === 'yes') {
+                                return 'badge badge-pill badge-success';
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 </script>

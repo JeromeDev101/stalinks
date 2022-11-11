@@ -24,13 +24,19 @@ class IncomesController extends Controller
                     ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
                     ->leftJoin('billing', 'backlinks.id', '=', 'billing.id_backlink')
                     ->with(['publisher' => function($query){
-                        $query->with('user:id,name,username');
+//                        $query->with('user:id,name,username');
+
+                        $query->with(['user' => function ($query) {
+                            $query->select('id','name', 'username', 'email');
+                        }, 'user.registration' => function ($query) {
+                            $query->select('id', 'email', 'is_recommended');
+                        }]);
                     }])
                     ->with('user:id,name,username')
                     ->whereIn('backlinks.status', ['Live','Live in Process'])
                     ->orderBy('created_at', 'desc');
 
-        
+
         $publisher_ids = Publisher::where('user_id', $user->id)->pluck('id')->toArray();
 
 
@@ -40,7 +46,7 @@ class IncomesController extends Controller
         if( $ext_seller_emails->count() > 0 && $user->role_id == 6) {
             $seller_emails = $ext_seller_emails->pluck('email')->toArray();
             $ext_seller_ids = User::select('id')->whereIn('email', $seller_emails)->where('status', 'active')->pluck('id')->toArray();
-            
+
             $list->whereHas('publisher', function($query) use ($ext_seller_ids){
                 return $query->whereIn('user_id', $ext_seller_ids);
             });
@@ -96,7 +102,7 @@ class IncomesController extends Controller
                             ->groupBy('publisher.user_id', 'users.username')
                             ->orderBy('users.username', 'asc')
                             ->get();
-        
+
         $list = $list->paginate($paginate);
 
         $buyers = collect(['buyers' => $getBuyer]);

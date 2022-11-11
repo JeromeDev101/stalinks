@@ -154,13 +154,15 @@
                                 <td>{{ incomes.id }}</td>
                                 <td>{{ incomes.in_charge == null ? 'N/A' : incomes.in_charge }}</td>
                                 <td v-if="isSeller">
-                                    {{
-                                        incomes.publisher == null
-                                            ? 'Record Deleted'
-                                            : incomes.publisher.user
+                                    <span :class="getSellerBadgeClass(incomes)">
+                                        {{
+                                            incomes.publisher == null
+                                                ? 'Record Deleted'
+                                                : incomes.publisher.user
                                                 ? incomes.publisher.user.name
                                                 : 'Record Deleted'
-                                    }}
+                                        }}
+                                    </span>
                                 </td>
                                 <td v-if="user.isOurs == 0">{{ incomes.user == null ? '' : incomes.user.name }}</td>
                                 <td>
@@ -508,6 +510,18 @@ export default {
         clearMessageform() {
             this.$store.dispatch('clearMessageform');
         },
+
+        getSellerBadgeClass (incomes) {
+            if (incomes.publisher != null) {
+                if (incomes.publisher.user != null) {
+                    if (incomes.publisher.user.registration != null) {
+                        if (incomes.publisher.user.registration.is_recommended === 'yes') {
+                            return 'badge badge-pill badge-success';
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 </script>
