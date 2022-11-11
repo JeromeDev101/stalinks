@@ -581,28 +581,8 @@
                             <template
                                 slot-scope="scope"
                                 slot="usernameData">
-                                {{ scope.row.username ?
-                                scope.row.username :
-                                scope.row.user_name }}
-
-                                <span
-                                    v-if="scope.row.user_account_validation === 'invalid'
-                                    && (user.isAdmin
-                                    || user.role_id === 8
-                                    || user.role_id === 10
-                                    || user.role_id === 6)"
-                                        class="badge badge-danger">
-                                    {{ $t('message.publisher.invalid') }}
-                                </span>
-
-                                <span
-                                        v-if="scope.row.is_recommended === 'yes'
-                                    && (user.isAdmin
-                                    || user.role_id === 8
-                                    || user.role_id === 10
-                                    || user.role_id === 6)"
-                                        class="badge badge-warning">
-                                    {{ $t('message.publisher.recommended') }}
+                                <span :class="getSellerBadge(scope.row)">
+                                    {{ scope.row.username ? scope.row.username : scope.row.user_name }}
                                 </span>
                             </template>
 
@@ -2710,7 +2690,7 @@ export default {
                         name : this.$t('message.publisher.filter_seller'),
                         actionName : 'usernameData',
                         // sortable: true,
-                        width: 100,
+                        // width: 100,
                         isHidden: this.user.isOurs != 0 || !this.tblPublisherOpt.seller
                     },
                     {
@@ -3860,6 +3840,20 @@ export default {
                 // open modal
                 let element = this.$refs.csvUploadResults
                 $(element).modal('show')
+            },
+
+            getSellerBadge (seller) {
+                let roles = [6, 8, 10, 12];
+
+                if (roles.includes(this.user.role_id) || this.user.isAdmin) {
+                    if (seller.user_account_validation === 'invalid') {
+                        return 'badge badge-pill badge-danger'
+                    }
+
+                    if (seller.is_recommended === 'yes') {
+                        return 'badge badge-pill badge-success'
+                    }
+                }
             },
 
             sortDataForExportListPublisher (data) {
