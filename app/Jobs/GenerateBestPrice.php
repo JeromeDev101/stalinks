@@ -53,6 +53,15 @@ class GenerateBestPrice implements ShouldQueue
         foreach ($duplicates as $url) {
             $url = $this->cleanUrl($url);
             $publisher = $this->publisher->getPublisherByUrl($url, ['user.registration']);
+
+            $publisherQcValidNoIds = $publisher->where('qc_validation', 'no')
+                                    ->pluck('id')->toArray();
+
+            //QC valid = no to valid = Invalid'
+            Publisher::whereIn('id', $publisherQcValidNoIds)->update([
+                'valid' => 'invalid'
+            ]);
+
             $publisherIncArticles = $publisher->pluck('inc_article')->toArray();
 
             //If duplicates has both Yes and No in inc_article field
@@ -186,6 +195,13 @@ class GenerateBestPrice implements ShouldQueue
 
         foreach ($nonDuplicates as $url) {
             $publisher = Publisher::where('url', $url)->first();
+
+            // set the Valid to 'invalid' if the qc validation is 'No'
+            if(strtolower($publisher->qc_validation) == 'no') {
+                $publisher->update([
+                    'valid' => 'invalid'
+                ]);
+            }
 
             if ($publisher &&
                 $publisher->valid == 'invalid' &&

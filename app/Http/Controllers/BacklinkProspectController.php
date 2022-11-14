@@ -229,8 +229,8 @@ class BacklinkProspectController extends Controller
         } else {
             $ext_domain = ExtDomain::where('domain', $request->referring_domain)->first();
             $ext_domain->update([
-                'backlink_prospect_id' => $request->id,
-                'from' => 'Backlinks'
+                'backlink_prospect_id' => $request->id
+                // 'from' => 'Backlinks'
             ]);
 
             // update the 3rd party status (apacaff) automatically based on the status of url prospect
