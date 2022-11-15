@@ -483,3 +483,6 @@ Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp
 // updating price basis
 Route::name('update-price-basis-publisher')->get('/update-price-basis-publisher', 'ConfigController@updatePriceBasis');
 
+// backlinks prospect
+Route::name('fetch-backlink-prospect')->get('/fetch-backlink-prospect', 'EXternalBacklinkProspectController@fetchBacklinkProspect');
+
