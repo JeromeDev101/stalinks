@@ -301,14 +301,14 @@
                             <tr>
                                 <td>
                                     <div class="input-group">
-                                        <input type="file"
+                                        <!-- <input type="file"
                                                class="form-control"
                                                @change="checkData()"
                                                enctype="multipart/form-data"
                                                ref="excel"
-                                               name="file">
+                                               name="file"> -->
                                         <div class="input-group-btn">
-                                            <button
+                                            <!-- <button
                                                 :title="$t('message.backlink_prospect.bp_upload_csv')"
                                                 class="btn btn-primary btn-flat"
                                                 :disabled="btnUpload"
@@ -322,7 +322,7 @@
 
                                                 @click="downloadTemplate">
                                                 <i class="fa fa-download"></i>
-                                            </button>
+                                            </button> -->
 
                                             <export-excel
                                                 class="btn btn-primary btn-flat"
@@ -364,7 +364,7 @@
 
                                         <div class="dropdown">
                                             <button
-                                                class="btn btn-default dropdown-toggle"
+                                                class="btn btn-default dropdown-toggle mr-2"
                                                 type="button"
                                                 id="dropdownMenuButton"
                                                 data-toggle="dropdown"
@@ -384,6 +384,10 @@
                                                 </a>
                                             </div>
                                         </div>
+
+                                        <button class="btn btn-primary mr-2" title="Data is coming from Backlinks Prospect of Apacaff" @click="fetchData();">
+                                            Fetch Data
+                                        </button>
 
                                     </div>
                                 </td>
@@ -1108,6 +1112,35 @@ export default {
     },
 
     methods : {
+
+        fetchData() {
+            let self = this;
+
+            swal.fire({
+                title : 'Fetching data ...',
+                text : 'Please wait while fetching the data',
+                timerProgressBar : true,
+                showConfirmButton : false,
+                allowOutsideClick : false,
+                onBeforeOpen : () => {
+                    swal.showLoading()
+                },
+            });
+
+            axios.get('/api/fetch-backlink-prospects')
+                .then((res) => {
+
+                console.log(res)
+
+                swal.fire(
+                    self.$t('message.generate_list.alert_success'),
+                    'Successfully Fetch Data',
+                    'success'
+                )
+
+                this.getBacklinkProspect(this.filterModel.page);
+            })
+        },
 
         getAhrefs() {
 

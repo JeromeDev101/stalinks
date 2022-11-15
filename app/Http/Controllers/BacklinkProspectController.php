@@ -114,6 +114,73 @@ class BacklinkProspectController extends Controller
         return $data;
     }
 
+    public function fetchBacklinkProspect(Request $request) {
+        $curl = curl_init();
+
+        $link = 'https://mad.apacaff.com/api/fetch-backlink-prospect-data';
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $link,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "cache-control: no-cache"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        curl_close($curl);
+
+        $response = json_decode($response, true);
+
+        $data = [];
+        foreach($response['data'] as $res) {
+            $data[] = $res['ref_domain'];
+
+            $referring_domain = $res['ref_domain'];
+            $ur = $res['ur'];
+            $dr = $res['dr'];
+            $backlinks = $res['backlinks'];
+            $org_kw = $res['org_keywords'];
+            $org_traffic = $res['org_traffic'];
+            $ref_domain = $res['ref_domains'];
+            // $category = $res['ref_domain'];
+            // $status = $res['ref_domain'];
+            $note = $res['notes'];
+            $date_created = $res['created_at'];
+
+            if( trim($referring_domain, " ") != '' ){
+
+                if(isset($res['status_dropdown']['name']) && strtolower($res['status_dropdown']['name']) == 'new') {
+                    $isRefDomainExist = $this->checkRefDomainExist($referring_domain);
+
+                    if(!$isRefDomainExist) {
+                        BacklinkProspect::create([
+                            'referring_domain' => $referring_domain,
+                            'ur' => $ur,
+                            'dr' => $dr,
+                            'backlinks' => $backlinks,
+                            'ref_domain_ahref' => $ref_domain,
+                            'org_kw' => $org_kw,
+                            'org_traffic' => $org_traffic,
+                            'category' => isset($res['category_dropdown']['name']) ? $res['category_dropdown']['name']:null,
+                            'status' => $res['status_dropdown']['name'],
+                            'note' => $note,
+                            'date_created' => $date_created,
+                        ]);
+                    }
+                }
+            }
+        }
+
+        dd($data);
+    }
+
     public function importCsv(Request $request) {
         $request->validate([
             'file' => 'bail|required|mimes:csv,txt',
