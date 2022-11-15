@@ -484,5 +484,5 @@ Route::name('test')->get('/test-remove-http', 'PurchaseController@testRemoveHttp
 Route::name('update-price-basis-publisher')->get('/update-price-basis-publisher', 'ConfigController@updatePriceBasis');
 
 // backlinks prospect
-Route::name('fetch-backlink-prospect')->get('/fetch-backlink-prospect', 'EXternalBacklinkProspectController@fetchBacklinkProspect');
+Route::name('fetch-backlink-prospect')->get('/fetch-backlink-prospect', 'ExternalBacklinkProspectController@fetchBacklinkProspect');
 
