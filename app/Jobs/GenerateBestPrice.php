@@ -94,7 +94,7 @@ class GenerateBestPrice implements ShouldQueue
                         if ($this->oneUrlHasArticle($publisherIncArticlesByPrice)) {
 
                             // checking if has a recommended seller
-                            $bestPrice = $publisher
+                            $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('user.registration.is_recommended', 'yes')
@@ -102,31 +102,36 @@ class GenerateBestPrice implements ShouldQueue
                                 ->sortBy('created_at')
                                 ->first();
 
-                                if(!$bestPrice) {
-                                    $bestPrice = $publisher
-                                        ->where('price', $bestPrice->price)
-                                        ->where('user.registration.account_validation', '!=', 'invalid')
-                                        ->where('inc_article', 'Yes')
-                                        ->sortBy('created_at')
-                                        ->first();
-                                }
+
+                            if(!$bPrice) {
+                                $bestPrice = $publisher
+                                    ->where('price', $bestPrice->price)
+                                    ->where('user.registration.account_validation', '!=', 'invalid')
+                                    ->where('inc_article', 'Yes')
+                                    ->sortBy('created_at')
+                                    ->first();
+                            } else {
+                                $bestPrice = $bPrice;
+                            }
                             
                         } else {
                             
                             // checking if has a recommended seller
-                            $bestPrice = $publisher
+                            $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('user.registration.is_recommended', 'yes')
                                 ->sortBy('created_at')
                                 ->first();
 
-                            if(!$bestPrice) {
+                            if(!$bPrice) {
                                 $bestPrice = $publisher
                                     ->where('price', $bestPrice->price)
                                     ->where('user.registration.account_validation', '!=', 'invalid')
                                     ->sortBy('created_at')
                                     ->first();
+                            } else {
+                                $bestPrice = $bPrice;
                             }
                         }
 
