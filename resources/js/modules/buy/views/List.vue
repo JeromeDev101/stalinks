@@ -10,6 +10,10 @@
             </div><!-- /.container-fluid -->
         </div>
 
+        <div class="alert alert-info" v-if="isBuyerHasDiscount">
+            {{ $t('message.list_backlinks.promo') }}
+        </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
@@ -523,13 +527,21 @@
                             <template
                                 slot-scope="scope"
                                 slot="priceData">
+                                
+                                <span v-if="computePrice(scope.row.price,
+                                        scope.row.inc_article, 'yes') != computePrice(scope.row.price, scope.row.inc_article, 'no')" 
+                                        class="text-danger" style="text-decoration: line-through;">
+                                    ${{ computePrice(scope.row.price, scope.row.inc_article, 'no') }}
+                                    &nbsp;
+                                </span>
+                                
                                 {{
                                     scope.row.price == '' ||
                                     scope.row.price
                                     == null ? '' : '$'
                                 }} {{
                                     computePrice(scope.row.price,
-                                        scope.row.inc_article)
+                                        scope.row.inc_article, 'yes')
                                 }}
                             </template>
 
@@ -566,7 +578,7 @@
                                         :disabled="isCreditAuth"
                                         :title="$t('message.list_backlinks.t_buy')"
                                         data-target="#modal-buy-update"
-                                        @click="doUpdate(scope.row)"
+                                        @click="doUpdate(scope.row)"uy
                                         data-toggle="modal"
                                         class="btn btn-default"><i class="fas fa-dollar-sign"></i></button>
                                     <button
@@ -622,14 +634,22 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('message.list_backlinks.t_prices') }}</label>
-                                    <input type="number"
+                                    <label>{{ $t('message.list_backlinks.t_prices') }} <span v-if="checkBuyerDiscount" class="text-danger">( 15% Off )</span></label>
+
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number"
                                            class="form-control"
                                            v-model="updateModel.price"
                                            name=""
                                            aria-describedby="helpId"
                                            placeholder=""
                                            disabled>
+                                    </div>
+
+                                    
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1271,7 +1291,8 @@ export default {
             sort_options: [],
             btnBuy: false,
 
-            currentWindowWidth: window.innerWidth
+            currentWindowWidth: window.innerWidth,
+            isBuyerHasDiscount: false,
         }
     },
 
@@ -1306,8 +1327,9 @@ export default {
         });
 
         this.columnShow();
-    },
 
+        
+    },
     watch : {
         'filterModel.continent_id' : function () {
             if (this.filterModel.country_id != null
@@ -1708,6 +1730,7 @@ export default {
             this.getListLanguages();
         }
 
+
         window.addEventListener("resize", this.resizeEventHandler);
     },
 
@@ -1716,6 +1739,28 @@ export default {
     },
 
     methods : {
+
+        checkBuyerDiscount() {
+            let user = this.user;
+
+            if(user.role_id == 5) {
+                let date_reg = user.created_at
+                let registered_date = new Date(date_reg)
+                let deposited = this.listBuy.deposited
+
+                // promo date range
+                let date1 = new Date('11/30/2022');
+                let date2 = new Date('01/06/2023');
+
+                // check if user has registered within these range date and has minimum deposit of $200
+                if(registered_date >=  date1 && registered_date <= date2) {
+                    if(deposited >= 200) {
+                        this.isBuyerHasDiscount = true;
+                    }
+                }
+
+            }
+        },
 
         resizeEventHandler(e) {
             this.currentWindowWidth = window.innerWidth;
@@ -1882,6 +1927,7 @@ export default {
 
             this.isSearching = false;
             this.toggleSearchLoading();
+            this.checkBuyerDiscount();
             this.btnBuy = false;
             loader.hide();
         },
@@ -2078,7 +2124,7 @@ export default {
 
                         this.updateModel = that
                         this.updateModel.seller_price = that.price;
-                        this.updateModel.price = this.computePrice(that.price, that.inc_article);
+                        this.updateModel.price = this.computePrice(that.price, that.inc_article, 'yes');
                         this.updateModel.prices = this.updateModel.price
 
                         $('#modal-buy-update').modal({
@@ -2092,7 +2138,7 @@ export default {
 
                 this.updateModel = that
                 this.updateModel.seller_price = that.price;
-                this.updateModel.price = this.computePrice(that.price, that.inc_article);
+                this.updateModel.price = this.computePrice(that.price, that.inc_article, 'yes');
                 this.updateModel.prices = this.updateModel.price
 
                 $('#modal-buy-update').modal({
@@ -2231,7 +2277,7 @@ export default {
             return selling_price;
         },
 
-        computePrice(price, article) {
+        computePrice(price, article, show_discount) {
 
             let activeUser = this.user
             let selling_price = price
@@ -2292,6 +2338,12 @@ export default {
             }
 
             selling_price = parseFloat(selling_price).toFixed(0);
+
+            // if buyer has a discount
+            if(this.isBuyerHasDiscount && show_discount == 'yes') {
+                let discount = selling_price * .15
+                selling_price = selling_price - discount
+            }
 
             return selling_price;
         },

@@ -83,4 +83,5 @@ export default {
     search: 'Cari',
     close: 'Tutup',
     save: 'Simpan',
+    promo: 'Anda memiliki diskon 15% untuk setiap pembelian hingga 6 Januari 2023.', 
 }

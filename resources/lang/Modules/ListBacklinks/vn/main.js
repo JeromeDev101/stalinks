@@ -83,4 +83,5 @@ export default {
     search: 'Tìm kiếm',
     close: 'Đóng',
     save: 'Lưu',
+    promo: 'Bạn được giảm giá 15% cho mỗi lần mua cho đến ngày 6 tháng 1 năm 2023.', 
 }

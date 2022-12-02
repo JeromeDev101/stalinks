@@ -324,6 +324,16 @@ class BuyController extends Controller
         //     })
         //     ->get();
 
+        // check if buyer deposited in promo period date
+        $date1 = date('2022-11-30');
+        $date2 = date('2023-01-06');
+
+        $deposited = WalletTransaction::where('user_id', $user->id)
+            ->whereIn('admin_confirmation', ['Paid'])
+            ->whereBetween('date', [$date1, $date2])
+            ->orderBy('created_at', 'desc')
+            ->first();
+
         $wallet_transaction = WalletTransaction::selectRaw('SUM(amount_usd) as amount_usd')
             ->where('user_id', $user->id)
             ->whereIn('admin_confirmation', ['Paid'])
@@ -352,9 +362,10 @@ class BuyController extends Controller
                 'data' => $result,
                 'total' => $result->count(),
                 'credit' => round($credit),
+                'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd):0,
             ], 200);
         } else {
-            $custom_credit = collect(['credit' => round($credit)]);
+            $custom_credit = collect(['credit' => round($credit), 'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd):0]);
             $result = $custom_credit->merge($result);
 
             return $result;

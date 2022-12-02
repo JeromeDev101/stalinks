@@ -83,4 +83,5 @@ export default {
     search: '検索',
     close: '閉じる',
     save: '保存する',
+    promo: '2023 年 1 月 6 日まで、購入ごとに 15% の割引があります。', 
 }

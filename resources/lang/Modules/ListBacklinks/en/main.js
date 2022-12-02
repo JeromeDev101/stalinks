@@ -83,4 +83,5 @@ export default {
     search: 'Search',
     close: 'Close',
     save: 'Save',
+    promo: 'You have 15% discount for every purchased until January 6, 2023.', 
 }
