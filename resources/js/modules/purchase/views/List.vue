@@ -137,7 +137,7 @@
                         <h3 class="card-title text-primary">{{ $t('message.purchase.p_title') }}</h3>
 
                         <span
-                            v-if="user.role_id === 5"
+                            v-if="user.role_id === 5 || user.role_id === 14"
                             class="ml-5 text-primary card-title"
                             style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
 
@@ -146,7 +146,7 @@
                         </span>
 
                         <span
-                            v-if="user.role_id === 5"
+                            v-if="user.role_id === 5 || user.role_id === 14"
                             class="ml-5 text-primary card-title"
                             style="font-size:15px !important; line-height: normal !important; font-weight: normal !important;">
 

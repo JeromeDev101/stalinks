@@ -287,7 +287,7 @@ class GraphService
             ->where('registration.type', 'Seller')
             ->whereDate('registration.created_at', '>=', $request['start_date'])
             ->whereDate('registration.created_at', '<=', $request['end_date'])
-            ->where('users.role_id', 6)
+            ->where('users.role_id', 15)
             ->where('users.isOurs', 0);
 
         if ($request['team_in_charge'] == 0 || $request['scope'] == 'team') {

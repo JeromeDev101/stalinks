@@ -69,6 +69,9 @@ const mutations = {
     },
 
     [CURRENT_USER](state, { currentUser }) {
+        currentUser.permission_list = currentUser.role.permissions.length
+            ? currentUser.role.permissions.map(a => a.name)
+            : [];
         return state.currentUser = currentUser;
     },
 

@@ -163,7 +163,7 @@
                             </div>
                             <div class="col-6">
                                 <button
-                                    v-if="user.isAdmin || user.role_id === 8"
+                                    v-if="user.permission_list.includes('create-purchases-manual')"
                                     title="Add Manual Purchase"
                                     class="btn btn-success float-right"
 
@@ -230,9 +230,9 @@
 
                                 <template slot-scope="scope" slot="action-buttons">
                                     <button
+                                        v-if="user.permission_list.includes('update-purchases-manual')"
                                         title="Edit"
                                         class="btn btn-primary m-1"
-                                        :disabled="!user.isAdmin || user.role_id === 8"
 
                                         @click="fillManualData(scope.row); modalOpener('Update')">
 
@@ -240,6 +240,7 @@
                                     </button>
 
                                     <button
+                                        v-if="user.permission_list.includes('delete-purchases-manual')"
                                         title="Delete"
                                         class="btn btn-danger"
                                         :disabled="!user.isAdmin || user.role_id === 8"
@@ -913,7 +914,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while adding the manual purchase.',
+                    self.messageFormsManualPurchases.message,
                     'error'
                 )
             }
@@ -953,7 +954,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the manual purchase details.',
+                    self.messageFormsManualPurchases.message,
                     'error'
                 )
             }
@@ -988,7 +989,7 @@ export default {
                 } else {
                     await swal.fire(
                         self.$t('message.tools.alert_error'),
-                        'There were some errors while deleting the manual purchase details.',
+                        self.messageFormsManualPurchases.message,
                         'error'
                     )
                 }
@@ -1044,6 +1045,7 @@ export default {
                         notes: '',
                         amount: '',
                         type_id: '',
+                        mode: 'manual',
                         purchased_at: '',
                         payment_type_id: '',
                     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MailDraft;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class MailDraftController extends Controller
 {
@@ -45,6 +46,15 @@ class MailDraftController extends Controller
     }
 
     public function destroySelected(Request $request) {
+        if (Gate::denies('delete-mails-drafts')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         MailDraft::whereIn('id', $request->ids)->delete();
     }
 

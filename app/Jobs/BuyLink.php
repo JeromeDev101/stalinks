@@ -81,7 +81,7 @@ class BuyLink implements ShouldQueue
                 'id_backlink' => $backlink->id,
                 'id_language' => $backlink->publisher->language_id,
             ]);
-            $users = User::where('status','active')->where('role_id',4)->get();
+            $users = User::where('status','active')->whereIn('role_id', [4, 13])->get();
             foreach($users as $user)
             {
                 event(new NotificationEvent("New Article to be write today!", $user->id));

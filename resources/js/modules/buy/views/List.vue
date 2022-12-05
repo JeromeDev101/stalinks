@@ -110,7 +110,7 @@
                             </div>
 
                             <div class="col-md-2"
-                                 v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || (user.isOurs == 0 && user.role_id == 5)">
+                                 v-if="user.isAdmin || (user.isOurs == 0 && [7, 14].includes(user.role_id))">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_seller') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.seller">
@@ -352,11 +352,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="ml-5 text-primary" v-show="user.role_id == 5">
+                        <span class="text-primary" v-show="[5, 14].includes(user.role_id)">
                             {{ $t('message.list_backlinks.bb_credit') }} <b>${{listBuy.credit }}</b>
                         </span>
 
-                        <div class="row">
+                        <div class="row mb-2">
                             <div class="col-md-12 mt-0 pt-0">
                                 <div v-if="isCreditAuth" class="alert alert-warning">
                                     {{ $t('message.list_backlinks.bb_sorry') }}
@@ -370,7 +370,7 @@
 
                         <div class="row mb-3">
                             <div class="col-md-8 mb-2">
-                                <div class="input-group">
+                                <div v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')" class="input-group">
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle"
                                                 :disabled="isDisabled"
@@ -527,14 +527,14 @@
                             <template
                                 slot-scope="scope"
                                 slot="priceData">
-                                
+
                                 <span v-if="computePrice(scope.row.price,
-                                        scope.row.inc_article, 'yes') != computePrice(scope.row.price, scope.row.inc_article, 'no')" 
+                                        scope.row.inc_article, 'yes') != computePrice(scope.row.price, scope.row.inc_article, 'no')"
                                         class="text-danger" style="text-decoration: line-through;">
                                     ${{ computePrice(scope.row.price, scope.row.inc_article, 'no') }}
                                     &nbsp;
                                 </span>
-                                
+
                                 {{
                                     scope.row.price == '' ||
                                     scope.row.price
@@ -574,23 +574,36 @@
                                 slot="actionButtons">
                                 <div class="btn-group" ref="text">
                                     <button
-                                        v-if="scope.row.price != '' && scope.row.price != null"
+                                        v-if="(scope.row.price != '' && scope.row.price != null) && user.permission_list.includes('create-buyer-list-backlinks-to-buy')"
+                                        class="btn btn-default"
+                                        data-toggle="modal"
+                                        data-target="#modal-buy-update"
                                         :disabled="isCreditAuth"
                                         :title="$t('message.list_backlinks.t_buy')"
-                                        data-target="#modal-buy-update"
-                                        @click="doUpdate(scope.row)"uy
-                                        data-toggle="modal"
-                                        class="btn btn-default"><i class="fas fa-dollar-sign"></i></button>
+
+                                        @click="doUpdate(scope.row)">
+
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </button>
+
                                     <button
-                                        :disabled="scope.row.status_purchased == 'Interested' || scope.row.status_purchased == 'Purchased'"
-                                        @click="doLike(scope.row.id)"
+                                        v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
+                                        class="btn btn-default"
                                         :title="$t('message.list_backlinks.bb_interested')"
-                                        class="btn btn-default"><i class="fa fa-fw fa-thumbs-up"></i></button>
+                                        :disabled="scope.row.status_purchased == 'Interested' || scope.row.status_purchased == 'Purchased'"
+
+                                        @click="doLike(scope.row.id)">
+
+                                        <i class="fa fa-fw fa-thumbs-up"></i>
+                                    </button>
+
                                     <button
-                                        :disabled="scope.row.status_purchased == 'Not interested' || scope.row.status_purchased == 'Purchased'"
-                                        @click="doDislike(scope.row.id)"
+                                        v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
+                                        class="btn btn-default"
                                         :title="$t('message.list_backlinks.bb_not_interested')"
-                                        class="btn btn-default"><i class="fa fa-fw fa-thumbs-down"></i></button>
+                                        :disabled="scope.row.status_purchased == 'Not interested' || scope.row.status_purchased == 'Purchased'"
+
+                                        @click="doDislike(scope.row.id)"><i class="fa fa-fw fa-thumbs-down"></i></button>
                                 </div>
                             </template>
                         </vue-virtual-table>
@@ -649,7 +662,7 @@
                                            disabled>
                                     </div>
 
-                                    
+
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1047,7 +1060,7 @@
                                     type="checkbox"
                                     :checked="tblBuyOptions.price ? 'checked':''"
                                     v-model="tblBuyOptions.price">
-                                    {{ user.role_id == 5 ? $t('message.list_backlinks.t_prices') : $t('message.list_backlinks.t_price') }}
+                                    {{ [5, 14].includes(user.role_id) ? $t('message.list_backlinks.t_prices') : $t('message.list_backlinks.t_price') }}
                                 </label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -1328,7 +1341,7 @@ export default {
 
         this.columnShow();
 
-        
+
     },
     watch : {
         'filterModel.continent_id' : function () {
@@ -1555,7 +1568,7 @@ export default {
                     // sortable : true,
                     actionName : 'sellerData',
                     width : 160,
-                    isHidden : this.user.role_id == 5 && this.user.isOurs == 1
+                    isHidden : (this.user.role_id == 5 && this.user.isOurs == 1) || !this.tblBuyOptions.seller
                 },
                 {
                     prop : '_action',
@@ -1657,7 +1670,7 @@ export default {
                 },
                 {
                     prop : '_action',
-                    name : !this.user.isAdmin && this.user.role_id == 5 ? this.$t('message.list_backlinks.t_prices'):this.$t('message.list_backlinks.t_price'),
+                    name : !this.user.isAdmin && [5, 14].includes(this.user.role_id) ? this.$t('message.list_backlinks.t_prices'):this.$t('message.list_backlinks.t_price'),
                     actionName : 'priceData',
                     // sortable: true,
                     // prefix: '$',
@@ -1850,7 +1863,7 @@ export default {
         },
 
         columnShow() {
-            if (this.user.role_id == 5) {
+            if ([5, 14].includes(this.user.role_id)) {
                 this.tblBuyOptions.casino_sites = false;
                 this.tblBuyOptions.seller = false;
                 this.tblBuyOptions.code_comb = false;
@@ -2401,6 +2414,14 @@ export default {
                     self.$t('message.list_backlinks.alert_success'),
                     self.$t('message.list_backlinks.alert_order'),
                     'success'
+                )
+            } else {
+                loader.hide();
+
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
                 )
             }
 

@@ -3,10 +3,16 @@
         <div class="card-header">
             <h3 class="card-title">{{ $t('message.finance.pm_title') }}</h3>
             <div class="card-tools">
-                <button data-toggle="modal"
-                        @click="clearMessageform"
-                        data-target="#modal-add-payment"
-                        class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                <button
+                    v-if="user.permission_list.includes('create-admin-settings-finance')"
+                    class="btn btn-success float-right"
+                    data-toggle="modal"
+                    data-target="#modal-add-payment"
+
+                    @click="clearMessageform">
+
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
         <div class="card-body" style="height: 650px; overflow: scroll;">
@@ -28,12 +34,18 @@
                     <td>{{ item.send_payment }}</td>
                     <td>
                         <div class="btn-group">
-                            <button type="submit"
-                                    @click="doEditPayment(item)"
-                                    data-toggle="modal"
-                                    data-target="#modal-update-payment"
-                                    :title="$t('message.finance.edit')"
-                                    class="btn btn-default"><i class="fa fa-fw fa-edit"></i></button>
+                            <button
+                                v-if="user.permission_list.includes('update-admin-settings-finance')"
+                                type="submit"
+                                class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#modal-update-payment"
+                                :title="$t('message.finance.edit')"
+
+                                @click="doEditPayment(item)">
+
+                                <i class="fa fa-fw fa-edit"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -70,7 +82,12 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             {{ $t('message.finance.close') }}
                         </button>
-                        <button type="button" @click="submitAddPayment" class="btn btn-primary">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+
+                            @click="submitAddPayment">
+
                             {{ $t('message.finance.save') }}
                         </button>
                     </div>
@@ -372,6 +389,7 @@ export default {
 
     computed : {
         ...mapState({
+            user : state => state.storeAuth.currentUser,
             paymentList : state => state.storeSystem.paymentList,
         }),
     },
@@ -458,7 +476,7 @@ export default {
             } else {
                 await swal.fire(
                     that.$t('message.finance.alert_error'),
-                    that.$t('message.finance.alert_error_add_payment'),
+                    that.messageForms.message,
                     'error'
                 )
             }
@@ -500,7 +518,7 @@ export default {
             } else {
                 await swal.fire(
                     self.$t('message.finance.alert_error'),
-                    self.$t('message.finance.alert_error_update_payment'),
+                    self.messageForms.message,
                     'error',
                 )
             }

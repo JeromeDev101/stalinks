@@ -23,10 +23,11 @@
                     <td>{{ checkPriceRate(item.ppw_rate) }}</td>
                     <td>
                         <button
+                            v-if="user.permission_list.includes('update-admin-settings-finance')"
+                            class="btn btn-default"
                             data-toggle="modal"
                             data-target="#modal-update-language-rates"
                             :title="$t('message.IT.edit')"
-                            class="btn btn-default"
 
                             @click="updateLanguageRate(item)">
 
@@ -192,7 +193,7 @@ export default {
 
                 swal.fire(
                     'Error!',
-                    'There were some errors while updating the language price rates.',
+                    err.response.data.message,
                     'error'
                 )
             });

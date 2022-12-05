@@ -1107,6 +1107,7 @@
                                 </select>
 
                                 <export-excel
+                                    v-if="user.permission_list.includes('export-survey-dashboard-survey-dashboard')"
                                     worksheet="My Worksheet"
                                     :name="surveyQuestionFullDetails.type
                                     + '_survey_answers_set_'
@@ -1141,7 +1142,7 @@
                                     <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
                                         <td>
                                             <span v-if="survey.user">
-                                                {{ survey.user.username }} <br> 
+                                                {{ survey.user.username }} <br>
                                                 <span class="text-primary">{{ survey.user.email }}</span>
                                             </span>
 
@@ -1211,6 +1212,7 @@ import seller_set_a from "../data/seller_set_a";
 import writer_set_a from "../data/writer_set_a";
 import {stringManipulation} from "../../../mixins/stringManipulation";
 import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
     name : "AdminSurvey",
@@ -1349,6 +1351,10 @@ export default {
     },
 
     computed: {
+        ...mapState({
+            user : state => state.storeAuth.currentUser,
+        }),
+
         toggleText () {
             return {
                 buyer: this.$t('message.survey_dashboard.t_buyer'),

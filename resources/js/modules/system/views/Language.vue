@@ -4,8 +4,16 @@
         <div class="card-header">
             <h3 class="card-title">{{ $t('message.IT.l_title') }}</h3>
             <div class="card-tools">
-                <button @click="clearMessageform" data-toggle="modal" data-target="#modal-add-language"
-                        class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                <button
+                    v-if="user.permission_list.includes('create-admin-settings-it')"
+                    class="btn btn-success float-right"
+                    data-toggle="modal"
+                    data-target="#modal-add-language"
+
+                    @click="clearMessageform">
+
+                    <i class="fa fa-plus"></i>
+                </button>
             </div>
         </div>
         <div class="card-body" style="height: 650px; overflow: scroll;">
@@ -26,10 +34,11 @@
                     <td>
                         <div class="btn-group">
                             <button
+                                v-if="user.permission_list.includes('update-admin-settings-it')"
+                                class="btn btn-default"
                                 data-toggle="modal"
                                 data-target="#modal-update-language"
                                 :title="$t('message.IT.edit')"
-                                class="btn btn-default"
 
                                 @click="doEditLanguage(item)">
 
@@ -178,6 +187,12 @@ export default {
                     self.$t('message.IT.alert_success_updated'),
                     'success'
                 )
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
 
             await this.getLanguageList();
@@ -192,6 +207,12 @@ export default {
                     self.$t('message.IT.alert_success'),
                     self.$t('message.IT.alert_success_added'),
                     'success'
+                )
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
                 )
             }
 

@@ -118,7 +118,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                                <div class="col-md-3" v-show="[6, 8, 15].includes(user.role_id) || user.isAdmin">
                                     <div class="form-group">
                                         <label>{{ $t('message.registration_accounts.filter_in_charge') }}</label>
                                         <select class="form-control" v-model="filterModel.team_in_charge">
@@ -131,7 +131,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-show="user.role_id == 6 || user.role_id == 8 || user.isAdmin">
+                                <div class="col-md-3" v-show="[6, 8, 15].includes(user.role_id) || user.isAdmin">
                                     <div class="form-group">
                                         <label>{{ $t('message.registration_accounts.filter_affiliate') }}</label>
                                         <select class="form-control" v-model="filterModel.affiliate">
@@ -308,6 +308,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                             type="submit"
                                             :title="$t('message.registration_accounts.ra_send_email')"
                                             class="btn btn-default"
@@ -319,6 +320,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                             type="submit"
                                             :title="$t('message.registration_accounts.ra_update_multiple_in_charge')"
                                             class="btn btn-default"
@@ -330,7 +332,8 @@
                                         </button>
 
                                         <button
-                                            v-if="user.role_id == 8 || user.isAdmin"
+                                            v-if="(user.role_id == 8 || user.isAdmin)
+                                            && user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                             type="button"
                                             :title="$t('message.registration_accounts.ra_send_multiple_validation_email')"
                                             class="btn btn-default"
@@ -342,7 +345,8 @@
                                         </button>
 
                                         <button
-                                            v-if="user.role_id == 8 || user.isAdmin"
+                                            v-if="(user.role_id == 8 || user.isAdmin)
+                                            && user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                             type="button"
                                             :title="$t('message.registration_accounts.ra_send_multiple_deposit_email')"
                                             class="btn btn-default"
@@ -380,6 +384,7 @@
                                 </button>
 
                                 <button
+                                    v-if="user.permission_list.includes('create-registration-accounts-registration-accounts')"
                                     data-toggle="modal"
                                     data-target="#modal-registration"
                                     class="btn btn-success float-right mr-2"
@@ -510,6 +515,7 @@
                                         <td>
                                             <div class="btn-group">
                                                 <button
+                                                    v-if="user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                                     title="Edit"
                                                     data-toggle="modal"
                                                     class="btn btn-default"
@@ -521,6 +527,7 @@
                                                 </button>
 
                                                 <button
+                                                    v-if="user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                                     type="button"
                                                     :title="$t('message.registration_accounts.ra_send_email')"
                                                     data-toggle="modal"
@@ -532,7 +539,8 @@
                                                 </button>
 
                                                 <button
-                                                    v-if="user.role_id == 8 || user.isAdmin"
+                                                    v-if="(user.role_id == 8 || user.isAdmin)
+                                                    && user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                                     :disabled="account.account_validation !== 'processing'
                                                     || account.email_via === 'validation_email'
                                                     || account.verification_code !== null"
@@ -546,7 +554,8 @@
                                                 </button>
 
                                                 <button
-                                                    v-if="user.role_id == 8 || user.isAdmin"
+                                                    v-if="(user.role_id == 8 || user.isAdmin)
+                                                    && user.permission_list.includes('update-registration-accounts-registration-accounts')"
                                                     :disabled="!account.user
                                                     || account.type != 'Buyer'
                                                     || account.email_via_others === 'deposit_email'
@@ -3538,6 +3547,13 @@ export default {
                     this.doSearch()
                 }
             })
+            .catch(err => {
+                swal.fire(
+                    self.$t('message.draft.error'),
+                    err.response.data.message,
+                    'error'
+                )
+            })
         },
 
         checkCompanyType() {
@@ -3635,7 +3651,7 @@ export default {
             } else {
                 await swal.fire(
                     self.$t('message.registration_accounts.alert_error'),
-                    self.$t('message.registration_accounts.alert_error_saving'),
+                    self.messageForms.message,
                     'error'
                 );
             }
@@ -3706,7 +3722,7 @@ export default {
             } else {
                 swal.fire(
                     self.$t('message.registration_accounts.alert_error'),
-                    self.$t('message.registration_accounts.alert_error_update'),
+                    self.messageForms.message,
                     'error'
                 );
 
@@ -3725,7 +3741,7 @@ export default {
         },
 
         checkTeamSeller() {
-            if (this.user.isOurs == 0 && this.user.role_id == 6) {
+            if (this.user.isOurs == 0 && this.user.role_id == 15) {
                 this.isTeamSeller = false;
             }
         },

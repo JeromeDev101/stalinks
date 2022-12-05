@@ -14,6 +14,7 @@ use App\Rules\ExtListPhone;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
@@ -346,6 +347,15 @@ class ExtDomainController extends Controller
     // }
 
     public function store(Request $request) {
+        if (Gate::denies('create-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $id = Auth::user()->id;
         $input = $request->only(['info','skype','domain', 'country_id', 'alexa_rank',
             'ahrefs_rank', 'no_backlinks', 'url_rating', 'domain_rating', 'ref_domains', 'organic_keywords', 'organic_traffic', 'email',
@@ -497,6 +507,15 @@ class ExtDomainController extends Controller
     }
 
     public function importExcel(Request $request) {
+        if (Gate::denies('upload-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'file' => 'bail|required|mimes:csv,txt',
             // 'language' => 'required',
@@ -554,6 +573,15 @@ class ExtDomainController extends Controller
     }
 
     public function update(Request $request) {
+        if (Gate::denies('update-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $id = Auth::user()->id;
 
         // $input = $request->only(['info','skype','id', 'status', 'email', 'domain',
@@ -806,6 +834,15 @@ class ExtDomainController extends Controller
     }
 
     public function delete(Request $request) {
+        if (Gate::denies('delete-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input['deleted_at'] = date('Y-m-d h:i:s');
 
         if( is_array($request->id) ){
@@ -843,6 +880,15 @@ class ExtDomainController extends Controller
     }
 
     public function updateMultipleStatus(Request $request) {
+        if (Gate::denies('update-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'status' => 'required'
         ]);
@@ -927,6 +973,15 @@ class ExtDomainController extends Controller
     }
 
     public function updateMultipleEmployee(Request $request) {
+        if (Gate::denies('update-url-prospect-url-prospect')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'ids' => 'required',
             'emp_id' => 'required'

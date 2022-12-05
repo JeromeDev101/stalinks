@@ -6,8 +6,9 @@
                     <h3 class="box-title align-self-center">{{ $t('message.signature.ms_title') }}</h3>
 
                     <button
-                        :title="$t('message.signature.ms_add')"
+                        v-if="user.permission_list.includes('create-mails-signatures')"
                         class="btn btn-success ml-auto"
+                        :title="$t('message.signature.ms_add')"
 
                         @click="modalOpener('Add')">
 
@@ -96,6 +97,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <button
+                                            v-if="user.permission_list.includes('update-mails-signatures')"
                                             title="Edit email signature"
                                             class="btn btn-default mr-2"
 
@@ -105,6 +107,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('delete-mails-signatures')"
                                             data-toggle="modal"
                                             title="Delete"
                                             class="btn btn-default"
@@ -471,7 +474,6 @@ export default {
             self.isPopupLoading = false;
 
             if (self.messageForms.action === 'saved_signature') {
-
                 // remove deleted images on editor
                 let removedImages = self.getRemovedImages('Add', self.getImages(self.signatureModel.content))
                 await self.deleteRemovedImages(removedImages);
@@ -484,6 +486,12 @@ export default {
                     self.$t('message.signature.alert_added'),
                     self.$t('message.signature.alert_added_note'),
                     'success'
+                )
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
                 )
             }
         },
@@ -538,6 +546,13 @@ export default {
                             'success'
                         )
                     })
+                    .catch(err => {
+                        swal.fire(
+                            self.$t('message.draft.error'),
+                            err.response.data.message,
+                            'error'
+                        )
+                    })
                 }
             });
         },
@@ -564,6 +579,12 @@ export default {
                     self.$t('message.signature.alert_updated'),
                     self.$t('message.signature.alert_updated_note'),
                     'success'
+                )
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
                 )
             }
         },

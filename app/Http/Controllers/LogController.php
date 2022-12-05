@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class LogController extends Controller
 {
@@ -283,6 +284,15 @@ class LogController extends Controller
      */
     public function flushMonth($month)
     {
+        if (Gate::denies('delete-management-system-logs')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $dateStart = Carbon::parse('01-' . $month . '-' . date("Y"));
         $dateEnd   = Carbon::parse('31-' . $month . '-' . date("Y"));
 

@@ -9,6 +9,7 @@ use App\Repositories\Contracts\MailRepositoryInterface;
 use App\Repositories\Contracts\ExtDomainRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -102,6 +103,15 @@ class MailController extends Controller
     }
 
     public function store(Request $request) {
+        if (Gate::denies('create-mails-mail-template')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input = $request->only(['title', 'content', 'mail_name', 'country_id', 'category', 'type']);
         $input['is_general_template'] = $request->is_general_template ? 1:0;
 
@@ -119,6 +129,15 @@ class MailController extends Controller
     }
 
     public function edit(UpdateMailTemplateRequest $request) {
+        if (Gate::denies('update-mails-mail-template')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $response = ['success' => false];
         $input = $request->only('id', 'title', 'content', 'mail_name', 'country_id', 'type', 'category');
 
@@ -133,6 +152,15 @@ class MailController extends Controller
     }
 
     public function delete(Request $request) {
+        if (Gate::denies('delete-mails-mail-template')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $response = ['success' => false];
         $content = MailContent::find($request->id);
 

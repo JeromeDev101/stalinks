@@ -63,7 +63,8 @@
                                 </button>
 
                                 <button
-                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    v-if="($route.name === 'Inbox' || $route.name === 'Starred')
+                                    && user.permission_list.includes('update-mails-inbox')"
                                     :disabled="btnEnable"
                                     type="button"
                                     :title="$t('message.inbox.i_read')"
@@ -75,7 +76,8 @@
                                 </button>
 
                                 <button
-                                    v-if="$route.name === 'Inbox' || $route.name === 'Starred'"
+                                    v-if="($route.name === 'Inbox' || $route.name === 'Starred')
+                                    && user.permission_list.includes('update-mails-inbox')"
                                     :disabled="btnEnable"
                                     type="button"
                                     :title="$t('message.inbox.i_unread')"
@@ -87,6 +89,7 @@
                                 </button>
 
                                 <button
+                                    v-if="user.permission_list.includes('update-mails-inbox')"
                                     type="button"
                                     :title="$t('message.inbox.i_star')"
                                     class="btn btn-default"
@@ -98,6 +101,7 @@
                                 </button>
 
                                 <button
+                                    v-if="user.permission_list.includes('update-mails-inbox')"
                                     type="button"
                                     :title="$t('message.inbox.i_label')"
                                     class="btn btn-default"
@@ -109,6 +113,7 @@
                                 </button>
 
                                 <button
+                                    v-if="user.permission_list.includes('delete-mails-inbox')"
                                     type="button"
                                     :title="$t('message.inbox.i_trash')"
                                     class="btn btn-default"
@@ -2536,6 +2541,13 @@ export default {
                                         this.paginate.total--;
                                     }
                                 })
+                                .catch((err) => {
+                                    swal.fire(
+                                        err.response.data.message,
+                                        '',
+                                        'error'
+                                    )
+                                })
 
                             this.selectedMessage = true;
                             this.MessageDisplay = false;
@@ -2588,25 +2600,32 @@ export default {
                     let ids = self.getThreadIds(thread, mod)
 
                     axios.post('/api/mail/delete-message-thread', {ids : ids})
-                        .then((res) => {
+                    .then((res) => {
 
-                            let page = self.records.data.length <= 1 ? 1 : self.paginate.current
+                        let page = self.records.data.length <= 1 ? 1 : self.paginate.current
 
-                            self.clearViewing()
-                            self.getInbox(page)
-                            self.checkIds = [];
-                            self.checkSelected()
+                        self.clearViewing()
+                        self.getInbox(page)
+                        self.checkIds = [];
+                        self.checkSelected()
 
-                            if (mod !== 'single') {
-                                self.allSelected = !self.allSelected
-                            }
+                        if (mod !== 'single') {
+                            self.allSelected = !self.allSelected
+                        }
 
-                            swal.fire(
-                                self.$t('message.inbox.alert_deleted'),
-                                self.$t('message.inbox.alert_deleted_moved'),
-                                'success'
-                            )
-                        })
+                        swal.fire(
+                            self.$t('message.inbox.alert_deleted'),
+                            self.$t('message.inbox.alert_deleted_moved'),
+                            'success'
+                        )
+                    })
+                    .catch((err) => {
+                        swal.fire(
+                            err.response.data.message,
+                            '',
+                            'error'
+                        )
+                    })
                 }
             })
         },

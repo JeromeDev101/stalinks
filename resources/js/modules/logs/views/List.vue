@@ -130,7 +130,7 @@
                         <div class="row mb-4">
 
                             <div class="col-md-4">
-                                <div class="input-group mb-3">
+                                <div v-if="user.permission_list.includes('delete-management-system-logs')" class="input-group mb-3">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">
                                             {{ $t('message.system_logs.sl_delete') }}
@@ -143,7 +143,12 @@
                                     </select>
 
                                     <div class="input-group-append">
-                                        <button type="button" @click="deleteMonth" class="btn btn-danger">
+                                        <button
+                                            type="button"
+                                            class="btn btn-danger"
+
+                                            @click="deleteMonth">
+
                                             {{ $t('message.system_logs.delete') }}
                                         </button>
                                     </div>
@@ -328,7 +333,7 @@ export default {
     async created() {
         await this.$store.dispatch('actionCheckAdminCurrentUser', {vue : this});
 
-        if (!(this.user.isAdmin || this.user.role_id === 8 || this.user.role_id === 6 || this.user.role_id === 12)) {
+        if (!(this.user.isAdmin || [7, 8, 12, 15].includes(this.user.role_id))) {
             window.location.href = '/';
             return;
         }
@@ -584,17 +589,30 @@ export default {
                 confirmButtonText : 'Yes',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete('/api/logs/flush/' + this.deleteModel.month)
-                        .then((response) => {
-                            this.getLogsList();
-                            this.getLogsTotals();
+                    let loader = this.$loading.show();
 
-                            swal.fire({
-                                icon : 'success',
-                                title : self.$t('message.system_logs.alert_success'),
-                                text : self.$t('message.system_logs.alert_deleted_successfully'),
-                            });
-                        })
+                    axios.delete('/api/logs/flush/' + this.deleteModel.month)
+                    .then((response) => {
+                        this.getLogsList();
+                        this.getLogsTotals();
+
+                        loader.hide();
+
+                        swal.fire({
+                            icon : 'success',
+                            title : self.$t('message.system_logs.alert_success'),
+                            text : self.$t('message.system_logs.alert_deleted_successfully'),
+                        });
+                    })
+                    .catch((err) => {
+                        loader.hide();
+
+                        swal.fire(
+                            self.$t('message.follow.alert_error'),
+                            err.response.data.message,
+                            'error'
+                        )
+                    })
                 }
             })
         },

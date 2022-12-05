@@ -19,7 +19,14 @@
 
                         <div class="row mb-2">
                             <div class="col-12">
-                                <button @click="doAdd" data-toggle="modal" data-target="#modal-add" class="btn btn-success float-right">
+                                <button
+                                    v-if="user.permission_list.includes('create-mails-mail-template')"
+                                    class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#modal-add"
+
+                                    @click="doAdd">
+
                                     <i class="fa fa-plus"></i>
                                 </button>
 
@@ -140,23 +147,35 @@
                                     <td>{{ (item.language) ? item.language.name : '' }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <button @click="Export2Word(item, item.title)" class="btn btn-default">{{ $t('message.template.export_text') }}</button>
                                             <button
-                                                @click="doEdit(item)"
+                                                v-if="user.permission_list.includes('export-mails-mail-template')"
+                                                class="btn btn-default"
+
+                                                @click="Export2Word(item, item.title)">
+
+                                                {{ $t('message.template.export_text') }}
+                                            </button>
+
+                                            <button
+                                                v-if="user.permission_list.includes('update-mails-mail-template')"
+                                                type="submit"
+                                                class="btn btn-default"
                                                 data-toggle="modal"
                                                 data-target="#modal-update"
-                                                type="submit"
                                                 :title="$t('message.template.action_edit')"
-                                                class="btn btn-default">
+
+                                                @click="doEdit(item)">
 
                                                 <i class="fa fa-fw fa-edit"></i>
                                             </button>
 
                                             <button
-                                                @click="doDelete(item)"
+                                                v-if="user.permission_list.includes('delete-mails-mail-template')"
+                                                class="btn btn-default"
                                                 data-toggle="modal"
                                                 :title="$t('message.template.action_delete')"
-                                                class="btn btn-default">
+
+                                                @click="doDelete(item)">
 
                                                 <i class="fa fa-fw fa-times"></i>
                                             </button>
@@ -726,6 +745,12 @@
                         self.$t('message.template.alert_deleted_success'),
                         'success'
                     )
+                } else {
+                    await swal.fire(
+                        self.$t('message.draft.error'),
+                        self.messageForms.message,
+                        'error'
+                    )
                 }
             },
 
@@ -747,6 +772,12 @@
                         that.$t('message.template.alert_saved_success'),
                         'success'
                     )
+                } else {
+                    await swal.fire(
+                        that.$t('message.draft.error'),
+                        that.messageForms.message,
+                        'error'
+                    )
                 }
             },
 
@@ -758,7 +789,6 @@
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_tpl') {
-
                     await this.getEmailList({
                         params: this.filterModel
                     });
@@ -767,6 +797,12 @@
                         self.$t('message.template.alert_updated'),
                         self.$t('message.template.alert_updated_success'),
                         'success'
+                    )
+                } else {
+                    await swal.fire(
+                        self.$t('message.draft.error'),
+                        self.messageForms.message,
+                        'error'
                     )
                 }
             },

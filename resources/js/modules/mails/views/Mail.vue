@@ -13,7 +13,11 @@
         <div class="row">
             <div class="col-sm-3">
                 <button
-                    :disabled="$route.name === 'Drafts' || $route.name === 'mail-signature' || $route.name === 'mail-template' || $route.name === 'auto-reply'"
+                    v-if="user.permission_list.includes('create-mails-inbox')"
+                    :disabled="$route.name === 'Drafts'
+                    || $route.name === 'mail-signature'
+                    || $route.name === 'mail-template'
+                    || $route.name === 'auto-reply'"
                     class="btn btn-success btn-lg btn-block mb-3"
 
                     @click="checkWorkMail">
@@ -87,7 +91,9 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Inbox'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-inbox')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'Inbox'}">
                                 <router-link :to="{path:'/mails/inbox', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }" >
                                     <i class="fa fa-fw fa-inbox"></i>
                                     {{ $t('message.mail.f_inbox') }}
@@ -95,25 +101,33 @@
                                     <span class="badge badge-primary float-right" v-show="displayInboxCnt != 0">{{displayInboxCnt}}</span>
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-sent')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'Sent'}">
                                 <router-link :to="{path:'/mails/sent', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-share"></i>
                                     {{ $t('message.mail.f_sent') }}
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Starred'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-starred')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'Starred'}">
                                 <router-link :to="{path:'/mails/starred', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-star"></i>
                                     {{ $t('message.mail.f_star') }}
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-trash')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'Trash'}">
                                 <router-link :to="{path:'/mails/trash', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fa fa-fw fa-trash"></i>
                                     {{ $t('message.mail.f_trash') }}
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'Drafts'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-drafts')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'Drafts'}">
                                 <router-link :to="{path:'/mails/drafts', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-file-alt"></i>
                                     {{ $t('message.mail.f_draft') }}
@@ -123,19 +137,25 @@
                                     </span>
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-mail-template')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'mail-template'}">
                                 <router-link :to="{path:'/mails/template', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-envelope"></i>
                                     {{ $t('message.mail.f_template') }}
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'mail-signature'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-signatures')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'mail-signature'}">
                                 <router-link :to="{path:'/mails/signature', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="far fa-id-card"></i>
                                     {{ $t('message.mail.f_sig') }}
                                 </router-link>
                             </li>
-                            <li :class="{ 'list-group-item':true, 'active': $route.name == 'auto-reply'}">
+                            <li
+                                v-if="user.permission_list.includes('view-mails-auto-replies')"
+                                :class="{ 'list-group-item':true, 'active': $route.name == 'auto-reply'}">
                                 <router-link :to="{path:'/mails/auto', query: {label_id : $route.query.label_id ? $route.query.label_id : null } }">
                                     <i class="fas fa-reply"></i>
                                     {{ $t('message.mail.f_auto') }}

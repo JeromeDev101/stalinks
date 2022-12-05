@@ -6,7 +6,9 @@ use App\Models\Config;
 use App\Models\User;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\UserWorkMails;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client as GuzzleClient;
@@ -54,6 +56,14 @@ class ConfigController extends Controller
     }
 
     public function edit(Request $request) {
+        if (Gate::denies('update-admin-settings-finance')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
 
         $response = ['success' => false];
         $input = $request->only(['id', 'value']);
@@ -92,6 +102,15 @@ class ConfigController extends Controller
     }
 
     public function updateFormula(Request $request) {
+        if (Gate::denies('update-admin-settings-finance')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'additional' => 'required',
             'percentage' => 'required',
@@ -104,6 +123,15 @@ class ConfigController extends Controller
     }
 
     public function storeLanguage(Request $request) {
+        if (Gate::denies('create-admin-settings-it')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input = $request->all();
         $request->validate([
             'name' => 'required',
@@ -141,6 +169,15 @@ class ConfigController extends Controller
 
     public function addEmailAccess(Request $request)
     {
+        if (Gate::denies('update-admin-settings-it')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $req_emails = $request->emails;
         $emails = [];
         $restore = [];
@@ -175,6 +212,15 @@ class ConfigController extends Controller
     }
 
     public function updateLanguage(Request $request){
+        if (Gate::denies('update-admin-settings-it')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'name' => 'required',
             'code' => 'required',
@@ -342,6 +388,15 @@ class ConfigController extends Controller
     }
 
     public function updateLanguagePriceRates (Request $request) {
+        if (Gate::denies('update-admin-settings-finance')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'ppa_rate' => 'required',
             'ppw_rate' => 'required',

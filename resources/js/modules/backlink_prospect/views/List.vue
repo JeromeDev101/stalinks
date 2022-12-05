@@ -301,18 +301,25 @@
                             <tr>
                                 <td>
                                     <div class="input-group">
-                                        <!-- <input type="file"
-                                               class="form-control"
-                                               @change="checkData()"
-                                               enctype="multipart/form-data"
-                                               ref="excel"
-                                               name="file"> -->
+                                        <input
+                                            v-if="user.permission_list.includes('upload-backlinks-prospect-backlinks-prospect')"
+                                            type="file"
+                                            ref="excel"
+                                            name="file"
+                                            class="form-control"
+                                            enctype="multipart/form-data"
+
+                                            @change="checkData()">
+
                                         <div class="input-group-btn">
-                                            <!-- <button
-                                                :title="$t('message.backlink_prospect.bp_upload_csv')"
+                                            <button
+                                                v-if="user.permission_list.includes('upload-backlinks-prospect-backlinks-prospect')"
                                                 class="btn btn-primary btn-flat"
                                                 :disabled="btnUpload"
+                                                :title="$t('message.backlink_prospect.bp_upload_csv')"
+
                                                 @click="submitUpload">
+
                                                 <i class="fa fa-upload"></i>
                                             </button>
 
@@ -325,14 +332,15 @@
                                             </button> -->
 
                                             <export-excel
-                                                class="btn btn-primary btn-flat"
-                                                :data=backinkProspectList.data
-                                                :fields="export_fields"
+                                                v-if="user.permission_list.includes('export-backlinks-prospect-backlinks-prospect')"
                                                 worksheet="My Worksheet"
-                                                name="backlink_prospect.xls">
+                                                name="backlink_prospect.xls"
+                                                class="btn btn-primary btn-flat"
+                                                :fields="export_fields"
+                                                :data=backinkProspectList.data>
+
                                                 <i class="fa fa-list"></i>
                                                 {{ $t('message.backlink_prospect.bp_export') }}
-
                                             </export-excel>
 
                                         </div>
@@ -376,10 +384,10 @@
                                                 <a class="dropdown-item" @click="getAhrefs();">
                                                     Get Ahref
                                                 </a>
-                                                <a class="dropdown-item" @click="editData();">
+                                                <a v-if="user.permission_list.includes('update-backlinks-prospect-backlinks-prospect')" class="dropdown-item" @click="editData();">
                                                     {{ $t('message.backlink_prospect.edit') }}
                                                 </a>
-                                                <a class="dropdown-item" @click="deleteData();" v-show="user.isAdmin || user.role_id == 8">
+                                                <a v-if="user.permission_list.includes('delete-backlinks-prospect-backlinks-prospect')" class="dropdown-item" @click="deleteData();">
                                                     {{ $t('message.backlink_prospect.delete') }}
                                                 </a>
                                             </div>
@@ -437,10 +445,11 @@
                                 slot="actionButtons">
                                 <div class="btn-group">
                                     <button
+                                        v-if="user.permission_list.includes('update-backlinks-prospect-backlinks-prospect')"
+                                        class="btn btn-default"
                                         data-toggle="modal"
                                         data-target="#modal-update-backlink_prospect"
                                         :title="$t('message.backlink_prospect.edit')"
-                                        class="btn btn-default"
 
                                         @click="doUpdate(scope.row)">
 
@@ -1332,20 +1341,27 @@ export default {
             let self = this;
 
             axios.post('/api/backlink-prospect-update', this.updateModel)
-                .then((res) => {
-                    if (res.data.success === true) {
-                        swal.fire(
-                            self.$t('message.backlink_prospect.alert_uploaded'),
-                            self.$t('message.backlink_prospect.alert_uploaded_successfully'),
-                            'success'
-                        )
+            .then((res) => {
+                if (res.data.success === true) {
+                    swal.fire(
+                        self.$t('message.article.alert_updated'),
+                        self.$t('message.backlink_prospect.alert_updated_successfully'),
+                        'success'
+                    )
 
-                        this.getBacklinkProspect(this.filterModel.page);
-                        $('#modal-update-backlink_prospect').modal({
-                            show: false
-                        });
-                    }
-                })
+                    this.getBacklinkProspect(this.filterModel.page);
+                    $('#modal-update-backlink_prospect').modal({
+                        show: false
+                    });
+                }
+            })
+            .catch((err) => {
+                swal.fire(
+                    err.response.data.message,
+                    '',
+                    'error'
+                )
+            })
         },
 
         submitUpload() {
@@ -1356,7 +1372,6 @@ export default {
 
             axios.post('/api/backlink-prospect-upload-csv', this.formData)
                 .then((res) => {
-
                     if (res.data.success === true) {
                         swal.fire(
                             self.$t('message.backlink_prospect.alert_uploaded'),
@@ -1370,13 +1385,19 @@ export default {
 
                     } else {
                         swal.fire(
-                            self.$t('message.publisher.alert_failed'),
-                            self.$t('message.publisher.alert_upload_fail'),
+                            res.data.message,
+                            '',
                             'error'
                         )
                     }
+                })
+                .catch((err) => {
+                    swal.fire(
+                        err.response.data.message,
+                        '',
+                        'error'
+                    )
                 });
-
         },
 
         getBacklinkProspect(page = 1) {
@@ -1452,6 +1473,13 @@ export default {
                 });
 
                 this.getBacklinkProspect(this.filterModel.page);
+            })
+            .catch((err) => {
+                swal.fire(
+                    err.response.data.message,
+                    '',
+                    'error'
+                )
             })
         },
 
@@ -1531,6 +1559,13 @@ export default {
                     self.allSelected = true;
                     self.checkIds = [];
                     self.getBacklinkProspect(page);
+                })
+                .catch((err) => {
+                    swal.fire(
+                        err.response.data.message,
+                        '',
+                        'error'
+                    )
                 })
             } else {
                 swal.fire(

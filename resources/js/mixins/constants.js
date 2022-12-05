@@ -192,7 +192,7 @@ export const Constants = {
             'Admin Dashboard'
         ],
         'Get Alexa': [
-            'Gex Alexa'
+            'Get Alexa'
         ],
         'Generate List': [
             'Generate List'

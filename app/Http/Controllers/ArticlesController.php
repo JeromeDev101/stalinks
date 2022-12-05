@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\Price;
-
+use Illuminate\Support\Facades\Gate;
 
 
 class ArticlesController extends Controller
@@ -318,6 +318,10 @@ class ArticlesController extends Controller
     }
 
     public function store(Request $request, NotificationInterface $notification) {
+        if (Gate::denies('create-article-article')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         $request->validate([
             'backlink' => 'required',
             'writer' => 'required',
@@ -343,6 +347,10 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request, NotificationInterface $notification){
+        if (Gate::denies('update-article-article')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         $user_id = Auth::user()->id;
         $article = Article::find($request->get('content')['id']);
         $price_id = $article->id_writer_price ?: null;
@@ -457,6 +465,10 @@ class ArticlesController extends Controller
     }
 
     public function deleteArticle(Request $request) {
+        if (Gate::denies('delete-admin-article-admin-article')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         $article = Article::find($request->id);
         $article->delete();
 

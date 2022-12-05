@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -43,6 +44,15 @@ class MailSignatureController extends Controller
 
     public function storeSignature(Request $request)
     {
+        if (Gate::denies('create-mails-signatures')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         Validator::make($request->all(), [
             'content' => 'required',
             'work_mail' => [
@@ -90,6 +100,15 @@ class MailSignatureController extends Controller
 
     public function updateSignature(Request $request)
     {
+        if (Gate::denies('update-mails-signatures')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         Validator::make($request->all(), [
             'content' => 'required',
             'work_mail' => [
@@ -123,6 +142,15 @@ class MailSignatureController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('delete-mails-signatures')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         MailSignature::find($id)->delete();
 
         return response()->json(['success' => true]);

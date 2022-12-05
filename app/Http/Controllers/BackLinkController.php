@@ -17,6 +17,7 @@ use App\Models\WalletTransaction;
 use App\Events\ArticleEvent;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\BacklinkOrderRefund;
+use Illuminate\Support\Facades\Gate;
 
 class BackLinkController extends Controller
 {
@@ -117,7 +118,7 @@ class BackLinkController extends Controller
         $user = \Illuminate\Support\Facades\Auth::user();
         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
-        
+
 
         $statuses = Backlink::select('status')
                                 ->selectRaw('count(*) as total')
@@ -173,6 +174,10 @@ class BackLinkController extends Controller
 
     public function update(UpdateBacklinkRequest $request, $id)
     {
+        if (Gate::denies('update-buyer-follow-up-backlinks')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         $seller = DB::table('backlinks')
 
                     ->join('publisher','backlinks.publisher_id','=','publisher.id')

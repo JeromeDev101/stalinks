@@ -34,7 +34,7 @@ class WriterExamProcessedListener
             $event->writerExam->writer->notify(new WriterExamProcessed($event->writerExam, $event->mode, $event->reason));
         } else if ($event->mode === 'checking') {
             //  send notification to team that exam is submitted
-            $team = User::whereIn('role_id', [8,1,6,4])->where('isOurs', 0)->where('status', 'active')->get();
+            $team = User::whereIn('role_id', [8,1,15,13])->where('isOurs', 0)->where('status', 'active')->get();
 
             Notification::send($team, new WriterExamProcessed($event->writerExam, $event->mode));
         }

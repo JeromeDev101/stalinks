@@ -17,6 +17,7 @@ use App\Models\Billing;
 use App\Models\TotalWallet;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Pdf;
 
@@ -97,6 +98,15 @@ class SellerBillingController extends Controller
     }
 
     public function payBilling(SellerPayRequest $request, PaypalInterface $paypal, InvoiceService $invoice) {
+        if (Gate::denies('update-billing-seller-billing')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $filename = time() . '-billing.' . $request->file->getClientOriginalExtension();
         move_file_to_storage($request->file, 'images/billing', $filename);
 
@@ -221,6 +231,15 @@ class SellerBillingController extends Controller
 
     public function updateBillings(Request $request)
     {
+        if (Gate::denies('update-billing-seller-billing')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $response = Backlink::whereIn('id', $request->ids)
             ->update([
                 'payment_status' => 'Voided'
@@ -230,6 +249,15 @@ class SellerBillingController extends Controller
     }
 
     public function sellerBillingReuploadDoc(Request $request) {
+        if (Gate::denies('upload-billing-seller-billing')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);

@@ -95,17 +95,21 @@
                     <div class="card-header">
                         <h3 class="card-title text-primary">{{ $t('message.wallet_transaction.wt_title') }}</h3>
                         <div class="card-tools">
-                            <button v-if="user.isAdmin"
-                                    data-toggle="modal"
-                                    @click="clearMessageform"
-                                    data-target="#modal-add-wallet"
-                                    class="btn btn-success float-right"><i class="fa fa-plus"></i>
+                            <button
+                                v-if="user.isAdmin && user.permission_list.includes('create-billing-wallet-transaction')"
+                                data-toggle="modal"
+                                data-target="#modal-add-wallet"
+                                class="btn btn-success float-right"
+
+                                @click="clearMessageform">
+
+                                <i class="fa fa-plus"></i>
                                 {{ $t('message.wallet_transaction.wt_add_wallet') }}
                             </button>
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="text-primary" v-show="user.role_id == 5">
+                        <span class="text-primary" v-show="[5, 14].includes(user.role_id)">
                             {{ $t('message.wallet_transaction.wt_total_deposit') }}
                             <b>${{listWallet.deposit}}</b>
                         </span>
@@ -161,7 +165,7 @@
                                 </td>
                                 <td>{{ wallet.admin_confirmation }}</td>
                                 <td>
-                                    <div class="btn-group" v-if="user.isAdmin">
+                                    <div class="btn-group" v-if="user.isAdmin && user.permission_list.includes('update-billing-wallet-transaction')">
                                         <button
                                             :title="$t('message.wallet_transaction.edit')"
                                             @click="doUpdate(wallet)"
@@ -695,6 +699,7 @@ export default {
         },
 
         async submitUpdatePay() {
+            let self = this;
             let loader = this.$loading.show();
 
             this.formDataEdit = new FormData();
@@ -714,8 +719,15 @@ export default {
                 this.getWalletTransactionList();
 
                 loader.hide();
-            }
+            } else {
+                loader.hide();
 
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
+            }
         },
 
         async submitPay() {
@@ -755,6 +767,12 @@ export default {
 
                     this.getWalletTransactionList();
                 }
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
 
             this.$root.$refs.AppHeader.liveGetWallet()

@@ -20,6 +20,7 @@ use App\Repositories\Contracts\PublisherRepositoryInterface;
 use App\Repositories\Contracts\ConfigRepositoryInterface;
 use App\Models\Publisher;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use League\OAuth2\Server\RequestEvent;
 use App\Models\User;
@@ -57,6 +58,15 @@ class PublisherController extends Controller
     }
 
     public function importExcel(Request $request){
+        if (Gate::denies('upload-seller-list-publisher')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         if (Auth::user()->isOurs == 1){
             $request->validate([
                 'account_valid' => 'required|in:false',
@@ -122,6 +132,15 @@ class PublisherController extends Controller
     }
 
     public function store(Request $request){
+        if (Gate::denies('create-seller-list-publisher')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $valid = 'valid';
         $request->validate([
             'account_valid' => 'required|in:' . false,
@@ -199,6 +218,15 @@ class PublisherController extends Controller
     }
 
     public function updateMultiple(Request $request) {
+        if (Gate::denies('update-seller-list-publisher')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         // dd($request->all());
         foreach( $request->ids as $id ) {
             $publisher = Publisher::findOrFail($id);
@@ -219,6 +247,14 @@ class PublisherController extends Controller
     }
 
     public function update(Request $request){
+        if (Gate::denies('update-seller-list-publisher')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
 
         $request->validate([
             'url' => 'required',
@@ -265,6 +301,15 @@ class PublisherController extends Controller
     }
 
     public function delete(Request $request){
+        if (Gate::denies('delete-seller-list-publisher')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input['deleted_at'] = date('Y-m-d');
         if( is_array($request->id) ){
             foreach( $request->id as $ids ){

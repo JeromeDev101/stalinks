@@ -10,6 +10,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Libs\Ahref;
+use Illuminate\Support\Facades\Gate;
 
 class BacklinkProspectController extends Controller
 {
@@ -182,6 +183,10 @@ class BacklinkProspectController extends Controller
     }
 
     public function importCsv(Request $request) {
+        if (Gate::denies('upload-backlinks-prospect-backlinks-prospect')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         $request->validate([
             'file' => 'bail|required|mimes:csv,txt',
         ]);
@@ -332,6 +337,10 @@ class BacklinkProspectController extends Controller
     }
 
     public function editMultiple(Request $request) {
+        if (Gate::denies('update-backlinks-prospect-backlinks-prospect')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         if(is_array($request->ids)) {
             foreach($request->ids as $id) {
                 $backlink_prospect = BacklinkProspect::find($id);
@@ -344,6 +353,10 @@ class BacklinkProspectController extends Controller
     }
 
     public function delete(Request $request) {
+        if (Gate::denies('delete-backlinks-prospect-backlinks-prospect')) {
+            abort(422, 'Unauthorized Access');
+        }
+
         if(is_array($request->ids)) {
             foreach($request->ids as $id) {
                 $backlink_prospect = BacklinkProspect::find($id);
@@ -353,6 +366,9 @@ class BacklinkProspectController extends Controller
     }
 
     public function update(Request $request) {
+        if (Gate::denies('update-backlinks-prospect-backlinks-prospect')) {
+            abort(422, 'Unauthorized Access');
+        }
 
         $backlink_prospect = BacklinkProspect::find($request->id);
         $backlink_prospect->update([

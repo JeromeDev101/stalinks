@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MailAutoReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class MailAutoReplyController extends Controller
 {
@@ -26,6 +27,15 @@ class MailAutoReplyController extends Controller
     }
 
     public function store (Request $request) {
+        if (Gate::denies('create-mails-auto-replies')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $this->validateRequest($request);
 
         $auto = Auth::user()->autoReplies()->create([
@@ -37,6 +47,15 @@ class MailAutoReplyController extends Controller
     }
 
     public function update (Request $request) {
+        if (Gate::denies('update-mails-auto-replies')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $this->validateRequest($request);
 
         $auto = MailAutoReply::find($request->id);
@@ -50,6 +69,15 @@ class MailAutoReplyController extends Controller
     }
 
     public function destroy (Request $request) {
+        if (Gate::denies('delete-mails-auto-replies')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         MailAutoReply::whereIn('id', $request->ids)->delete();
     }
 

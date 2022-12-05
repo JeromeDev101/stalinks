@@ -466,7 +466,7 @@
                                                     <span class="text-primary" v-if="buyer.is_sub_account == 1">
                                                         {{ buyer.under_name != null ?  '['+ upperCase(buyer.under_name)+']':''}}
                                                     </span>
-                                                    {{ upperCase(buyer.username) }} 
+                                                    {{ upperCase(buyer.username) }}
                                                 </span>
                                             </td>
                                             <td>{{ buyer.num_total }}</td>
@@ -694,7 +694,7 @@ export default {
         },
 
         isBuyer() {
-            return this.user.role_id === 5;
+            return [5, 14].includes(this.user.role_id)
         },
 
         isAffiliate() {

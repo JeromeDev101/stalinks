@@ -54,6 +54,7 @@
                             </button>
 
                             <button
+                                v-if="user.permission_list.includes('delete-mails-drafts')"
                                 type="button"
                                 title="Trash"
                                 class="btn btn-default"
@@ -611,11 +612,9 @@ export default {
 
                         this.getDrafts()
                     }).catch((err) => {
-                        console.log(err)
-
                         swal.fire(
                             self.$t('message.draft.error'),
-                            self.$t('message.draft.dd_err_delete'),
+                            err.response.data.message,
                             'error'
                         )
                     })

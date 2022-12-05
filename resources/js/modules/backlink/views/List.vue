@@ -220,7 +220,11 @@
                                     <i class="fa fa-cog"></i>
                                 </button>
 
-                                <div v-if="Object.keys(listBackLink).length !== 0" class="mr-2">
+                                <div
+                                    v-if="Object.keys(listBackLink).length !== 0
+                                    && user.permission_list.includes('export-buyer-follow-up-backlinks')"
+                                    class="mr-2">
+
                                     <download-csv
                                         style="margin-bottom: 0 !important;"
                                         :data="listBackLink.data"
@@ -264,7 +268,7 @@
                                     <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{ $t('message.follow_backlinks.filter_seller') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_user_buyer') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.follow_backlinks.t_url_pub') }}</th>
-                                    <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">{{ $t('message.follow_backlinks.t_url_ad') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || [5, 8, 14].includes(user.role_id)">{{ $t('message.follow_backlinks.t_url_ad') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.link_from">{{ $t('message.follow_backlinks.t_link_from') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.link_to">{{ $t('message.follow_backlinks.t_link_to') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.price" v-if="user.isAdmin">{{ $t('message.follow_backlinks.t_price') }}</th>
@@ -331,7 +335,7 @@
                                             </a>
                                         </span>
                                         </td>
-                                        <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8">
+                                        <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || [5, 8, 14].includes(user.role_id)">
                                             <!--                                    {{ backLink.url_advertiser }}-->
                                             <span v-if="backLink.url_advertiser == null">
                                                 N/A
@@ -364,7 +368,15 @@
                                         <td v-show="tblFollowupBacklinksOpt.status">{{ backLink.status }}</td>
                                         <td class="text-center">
                                             <div class="btn-group">
-                                                <button class="btn btn-default" @click="editBackLink(backLink)" title="Edit"><i class="fa fa-fw fa-edit"></i></button>
+                                                <button
+                                                    v-if="user.permission_list.includes('update-buyer-follow-up-backlinks')"
+                                                    title="Edit"
+                                                    class="btn btn-default"
+
+                                                    @click="editBackLink(backLink)">
+
+                                                    <i class="fa fa-fw fa-edit"></i>
+                                                </button>
                                             </div>
 <!--                                            <div v-if="user.isAdmin" class="btn-group">-->
 <!--                                                <button class="btn btn-default" @click="deleteBackLink(backLink.id, backLink.publisher.user.username, backLink.user.username)" title="Delete"><i class="fa fa-fw fa-trash"></i></button>-->
@@ -400,7 +412,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_publisher ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.follow_backlinks.t_url_pub') }}</label>
                             </div>
-                            <div v-if="user.isAdmin || user.role_id == 5 || user.role_id == 8" class="checkbox col-md-4">
+                            <div v-if="user.isAdmin || [5, 8, 14].includes(user.role_id)" class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblFollowupBacklinksOpt.url_advertiser ? 'checked':''" v-model="tblFollowupBacklinksOpt.url_advertiser">{{ $t('message.follow_backlinks.t_url_ad') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
@@ -459,7 +471,7 @@
                     </div>
                     <div class="modal-body relative">
                         <form class="row" action="">
-                            <div class="col-md-6" v-show="user.role_id != 5">
+                            <div class="col-md-6" v-show="![5, 14].includes(user.role_id)">
                                 <div class="form-group">
                                     <label>{{ $t('message.follow_backlinks.efb_seller_name') }}</label>
                                     <input type="text" v-model="modelBaclink.username" :disabled="true" class="form-control" required="required" >
@@ -1246,7 +1258,7 @@
                     }
                 }
 
-                if( that.role.id == 4 ){
+                if( that.role.id == 4 || that.role.id == 13){
                     this.isPostingWriter = true;
                 }
             },
@@ -1304,7 +1316,6 @@
                     this.modelBaclink.status === 'Deleted' ||
                     this.modelBaclink.status === 'Refund'
                 ) {
-
                     swal.fire({
                         title : self.$t('message.follow_backlinks.alert_confirm'),
                         text : self.$t('message.follow_backlinks.alert_accept_note'),
@@ -1321,11 +1332,11 @@
                 } else {
                     this.sendUpdate();
                 }
-
-
             },
 
             async sendUpdate() {
+                let self = this;
+
                 await this.$store.dispatch('actionSaveBacklink', {
                     params: this.modelBaclink
                 })
@@ -1333,6 +1344,18 @@
                 if (this.messageBacklinkForms.action === 'saved_backlink') {
                     this.closeModalBacklink()
                     this.getBackLinkList()
+
+                    await swal.fire(
+                        self.$t('message.article.alert_updated'),
+                        '',
+                        'success'
+                    )
+                } else {
+                    await swal.fire(
+                        self.messageBacklinkForms.message,
+                        '',
+                        'error'
+                    )
                 }
             },
 

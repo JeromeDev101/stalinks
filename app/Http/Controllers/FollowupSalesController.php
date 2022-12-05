@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Article;
 use App\Events\NotificationEvent;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class FollowupSalesController extends Controller
@@ -55,6 +56,7 @@ class FollowupSalesController extends Controller
                 }
             ])
             ->with('user:id,name,username')
+            ->with('article')
             ->orderBy('created_at', 'desc');
 
         $registered = Registration::where('email', $user->email)->first();
@@ -169,6 +171,15 @@ class FollowupSalesController extends Controller
 
     public function update(Request $request, NotificationInterface $notification)
     {
+        if (Gate::denies('update-seller-follow-up-sale')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         // $seller = DB::table('backlinks')
         //             ->join('publisher','backlinks.publisher_id','=','publisher.id')
         //             ->join('users','publisher.user_id','=','users.id')
@@ -277,6 +288,15 @@ class FollowupSalesController extends Controller
     }
 
     public function generateArticle (Request $request) {
+        if (Gate::denies('create-article-article')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         DB::transaction(function () use ($request) {
             // generate article
 
@@ -387,6 +407,15 @@ class FollowupSalesController extends Controller
 
     public function processPendingOrder(Request $request)
     {
+        if (Gate::denies('update-seller-follow-up-sale')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $id = isset($request->id) ? $request->id : null;
 
         if (!is_null($id)) {

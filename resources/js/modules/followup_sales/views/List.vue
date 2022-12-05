@@ -106,7 +106,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                            <div class="col-md-2" v-if="user.isOurs !== 1 || user.role_id !== 13">
                                 <div class="form-group">
                                     <label>{{ $t('message.follow.filter_article') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.article">
@@ -255,7 +255,7 @@
                                 <tr class="label-primary">
                                     <th>{{ $t('message.follow.fus_action') }}</th>
                                     <th>#</th>
-                                    <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                                    <th v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 13">
                                         {{ $t('message.follow.fus_url_pub_id') }}
                                     </th>
                                     <th v-show="tblOptions.blink_id">{{ $t('message.follow.fus_blink') }}</th>
@@ -265,7 +265,7 @@
                                     <th v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ $t('message.follow.filter_seller') }}</th>
                                     <th v-show="tblOptions.buyer" v-if="user.isOurs != 1">{{ $t('message.follow.filter_buyer') }}</th>
                                     <th v-show="tblOptions.url">{{ $t('message.follow.fus_url_pub') }}</th>
-                                    <th v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                                    <th v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 13">
                                         {{ $t('message.follow.fus_price') }}
                                     </th>
                                     <th v-show="tblOptions.link_from">{{ $t('message.follow.fus_link_from') }}</th>
@@ -281,6 +281,7 @@
                                     <td>
                                         <div class="btn-group">
                                             <button
+                                                v-if="user.permission_list.includes('update-seller-follow-up-sale')"
                                                 data-toggle="modal"
                                                 data-target="#modal-update-sales"
                                                 :title="$t('message.follow.edit')"
@@ -292,7 +293,10 @@
                                             </button>
 
                                             <button
-                                                v-if="user.isAdmin || (user.role_id === 6 && user.isOurs === 1) || (user.role_id === 8 && user.isOurs === 1)"
+                                                v-if="(user.isAdmin
+                                                || (user.role_id === 6 && user.isOurs === 1)
+                                                || (user.role_id === 8 && user.isOurs === 0))
+                                                && user.permission_list.includes('update-seller-follow-up-sale')"
                                                 :disabled="sales.status !== 'Pending'"
                                                 data-toggle="modal"
                                                 data-target="#modal-approve-pending"
@@ -307,7 +311,7 @@
                                     </td>
                                     <td>{{ index + 1}}</td>
                                     <td
-                                        v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}
+                                        v-show="tblOptions.pub_id" v-if="user.isOurs !== 1 || user.role_id !== 13">{{ sales.publisher == null ? 'N/A' : sales.publisher.id }}
                                     </td>
                                     <td v-show="tblOptions.blink_id">{{ sales.id }}</td>
                                     <td v-show="tblOptions.arc_id">
@@ -328,9 +332,10 @@
                                             </span>
 
                                             <button
-                                                v-if="sales.article_id == null
-                                                    && sales.status === 'Processing'
-                                                    && (user.isAdmin || user.role_id === 8)"
+                                                v-if="(sales.article_id == null
+                                                && sales.status === 'Processing'
+                                                && (user.isAdmin || user.role_id === 8))
+                                                && user.permission_list.includes('create-article-article')"
                                                 title="Generate Article"
                                                 class="btn btn-primary ml-2"
 
@@ -373,7 +378,7 @@
                                             </span>
                                         </span>
                                     </td>
-                                    <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 4">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
+                                    <td v-show="tblOptions.price" v-if="user.isOurs !== 1 || user.role_id !== 13">{{ sales.price == null ? '':'$ ' + sales.price }}</td>
                                     <td v-show="tblOptions.link_from">
                                         <div class="dont-break-out">
                                             <a :href="sales.link_from" target="_blank">{{ sales.link_from }}</a>
@@ -502,7 +507,7 @@
                             <div class="col-sm-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <label>{{ $t('message.follow.si_status_writer') }}</label>
-                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || user.role_id == 6" >
+                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || [6, 15].includes(user.role_id)" >
                                         <option value="">{{ $t('message.follow.si_select_status') }}</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
                                             {{ option }}
@@ -519,7 +524,7 @@
                                             v-model="updateModel.status"
                                             style="height: 37px;"
                                             class="form-control pull-right"
-                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && (user.role_id != 8 || user.role_id != 6) && user.isOurs != 0 && !user.isAdmin) || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund'"
+                                            :disabled="(isLive && user.role_id != 8) || isCancelledIssue || (updateModel.status == 'Pending' && (user.role_id != 8 || ![6, 15].includes(user.role_id)) && user.isOurs != 0 && !user.isAdmin) || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund'"
 
                                             @change="checkStatus()">
 
@@ -533,14 +538,14 @@
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklinkQc"
-                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0 && updateModel.status != 'Live' && updateModel.status != 'Nofollow' && updateModel.status != '404' && updateModel.status != 'Deleted' && updateModel.status != 'Refund'">
+                                                v-show="(user.role_id == 8 || [6, 15].includes(user.role_id) || user.isAdmin) && user.isOurs == 0 && updateModel.status != 'Live' && updateModel.status != 'Nofollow' && updateModel.status != '404' && updateModel.status != 'Deleted' && updateModel.status != 'Refund'">
                                                 {{ status }}
                                             </option>
 
                                             <option
                                                 v-bind:value="status"
                                                 v-for="status in statusBacklinkQcAfterLive"
-                                                v-show="(user.role_id == 8 || user.role_id == 6 || user.isAdmin) && user.isOurs == 0 && (updateModel.status == 'Live' || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund')">
+                                                v-show="(user.role_id == 8 || [6, 15].includes(user.role_id) || user.isAdmin) && user.isOurs == 0 && (updateModel.status == 'Live' || updateModel.status == 'Nofollow' || updateModel.status == '404' || updateModel.status == 'Deleted' || updateModel.status == 'Refund')">
                                                 {{ status }}
                                             </option>
                                         </select>
@@ -563,7 +568,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">{{ $t('message.follow.filter_date_completed') }}</label>
-                                        <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive || user.role_id === 6">
+                                        <input type="date" class="form-control" v-model="updateModel.live_date" :disabled="isLive || [6, 15].includes(user.role_id)">
                                     </div>
                                 </div>
                             </div>
@@ -650,7 +655,7 @@
                     <div class="modal-body relative">
                         <div class="form-group row">
                             <div class="checkbox col-md-4">
-                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-if="user.isOurs !== 1 || user.role_id !== 4" v-model="tblOptions.pub_id">{{ $t('message.follow.sd_url_id') }}</label>
+                                <label><input type="checkbox" :checked="tblOptions.pub_id ? 'checked':''" v-if="user.isOurs !== 1 || ![4, 13].includes(user.role_id)" v-model="tblOptions.pub_id">{{ $t('message.follow.sd_url_id') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.blink_id ? 'checked':''" v-model="tblOptions.blink_id">{{ $t('message.follow.sd_backlink_id') }}</label>
@@ -673,7 +678,7 @@
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">{{ $t('message.follow.fus_url_pub') }}</label>
                             </div>
-                            <div class="checkbox col-md-4" v-if="user.isOurs !== 1 || user.role_id !== 4">
+                            <div class="checkbox col-md-4" v-if="user.isOurs !== 1 || ![4, 13].includes(user.role_id)">
                                 <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">{{ $t('message.follow.fus_price') }}</label>
                             </div>
                             <div class="checkbox col-md-4">
@@ -1612,6 +1617,14 @@
                         self.$t('message.follow.alert_updated_successfully'),
                         'success'
                     )
+                } else {
+                    loader.hide();
+
+                    await swal.fire(
+                        this.messageForms.message,
+                        '',
+                        'error'
+                    )
                 }
 
                 self.isDisabledUpdate = false;
@@ -1645,11 +1658,12 @@
                     id: id,
                     process: process
                 }).then((res) => {
-
                     this.resetConfirmationValues();
 
                     let orderModal = this.$refs.modalApprovePending
                     $(orderModal).modal('hide')
+
+                    loader.hide();
 
                     if (process === 'approve') {
                         swal.fire(
@@ -1666,18 +1680,16 @@
                     }
 
                     this.getListSales();
-
-                    loader.hide();
                 }).catch((err) => {
                     console.log(err)
 
+                    loader.hide();
+
                     swal.fire(
                         self.$t('message.follow.alert_error'),
-                        self.$t('message.follow.alert_pending_order_error'),
+                        err.response.data.message,
                         'error'
                     )
-
-                    loader.hide();
                 })
             },
 
@@ -1713,7 +1725,7 @@
 
                                 swal.fire(
                                     self.$t('message.tools.alert_error'),
-                                    'There were some errors while generating an article.',
+                                    err.response.data.message,
                                     'error'
                                 )
                             });

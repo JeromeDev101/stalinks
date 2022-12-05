@@ -169,14 +169,17 @@
                             <tr>
                                 <td>
                                     <div class="input-group">
-                                        <input type="file"
-                                               class="form-control"
-                                               @change="checkData()"
-                                               enctype="multipart/form-data"
-                                               ref="excel"
-                                               name="file">
+                                        <input
+                                            v-if="user.permission_list.includes('upload-generate-list-generate-list')"
+                                            type="file"
+                                            class="form-control"
+                                            @change="checkData()"
+                                            enctype="multipart/form-data"
+                                            ref="excel"
+                                            name="file">
                                         <div class="input-group-btn">
                                             <button
+                                                v-if="user.permission_list.includes('upload-generate-list-generate-list')"
                                                 :title="$t('message.generate_list.gl_upload_csv')"
                                                 class="btn btn-primary btn-flat"
                                                 :disabled="btnUpload"
@@ -185,6 +188,7 @@
                                             </button>
 
                                             <button
+                                                v-if="user.permission_list.includes('upload-generate-list-generate-list')"
                                                 :title="$t('message.generate_list.gl_download_csv')"
                                                 class="btn btn-primary btn-flat"
 
@@ -193,6 +197,7 @@
                                             </button>
 
                                             <export-excel
+                                                v-if="user.permission_list.includes('export-generate-list-generate-list')"
                                                 class="btn btn-primary btn-flat"
                                                 :data=generateList.data
                                                 worksheet="My Worksheet"
@@ -206,9 +211,12 @@
                                     </div>
                                 </td>
                                 <td class="text-right">
-                                    <button class="btn btn-success"
-                                            data-toggle="modal"
-                                            data-target="#modalAddUrlGenerateList">
+                                    <button
+                                        v-if="user.permission_list.includes('create-generate-list-generate-list')"
+                                        class="btn btn-success"
+                                        data-toggle="modal"
+                                        data-target="#modalAddUrlGenerateList">
+
                                         {{ $t('message.generate_list.gl_add_url') }}
                                     </button>
                                 </td>
@@ -243,9 +251,31 @@
                                                 {{ $t('message.generate_list.gl_selected_action') }}
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item" @click="deleteData();">{{ $t('message.generate_list.gl_delete') }}</a>
-                                                <a class="dropdown-item" @click="getAhref()">{{ $t('message.generate_list.gl_get_ahref') }}</a>
-                                                <a class="dropdown-item" @click="computePrice()">{{ $t('message.generate_list.gl_compute_price') }}</a>
+                                                <a
+                                                    v-if="user.permission_list.includes('delete-generate-list-generate-list')"
+                                                    class="dropdown-item"
+
+                                                    @click="deleteData();">
+
+                                                    {{ $t('message.generate_list.gl_delete') }}
+                                                </a>
+
+                                                <a
+                                                    v-if="user.permission_list.includes('update-generate-list-generate-list')"
+                                                    class="dropdown-item"
+
+                                                    @click="getAhref()">
+                                                    {{ $t('message.generate_list.gl_get_ahref') }}
+                                                </a>
+
+                                                <a
+                                                    v-if="user.permission_list.includes('update-generate-list-generate-list')"
+                                                    class="dropdown-item"
+
+                                                    @click="computePrice()">
+
+                                                    {{ $t('message.generate_list.gl_compute_price') }}
+                                                </a>
                                             </div>
                                         </div>
 
@@ -594,25 +624,32 @@ export default {
             }
 
             axios.post('/api/generate-list-add-url', this.addModel)
-                .then((res) => {
-                    if (res.data.success === true) {
-                        swal.fire(
-                            self.$t('message.generate_list.alert_saved'),
-                            self.$t('message.generate_list.alert_updated_successfully'),
-                            'success'
-                        )
-                    } else {
-                        swal.fire(
-                            self.$t('message.generate_list.alert_error'),
-                            self.$t('message.generate_list.alert_url_exists'),
-                            'error'
-                        )
-                    }
+            .then((res) => {
+                if (res.data.success === true) {
+                    swal.fire(
+                        self.$t('message.generate_list.alert_saved'),
+                        self.$t('message.generate_list.alert_updated_successfully'),
+                        'success'
+                    )
+                } else {
+                    swal.fire(
+                        self.$t('message.generate_list.alert_error'),
+                        self.$t('message.generate_list.alert_url_exists'),
+                        'error'
+                    )
+                }
 
-                    this.errorMessage.url = false
-                    this.addModel.url = ''
-                    this.getGenerateList()
-                })
+                this.errorMessage.url = false
+                this.addModel.url = ''
+                this.getGenerateList()
+            })
+            .catch((err) => {
+                swal.fire(
+                    self.$t('message.follow.alert_error'),
+                    err.response.data.message,
+                    'error'
+                )
+            })
         },
 
         getGenerateList(page = 1) {
@@ -662,8 +699,14 @@ export default {
 
                     }
                     console.log(res)
-                });
-
+                })
+                .catch((err) => {
+                    swal.fire(
+                        self.$t('message.follow.alert_error'),
+                        err.response.data.message,
+                        'error'
+                    )
+                })
         },
 
         deleteData() {
@@ -680,6 +723,13 @@ export default {
                 this.allSelected = true;
                 this.checkIds = [];
                 this.getGenerateList();
+            })
+            .catch((err) => {
+                swal.fire(
+                    self.$t('message.follow.alert_error'),
+                    err.response.data.message,
+                    'error'
+                )
             })
         },
 

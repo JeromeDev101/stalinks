@@ -241,10 +241,16 @@
                             </select>
                         </div>
 
-                        <button v-if="isTeam"
-                                data-toggle="modal"
-                                @click="clearModels(); clearEditorImages()" data-target="#modal-add-article" class="btn btn-success float-right mr-2 mb-2"><i
-                            class="fa fa-plus"></i> {{ $t('message.article.ar_create') }}
+                        <button
+                            v-if="isTeam && user.permission_list.includes('create-article-article')"
+                            class="btn btn-success float-right mr-2 mb-2"
+                            data-toggle="modal"
+                            data-target="#modal-add-article"
+
+                            @click="clearModels(); clearEditorImages()">
+
+                            <i class="fa fa-plus"></i>
+                            {{ $t('message.article.ar_create') }}
                         </button>
 
                         <span class="pagination-custom-footer-text" style="margin-left: 0 !important;">
@@ -264,7 +270,8 @@
                                 slot="actionButton">
                                 <div class="btn-group">
                                     <button
-                                        v-if="user.role_id === 4"
+                                        v-if="(user.role_id === 4 || user.role_id === 13)
+                                         && user.permission_list.includes('create-article-article')"
                                         :disabled="!isStatusOnQueue(scope.row) || isProcessing"
                                         :id="'accept-article-' + scope.row.id"
                                         class="btn btn-default"
@@ -276,7 +283,9 @@
                                     </button>
 
                                     <button
-                                        v-if="(user.isOurs === 0 || (user.isOurs === 1 && !isStatusOnQueue(scope.row)))"
+                                        v-if="((user.isOurs === 0
+                                        || (user.isOurs === 1 && !isStatusOnQueue(scope.row))))
+                                        && user.permission_list.includes('update-article-article')"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
@@ -289,7 +298,9 @@
                                     </button>
 
                                     <button
-                                        v-if="scope.row.status_writer === 'Done' && scope.row.backlink_status != 'Canceled'"
+                                        v-if="scope.row.status_writer === 'Done'
+                                        && scope.row.backlink_status != 'Canceled'
+                                        && user.permission_list.includes('export-article-article')"
                                         class="btn btn-default"
                                         title="Export to document"
                                         @click="Export2Word(scope.row, scope.row.title)"
@@ -391,7 +402,7 @@
                             && (contentModel.status === 'In Writing' || contentModel.status === 'Issue')
                             && contentModel.status !== null
                             && contentModel.writer !== null
-                            && (user.isOurs === 1 && user.role_id === 4) || (user.isOurs === 0 && (user.role_id === 8 || user.role_id === 4)) || user.isAdmin"
+                            && (user.isOurs === 1 && user.role_id === 4) || (user.isOurs === 0 && (user.role_id === 8 || user.role_id === 13)) || user.isAdmin"
                             class="btn btn-danger"
 
                             @click="cancelWritingArticle(contentModel)">
@@ -1120,7 +1131,7 @@
                 }).catch((error) => {
                     swal.fire(
                         self.$t('message.article.alert_err'),
-                        self.$t('message.article.alert_err_accept'),
+                        error.response.data.message,
                         'error'
                     )
 
@@ -1442,24 +1453,37 @@
             async submitSave() {
                 let self = this;
                 this.isPopupLoading = true;
+
                 this.contentModel.num_words = this.$refs.composeEditorArticle.wordCount();
+
                 await this.$store.dispatch('actionSaveContent', {
                     data: this.data,
                     content: this.contentModel
                 });
+
                 this.isPopupLoading = false;
 
-                // delete removed images before saving
-                this.$refs.composeEditorArticle.deleteImages('Update');
-                this.isSaved = true;
+                if ( this.messageForms.action == 'success' ){
+                    this.clearModels();
+                    this.getListArticles();
 
-                this.getListArticles();
+                    // delete removed images before saving
+                    this.$refs.composeEditorArticle.deleteImages('Update');
+                    this.isSaved = true;
 
-                await swal.fire(
-                    self.$t('message.article.alert_updated'),
-                    self.$t('message.article.alert_article_updated'),
-                    'success'
-                )
+                    await swal.fire(
+                        self.$t('message.article.alert_updated'),
+                        self.$t('message.article.alert_article_updated'),
+                        'success'
+                    )
+
+                } else {
+                    await swal.fire(
+                        self.$t('message.draft.error'),
+                        self.messageForms.message,
+                        'error'
+                    )
+                }
             },
 
             displayInfo() {
@@ -1477,9 +1501,15 @@
                 await this.$store.dispatch('actionAddArticle', this.addModel);
                 this.isPopupLoading = false;
 
-                if( this.messageForms.action == 'success' ){
+                if ( this.messageForms.action == 'success' ){
                     this.clearModels();
                     this.getListArticles();
+                } else {
+                    await swal.fire(
+                        this.messageForms.message,
+                        '',
+                        'error'
+                    )
                 }
             },
 

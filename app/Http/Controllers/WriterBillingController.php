@@ -14,6 +14,7 @@ use App\Models\Article;
 use App\Models\User;
 use App\Models\BillingWriter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class WriterBillingController extends Controller
@@ -84,6 +85,15 @@ class WriterBillingController extends Controller
     }
 
     public function payBilling(WriterPayRequest $request, NotificationInterface $notification, InvoiceService $invoice, PaypalInterface $paypal) {
+
+        if (Gate::denies('update-billing-writer-billing')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
 
         $ids = json_decode($request->ids);
 
@@ -191,6 +201,15 @@ class WriterBillingController extends Controller
     }
 
     public function writerBillingReuploadDoc(Request $request) {
+        if (Gate::denies('upload-billing-writer-billing')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'file' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);

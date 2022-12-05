@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Registration;
 use App\Models\WriterExam;
+use Illuminate\Support\Facades\Gate;
 
 class WriterValidationController extends Controller
 {
@@ -93,6 +94,15 @@ class WriterValidationController extends Controller
     }
 
     public function update(Request $request) {
+        if (Gate::denies("create-writer's-validation-writer's-validation")) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input = $request->except('created_at', 'updated_at', 'deleted_at', 'status', 'topic');
         $input['status'] = 'For Checking';
         $exam = WriterExam::find($request->id);
@@ -102,6 +112,15 @@ class WriterValidationController extends Controller
     }
 
     public function checkExam(Request $request) {
+        if (Gate::denies("update-writer's-validation-writer's-validation")) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input = $request->only('status', 'attempt', 'fail_reason');
 
         if ($input['status'] === 'Disapproved') {
@@ -174,6 +193,15 @@ class WriterValidationController extends Controller
     }
 
     public function updateExamFailReason (Request $request) {
+        if (Gate::denies("update-writer's-validation-writer's-validation")) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'reason' => 'required',
         ]);
@@ -193,6 +221,14 @@ class WriterValidationController extends Controller
     }
 
     public function store(Request $request) {
+        if (Gate::denies("create-writer's-validation-writer's-validation")) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
 
         $request->validate([
             'topic' => 'required',

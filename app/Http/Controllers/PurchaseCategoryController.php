@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PurchaseCategoryRequest;
 use App\Models\PurchaseCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PurchaseCategoryController extends Controller
 {
@@ -32,6 +33,15 @@ class PurchaseCategoryController extends Controller
     }
 
     public function store (PurchaseCategoryRequest $request) {
+        if (Gate::denies('create-purchases-config')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $category = new PurchaseCategory();
 
         $category->fill($request->all());
@@ -42,6 +52,15 @@ class PurchaseCategoryController extends Controller
     }
 
     public function update (PurchaseCategoryRequest $request) {
+        if (Gate::denies('update-purchases-config')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $inputs = $request->only('name', 'description');
 
         $category = PurchaseCategory::find($request->id);

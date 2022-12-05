@@ -16,6 +16,7 @@ use App\Http\Requests\RegistrationAccountRequest;
 use App\Http\Requests\UpdateSetPasswordRequest;
 use App\Models\Registration;
 use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use App\Jobs\SendEmailVerification;
 use App\Models\BuyerPurchased;
@@ -44,6 +45,15 @@ class AccountController extends Controller
 
     public function store(AccountRequest $request)
     {
+        if (Gate::denies('create-registration-accounts-registration-accounts')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $input = $request->except(
             'company_type',
             'add_method_payment_type',
@@ -402,11 +412,20 @@ class AccountController extends Controller
 
     private function checkTeamSeller() {
         $user = Auth::user();
-        return ($user->role_id == 6 && $user->isOurs == 0);
+        return ($user->role_id == 15 && $user->isOurs == 0);
     }
 
     public function edit(UpdateAccountRequest $request)
     {
+        if (Gate::denies('update-registration-accounts-registration-accounts')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $inputs = $request->all();
 
         if(isset($request->language_id)) {
@@ -923,7 +942,7 @@ class AccountController extends Controller
     }
 
     public function getTeamInCharge() {
-        $team_in_charge = [4,5,6,7,1,8];
+        $team_in_charge = [13,14,15,7,1,8];
 
         $team = User::select('id','name', 'username', 'role_id')
             ->where('isOurs',0)
@@ -957,15 +976,15 @@ class AccountController extends Controller
     public function getTeamInChargePerRole(Request $request) {
         $role_id = 0;
         if( $request->role == 'Seller' ){
-            $role_id = 6;
+            $role_id = 15;
         }
 
         if( $request->role == 'Buyer' ){
-            $role_id = 5;
+            $role_id = 14;
         }
 
         if( $request->role == 'Writer' ){
-            $role_id = 4;
+            $role_id = 13;
         }
 
         $team = User::select('id','name', 'username')
@@ -973,7 +992,7 @@ class AccountController extends Controller
                     // ->where('role_id', $role_id)
                     ->where(function($query) use ($role_id, $request) {
                         if($request->role == 'Buyer') {
-                            $query->whereIn('role_id', [5, 8]);
+                            $query->whereIn('role_id', [14, 8]);
                         } else{
                             $query->where('role_id', $role_id);
                         }
@@ -1202,6 +1221,15 @@ class AccountController extends Controller
 
     public function updateMultipleInCharge(Request $request)
     {
+        if (Gate::denies('update-registration-accounts-registration-accounts')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         Registration::whereIn('id', $request->ids)->update([
             'team_in_charge' => $request->emp_id,
         ]);

@@ -188,7 +188,7 @@ const actions = {
             let response = await PublisherService.deletePublisher(params);
 
             if (response.status === 200 && response.data.success === true) {
-                commit(MESSAGE_FORMS, { action: 'uploaded', message: 'Sucessfully Deleted!', errors: {} });
+                commit(MESSAGE_FORMS, { action: 'deleted', message: 'Sucessfully Deleted!', errors: {} });
             }
             else if (response.response.status === 422) {
                 commit(MESSAGE_FORMS, response.response.data);

@@ -32,6 +32,7 @@
                             </div>
                             <div class="col-6">
                                 <button
+                                    v-if="user.permission_list.includes('create-purchases-config')"
                                     title="Add Purchase Category"
                                     class="btn btn-success float-right"
 
@@ -87,6 +88,7 @@
                                             <td>{{ category.description }}</td>
                                             <td class="text-center">
                                                 <button
+                                                    v-if="user.permission_list.includes('update-purchases-config')"
                                                     title="Edit Category"
                                                     class="btn btn-primary m-1"
 
@@ -96,6 +98,7 @@
                                                 </button>
 
                                                 <button
+                                                    v-if="user.permission_list.includes('create-purchases-config')"
                                                     title="Add Purchase Type"
                                                     class="btn btn-success m-1"
 
@@ -135,6 +138,7 @@
                                                                     <td>{{ type.description }}</td>
                                                                     <td class="text-center">
                                                                         <button
+                                                                            v-if="user.permission_list.includes('update-purchases-config')"
                                                                             title="Edit Category"
                                                                             class="btn btn-primary m-1"
 
@@ -537,7 +541,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while saving the purchase category.',
+                    self.messageFormsCategories.message,
                     'error'
                 )
             }
@@ -566,7 +570,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the purchase category.',
+                    self.messageFormsCategories.message,
                     'error'
                 )
             }
@@ -596,7 +600,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while saving the purchase type.',
+                    self.messageFormsTypes.message,
                     'error'
                 )
             }
@@ -625,7 +629,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the purchase type.',
+                    self.messageFormsTypes.message,
                     'error'
                 )
             }

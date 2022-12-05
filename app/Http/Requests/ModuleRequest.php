@@ -31,7 +31,8 @@ class ModuleRequest extends FormRequest
                     'required',
                     Rule::unique('modules')->where(function ($query) {
                         return $query->where('group', $this->input('group'))
-                            ->where('page', $this->input('page'));
+                            ->where('page', $this->input('page'))
+                            ->whereNull('deleted_at');
                     }),
                 ],
             ];
@@ -42,7 +43,8 @@ class ModuleRequest extends FormRequest
                     'required',
                     Rule::unique('modules')->ignore($this->input('id'))->where(function ($query) {
                         return $query->where('group', $this->input('group'))
-                            ->where('page', $this->input('page'));
+                            ->where('page', $this->input('page'))
+                            ->whereNull('deleted_at');
                     })
                 ],
             ];

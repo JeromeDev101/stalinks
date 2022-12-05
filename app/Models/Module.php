@@ -15,4 +15,9 @@ class Module extends Model
         'page',
         'description',
     ];
+
+    public function permissions()
+    {
+        return $this->hasMany('App\Models\Permission', 'module_id');
+    }
 }

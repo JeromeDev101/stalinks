@@ -165,10 +165,10 @@ export default {
 
         isQc() {
             let qcRoleIds = [
-                5,
                 8,
                 9,
-                10
+                10,
+                14,
             ];
             return qcRoleIds.includes(this.user.role_id);
         },
@@ -178,7 +178,7 @@ export default {
         },
 
         isCs() {
-            return this.user.role_id === 6
+            return this.user.role_id === 15
         },
 
         isMarketing () {

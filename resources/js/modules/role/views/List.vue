@@ -65,7 +65,14 @@
                     <div class="card-header">
                         <h3 class="card-title text-primary">{{ $t('message.role.r_title') }}</h3>
                         <div class="card-tools">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#modal-add-role">
+                            <button
+                                v-if="user.permission_list.includes('create-management-role')"
+                                class="btn btn-success"
+                                data-toggle="modal"
+                                data-target="#modal-add-role"
+
+                                @click="clearToggles(); addModel.permissions = [];">
+
                                 {{ $t('message.role.r_add_role') }}
                             </button>
                         </div>
@@ -106,14 +113,24 @@
                                 slot="actionButtons">
                                 <div class="btn-group">
                                     <button
+                                        v-if="user.permission_list.includes('update-management-role')"
+                                        class="btn btn-default"
                                         data-toggle="modal"
-                                        @click="doUpdate(scope.row)"
                                         data-target="#modal-update-role-list"
                                         :title="$t('message.role.ar_edit_role')"
-                                        class="btn btn-default">
+
+                                        @click="doUpdate(scope.row)">
+
                                         <i class="fa fa-fw fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-default" :title="$t('message.system_logs.delete')" @click="doDelete(scope.row.id)">
+
+                                    <button
+                                        v-if="user.permission_list.includes('update-management-role')"
+                                        class="btn btn-default"
+                                        :title="$t('message.system_logs.delete')"
+
+                                        @click="doDelete(scope.row.id)">
+
                                         <i class="fa fa-fw fa-trash"></i>
                                     </button>
                                 </div>
@@ -133,7 +150,7 @@
 
         <!-- Modal -->
         <div class="modal fade" id="modal-add-role" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ $t('message.role.r_add_role') }}</h5>
@@ -149,16 +166,217 @@
                                     <input type="text" class="form-control" v-model="addModel.name">
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>{{ $t('message.role.r_desc') }}</label>
                                     <textarea class="form-control" cols="30" rows="5" v-model="addModel.description"></textarea>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Role Permissions</label>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Module Group</th>
+                                                        <th>Module Page</th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllViewPermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allViewPermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('view-', 'add', isAllViewPermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allViewPermissionsToggleAdd">
+                                                                    View
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllCreatePermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allCreatePermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('create-', 'add', isAllCreatePermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allCreatePermissionsToggleAdd">
+                                                                    Create
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllUpdatePermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allUpdatePermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('update-', 'add', isAllUpdatePermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allUpdatePermissionsToggleAdd">
+                                                                    Update
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllDeletePermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allDeletePermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('delete-', 'add', isAllDeletePermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allDeletePermissionsToggleAdd">
+                                                                    Delete
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllUploadPermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allUploadPermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('upload-', 'add', isAllUploadPermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allUploadPermissionsToggleAdd">
+                                                                    Upload
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th>
+                                                            <div class="custom-control custom-switch">
+                                                                <input
+                                                                    v-model="isAllExportPermissionsSelected"
+                                                                    type="checkbox"
+                                                                    id="allExportPermissionsToggleAdd"
+                                                                    class="custom-control-input"
+
+                                                                    @change="toggleSelectAllPermissions('export-', 'add', isAllExportPermissionsSelected)">
+
+                                                                <label class="custom-control-label" for="allExportPermissionsToggleAdd">
+                                                                    Export
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <tr v-for="module in modules.data">
+                                                        <td>
+                                                            {{ module.id }}
+                                                        </td>
+
+                                                        <td>
+                                                            {{ module.group }}
+                                                        </td>
+
+                                                        <td>
+                                                            {{ module.page }}
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('view-', module)"
+                                                                    :disabled="getPermissionId('view-', module) == null"
+                                                                    :id="generatePermissionName('view-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('create-', module)"
+                                                                    :disabled="getPermissionId('create-', module) == null"
+                                                                    :id="generatePermissionName('create-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('update-', module)"
+                                                                    :disabled="getPermissionId('update-', module) == null"
+                                                                    :id="generatePermissionName('update-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('delete-', module)"
+                                                                    :disabled="getPermissionId('delete-', module) == null"
+                                                                    :id="generatePermissionName('delete-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('upload-', module)"
+                                                                    :disabled="getPermissionId('upload-', module) == null"
+                                                                    :id="generatePermissionName('upload-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            <div class="form-check form-check-inline">
+                                                                <input
+                                                                    v-model="addModel.permissions"
+                                                                    type="checkbox"
+                                                                    class="form-check-input"
+                                                                    :value="getPermissionId('export-', module)"
+                                                                    :disabled="getPermissionId('export-', module) == null"
+                                                                    :id="generatePermissionName('export-', module.group, module.page)">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="addModel.permissions = [];">
                             {{ $t('message.role.close') }}
                         </button>
                         <button type="button" class="btn btn-primary" @click="submitAdd">
@@ -172,7 +390,7 @@
 
         <!-- Modal Edit Role -->
         <div class="modal fade" id="modal-update-role-list" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ $t('message.role.ar_edit_role') }}</h5>
@@ -188,10 +406,211 @@
                                     <input type="text" class="form-control" v-model="updateModel.name">
                                 </div>
                             </div>
+
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>{{ $t('message.role.r_desc') }}</label>
                                     <textarea class="form-control" cols="30" rows="5" v-model="updateModel.description"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Role Permissions</label>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Module Group</th>
+                                                            <th>Module Page</th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllViewPermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allViewPermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('view-', 'update', isAllViewPermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allViewPermissionsToggle">
+                                                                        View
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllCreatePermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allCreatePermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('create-', 'update', isAllCreatePermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allCreatePermissionsToggle">
+                                                                        Create
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllUpdatePermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allUpdatePermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('update-', 'update', isAllUpdatePermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allUpdatePermissionsToggle">
+                                                                        Update
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllDeletePermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allDeletePermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('delete-', 'update', isAllDeletePermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allDeletePermissionsToggle">
+                                                                        Delete
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllUploadPermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allUploadPermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('upload-', 'update', isAllUploadPermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allUploadPermissionsToggle">
+                                                                        Upload
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                            <th>
+                                                                <div class="custom-control custom-switch">
+                                                                    <input
+                                                                        v-model="isAllExportPermissionsSelected"
+                                                                        type="checkbox"
+                                                                        id="allExportPermissionsToggle"
+                                                                        class="custom-control-input"
+
+                                                                        @change="toggleSelectAllPermissions('export-', 'update', isAllExportPermissionsSelected)">
+
+                                                                    <label class="custom-control-label" for="allExportPermissionsToggle">
+                                                                        Export
+                                                                    </label>
+                                                                </div>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr v-for="module in modules.data">
+                                                            <td>
+                                                                {{ module.id }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ module.group }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ module.page }}
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('view-', module)"
+                                                                        :disabled="getPermissionId('view-', module) == null"
+                                                                        :id="generatePermissionName('view-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('create-', module)"
+                                                                        :disabled="getPermissionId('create-', module) == null"
+                                                                        :id="generatePermissionName('create-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('update-', module)"
+                                                                        :disabled="getPermissionId('update-', module) == null"
+                                                                        :id="generatePermissionName('update-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('delete-', module)"
+                                                                        :disabled="getPermissionId('delete-', module) == null"
+                                                                        :id="generatePermissionName('delete-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('upload-', module)"
+                                                                        :disabled="getPermissionId('upload-', module) == null"
+                                                                        :id="generatePermissionName('upload-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+
+                                                            <td class="text-center">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input
+                                                                        v-model="updateModel.permissions"
+                                                                        type="checkbox"
+                                                                        class="form-check-input"
+                                                                        :value="getPermissionId('export-', module)"
+                                                                        :disabled="getPermissionId('export-', module) == null"
+                                                                        :id="generatePermissionName('export-', module.group, module.page)">
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -215,8 +634,10 @@
 import {mapState} from 'vuex';
 import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
+import {stringManipulation} from "../../../mixins/stringManipulation";
 
 export default {
+    mixins: [stringManipulation],
     components : {
         VueVirtualTable,
     },
@@ -234,22 +655,33 @@ export default {
                 'All'
             ],
 
+            modules: [],
             roleList: [],
             checkIds : [],
             updateModel: {
                 id: '',
                 name: '',
                 description: '',
+                permissions: [],
             },
             addModel: {
                 name: '',
                 description: '',
+                permissions: [],
             },
+
+            isAllViewPermissionsSelected: false,
+            isAllCreatePermissionsSelected: false,
+            isAllUpdatePermissionsSelected: false,
+            isAllDeletePermissionsSelected: false,
+            isAllUploadPermissionsSelected: false,
+            isAllExportPermissionsSelected: false,
         }
     },
 
     async created() {
         this.getRoleList();
+        this.getModules();
     },
 
     computed : {
@@ -261,8 +693,8 @@ export default {
             let self = this;
             return [
                 {
-                    prop : '_index',
-                    name : '#',
+                    prop : 'id',
+                    name : 'ID#',
                     width : '50',
                     isHidden : false
                 },
@@ -294,9 +726,13 @@ export default {
 
         submitUpdate() {
             let self = this;
+            let loader = self.$loading.show();
+
             axios.post('/api/roles-update', this.updateModel)
                 .then((res) => {
                     if (res.data.success === true) {
+                        loader.hide();
+
                         swal.fire(
                             self.$t('message.role.alert_updated'),
                             self.$t('message.role.alert_updated_successfully'),
@@ -309,6 +745,15 @@ export default {
                         });
                     }
                 })
+                .catch((err) => {
+                    swal.fire(
+                        self.$t('message.article.alert_err'),
+                        err.response.data.message,
+                        'error'
+                    )
+
+                    loader.hide();
+                });
         },
 
         submitAdd() {
@@ -343,6 +788,13 @@ export default {
                     }
                 }
             })
+            .catch(err => {
+                swal.fire(
+                    self.$t('message.draft.error'),
+                    err.response.data.message,
+                    'error'
+                )
+            })
         },
 
         getRoleList(page = 1) {
@@ -356,13 +808,35 @@ export default {
             })
         },
 
-        doUpdate(role) {
+        getModules () {
+            let self = this;
+            let loader = self.$loading.show();
 
+            axios.get('/api/module', {
+                params: {
+                    paginate: 'All'
+                }
+            })
+            .then((res) => {
+                self.modules = res.data
+
+                loader.hide();
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+            })
+        },
+
+        doUpdate(role) {
             this.updateModel = {
                 id: role.id,
                 name: role.name,
-                description: role.description
+                description: role.description,
+                permissions: role.permissions.map(a => a.id)
             }
+
+            this.clearToggles();
 
             $('#modal-update-role-list').modal({
                 show: true
@@ -381,22 +855,110 @@ export default {
 
         doDelete(id) {
             let self = this;
-            axios.post('/api/roles-delete', {id})
-                .then((res) => {
-                    if (res.data.success === true) {
-                        swal.fire(
-                            self.$t('message.role.alert_deleted'),
-                            self.$t('message.role.alert_deleted_successfully'),
-                            'success'
-                        )
 
-                        this.getRoleList();
-                        $('#modal-update-role-list').modal({
-                            show: false
-                        });
-                    }
-                })
+            swal.fire({
+                title : 'Delete Role',
+                text : 'Are you sure that you want to delete this role?',
+                icon : "warning",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.tools.yes_delete'),
+                cancelButtonText : self.$t('message.tools.no_delete')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let loader = self.$loading.show();
+
+                    axios.post('/api/roles-delete', {id})
+                        .then((res) => {
+                            if (res.data.success === true) {
+                                loader.hide();
+
+                                swal.fire(
+                                    self.$t('message.role.alert_deleted'),
+                                    self.$t('message.role.alert_deleted_successfully'),
+                                    'success'
+                                )
+
+                                this.getRoleList();
+
+                                $('#modal-update-role-list').modal({
+                                    show: false
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            loader.hide();
+
+                            swal.fire(
+                                self.$t('message.draft.error'),
+                                err.response.data.message,
+                                'error'
+                            )
+                        })
+                }
+            });
         },
+
+        getPermissionId (mode, module) {
+            let permissionName = this.generatePermissionName(mode, module.group, module.page);
+
+            if (Array.isArray(module.permissions)) {
+                if (module.permissions.length) {
+                    let obj = module.permissions.find(o => o.name === permissionName)
+
+                    return obj ? obj.id : null;
+                }
+            } else {
+                return null;
+            }
+        },
+
+        generatePermissionName (mode, module, page) {
+            let moduleTemp = this.convertStringToKebabCase(module);
+            let pageTemp = this.convertStringToKebabCase(page);
+            let permission = moduleTemp + '-' + pageTemp;
+
+            return mode + permission;
+        },
+
+        toggleSelectAllPermissions (mode, func, toggle) {
+            let permissionIds = [];
+
+            this.modules.data.forEach((item) => {
+                let permissionName = this.generatePermissionName(mode, item.group, item.page);
+
+                if (Array.isArray(item.permissions)) {
+                    let obj = item.permissions.find(o => o.name === permissionName)
+
+                    if (obj) {
+                        permissionIds.push(obj.id)
+                    }
+                }
+            })
+
+            if (func === 'update') {
+                if (toggle) {
+                    this.updateModel.permissions.push(...permissionIds);
+                } else {
+                    this.updateModel.permissions = this.updateModel.permissions.filter( ( el ) => !permissionIds.includes( el ) );
+                }
+            } else {
+                if (toggle) {
+                    this.addModel.permissions.push(...permissionIds);
+                } else {
+                    this.addModel.permissions = this.addModel.permissions.filter( ( el ) => !permissionIds.includes( el ) );
+                }
+            }
+        },
+
+        clearToggles () {
+            this.isAllViewPermissionsSelected = false;
+            this.isAllCreatePermissionsSelected = false;
+            this.isAllUpdatePermissionsSelected = false;
+            this.isAllDeletePermissionsSelected = false;
+            this.isAllUploadPermissionsSelected = false;
+            this.isAllExportPermissionsSelected = false;
+        }
     }
 }
 </script>

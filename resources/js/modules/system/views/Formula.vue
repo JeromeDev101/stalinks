@@ -93,7 +93,13 @@
         </div>
 
         <div class="card-footer">
-            <button type="button" @click="submitFormula" class="btn btn-primary">
+            <button
+                v-if="user.permission_list.includes('update-admin-settings-finance')"
+                type="button"
+                class="btn btn-primary"
+
+                @click="submitFormula">
+
                 {{ $t('message.finance.save') }}
             </button>
         </div>
@@ -125,6 +131,7 @@ export default {
 
     computed : {
         ...mapState({
+            user : state => state.storeAuth.currentUser,
             formula : state => state.storeSystem.formula,
         }),
     },
@@ -146,6 +153,12 @@ export default {
                 )
 
                 this.getFormula();
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
         },
 

@@ -37,7 +37,7 @@ class NotifyTeamWriterExamDurationOver implements ShouldQueue
 
         // send notification to team
         if ($writers) {
-            $team = User::whereIn('role_id', [8,1,6,4])->where('isOurs', 0)->where('status', 'active')->get();
+            $team = User::whereIn('role_id', [8,1,15,13])->where('isOurs', 0)->where('status', 'active')->get();
 
             Notification::send($team, new WriterSecondExamDurationOver($writers));
         }

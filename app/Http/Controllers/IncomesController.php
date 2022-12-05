@@ -43,7 +43,7 @@ class IncomesController extends Controller
         $ext_seller_emails = Registration::select('email')->where('team_in_charge', $user->id)->where('status', 'active');
 
         // to display the records of his/her external sellers
-        if( $ext_seller_emails->count() > 0 && $user->role_id == 6) {
+        if( $ext_seller_emails->count() > 0 && $user->role_id == 15) {
             $seller_emails = $ext_seller_emails->pluck('email')->toArray();
             $ext_seller_ids = User::select('id')->whereIn('email', $seller_emails)->where('status', 'active')->pluck('id')->toArray();
 

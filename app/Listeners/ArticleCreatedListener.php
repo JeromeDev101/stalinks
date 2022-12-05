@@ -30,7 +30,7 @@ class ArticleCreatedListener
     public function handle(ArticleCreatedEvent $event)
     {
         // notify valid inter writers
-        $internal = User::where('role_id', 4)->where('isOurs', 0)->where('status', 'active')->get();
+        $internal = User::where('role_id', 13)->where('isOurs', 0)->where('status', 'active')->get();
 
         Notification::send($internal, new ArticleCreated($event->article));
 

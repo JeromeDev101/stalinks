@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Illuminate\Support\Facades\Gate;
 
 class RoleController extends Controller
 {
@@ -37,6 +38,7 @@ class RoleController extends Controller
             return $query->where('name', 'like', '%'.$filter['name'].'%');
         });
 
+        $roles = $roles->with('permissions:id');
 
         if(isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All' ){
             return response()->json([
@@ -46,27 +48,71 @@ class RoleController extends Controller
         } else {
             return $roles->paginate($paginate);
         }
-        
+
         return response()->json(['data' => $roles],200);
     }
 
     public function store(Request $request) {
-        Role::create($request->all());
+        if (Gate::denies('create-management-role')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
+        $role = Role::create($request->except('permissions'));
+
+        // save permissions
+        if (isset($request->permissions) && is_array($request->permissions)) {
+            $role->permissions()->sync($request->permissions);
+        }
+
         return response()->json(['success' => true], 200);
     }
 
     public function update(Request $request) {
+        if (Gate::denies('update-management-role')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $role = Role::find($request->id);
+
         $role->update([
             'name' => $request->name,
             'description' => $request->description
         ]);
 
+        // save permissions
+        if (isset($request->permissions) && is_array($request->permissions)) {
+            $role->permissions()->sync($request->permissions);
+        }
+
         return response()->json(['success' => true], 200);
     }
 
     public function delete(Request $request) {
+        if (Gate::denies('delete-management-role')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $role = Role::find($request->id);
+
+        // delete permissions
+
+        $role->permissions()->detach();
+
         $role->update([
             'deleted_at' => date('Y-m-d H:i:s')
         ]);

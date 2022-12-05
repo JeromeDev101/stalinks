@@ -118,7 +118,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="input-group" v-if="user.isOurs != 1">
+                        <div class="input-group" v-if="user.isOurs != 1 && user.permission_list.includes('update-billing-writer-billing')">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle"
                                         :disabled="isDisabled"
@@ -207,6 +207,7 @@
                                             </button>
 
                                             <button
+                                                v-if="user.permission_list.includes('upload-billing-writer-billing')"
                                                 data-target="#modal-re-upload-doc-writer"
                                                 data-toggle="modal"
                                                 class="btn btn-default px-3 ml-2"
@@ -703,6 +704,7 @@ export default {
         },
 
         async doPay() {
+            let self = this;
             let loader = this.$loading.show();
             let ids = this.checkIds
             this.isDisabledPay = true;
@@ -726,6 +728,14 @@ export default {
                     self.$t('message.seller_billing.alert_success'),
                     self.$t('message.seller_billing.alert_paid_successfully'),
                     'success'
+                )
+            } else {
+                loader.hide();
+
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
                 )
             }
 
@@ -869,8 +879,8 @@ export default {
                 this.isDisabledReupload = false;
 
                 await swal.fire(
-                    self.$t('message.seller_billing.alert_error'),
-                    self.$t('message.seller_billing.alert_re_upload_error'),
+                    this.messageForms.message,
+                    '',
                     'error'
                 )
             }

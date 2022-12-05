@@ -96,6 +96,7 @@
                         <h3 class="card-title">{{ $t('message.tools.t_title') }}</h3>
                         <div class="card-tools">
                             <button
+                                v-if="user.permission_list.includes('create-management-tools')"
                                 class="btn btn-success btn-tool"
                                 data-toggle="modal"
                                 data-target="#modal-add-tool"
@@ -195,9 +196,10 @@
                                         <td>
                                             <div class="text-center">
                                                 <button
+                                                    v-if="user.permission_list.includes('update-management-tools')"
                                                     type="button"
-                                                    :title="$t('message.tools.t_edit_tool')"
                                                     class="btn btn-default"
+                                                    :title="$t('message.tools.t_edit_tool')"
 
                                                     @click="updateTool(tool); modalOpener('update')">
 
@@ -205,9 +207,10 @@
                                                 </button>
 
                                                 <button
+                                                    v-if="user.permission_list.includes('delete-management-tools')"
                                                     type="button"
-                                                    :title="$t('message.tools.t_delete_tool')"
                                                     class="btn btn-default"
+                                                    :title="$t('message.tools.t_delete_tool')"
 
                                                     @click="deleteTool(tool.id)">
 
@@ -1059,7 +1062,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    self.$t('message.tools.alert_add_error'),
+                    self.messageFormsTools.message,
                     'error'
                 )
             }
@@ -1091,7 +1094,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    self.$t('message.tools.alert_update_error'),
+                    self.messageFormsTools.message,
                     'error'
                 )
             }
@@ -1110,16 +1113,23 @@ export default {
                 .then((result) => {
                     if (result.isConfirmed) {
                         axios.delete('/api/tools/' + id)
-                            .then(response => {
+                        .then(response => {
 
-                                this.getToolList();
+                            this.getToolList();
 
-                                swal.fire(
-                                    self.$t('message.tools.alert_deleted'),
-                                    self.$t('message.tools.alert_deleted_tool'),
-                                    'success'
-                                )
-                            })
+                            swal.fire(
+                                self.$t('message.tools.alert_deleted'),
+                                self.$t('message.tools.alert_deleted_tool'),
+                                'success'
+                            )
+                        })
+                        .catch(err => {
+                            swal.fire(
+                                self.$t('message.draft.error'),
+                                err.response.data.message,
+                                'error'
+                            )
+                        })
                     }
                 });
         },

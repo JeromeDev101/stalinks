@@ -23,6 +23,7 @@ use App\Models\WalletTransaction;
 use App\Models\User;
 use App\Events\NotificationEvent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class BuyController extends Controller
 {
@@ -381,6 +382,15 @@ class BuyController extends Controller
      */
     public function update(Request $request, NotificationInterface $notification)
     {
+        if (Gate::denies('create-buyer-list-backlinks-to-buy')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $status = 'Pending';
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
 

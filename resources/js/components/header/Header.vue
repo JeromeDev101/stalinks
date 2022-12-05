@@ -72,7 +72,10 @@
 
             <li class="nav-item">
                 <button
-                    v-if="user.registration && user.registration.is_sub_account === 0 && user.registration.account_validation === 'valid' && user.role_id === 5"
+                    v-if="user.registration
+                        && user.registration.is_sub_account === 0
+                        && user.registration.account_validation === 'valid'
+                        && user.role_id === 5"
                     class="btn btn-round btn-success"
                     data-toggle="modal"
                     data-target="#modal-add-wallet-header">
@@ -273,7 +276,7 @@
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     <img :src="user.avatar" class="user-image img-circle elevation-2" alt="User Image">
                     <span class="d-none d-md-inline">
-                        {{ user.username }} ({{ user.isOurs == 0 && user.role ? user.role.name : null }})
+                        {{ user.username }} ({{ user.role ? user.role.name : null }})
                     </span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
@@ -1324,7 +1327,7 @@ export default {
         liveGetWallet() {
             let app = this
 
-            if (this.user.role_id == 5) {
+            if (this.user.role_id == 5 || this.user.role_id == 14) {
                 axios
                     .get("/api/wallet-credit")
                     .then(function (res) {
@@ -1355,7 +1358,7 @@ export default {
             }
 
             // for emaployee with a role of seller/buyer
-            if (that.role.description == "Buyer") {
+            if (that.role.description == "Buyer" || that.role_id == 14) {
                 this.isBuyer = true;
             }
 

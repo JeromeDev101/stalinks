@@ -273,9 +273,9 @@
 
                                 <template slot-scope="scope" slot="action-buttons">
                                     <button
+                                        v-if="user.permission_list.includes('update-purchases-summary')"
                                         title="Edit"
                                         class="btn btn-primary m-1"
-                                        :disabled="!user.isAdmin || user.role_id === 8"
 
                                         @click="fillPurchaseData(scope.row); modalOpener('Update')">
 
@@ -283,9 +283,9 @@
                                     </button>
 
                                     <button
+                                        v-if="user.permission_list.includes('delete-purchases-summary')"
                                         title="Delete"
                                         class="btn btn-danger"
-                                        :disabled="!user.isAdmin || user.role_id === 8"
 
                                         @click="deletePurchase(scope.row.id)">
 
@@ -718,7 +718,7 @@ export default {
                 notes: '',
                 amount: '',
                 type_id: '',
-                mode: 'manual',
+                mode: 'summary',
                 purchased_at: '',
                 payment_type_id: '',
             },
@@ -730,7 +730,7 @@ export default {
                 notes: '',
                 amount: '',
                 type_id: '',
-                mode: 'manual',
+                mode: 'summary',
                 purchased_at: '',
                 payment_type_id: '',
             },
@@ -970,7 +970,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the purchase details.',
+                    self.messageFormsPurchases.message,
                     'error'
                 )
             }
@@ -1005,7 +1005,7 @@ export default {
                 } else {
                     await swal.fire(
                         self.$t('message.tools.alert_error'),
-                        'There were some errors while deleting the purchase details.',
+                        self.messageFormsPurchases.message,
                         'error'
                     )
                 }
@@ -1073,6 +1073,7 @@ export default {
                         notes: '',
                         amount: '',
                         type_id: '',
+                        mode: 'summary',
                         purchased_at: '',
                         payment_type_id: '',
                     }

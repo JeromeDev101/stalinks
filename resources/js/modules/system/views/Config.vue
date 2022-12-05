@@ -15,7 +15,13 @@
         </div>
 
         <div class="card-footer">
-            <button type="button" @click="submitSaveConfig(typeConfig)" class="btn btn-primary">
+            <button
+                v-if="user.permission_list.includes('update-admin-settings-finance')"
+                type="button"
+                class="btn btn-primary"
+
+                @click="submitSaveConfig(typeConfig)">
+
                 {{ $t('message.IT.save') }}
             </button>
         </div>
@@ -46,6 +52,7 @@ export default {
 
     computed : {
         ...mapState({
+            user : state => state.storeAuth.currentUser,
             configList : state => state.storeSystem.configList,
         }),
     },
@@ -57,15 +64,19 @@ export default {
             await this.saveListConfig(this.configList.data[configType])
             this.isLoadingConfig[configType] = false;
 
-            if (this.messageForms.action === 'saved_config') {
-
+            if (this.messageForms.action === 'updated_conf') {
+                await swal.fire(
+                    self.$t('message.IT.alert_saved'),
+                    self.$t('message.IT.alert_saved_config'),
+                    'success'
+                )
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
-
-            await swal.fire(
-                self.$t('message.IT.alert_saved'),
-                self.$t('message.IT.alert_saved_config'),
-                'success'
-            )
         },
 
         async saveListConfig(configs) {

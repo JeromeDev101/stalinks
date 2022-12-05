@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\TotalWallet;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use function GuzzleHttp\Psr7\uri_for;
 
@@ -105,7 +106,7 @@ class WalletTransactionController extends Controller
     }
 
     public function getListSellerTeam() {
-        $list = User::select('id', 'username', 'status')->whereIn('role_id', [6, 1])->where('isOurs', 0)->orderBy('username', 'asc');
+        $list = User::select('id', 'username', 'status')->whereIn('role_id', [15, 1])->where('isOurs', 0)->orderBy('username', 'asc');
         return [
             'data' => $list->get()
         ];
@@ -172,6 +173,15 @@ class WalletTransactionController extends Controller
     }
 
     public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
+        if (Gate::denies('create-billing-wallet-transaction')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $image = $request->file;
         $paymentType = $request->get('payment_type');
 
@@ -230,6 +240,15 @@ class WalletTransactionController extends Controller
     }
 
     public function updateWallet(Request $request) {
+        if (Gate::denies('update-billing-wallet-transaction')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $wallet_transaction = WalletTransaction::find($request->id);
         $proof_doc = $wallet_transaction->proof_doc;
 

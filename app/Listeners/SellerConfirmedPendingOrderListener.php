@@ -35,7 +35,7 @@ class SellerConfirmedPendingOrderListener
         if ($team_in_charge) {
             $team_in_charge->notify(new SellerConfirmedPendingOrder($event->backlink, $event->confirmation));
         } else {
-            $cs = User::where('role_id', 6)->where('status', 'active')->where('isOurs', 0)->get();
+            $cs = User::where('role_id', 15)->where('status', 'active')->where('isOurs', 0)->get();
 
             Notification::send($cs, new SellerConfirmedPendingOrder($event->backlink, $event->confirmation));
         }

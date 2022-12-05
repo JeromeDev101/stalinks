@@ -295,7 +295,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 col-sm-12 my-3">
-                                <div class="input-group">
+                                <div v-if="user.permission_list.includes('upload-url-prospect-url-prospect')" class="input-group">
                                     <input type="file"
                                            class="form-control"
                                            v-on:change="checkDataExcel"
@@ -353,10 +353,16 @@
                             </div>
 
                             <div class="col-md-6 col-sm-12 my-3">
-                                <button @click="doAddExt"
-                                        data-toggle="modal"
-                                        data-target="#modal-add"
-                                        class="btn btn-success float-right"><i class="fa fa-plus"></i></button>
+                                <button
+                                    v-if="user.permission_list.includes('create-url-prospect-url-prospect')"
+                                    class="btn btn-success float-right"
+                                    data-toggle="modal"
+                                    data-target="#modal-add"
+
+                                    @click="doAddExt">
+
+                                    <i class="fa fa-plus"></i>
+                                </button>
                                 <button data-toggle="modal"
                                         data-target="#modal-setting"
                                         class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
@@ -395,6 +401,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             data-toggle="modal"
                                             type="submit"
                                             :disabled="isNotAllowedMultipleActions"
@@ -407,6 +414,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             type="submit"
                                             :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.ac_get_ahrefs')"
@@ -418,6 +426,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             type="submit"
                                             :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.tb_status')"
@@ -429,6 +438,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             type="submit"
                                             :title="$t('message.url_prospect.ac_emp')"
                                             class="btn btn-default"
@@ -439,6 +449,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('delete-url-prospect-url-prospect')"
                                             type="submit"
                                             :disabled="isNotAllowedMultipleActions"
                                             :title="$t('message.url_prospect.ac_delete')"
@@ -450,6 +461,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             @click="doCrawlExtList"
                                             :disabled="isCrawling || isNotAllowedMultipleActions"
                                             type="submit"
@@ -474,6 +486,7 @@
                                     </Sort>
 
                                     <export-excel
+                                        v-if="user.permission_list.includes('export-url-prospect-url-prospect')"
                                         ref="exportButton"
                                         class="btn btn-primary mr-2"
                                         :data=listExt.data
@@ -518,6 +531,7 @@
                                     <div class="btn-group"
                                          v-if="checkSellerAccess(scope.row.users == null ? null:scope.row.users.id, scope.row.users != null) || (scope.row.users == null ? false:scope.row.users.status == 'inactive' ? true:false)">
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             data-action="a1"
                                             :data-index="scope.index"
                                             data-toggle="modal"
@@ -532,6 +546,7 @@
                                                 :data-index="scope.index"
                                                 v-if="hasBacklink(scope.row.status)" @click="doShowBackLink(scope.row)" data-toggle="modal" data-target="#modal-backlink" type="submit" title="Back Link" class="btn btn-default"><i class="fa fa-fw fa-link"></i></button> -->
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             data-action="a4"
                                             :data-index="scope.index"
                                             data-toggle="modal"
@@ -544,6 +559,7 @@
                                         </button>
                                         <!-- <button v-if="ext.status == '30'" type="submit" title="Get Ahrefs" @click="getAhrefsById(ext.id, ext.status)" class="btn btn-default"><i class="fa fa-fw fa-area-chart"></i></button> -->
                                         <button
+                                            v-if="user.permission_list.includes('update-url-prospect-url-prospect')"
                                             type="submit"
                                             :title="$t('message.url_prospect.ac_get_ahrefs')"
                                             class="btn btn-default"
@@ -3295,7 +3311,7 @@ export default {
         isNotAllowedMultipleActions () {
             let self = this;
 
-            return (self.user.role_id !== 6 && self.user.isOurs === 0)
+            return (self.user.role_id !== 15 && self.user.isOurs === 0)
                 ? false
                 : self.checkIds.some(function (item) {
                     return (item.user_id !== self.user.id && item.users.status !== 'inactive');
@@ -3526,7 +3542,7 @@ export default {
         },
 
         checkSellerAccess(seller_id, in_charge) {
-            if (this.user.role_id == 6 && this.user.isOurs == 0) {
+            if (this.user.role_id == 15 && this.user.isOurs == 0) {
                 let check = false;
                 if (this.user.id == seller_id) {
                     check = true;
@@ -3631,15 +3647,25 @@ export default {
                         }
                     });
 
-                    this.getExtList({
-                        params : this.filterModel
-                    });
-                    this.checkIds = []
-                    swal.fire(
-                        self.$t('message.url_prospect.swal_saved'),
-                        self.$t('message.url_prospect.swal_successfully_updated'),
-                        'success'
-                    )
+                    if (this.messageForms.action === 'deleted') {
+                        this.getExtList({
+                            params : this.filterModel
+                        });
+
+                        this.checkIds = []
+
+                        swal.fire(
+                            self.$t('message.url_prospect.swal_saved'),
+                            self.$t('message.url_prospect.swal_successfully_updated'),
+                            'success'
+                        )
+                    } else {
+                        await swal.fire(
+                            this.messageForms.message,
+                            '',
+                            'error'
+                        )
+                    }
                 }
             } else {
                 swal.fire(
@@ -3691,14 +3717,22 @@ export default {
                     $("#modal-existing-domain").modal('show')
                 }
 
+                loader.hide();
+
                 swal.fire(
                     self.$t('message.url_prospect.swal_uploaded'),
                     self.$t('message.url_prospect.swal_successfully_uploaded'),
                     'success'
                 )
-            }
+            } else {
+                loader.hide();
 
-            loader.hide();
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
+                )
+            }
         },
 
         formatPrice(value) {
@@ -3985,6 +4019,12 @@ export default {
                 //this.listExt.data.unshift(this.messageForms.obj);
                 this.doSearchList();
                 this.isEditable = true;
+            } else {
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
+                )
             }
         },
         convertPrice(price) {
@@ -4436,6 +4476,13 @@ export default {
                 this.updateMultiEmployee = '';
                 this.checkIds = [];
             })
+            .catch((err) => {
+                swal.fire(
+                    err.response.data.message,
+                    '',
+                    'error'
+                )
+            })
         },
 
         async submitSendMail() {
@@ -4585,6 +4632,14 @@ export default {
                 await this.getExtList({
                     params : this.filterModel
                 });
+            } else {
+                loader.hide();
+
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
+                )
             }
 
             loader.hide();

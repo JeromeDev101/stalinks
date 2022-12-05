@@ -34,7 +34,7 @@ class UserValidateListener
 
             // if writer - send notification to team to create exam
             if ($event->user->role_id === 4 && $event->user->isOurs === 1) {
-                $team = User::whereIn('role_id', [8,1,6,4])->where('isOurs', 0)->where('status', 'active')->get();
+                $team = User::whereIn('role_id', [8,1,15,13])->where('isOurs', 0)->where('status', 'active')->get();
 
                 Notification::send($team, new WriterValidated($event->input, $event->user));
             }

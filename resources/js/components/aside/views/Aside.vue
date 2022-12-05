@@ -9,42 +9,31 @@
         <div class="sidebar" style="overflow-x: hidden;" v-if="!isProcessing">
             <!-- Sidebar Menu -->
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
-                    data-widget="treeview"
+                <ul
                     role="menu"
+                    class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
+                    data-widget="treeview"
                     data-accordion="false">
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
-                    <li class="nav-header"
-                        v-if="user.isAdmin || (user.isOurs === 0 && (isManager || isSeller || isBuyer || isQc || isMarketing))">
+                    <li v-if="canViewAdminHeader" class="nav-header">
                         {{ $t('message.sidebar.admin') }}
                     </li>
 
-<!--                    <li class="nav-item"
-                        v-if="user.isAdmin">
-                        <router-link
-                            class="nav-link"
-                            :to="{ path: '/system' }"
-                            :class="{ 'active': $route.name == 'system' }"
-                        >
-                            <img src="../../../../images/admin-settings.png"/>
-                            <span>Admin Settings</span>
-                            <span class="pull-right-container"></span>
-                        </router-link>
-                    </li>-->
-
-                    <li class="nav-item"
-                        v-if="user.isAdmin"
+                    <!-- Admin Settings -->
+                    <li
+                        v-if="canViewAdminSettings"
+                        class="nav-item"
                         :class="{
-                        'active' :
-                            $route.name == 'system-it' ||
-                            $route.name == 'system-finance' ||
-                            $route.name == 'system-dev',
-                        'menu-open':
-                             $route.name == 'system-it' ||
-                            $route.name == 'system-finance' ||
-                            $route.name == 'system-dev'
-                    }">
+                            'active' :
+                                $route.name == 'system-it' ||
+                                $route.name == 'system-finance' ||
+                                $route.name == 'system-dev',
+                            'menu-open':
+                                 $route.name == 'system-it' ||
+                                $route.name == 'system-finance' ||
+                                $route.name == 'system-dev'
+                        }">
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
                             <p>
@@ -53,27 +42,32 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/system/it' }"
-                                             class="nav-link"
-                                             :class="{ active: $route.name == 'system-it' }">
+                            <li v-if="user.permission_list.includes('view-admin-settings-it')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/system/it' }"
+                                    :class="{ active: $route.name == 'system-it' }">
+
                                     <i class="fas fa-desktop nav-icon"></i>
                                     <p>{{ $t('message.sidebar.it') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/system/finance' }" class="nav-link"
-                                             :class="{ active: $route.name == 'system-finance' }">
+                            <li v-if="user.permission_list.includes('view-admin-settings-finance')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/system/finance' }"
+                                    :class="{ active: $route.name == 'system-finance' }">
+
                                     <i class="fas fa-hand-holding-usd nav-icon"></i>
                                     <p>{{ $t('message.sidebar.finance') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/system/dev' }" class="nav-link"
-                                             :class="{ active: $route.name == 'system-dev' }">
+                            <li v-if="user.permission_list.includes('view-admin-settings-dev')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/system/dev' }"
+                                    :class="{ active: $route.name == 'system-dev' }">
+
                                     <i class="fas fa-code nav-icon"></i>
                                     <p>{{ $t('message.sidebar.devs') }}</p>
                                 </router-link>
@@ -81,8 +75,10 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))"
+                    <!-- Management -->
+                    <li
+                        v-if="canViewManagement"
+                        class="nav-item"
                         :class="{
                             'active' :
                                 $route.name == 'roles' ||
@@ -96,8 +92,7 @@
                                 $route.name == 'mail-logs' ||
                                 $route.name == 'List User' ||
                                 $route.name == 'modules'
-                        }"
-                        >
+                        }">
                         <a href="#" class="nav-link">
                             <img src="../../../../images/admin-settings.png"/>
                             <p>
@@ -106,52 +101,63 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/management/roles' }"
-                                             class="nav-link"
-                                             :class="{ active: $route.name == 'roles' }">
+                            <li v-if="user.permission_list.includes('view-management-role')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/roles' }"
+                                    :class="{ active: $route.name == 'roles' }">
+
                                     <i class="fas fa-user nav-icon"></i>
                                     <p>{{ $t('message.sidebar.role') }}</p>
                                     <span class="pull-right-container"></span>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/management/modules' }" class="nav-link"
-                                             :class="{ active: $route.name == 'modules' }">
+                            <li v-if="user.permission_list.includes('view-management-module')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/modules' }"
+                                    :class="{ active: $route.name == 'modules' }">
+
                                     <i class="fas fa-bars nav-icon"></i>
                                     <p>{{ $t('message.sidebar.mod') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/management/tools' }" class="nav-link"
-                                             :class="{ active: $route.name == 'tools' }">
+                            <li v-if="user.permission_list.includes('view-management-tools')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/tools' }"
+                                    :class="{ active: $route.name == 'tools' }">
+
                                     <i class="fas fa-tools nav-icon"></i>
                                     <p>{{ $t('message.sidebar.tools') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
-                                <router-link :to="{ path: '/management/mail-logs' }" class="nav-link"
-                                             :class="{ active: $route.name == 'mail-logs' }">
+                            <li v-if="user.permission_list.includes('view-management-mail-logs')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/mail-logs' }"
+                                    :class="{ active: $route.name == 'mail-logs' }">
+
                                     <i class="fas fa-envelope nav-icon"></i>
                                     <p>{{ $t('message.sidebar.mail_logs') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin || (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
-                                <router-link :to="{ path: '/management/logs' }" class="nav-link"
-                                             :class="{ active: $route.name == 'logs' }">
+                            <li v-if="user.permission_list.includes('view-management-system-logs')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/logs' }"
+                                    :class="{ active: $route.name == 'logs' }">
                                     <i class="fas fa-cogs nav-icon"></i>
+
                                     <p>{{ $t('message.sidebar.system_logs') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin">
-                                <router-link :to="{ path: '/management/teams' }" class="nav-link"
-                                             :class="{ active: $route.name == 'List User' }">
+                            <li v-if="user.permission_list.includes('view-management-teams')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/management/teams' }"
+                                    :class="{ active: $route.name == 'List User' }">
+
                                     <i class="fas fa-users nav-icon"></i>
                                     <p>{{ $t('message.sidebar.teams') }}</p>
                                 </router-link>
@@ -159,203 +165,132 @@
                         </ul>
                     </li>
 
-                    <!-- <li class="nav-item"
-                        v-if="user.isAdmin">
-                        <router-link
-                            class="nav-link"
-                            :to="{ path: '/tools' }"
-                            :class="{ 'active': $route.name == 'tools' }"
-                        >
-                            <img src="../../../../images/admin-settings.png"/>
-                            <p>Tools</p>
-                        </router-link>
-                    </li> -->
-
-                    <li class="nav-item"
-                        v-if="user.isAdmin || (user.isOurs === 0 && (isQc || isBuyer || isQcBilling || isQcSeller || isSeller || isMarketing))">
+                    <!-- Admin Dashboard -->
+                    <li v-if="user.permission_list.includes('view-admin-dashboard-admin-dashboard')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/dashboard' }"
-                            :class="{ active: $route.name == 'dashboard' }"
-                        >
+                            :class="{ active: $route.name == 'dashboard' }">
+
                             <img src="../../../../images/dashboard.png"/>
                             <p>{{ $t('message.sidebar.dashboard_admin') }}</p>
                         </router-link>
                     </li>
 
-                    <!-- <li class="nav-item"
-                        v-if="user.isAdmin">
-                        <router-link
-                            class="nav-link"
-                            :to="{ path: '/users' }"
-                            :class="{ active: $route.name == 'List User' }"
-                        >
-                            <img src="../../../../images/team.png"/>
-                            <p>Team</p>
-                        </router-link>
-                    </li> -->
-
-                    <!-- <li class="nav-item"
-                        v-if="user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))">
-                        <router-link
-                            class="nav-link"
-                            :to="{ path: '/mail-logs' }"
-                            :class="{ active: $route.name == 'mail-logs' }"
-                        >
-                            <img src="../../../../images/mail.png"/>
-                            <p>Mail Logs</p>
-                        </router-link>
-                    </li> -->
-
-                    <!-- <li class="nav-item"
-                        v-if="user.isAdmin">
-                        <router-link
-                            class="nav-link"
-                            :to="{ path: '/logs' }"
-                            :class="{ active: $route.name == 'logs' }"
-                        >
-                            <img src="../../../../images/system-logs.png"/>
-                            <p>System Logs</p>
-                        </router-link>
-                    </li> -->
-
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isMarketing))
-                    ">
+                    <!-- Gex Alexa -->
+                    <li v-if="user.permission_list.includes('view-get-alexa-get-alexa')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/ext/alexa' }"
-                            :class="{ active: $route.name == 'AlexaDomain' }"
-                        >
+                            :class="{ active: $route.name == 'AlexaDomain' }">
+
                             <img src="../../../../images/alexa.png"/>
                             <p>{{ $t('message.sidebar.get_alexa') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))
-                    ">
+                    <!-- Generate List -->
+                    <li v-if="user.permission_list.includes('view-generate-list-generate-list')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/generate-list' }"
-                            :class="{ active: $route.name == 'generate-list' }"
-                        >
+                            :class="{ active: $route.name == 'generate-list' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.generate_list') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            (user.role_id == 3 && user.isOurs == 0) ||
-                            (user.role_id == 5 && user.isOurs == 0) ||
-                            (user.role_id == 6 && user.isOurs == 0) ||
-                            (user.role_id == 7 && user.isOurs == 0) ||
-                            (user.role_id == 8 && user.isOurs == 0)
-                    ">
+                    <!-- Registration Accounts -->
+                    <li
+                        v-if="user.permission_list.includes('view-registration-accounts-registration-accounts')"
+                        class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/accounts' }"
-                            :class="{ active: $route.name == 'Registration' }"
-                        >
+                            :class="{ active: $route.name == 'Registration' }">
+
                             <img src="../../../../images/registration.png"/>
                             <p>{{ $t('message.sidebar.registration_accounts') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            isQc
-                    ">
+                    <!-- Survey Dashboard -->
+                    <li v-if="user.permission_list.includes('view-survey-dashboard-survey-dashboard')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/survey-dashboard' }"
-                            :class="{ active: $route.name == 'survey-dashboard' }"
-                        >
+                            :class="{ active: $route.name == 'survey-dashboard' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.survey_dashboard') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            (user.isOurs == 0 &&
-                                (isManager || isSeller || isPostingWriter || isMarketing))
-                    ">
+                    <!-- Admin Article -->
+                    <li v-if="user.permission_list.includes('view-admin-article-admin-article')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/articles-list' }"
-                            :class="{ active: $route.name == 'articles-list' }"
-                        >
+                            :class="{ active: $route.name == 'articles-list' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.article_admin') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="isPostingWriterExt || isPostingWriter ||
-                                user.isAdmin || isQc || isQcSeller ||
-                                         isQcBilling || (user.isOurs == 0 && isSeller || isMarketing)"
-                    >
+                    <!-- Writer's Validation -->
+                    <li v-if="user.permission_list.includes('view-writer\'s-validation-writer\'s-validation')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/validate-writer' }"
-                            :class="{ active: $route.name == 'validate-writer' }"
-                        >
+                            :class="{ active: $route.name == 'validate-writer' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.writer_validation') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                        user.isAdmin ||
-                            (user.isOurs == 0 && (isManager || isSeller || isQc || isQcBilling || isQcSeller || isQcBuyer || isMarketing))
-                    ">
+                    <!-- Backlinks Prospect -->
+                    <li v-if="user.permission_list.includes('view-backlinks-prospect-backlinks-prospect')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/backlink-prospect' }"
-                            :class="{ active: $route.name == 'backlink-prospect' }"
-                        >
+                            :class="{ active: $route.name == 'backlink-prospect' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.backlinks_prospect') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="user.isAdmin || isAffiliate">
+                    <!-- Admin Incomes -->
+                    <li v-if="user.permission_list.includes('view-incomes-admin-incomes')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/overall-incomes' }"
-                            :class="{ active: $route.name == 'overall-incomes' }"
-                        >
+                            :class="{ active: $route.name == 'overall-incomes' }">
+
                             <img src="../../../../images/incomes.png"/>
                             <p>{{ $t('message.sidebar.incomes_admin') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="user.isAdmin || ((isManager || isSeller || isBuyer || isPostingWriter || isQc || isQcSeller || isQcBilling || isMarketing))"
+                    <!-- Billing -->
+                    <li
+                        v-if="canViewBilling"
+                        class="nav-item"
                         :class="{
-                        active:
-                            $route.name == 'seller-billing' ||
-                            $route.name == 'wallet-transaction' ||
-                            $route.name == 'wallet-summary' ||
-                            $route.name == 'writer-billing',
-                        'menu-open':
-                            $route.name == 'wallet-transaction' ||
-                            $route.name == 'seller-billing' ||
-                            $route.name == 'wallet-summary' ||
-                            $route.name == 'writer-billing'
-                    }">
+                            active:
+                                $route.name == 'seller-billing' ||
+                                $route.name == 'wallet-transaction' ||
+                                $route.name == 'wallet-summary' ||
+                                $route.name == 'writer-billing',
+                            'menu-open':
+                                $route.name == 'wallet-transaction' ||
+                                $route.name == 'seller-billing' ||
+                                $route.name == 'wallet-summary' ||
+                                $route.name == 'writer-billing'
+                        }">
                         <a href="#" class="nav-link">
                             <img src="../../../../images/billing.png"/>
                             <p>
@@ -364,49 +299,42 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item"
-                                v-if="isSeller || user.isAdmin || isQc || isQcSeller || isQcBilling || isMarketing">
-                                <router-link :to="{ path: '/seller-billing' }"
-                                             class="nav-link"
-                                             :class="{ active: $route.name == 'seller-billing' }">
+                            <li v-if="user.permission_list.includes('view-billing-seller-billing')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/seller-billing' }"
+                                    :class="{ active: $route.name == 'seller-billing' }">
+
                                     <i class="far fa-user nav-icon"></i>
                                     <p>{{ $t('message.sidebar.seller_billing') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="isPostingWriter ||
-                                user.isAdmin || isQc || isQcSeller ||
-                                         isQcBilling">
-                                <router-link :to="{ path: '/writer-billing' }" class="nav-link"
-                                             :class="{ active: $route.name == 'writer-billing' }">
+                            <li v-if="user.permission_list.includes('view-billing-writer-billing')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/writer-billing' }"
+                                    :class="{ active: $route.name == 'writer-billing' }">
+
                                     <i class="far fa-newspaper nav-icon"></i>
                                     <p>{{ $t('message.sidebar.writer_billing') }}</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item"
-                                v-if="user.isAdmin ||
-                                isManager || isBuyer || isQc || isQcSeller ||
-                                         isQcBilling">
-                                <router-link :to="{ path: '/wallet-transaction' }" class="nav-link"
-                                             :class="{
-                                    active: $route.name == 'wallet-transaction'
-                                }">
+                            <li v-if="user.permission_list.includes('view-billing-wallet-transaction')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/wallet-transaction' }"
+                                    :class="{active: $route.name == 'wallet-transaction'}">
+
                                     <i class="far fa-money-bill-alt nav-icon"></i>
                                     <p>{{ $t('message.sidebar.wallet_trans') }}</p>
                                 </router-link>
                             </li>
+                            <li v-if="user.permission_list.includes('view-billing-wallet-summary')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/wallet-summary' }"
+                                    :class="{active: $route.name == 'wallet-summary' }">
 
-                            <li class="nav-item"
-                                v-if="user.isAdmin ||
-                            isManager || isBuyer || isQc || isQcSeller ||
-                                     isQcBilling"
-                                :class="{
-                                active: $route.name == 'wallet-summary'
-                            }">
-                                <router-link :to="{ path: '/wallet-summary' }" class="nav-link"
-                                             :class="{
-                                    active: $route.name == 'wallet-summary'
-                                }">
                                     <i class="fas fa-bars nav-icon"></i>
                                     <p>{{ $t('message.sidebar.wallet_summary') }}</p>
                                 </router-link>
@@ -418,36 +346,34 @@
                         {{ $t('message.sidebar.main_navigation') }}
                     </li>
 
+                    <!-- Dashboard -->
                     <li class="nav-item">
-                        <router-link :to="{ path: '/' }" class="nav-link"
-                                     :class="{ active: $route.name == 'Dashboard' }">
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/' }"
+                            :class="{ active: $route.name == 'Dashboard' }">
+
                             <img src="../../../../images/dashboard.png"/>
                             <p>{{ $t('message.sidebar.dashboard') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item" v-if="
-                            user.isAdmin ||
-                                (user.isOurs == 0 && (isManager || isSeller || isQc || isMarketing))
-                        "
-                        :class="{
-                            active:
-                                $route.name == 'url-prospect',
-                            'menu-open':
-                                $route.name == 'url-prospect'
-                        }">
-                        <router-link :to="{ path: '/url-prospect' }" class="nav-link"
-                                        :class="{ active: $route.name == 'ExtDomain' }">
+                    <!-- URL Prospect -->
+                    <li v-if="user.permission_list.includes('view-url-prospect-url-prospect')" class="nav-item">
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/url-prospect' }"
+                            :class="{ active: $route.name == 'ExtDomain' }">
+
                             <img src="../../../../images/search-domains.png"/>
                             <p>{{ $t('message.sidebar.url_prospect') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item" v-if="
-                            user.isAdmin ||
-                                (user.isOurs == 0 &&
-                                    (isManager || isSeller || isQc || isMarketing))
-                        "
+                    <!-- Mails -->
+                    <li
+                        v-if="canViewMails"
+                        class="nav-item"
                         :class="{
                             active:
                                 $route.name == 'Sent' ||
@@ -468,33 +394,34 @@
                             class="nav-link"
                             :to="{ path: '/mails/inbox' }"
                             :class="{
-                            active:
-                                $route.name == 'Inbox' ||
-                                $route.name == 'Sent' ||
-                                $route.name == 'Starred' ||
-                                $route.name == 'Trash'
-                        }"
-                        >
+                                active:
+                                    $route.name == 'Inbox' ||
+                                    $route.name == 'Sent' ||
+                                    $route.name == 'Starred' ||
+                                    $route.name == 'Trash'
+                            }">
+
                             <img src="../../../../images/billing.png"/>
                             <p>{{ $t('message.sidebar.mails') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item" v-if="!isAffiliate">
+                    <!-- Article -->
+                    <li v-if="user.permission_list.includes('view-article-article')" class="nav-item">
                         <router-link
-                            :to="{ path: '/articles' }"
                             class="nav-link"
-                            :class="{ active: $route.name == 'articles' }"
-                        >
+                            :to="{ path: '/articles' }"
+                            :class="{ active: $route.name == 'articles' }">
+
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.articles') }}</p>
                         </router-link>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                            (isSeller || user.isAdmin || isManager || isPostingWriter || isQc || isQcSeller || isMarketing) && !isExtWriter
-                        "
+                    <!-- Seller -->
+                    <li
+                        v-if="canViewSeller"
+                        class="nav-item"
                         :class="{
                             active:
                                 $route.name == 'publisher' ||
@@ -513,35 +440,32 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-seller-list-publisher')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/publisher' }"
-                                    :class="{ active: $route.name == 'publisher' }"
-                                >
+                                    :class="{ active: $route.name == 'publisher' }">
+
                                     <i class="fas fa-bars nav-icon"></i>
                                     <p>{{ $t('message.sidebar.list_publisher') }}</p>
                                 </router-link>
                             </li>
-
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-seller-follow-up-sale')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/followup-sales' }"
-                                    :class="{ active: $route.name == 'followup-sales' }"
-                                >
+                                    :class="{ active: $route.name == 'followup-sales' }">
+
                                     <i class="fa fa-fw fa-share nav-icon"></i>
                                     <p>{{ $t('message.sidebar.follow_up_sale') }}</p>
                                 </router-link>
                             </li>
-
-                            <li class="nav-item" >
+                            <li v-if="user.permission_list.includes('view-seller-incomes')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/incomes' }"
-                                    :class="{ active: $route.name == 'incomes' }"
-                                >
+                                    :class="{ active: $route.name == 'incomes' }">
+
                                     <i class="fas fa-dollar-sign nav-icon"></i>
                                     <p>{{ $t('message.sidebar.incomes') }}</p>
                                 </router-link>
@@ -549,13 +473,10 @@
                         </ul>
                     </li>
 
-                    <li class="nav-item"
-                        v-if="
-                            isBuyer ||
-                                user.isAdmin ||
-                                (user.isOurs == 0 &&
-                                    (isManager || isPostingWriter || isQc))
-                        "
+                    <!-- Buyer -->
+                    <li
+                        v-if="canViewBuyer"
+                        class="nav-item"
                         :class="{
                             active:
                                 $route.name == 'BackLink' ||
@@ -574,34 +495,33 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-buyer-list-backlinks-to-buy')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/list-backlinks' }"
-                                    :class="{ active: $route.name == 'list-backlinks' }"
-                                >
+                                    :class="{ active: $route.name == 'list-backlinks' }">
+
                                     <i class="fas fa-bars nav-icon"></i>
                                     <p>{{ $t('message.sidebar.list_backlinks') }}</p>
                                 </router-link>
                             </li>
-
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-buyer-follow-up-backlinks')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/followup-backlinks' }"
-                                    :class="{ active: $route.name == 'BackLink' }"
-                                >
+                                    :class="{ active: $route.name == 'BackLink' }">
+
                                     <i class="fa fa-fw fa-share nav-icon"></i>
                                     <p>{{ $t('message.sidebar.follow_up_backlinks') }}</p>
                                 </router-link>
                             </li>
 
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-buyer-purchase')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/purchase' }"
-                                    :class="{ active: $route.name == 'purchase' }"
-                                >
+                                    :class="{ active: $route.name == 'purchase' }">
+
                                     <i class="fab fa-btc nav-icon"></i>
                                     <p>{{ $t('message.sidebar.purchase') }}</p>
                                 </router-link>
@@ -609,9 +529,10 @@
                         </ul>
                     </li>
 
-                    <!-- Purchase Module -->
-                    <li class="nav-item"
-                        v-if="user.isAdmin"
+                    <!-- Purchases -->
+                    <li
+                        v-if="canViewPurchases"
+                        class="nav-item"
                         :class="{
                             active:
                                 $route.name === 'purchases-config' ||
@@ -632,42 +553,42 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-purchases-config')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/purchases/config' }"
-                                    :class="{ active: $route.name === 'purchases-config' }"
-                                >
+                                    :class="{ active: $route.name === 'purchases-config' }">
+
                                     <i class="fas fa-cog nav-icon"></i>
                                     <p>Config</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-purchases-summary')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/purchases/summary' }"
-                                    :class="{ active: $route.name === 'purchases-summary' }"
-                                >
+                                    :class="{ active: $route.name === 'purchases-summary' }">
+
                                     <i class="fas fa-clipboard-list nav-icon"></i>
                                     <p>Summary</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-purchases-tools')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/purchases/tools' }"
-                                    :class="{ active: $route.name === 'purchases-tools' }"
-                                >
+                                    :class="{ active: $route.name === 'purchases-tools' }">
+
                                     <i class="fas fa-tools nav-icon"></i>
                                     <p>Tools</p>
                                 </router-link>
                             </li>
-                            <li class="nav-item">
+                            <li v-if="user.permission_list.includes('view-purchases-manual')" class="nav-item">
                                 <router-link
                                     class="nav-link"
                                     :to="{ path: '/purchases/manual' }"
-                                    :class="{ active: $route.name === 'purchases-manual' }"
-                                >
+                                    :class="{ active: $route.name === 'purchases-manual' }">
+
                                     <i class="fas fa-cash-register nav-icon"></i>
                                     <p>Manual</p>
                                 </router-link>
@@ -675,19 +596,20 @@
                         </ul>
                     </li>
 
+                    <!-- Help -->
                     <li class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/help' }"
                             :class="{
-                        active:
-                            $route.name == 'help' ||
-                            $route.name == 'seller-guide-1' ||
-                            $route.name == 'seller-guide-2' ||
-                            $route.name == 'seller-guide-3' ||
-                            $route.name == 'seller-guide-4'
-                    }"
-                        >
+                                active:
+                                    $route.name == 'help' ||
+                                    $route.name == 'seller-guide-1' ||
+                                    $route.name == 'seller-guide-2' ||
+                                    $route.name == 'seller-guide-3' ||
+                                    $route.name == 'seller-guide-4'
+                            }">
+
                             <i class="fa fa-question-circle nav-icon"></i>
                             <p>{{ $t('message.sidebar.help') }}</p>
                         </router-link>
@@ -700,14 +622,18 @@
         <!-- display only help when the status is 'Processing' -->
         <div class="sidebar" style="overflow-x: hidden;" v-if="isProcessing">
             <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
-                    data-widget="treeview"
+                <ul
                     role="menu"
+                    class="nav nav-pills nav-sidebar text-sm nav-flat nav-legacy nav-compact nav-child-indent flex-column"
+                    data-widget="treeview"
                     data-accordion="false">
 
                         <li class="nav-item">
-                            <router-link :to="{ path: '/' }" class="nav-link"
-                                        :class="{ active: $route.name == 'Dashboard' }">
+                            <router-link
+                                class="nav-link"
+                                :to="{ path: '/' }"
+                                :class="{ active: $route.name == 'Dashboard' }">
+
                                 <img src="../../../../images/dashboard.png"/>
                                 <p> {{ $t('message.sidebar.dashboard') }}</p>
                             </router-link>
@@ -718,14 +644,14 @@
                                 class="nav-link"
                                 :to="{ path: '/help' }"
                                 :class="{
-                            active:
-                                $route.name == 'help' ||
-                                $route.name == 'seller-guide-1' ||
-                                $route.name == 'seller-guide-2' ||
-                                $route.name == 'seller-guide-3' ||
-                                $route.name == 'seller-guide-4'
-                        }"
-                            >
+                                    active:
+                                        $route.name == 'help' ||
+                                        $route.name == 'seller-guide-1' ||
+                                        $route.name == 'seller-guide-2' ||
+                                        $route.name == 'seller-guide-3' ||
+                                        $route.name == 'seller-guide-4'
+                                }">
+
                                 <i class="fa fa-question-circle nav-icon"></i>
                                 <p>{{ $t('message.sidebar.help') }}</p>
                             </router-link>
@@ -773,6 +699,7 @@ export default {
             isQcBilling : false,
             isAffiliate: false,
             isMarketing: false,
+            isCsSeller: false,
         };
     },
     created() {
@@ -812,6 +739,96 @@ export default {
 
             return result;
         },
+
+        canViewAdminHeader () {
+            return this.user.isAdmin
+                || (this.user.isOurs === 0
+                    && (this.isManager
+                        || this.isCsSeller
+                        || this.isQcBuyer
+                        || this.isQc
+                        || this.isMarketing));
+        },
+
+        canViewAdminSettings () {
+            let adminHeader = [
+                'view-admin-settings-it',
+                'view-admin-settings-finance',
+                'view-admin-settings-dev',
+            ]
+
+            return this.user.permission_list.some(permission => adminHeader.includes(permission))
+        },
+
+        canViewManagement () {
+            let managementHeader = [
+                'view-management-role',
+                'view-management-module',
+                'view-management-tools',
+                'view-management-mail-logs',
+                'view-management-system-logs',
+                'view-management-teams',
+            ]
+
+            return this.user.permission_list.some(permission => managementHeader.includes(permission))
+        },
+
+        canViewBilling () {
+            let billingHeader = [
+                'view-billing-seller-billing',
+                'view-billing-wallet-summary',
+                'view-billing-wallet-transaction',
+                'view-billing-writer-billing',
+            ]
+
+            return this.user.permission_list.some(permission => billingHeader.includes(permission))
+        },
+
+        canViewMails () {
+            let mailHeader = [
+                'view-mails-inbox',
+                'view-mails-sent',
+                'view-mails-starred',
+                'view-mails-trash',
+                'view-mails-signatures',
+                'view-mails-mail-template',
+                'view-mails-drafts',
+                'view-mails-auto-replies',
+            ]
+
+            return this.user.permission_list.some(permission => mailHeader.includes(permission))
+        },
+
+        canViewSeller () {
+            let sellerHeader = [
+                'view-seller-list-publisher',
+                'view-seller-follow-up-sale',
+                'view-seller-incomes',
+            ]
+
+            return this.user.permission_list.some(permission => sellerHeader.includes(permission))
+        },
+
+        canViewBuyer () {
+            let buyerHeader = [
+                'view-buyer-list-backlinks-to-buy',
+                'view-buyer-follow-up-backlinks',
+                'view-buyer-purchase',
+            ]
+
+            return this.user.permission_list.some(permission => buyerHeader.includes(permission))
+        },
+
+        canViewPurchases () {
+            let purchaseHeader = [
+                'view-purchases-config',
+                'view-purchases-summary',
+                'view-purchases-tools',
+                'view-purchases-manual',
+            ]
+
+            return this.user.permission_list.some(permission => purchaseHeader.includes(permission))
+        },
     },
 
     methods : {
@@ -819,15 +836,8 @@ export default {
         checkAccountType() {
             let that = this.user;
 
-            // not employee
-            if (that.user_type) {
-                if (that.user_type.type == "Seller") {
-                    this.isSeller = true;
-                }
-
-                if (that.user_type.type == "Buyer") {
-                    this.isBuyer = true;
-                }
+            if (that.role.id == 4 && that.isOurs == 1 && that.user_type.is_exam_passed != 1) {
+                this.isPostingWriterExt = true;
             }
 
             // checking role type
@@ -841,14 +851,6 @@ export default {
 
             if (that.role.id == 7) {
                 this.isManager = true;
-            }
-
-            if (that.role.id == 4) {
-                this.isPostingWriter = true;
-            }
-
-            if (that.role.id == 4 && that.isOurs == 1 && that.user_type.is_exam_passed != 1) {
-                this.isPostingWriterExt = true;
             }
 
             if (that.role.id == 8) {
@@ -869,6 +871,18 @@ export default {
 
             if (that.role.id == 12) {
                 this.isMarketing = true;
+            }
+
+            if (that.role.id == 13) {
+                this.isPostingWriter = true;
+            }
+
+            if (that.role.id == 14) {
+                this.isQcBuyer = true;
+            }
+
+            if (that.role.id == 15) {
+                this.isCsSeller = true;
             }
         }
     }

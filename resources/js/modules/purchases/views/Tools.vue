@@ -220,9 +220,9 @@
 
                                 <template slot-scope="scope" slot="action-buttons">
                                     <button
+                                        v-if="user.permission_list.includes('update-purchases-tools')"
                                         title="Edit"
                                         class="btn btn-primary m-1"
-                                        :disabled="!user.isAdmin || user.role_id === 8"
 
                                         @click="fillToolData(scope.row); modalOpener('Update')">
 
@@ -230,9 +230,9 @@
                                     </button>
 
                                     <button
+                                        v-if="user.permission_list.includes('delete-purchases-tools')"
                                         title="Delete"
                                         class="btn btn-danger"
-                                        :disabled="!user.isAdmin || user.role_id === 8"
 
                                         @click="deleteTool(scope.row.id)">
 
@@ -908,7 +908,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_error'),
-                    'There were some errors while updating the tool purchase details.',
+                    self.messageFormsToolsPurchases.message,
                     'error'
                 )
             }
@@ -943,7 +943,7 @@ export default {
                 } else {
                     await swal.fire(
                         self.$t('message.tools.alert_error'),
-                        'There were some errors while deleting the tool purchase details.',
+                        self.messageFormsToolsPurchases.message,
                         'error'
                     )
                 }
@@ -985,6 +985,7 @@ export default {
                         notes: '',
                         amount: '',
                         type_id: '',
+                        mode: 'tools',
                         purchased_at: '',
                         payment_type_id: '',
                     }
@@ -998,6 +999,7 @@ export default {
                         notes: '',
                         amount: '',
                         type_id: '',
+                        mode: 'tools',
                         purchased_at: '',
                         payment_type_id: '',
                     }
@@ -1009,7 +1011,7 @@ export default {
                         from : '',
                         type_id: '',
                         user_id: '',
-                        mode: 'summary',
+                        mode: 'tools',
                         category_id: '',
                         payment_type_id: '',
                         paginate: this.filterModel.paginate,

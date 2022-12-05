@@ -243,7 +243,7 @@ const routes = [
                 name : 'dashboard',
                 component : DashboardAdmin,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8, 4, 6, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-admin-dashboard-admin-dashboard')) {
                         next();
                     } else {
                         next('*');
@@ -255,7 +255,7 @@ const routes = [
                 name : 'articles-list',
                 component : ArticleList,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-admin-article-admin-article')) {
                         next();
                     } else {
                         next('*');
@@ -267,7 +267,7 @@ const routes = [
                 name : 'validate-writer',
                 component : ValidateWriter,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isOurs === 0 || (store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-writer\'s-validation-writer\'s-validation')) {
                         next();
                     } else {
                         next('*');
@@ -279,7 +279,7 @@ const routes = [
                 name : 'backlink-prospect',
                 component : BacklinksProspect,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-backlinks-prospect-backlinks-prospect')) {
                         next();
                     } else {
                         next('*');
@@ -291,7 +291,7 @@ const routes = [
                 name : 'roles',
                 component : Role,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-management-role')) {
                         next();
                     } else {
                         next('*');
@@ -303,7 +303,7 @@ const routes = [
                 name : 'modules',
                 component : Module,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-management-module')) {
                         next();
                     } else {
                         next('*');
@@ -315,7 +315,7 @@ const routes = [
                 name : 'overall-incomes',
                 component : OverAllIncomes,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [11].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-incomes-admin-incomes')) {
                         next();
                     } else {
                         next('*');
@@ -369,7 +369,7 @@ const routes = [
                     },
                 ],
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 8, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-mails-inbox')) {
                         next();
                     } else {
                         next('*');
@@ -391,7 +391,7 @@ const routes = [
                 name : 'articles',
                 component : Article,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.role_id !== 11) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-article-article')) {
                         next();
                     } else {
                         next('*');
@@ -403,7 +403,7 @@ const routes = [
                 name : 'followup-sales',
                 component : FollowupSales,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-seller-follow-up-sale')) {
                         next();
                     } else {
                         next('*');
@@ -415,7 +415,7 @@ const routes = [
                 name : 'wallet-transaction',
                 component : WalletTransaction,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [7, 8, 5, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-wallet-transaction')) {
                         next();
                     } else {
                         next('*');
@@ -427,7 +427,7 @@ const routes = [
                 name : 'wallet-summary',
                 component : WalletSummary,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [7, 8, 5, 9, 10].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-wallet-summary')) {
                         next();
                     } else {
                         next('*');
@@ -451,7 +451,7 @@ const routes = [
                 name : 'writer-billing',
                 component : BillingWriter,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [4, 8, 10, 9].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-writer-billing')) {
                         next();
                     } else {
                         next('*');
@@ -463,7 +463,7 @@ const routes = [
                 name : 'publisher',
                 component : Publisher,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-seller-list-publisher')) {
                         next();
                     } else {
                         next('*');
@@ -475,7 +475,7 @@ const routes = [
                 name : 'seller-billing',
                 component : BillingSeller,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || [6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-seller-billing')) {
                         next();
                     } else {
                         next('*');
@@ -487,7 +487,7 @@ const routes = [
                 name : 'purchase',
                 component : Purchase,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-buyer-purchase')) {
                         next();
                     } else {
                         next('*');
@@ -504,7 +504,7 @@ const routes = [
                 name : 'ExtDomain',
                 component : ExtDomain,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-url-prospect-url-prospect')) {
                         next();
                     } else {
                         next('*');
@@ -516,7 +516,7 @@ const routes = [
                 name : 'AlexaDomain',
                 component : AlexaDomain,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-get-alexa-get-alexa')) {
                         next();
                     } else {
                         next('*');
@@ -528,7 +528,7 @@ const routes = [
                 name : 'BackLink',
                 component : BackLink,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-buyer-follow-up-backlinks')) {
                         next();
                     } else {
                         next('*');
@@ -540,7 +540,7 @@ const routes = [
                 name : 'list-backlinks',
                 component : Buy,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || store.state.storeAuth.currentUser.role_id === 5 || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 4, 8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-buyer-list-backlinks-to-buy')) {
                         next();
                     } else {
                         next('*');
@@ -552,7 +552,7 @@ const routes = [
                 name : 'incomes',
                 component : Incomes,
                 beforeEnter: (to, from, next) => {
-                    if((store.state.storeAuth.currentUser.isAdmin || [6, 7, 8, 4, 10, 12].includes(store.state.storeAuth.currentUser.role_id)) && !(store.state.storeAuth.currentUser.isOurs === 1 && store.state.storeAuth.currentUser.role_id === 4)) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-seller-incomes')) {
                         next();
                     } else {
                         next('*');
@@ -564,7 +564,7 @@ const routes = [
                 name : 'Registration',
                 component : Registration,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([3, 5, 6, 7, 8, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-registration-accounts-registration-accounts')) {
                         next();
                     } else {
                         next('*');
@@ -576,7 +576,7 @@ const routes = [
                 name : 'survey-dashboard',
                 component : AdminSurvey,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([8].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-survey-dashboard-survey-dashboard')) {
                         next();
                     } else {
                         next('*');
@@ -612,7 +612,7 @@ const routes = [
                 name : 'logs',
                 component : Log,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-management-system-logs')) {
                         next();
                     } else {
                         next('*');
@@ -665,7 +665,7 @@ const routes = [
                 name : 'system-it',
                 component : IT,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-admin-settings-it')) {
                         next();
                     } else {
                         next('*');
@@ -677,7 +677,7 @@ const routes = [
                 name : 'system-finance',
                 component : Finance,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-admin-settings-finance')) {
                         next();
                     } else {
                         next('*');
@@ -689,7 +689,7 @@ const routes = [
                 name : 'system-dev',
                 component : Devs,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-admin-settings-dev')) {
                         next();
                     } else {
                         next('*');
@@ -706,7 +706,7 @@ const routes = [
                 name : 'mail-logs',
                 component : Maillog,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-management-mail-logs')) {
                         next();
                     } else {
                         next('*');
@@ -718,7 +718,7 @@ const routes = [
                 name : 'generate-list',
                 component : GenerateList,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin || (store.state.storeAuth.currentUser.isOurs === 0 && ([7, 6, 8, 9, 10, 12].includes(store.state.storeAuth.currentUser.role_id)))) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-generate-list-generate-list')) {
                         next();
                     } else {
                         next('*');
@@ -730,7 +730,7 @@ const routes = [
                 name : 'tools',
                 component : Tools,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-management-tools')) {
                         next();
                     } else {
                         next('*');
@@ -742,7 +742,7 @@ const routes = [
                 name : 'purchases-config',
                 component : Config,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-purchases-config')) {
                         next();
                     } else {
                         next('*');
@@ -754,7 +754,7 @@ const routes = [
                 name : 'purchases-summary',
                 component : Summary,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-purchases-summary')) {
                         next();
                     } else {
                         next('*');
@@ -766,7 +766,7 @@ const routes = [
                 name : 'purchases-tools',
                 component : PurchaseTools,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-purchases-tools')) {
                         next();
                     } else {
                         next('*');
@@ -778,7 +778,7 @@ const routes = [
                 name : 'purchases-manual',
                 component : Manual,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.isAdmin) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-purchases-manual')) {
                         next();
                     } else {
                         next('*');

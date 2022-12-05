@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\PaymentTypeImage;
 use Illuminate\Http\Request;
 use App\Models\PaymentType;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
@@ -43,6 +44,15 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
+        if (Gate::denies('create-admin-settings-finance')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate(['type' => 'required']);
         $input['type'] = $request->type;
         PaymentType::create($input);
@@ -52,6 +62,15 @@ class PaymentController extends Controller
 
     public function edit(Request $request)
     {
+        if (Gate::denies('update-admin-settings-finance')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate(['type' => 'required']);
         $input = $request->except(['id', 'show_registration', 'qr_img_path', 'deleted_at', 'created_at', 'updated_at']);
         $payment = PaymentType::findOrFail($request->id);

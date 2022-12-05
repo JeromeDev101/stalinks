@@ -224,7 +224,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3" v-show="user.isAdmin || user.role_id === 8 || user.role_id === 10 || user.role_id === 6">
+                                <div class="col-md-3" v-show="user.isAdmin || [6, 8, 10, 15].includes(user.role_id)">
                                     <div class="form-group">
                                         <label>{{ $t('message.publisher.filter_account_validation') }}</label>
                                         <select class="form-control" v-model="filterModel.account_validation">
@@ -286,7 +286,7 @@
 
                             <div class="row">
                                 <div class="col-md-3"
-                                     v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 6 && user.isOurs === 0) || user.role_id === 10">
+                                     v-show="user.isAdmin || user.role_id === 8 || (user.role_id === 15 && user.isOurs === 0) || user.role_id === 10">
                                     <div class="form-group">
                                         <label>{{ $t('message.publisher.filter_qc_valid') }}</label>
                                         <select name="" class="form-control" v-model="filterModel.qc_validation">
@@ -353,6 +353,7 @@
                         <div class="row form-divider pb-3">
                             <div class="col-12 col-md-12 col-xl-4 mt-2">
                                 <button
+                                    v-if="user.permission_list.includes('upload-seller-list-publisher')"
                                     class="btn btn-primary mr-2"
                                     data-toggle="modal"
                                     data-target="#modal-upload-csv"
@@ -390,6 +391,7 @@
                                     </button>
 
                                     <button
+                                        v-if="user.permission_list.includes('create-seller-list-publisher')"
                                         data-toggle="modal"
                                         data-target="#modal-add-url"
                                         class="btn btn-success mr-2"
@@ -442,45 +444,66 @@
 
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a
+                                                v-if="user.permission_list.includes('update-seller-list-publisher')"
+                                                href="#"
                                                 class="dropdown-item"
-                                                @click="doMultipleEdit"
                                                 data-toggle="modal"
                                                 data-target="#modal-multiple-edit"
-                                                href="#">
+
+                                                @click="doMultipleEdit">
+
                                                 {{ $t('message.publisher.ab_edit') }}
                                             </a>
 
-                                            <a class="dropdown-item" @click="doMultipleDelete" href="#">
+                                            <a
+                                                v-if="user.permission_list.includes('delete-seller-list-publisher')"
+                                                href="#"
+                                                class="dropdown-item"
+
+                                                @click="doMultipleDelete">
+
                                                 {{ $t('message.publisher.ab_delete') }}
                                             </a>
 
                                             <a
-                                                class="dropdown-item "
-                                                @click="getAhrefs()"
-                                                v-if="user.isAdmin || user.isOurs == 0">
+                                                v-if="(user.isAdmin || user.isOurs == 0)
+                                                && user.permission_list.includes('update-seller-list-publisher')"
+                                                class="dropdown-item"
+
+                                                @click="getAhrefs()">
+
                                                 {{ $t('message.publisher.ab_get_ahref') }}
                                             </a>
                                             <!--                                    <a class="dropdown-item " @click="validData('valid')" v-if="user.isAdmin || user.role_id != 6">Valid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('invalid')" v-if="user.isAdmin || user.role_id != 6">Invalid</a>-->
                                             <!--                                    <a class="dropdown-item " @click="validData('unchecked')" v-if="user.isAdmin || user.isOurs == 0">Unchecked</a>-->
                                             <a
-                                                class="dropdown-item "
-                                                @click="qcValidationUpdate('yes')"
-                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10 ">
+                                                v-if="(user.isAdmin || user.role_id == 8 || user.role_id === 10)
+                                                && user.permission_list.includes('update-seller-list-publisher')"
+                                                class="dropdown-item"
+
+                                                @click="qcValidationUpdate('yes')">
+
                                                 {{ $t('message.publisher.ab_qc_yes') }}
                                             </a>
 
                                             <a
-                                                class="dropdown-item "
-                                                @click="qcValidationUpdate('no')"
-                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">
+                                                v-if="(user.isAdmin || user.role_id == 8 || user.role_id === 10)
+                                                && user.permission_list.includes('update-seller-list-publisher')"
+                                                class="dropdown-item"
+
+                                                @click="qcValidationUpdate('no')">
+
                                                 {{ $t('message.publisher.ab_qc_no') }}
                                             </a>
 
                                             <a
+                                                v-if="(user.isAdmin || user.role_id == 8 || user.role_id === 10)
+                                                && user.permission_list.includes('update-seller-list-publisher')"
                                                 class="dropdown-item "
-                                                @click="generateCountry"
-                                                v-if="user.isAdmin || user.role_id == 8 || user.role_id === 10">
+
+                                                @click="generateCountry">
+
                                                 {{ $t('message.publisher.ab_generate_country') }}
                                             </a>
                                         </div>
@@ -491,7 +514,7 @@
                             <div class="col-md-4">
                                 <div class="input-group justify-content-end">
                                     <export-excel
-                                        v-if="user.isOurs === 0"
+                                        v-if="user.isOurs === 0 && user.permission_list.includes('export-seller-list-publisher')"
                                         :data=sortDataForExportListPublisher(listPublish.data)
                                         type="csv"
                                         name="list_publisher.xls"
@@ -643,11 +666,13 @@
                                 slot="actionButtons">
                                 <div class="btn-group">
                                     <button
-                                        data-toggle="modal"
-                                        @click="doUpdate(scope.row)"
-                                        data-target="#modal-update-publisher"
+                                        v-if="user.permission_list.includes('update-seller-list-publisher')"
                                         title="Edit"
-                                        class="btn btn-default">
+                                        class="btn btn-default"
+                                        data-toggle="modal"
+                                        data-target="#modal-update-publisher"
+
+                                        @click="doUpdate(scope.row)">
 
                                         <i class="fa fa-fw fa-edit"></i>
                                     </button>
@@ -2421,12 +2446,12 @@ export default {
             }),
 
             isQc() {
-                let qcRoleIds = [5, 8, 9, 10];
+                let qcRoleIds = [8, 9, 10, 14];
                 return qcRoleIds.includes(this.user.role_id);
             },
 
             computedListSeller() {
-                return this.user.role_id == 6 && this.user.isOurs == 0
+                return this.user.role_id == 15 && this.user.isOurs == 0
                     ? this.listSellerIncharge.data
                     : this.listSeller.data;
             },
@@ -2981,7 +3006,7 @@ export default {
                     this.tblPublisherOpt.in_charge = false;
                 }
 
-                if (this.user.role_id == 6){
+                if (this.user.role_id == 6 || this.user.role_id == 15){
                     this.tblPublisherOpt.uploaded = false;
                     this.tblPublisherOpt.topic = false;
                     this.tblPublisherOpt.casino_sites = false;
@@ -3335,7 +3360,13 @@ export default {
                         self.$t('message.publisher.alert_success_update'),
                         'success'
                     )
-
+                })
+                .catch(err => {
+                    swal.fire(
+                        self.$t('message.draft.error'),
+                        err.response.data.message,
+                        'error'
+                    )
                 })
             },
 
@@ -3344,6 +3375,7 @@ export default {
                 $('#tbl-publisher').DataTable().destroy();
 
                 this.clearMessageform()
+
                 if( confirm(self.$t('message.publisher.alert_confirm_delete')) ){
                     await this.$store.dispatch('actionDeletePublisher', {
                         params: {
@@ -3351,11 +3383,25 @@ export default {
                         }
                     });
 
-                    let page = self.listPublish.data.length <= 1 ? 1 : self.filterModel.page
+                    if (this.messageForms.action === 'deleted' ){
+                        let page = self.listPublish.data.length <= 1 ? 1 : self.filterModel.page
 
-                    this.getPublisherList(page);
-                    this.checkIds = []
-                    this.isDisabled = true;
+                        await this.getPublisherList(page);
+                        this.checkIds = []
+                        this.isDisabled = true;
+
+                        await swal.fire(
+                            self.$t('message.tools.alert_deleted'),
+                            'Selected records successfully deleted.',
+                            'success'
+                        )
+                    } else {
+                        await swal.fire(
+                            self.$t('message.draft.error'),
+                            self.messageForms.message,
+                            'error'
+                        )
+                    }
                 }
             },
 
@@ -3394,7 +3440,7 @@ export default {
                 } else {
                     swal.fire(
                         self.$t('message.publisher.alert_failed'),
-                        self.$t('message.publisher.alert_failed_url'),
+                        self.messageForms.message,
                         'error'
                     )
 
@@ -3466,12 +3512,13 @@ export default {
                         }
                     }
                 } else {
+                    this.isCsvUploading = false;
+
                     swal.fire(
                         self.$t('message.publisher.alert_failed'),
-                        self.$t('message.publisher.alert_upload_fail'),
+                        self.messageForms.message,
                         'error'
                     )
-
                 }
             },
 
@@ -3541,7 +3588,6 @@ export default {
                 this.isPopupLoading = false;
 
                 if (this.messageForms.action === 'updated_publisher') {
-
                     // for qc seller
                     if (this.user.role_id === 10) {
                         swal.fire({
@@ -3565,7 +3611,6 @@ export default {
                             }
                         });
                     } else {
-
                         this.getPublisherList(this.filterModel.page);
 
                         swal.fire(
@@ -3574,7 +3619,12 @@ export default {
                             'success'
                         )
                     }
-
+                } else {
+                    await swal.fire(
+                        self.$t('message.draft.error'),
+                        self.messageForms.message,
+                        'error'
+                    )
                 }
             },
 
@@ -3751,7 +3801,7 @@ export default {
             },
 
             checkSeller(){
-                this.addModel.seller = this.user.role_id === 6 ? this.user.id : '';
+                this.addModel.seller = (this.user.role_id === 6 || this.user.role_id === 15) ? this.user.id : '';
             },
 
             checkAccountValidity(){
@@ -3843,7 +3893,7 @@ export default {
             },
 
             getSellerBadge (seller) {
-                let roles = [6, 8, 10, 12];
+                let roles = [6, 8, 10, 12, 15];
 
                 if (roles.includes(this.user.role_id) || this.user.isAdmin) {
                     if (seller.user_account_validation === 'invalid') {

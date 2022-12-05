@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client as GuzzleClient;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -844,6 +845,15 @@ class MailgunController extends Controller
 
     public function deleteMessage(Request $request)
     {
+        if (Gate::denies('delete-mails-inbox')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         if (is_array($request->id)) {
             foreach ($request->id as $id) {
                 $inbox = Reply::findOrFail($id);
@@ -859,6 +869,15 @@ class MailgunController extends Controller
 
     public function deleteMessageThread(Request $request)
     {
+        if (Gate::denies('delete-mails-inbox')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         Reply::whereIn('id', $request->ids)->update(['deleted_at' => date('Y-m-d')]);
 
         return response()->json(['success' => true], 200);

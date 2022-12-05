@@ -13,6 +13,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\Registration;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -79,6 +80,15 @@ class AuthController extends Controller
 
     // UpdateUserRequest
     public function edit(UpdateUserRequest $request) {
+        if (Gate::denies('update-management-teams')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
 
         $response = ['success' => false];
         $input_2 = $request->only('payment_type');

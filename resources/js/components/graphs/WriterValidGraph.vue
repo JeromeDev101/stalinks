@@ -126,7 +126,7 @@ export default {
 
         writerTeamInCharge () {
             return this.listTeamInCharge.data.filter((item) => {
-                return item.role_id === 4;
+                return item.role_id === 13;
             });
         }
     },

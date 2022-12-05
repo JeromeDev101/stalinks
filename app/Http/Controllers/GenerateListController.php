@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\GenerateList;
 use App\Models\Pricelist;
 use App\Libs\Ahref;
+use Illuminate\Support\Facades\Gate;
 
 class GenerateListController extends Controller
 {
@@ -97,6 +98,15 @@ class GenerateListController extends Controller
     }
 
     public function importCsv(Request $request) {
+        if (Gate::denies('upload-generate-list-generate-list')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate([
             'file' => 'bail|required|mimes:csv,txt',
         ]);
@@ -160,6 +170,15 @@ class GenerateListController extends Controller
     }
 
     public function deleteGenerateList(Request $request) {
+        if (Gate::denies('delete-generate-list-generate-list')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         if(is_array($request->ids)) {
             foreach($request->ids as $id) {
                 $generate_list = GenerateList::find($id);
@@ -169,6 +188,15 @@ class GenerateListController extends Controller
     }
 
     public function store(Request $request) {
+        if (Gate::denies('create-generate-list-generate-list')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $request->validate(['url' => 'required']);
         $url = remove_http($request->url);
 

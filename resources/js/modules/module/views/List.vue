@@ -92,6 +92,7 @@
                             </div>
                             <div class="col-6">
                                 <button
+                                    v-if="user.permission_list.includes('create-management-module')"
                                     title="Add Module"
                                     class="btn btn-success float-right"
 
@@ -128,6 +129,7 @@
 
                                 <template slot-scope="scope" slot="action-buttons">
                                     <button
+                                        v-if="user.permission_list.includes('update-management-module')"
                                         title="Edit"
                                         class="btn btn-primary m-1"
 
@@ -137,6 +139,7 @@
                                     </button>
 
                                     <button
+                                        v-if="user.permission_list.includes('delete-management-module')"
                                         title="Delete"
                                         class="btn btn-danger"
 
@@ -260,6 +263,55 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label style="color: #333">Module Permissions</label>
+
+                                    <div class="mt-3 card">
+                                        <div class="card-header">
+                                            <div class="custom-control custom-switch">
+                                                <input
+                                                    v-model="isAllPermissionsSelected"
+                                                    type="checkbox"
+                                                    id="allPermissionsToggle"
+                                                    class="custom-control-input"
+
+                                                    @change="toggleSelectPermissions()">
+
+                                                <label class="custom-control-label" for="allPermissionsToggle">
+                                                    {{ isAllPermissionsSelected ? 'Deselect' : 'Select' }} All Permissions
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div
+                                                v-for="(permission, index) in generatePermissionsNamesPerModule(modelGroup, modelPage, 'obj')"
+                                                class="form-check form-check-inline"
+                                                :key="index">
+
+                                                <input
+                                                    v-model="modelPermissions"
+                                                    type="checkbox"
+                                                    class="form-check-input"
+                                                    :value="permission.value"
+                                                    :disabled="!modelPage || !modelGroup">
+
+                                                <label class="form-check-label">{{ permission.text }}</label>
+                                            </div>
+
+                                            <div v-if="!modelGroup || !modelPage" class="mt-2">
+                                                <small class="text-secondary font-italic">
+                                                    Please select module group and page.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -284,9 +336,10 @@ import {mapState} from 'vuex';
 import axios from 'axios';
 import VueVirtualTable from 'vue-virtual-table';
 import {Constants} from "../../../mixins/constants";
+import {stringManipulation} from "../../../mixins/stringManipulation";
 
 export default {
-    mixins: [Constants],
+    mixins: [Constants, stringManipulation],
     components : {
         VueVirtualTable,
     },
@@ -305,6 +358,7 @@ export default {
                 group: '',
                 page: '',
                 description: '',
+                permissions: [],
             },
 
             updateModuleModel: {
@@ -312,6 +366,7 @@ export default {
                 group: '',
                 page: '',
                 description: '',
+                permissions: [],
             },
 
             addModulePageInfo: '',
@@ -331,6 +386,8 @@ export default {
 
             modalMode: 'Add',
             pageOptions: [10, 25, 50, 100, 'All'],
+
+            isAllPermissionsSelected: false,
         }
     },
 
@@ -448,6 +505,19 @@ export default {
                 }
             }
         },
+
+        modelPermissions: {
+            get () {
+                return this.modalMode === 'Add' ? this.addModuleModel.permissions : this.updateModuleModel.permissions
+            },
+            set (val) {
+                if (this.modalMode === 'Add') {
+                    this.addModuleModel.permissions = val
+                } else {
+                    this.updateModuleModel.permissions = val
+                }
+            }
+        },
     },
 
     methods : {
@@ -525,7 +595,7 @@ export default {
 
                 swal.fire(
                     self.$t('message.article.alert_err'),
-                    'There were some errors while saving the module.',
+                    err.response.data.message,
                     'error'
                 )
 
@@ -539,23 +609,23 @@ export default {
 
             axios.put('/api/module', self.updateModuleModel)
             .then((response) => {
-                    swal.fire(
-                        self.$t('message.article.alert_success'),
-                        'Module successfully updated.',
-                        'success'
-                    )
+                swal.fire(
+                    self.$t('message.article.alert_success'),
+                    'Module successfully updated.',
+                    'success'
+                )
 
-                    self.modalCloser();
-                    self.clearModels('update');
-                    self.getModules(self.filterModel.page);
-                    self.getModuleFilterValues();
-                    loader.hide();
+                self.modalCloser();
+                self.clearModels('update');
+                self.getModules(self.filterModel.page);
+                self.getModuleFilterValues();
+                loader.hide();
             }).catch((err) => {
                 self.errorMessages = err.response.data
 
                 swal.fire(
                     self.$t('message.article.alert_err'),
-                    'There were some errors while updating the module.',
+                    err.response.data.message,
                     'error'
                 )
 
@@ -590,6 +660,13 @@ export default {
                                 'success'
                             )
                         })
+                        .catch(err => {
+                            swal.fire(
+                                self.$t('message.draft.error'),
+                                err.response.data.message,
+                                'error'
+                            )
+                        })
                 }
             });
         },
@@ -601,6 +678,7 @@ export default {
                         group: '',
                         page: '',
                         description: '',
+                        permissions: []
                     }
 
                     break;
@@ -610,6 +688,7 @@ export default {
                         group: '',
                         page: '',
                         description: '',
+                        permissions: []
                     }
 
                     break;
@@ -630,11 +709,20 @@ export default {
             }
         },
 
+        clearPermissions (mode) {
+            if (mode === 'update') {
+                this.updateModuleModel.permissions = [];
+            } else {
+                this.addModuleModel.permissions = [];
+            }
+        },
+
         fillModuleData (data) {
             this.updateModuleModel.id = data.id;
             this.updateModuleModel.group = data.group;
             this.updateModuleModel.page = data.page;
             this.updateModuleModel.description = data.description;
+            this.updateModuleModel.permissions = data.permissions.map(({module_id, id, ...keepAttrs}) => keepAttrs);
         },
 
         modalOpener (mode) {
@@ -642,6 +730,8 @@ export default {
 
             let element = this.$refs.modalModule
             $(element).modal('show')
+
+            this.isAllPermissionsSelected = false;
         },
 
         modalCloser () {
@@ -649,6 +739,91 @@ export default {
             $(element).modal('hide')
 
             this.clearModels('error');
+            this.clearPermissions('add');
+            this.clearPermissions('update');
+        },
+
+        generatePermissionsNamesPerModule (module, page, mode) {
+            let moduleTemp = this.convertStringToKebabCase(module);
+            let pageTemp = this.convertStringToKebabCase(page);
+            let permission = moduleTemp + '-' + pageTemp;
+
+            return mode === 'obj' ? [
+                {
+                    value: {
+                        name: 'view-' + permission,
+                        display_name: this.toTitleCase('View ' + module + ' ' + page)
+                    },
+                    text: 'View'
+                },
+                {
+                    value: {
+                        name: 'create-' + permission,
+                        display_name: this.toTitleCase('Create ' + module + ' ' + page)
+                    },
+                    text: 'Create'
+                },
+                {
+                    value: {
+                        name: 'update-' + permission,
+                        display_name: this.toTitleCase('Update ' + module + ' ' + page)
+                    },
+                    text: 'Update'
+                },
+                {
+                    value: {
+                        name: 'delete-' + permission,
+                        display_name: this.toTitleCase('Delete ' + module + ' ' + page)
+                    },
+                    text: 'Delete'
+                },
+                {
+                    value: {
+                        name: 'upload-' + permission,
+                        display_name: this.toTitleCase('Upload ' + module + ' ' + page)
+                    },
+                    text: 'Upload'
+                },
+                {
+                    value: {
+                        name: 'export-' + permission,
+                        display_name: this.toTitleCase('Export ' + module + ' ' + page)
+                    },
+                    text: 'Export'
+                },
+            ] : [
+
+                {
+                    name: 'view-' + permission,
+                    display_name: this.toTitleCase('View ' + module + ' ' + page)
+                },
+                {
+                    name: 'create-' + permission,
+                    display_name: this.toTitleCase('Create ' + module + ' ' + page)
+                },
+                {
+                    name: 'update-' + permission,
+                    display_name: this.toTitleCase('Update ' + module + ' ' + page)
+                },
+                {
+                    name: 'delete-' + permission,
+                    display_name: this.toTitleCase('Delete ' + module + ' ' + page)
+                },
+                {
+                    name: 'upload-' + permission,
+                    display_name: this.toTitleCase('Upload ' + module + ' ' + page)
+                },
+                {
+                    name: 'export-' + permission,
+                    display_name: this.toTitleCase('Export ' + module + ' ' + page)
+                },
+            ]
+        },
+
+        toggleSelectPermissions () {
+            this.modelPermissions = this.isAllPermissionsSelected
+                ? this.generatePermissionsNamesPerModule(this.modelGroup, this.modelPage, 'toggles')
+                : [];
         },
     }
 }

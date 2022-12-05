@@ -21,11 +21,12 @@
                     <td>
                         <div class="btn-group">
                             <button
-                                :title="$t('message.IT.edit')"
+                                v-if="user.permission_list.includes('update-admin-settings-it')"
                                 type="submit"
                                 class="btn btn-default"
                                 data-toggle="modal"
                                 data-target="#modal-email-access"
+                                :title="$t('message.IT.edit')"
 
                                 @click="doEditEmailAccess(item)">
 
@@ -123,6 +124,7 @@ export default {
 
     computed : {
         ...mapState({
+            user : state => state.storeAuth.currentUser,
             emailAccessList : state => state.storeSystem.emailAccessList,
         }),
 
@@ -172,7 +174,6 @@ export default {
             self.isPopupLoading = false;
 
             if (self.messageForms.action === 'add_email_access') {
-
                 await swal.fire(
                     self.$t('message.IT.alert_saved'),
                     self.$t('message.IT.alert_saved_success'),
@@ -180,6 +181,12 @@ export default {
                 )
 
                 await this.getEmailAccessList();
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
         },
     }

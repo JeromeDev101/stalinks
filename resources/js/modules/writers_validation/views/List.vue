@@ -142,6 +142,7 @@
 
                                                     <td class="align-middle">
                                                         <button
+                                                            v-if="user.permission_list.includes('create-writer\'s-validation-writer\'s-validation')"
                                                             :title="$t('message.writer_validation.wv_create_exam')"
                                                             class="btn btn-success"
 
@@ -184,7 +185,7 @@
                                                             </span>
 
                                                             <button
-                                                                v-if="exam.status === 'Disapproved'"
+                                                                v-if="exam.status === 'Disapproved' && user.permission_list.includes('update-writer\'s-validation-writer\'s-validation')"
                                                                 title="Update fail reason"
                                                                 class="btn btn-warning ml-2"
 
@@ -197,6 +198,7 @@
 
                                                     <td :style="exam.attempt === 2 ? 'border: none !important;' : ''">
                                                         <button
+                                                            v-if="user.permission_list.includes('update-writer\'s-validation-writer\'s-validation')"
                                                             :title="$t('message.writer_validation.wv_view_exam_details')"
                                                             class="btn btn-primary"
 
@@ -270,6 +272,7 @@
 
                                                     <td class="align-middle" style="border: none !important;">
                                                         <button
+                                                            v-if="user.permission_list.includes('create-writer\'s-validation-writer\'s-validation')"
                                                             :disabled="writer.exam_duration > 0"
                                                             :title="$t('message.writer_validation.wv_create_exam')"
                                                             class="btn btn-success"
@@ -783,7 +786,12 @@
                                     </div>
 
                                     <div class="col-md-12 my-3" v-if="ExamUpdateFirst.status !== 'For Checking' && ExamUpdateFirst.status !== 'Approved'">
-                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(1)">
+                                        <button
+                                            v-if="user.permission_list.includes('create-writer\'s-validation-writer\'s-validation')"
+                                            class="btn btn-primary btn-lg"
+
+                                            @click="submitWriterExam(1)">
+
                                             {{ $t('message.writer_validation.fam_submit_exam') }}
                                         </button>
                                     </div>
@@ -933,7 +941,12 @@
                                     </div>
 
                                     <div class="col-md-12 my-3" v-if="ExamUpdateSecond.status !== 'For Checking' && ExamUpdateSecond.status !== 'Approved'">
-                                        <button class="btn btn-primary btn-lg" @click="submitWriterExam(2)">
+                                        <button
+                                            v-if="user.permission_list.includes('create-writer\'s-validation-writer\'s-validation')"
+                                            class="btn btn-primary btn-lg"
+
+                                            @click="submitWriterExam(2)">
+
                                             {{ $t('message.writer_validation.fam_submit_exam') }}
                                         </button>
                                     </div>
@@ -1155,8 +1168,8 @@ export default {
                 self.errorMessages = err.response.data
 
                 swal.fire(
-                    self.$t('message.article.alert_err'),
-                    'Please indicate the reason why the writer failed the exam.',
+                    self.$t('message.draft.error'),
+                    err.response.data.message,
                     'error'
                 )
             })
@@ -1197,8 +1210,8 @@ export default {
                     self.errorMessages = err.response.data
 
                     swal.fire(
-                        self.$t('message.article.alert_err'),
-                        'Please indicate the reason why the writer failed the exam.',
+                        self.$t('message.draft.error'),
+                        err.response.data.message,
                         'error'
                     )
                 })
@@ -1337,6 +1350,13 @@ export default {
 
                 }).catch((err) => {
                     loader.hide();
+
+                    swal.fire(
+                        self.$t('message.draft.error'),
+                        err.response.data.message,
+                        'error'
+                    )
+
                     console.log(err)
                 })
         },
@@ -1373,7 +1393,6 @@ export default {
         },
 
         doUpdate(exam) {
-
             let topic = '';
 
             if(exam.topic != null && exam.topic != '') {

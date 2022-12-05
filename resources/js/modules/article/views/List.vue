@@ -159,16 +159,25 @@
                                 <td>{{ article.isOurs == 1 ? computeWriterPrice(article) : '----' }}</td>
                                 <td>
                                     <div :disabled="article.content == null" class="btn-group">
-                                        <button :title="$t('message.admin_article.aa_view_content')"
-                                                @click="viewContent( article.backlink ,article.content, article)"
-                                                data-toggle="modal"
-                                                data-target="#modal-view-content"
-                                                class="btn btn-default"><i class="fa fa-fw fa-eye"></i></button>
+                                        <button
+                                            class="btn btn-default"
+                                            data-toggle="modal"
+                                            data-target="#modal-view-content"
+                                            :title="$t('message.admin_article.aa_view_content')"
+
+                                            @click="viewContent( article.backlink ,article.content, article)">
+
+                                            <i class="fa fa-fw fa-eye"></i>
+                                        </button>
                                     </div>
-                                    <div class="btn-group" v-if="user.isAdmin">
-                                        <button :title="$t('message.admin_article.delete')"
-                                                @click="deleteArticle(article.id)"
-                                                class="btn btn-default"><i class="fa fa-fw fa-trash"></i></button>
+                                    <div v-if="user.permission_list.includes('delete-admin-article-admin-article')" class="btn-group">
+                                        <button
+                                            class="btn btn-default"
+                                            :title="$t('message.admin_article.delete')"
+                                            @click="deleteArticle(article.id)">
+
+                                            <i class="fa fa-fw fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -426,16 +435,22 @@ export default {
                     axios.post('/api/delete-article', {
                         id : id
                     })
-                        .then(response => {
-                            this.getListArticles();
+                    .then(response => {
+                        this.getListArticles();
 
-                            swal.fire(
-                                self.$t('message.admin_article.alert_deleted'),
-                                self.$t('message.admin_article.alert_deleted_successfully'),
-                                'success'
-                            )
-                        })
-
+                        swal.fire(
+                            self.$t('message.admin_article.alert_deleted'),
+                            self.$t('message.admin_article.alert_deleted_successfully'),
+                            'success'
+                        )
+                    })
+                    .catch(err => {
+                        swal.fire(
+                            self.$t('message.draft.error'),
+                            err.response.data.message,
+                            'error'
+                        )
+                    })
                 }
             });
         },

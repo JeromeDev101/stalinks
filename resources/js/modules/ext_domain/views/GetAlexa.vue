@@ -63,7 +63,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3 col-lg-2">
+                            <div v-if="user.permission_list.includes('create-get-alexa-get-alexa')" class="col-md-3 col-lg-2">
                                 <button @click="doGetAlexaRank" type="submit" class="btn btn-default">
                                     <i v-if="isLoadingTable" class="fa fa-refresh fa-spin"></i>
                                     <i v-if="!isLoadingTable" class="fa fa-search"></i>

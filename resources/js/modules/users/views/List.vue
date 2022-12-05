@@ -99,10 +99,16 @@
                     <div class="card-header">
                         <h3 class="card-title text-primary">{{ $t('message.teams.t_title') }}</h3>
                         <div class="card-tools">
-                            <button @click="doAddUser"
-                                    data-toggle="modal"
-                                    data-target="#modal-add"
-                                    class="btn btn-success btn-tool"><i class="fa fa-plus"></i></button>
+                            <button
+                                v-if="user.permission_list.includes('create-management-teams')"
+                                class="btn btn-success btn-tool"
+                                data-toggle="modal"
+                                data-target="#modal-add"
+
+                                @click="doAddUser">
+
+                                <i class="fa fa-plus"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -182,35 +188,37 @@
                                 </thead>
 
                                 <tbody>
-                                <tr v-for="(user, index) in listUser.data" :key="index">
+                                <tr v-for="(userData, index) in listUser.data" :key="index">
                                     <td class="center-content">{{ index + 1 }}</td>
-                                    <td>{{ user.username == null ? user.name : user.username }}</td>
-                                    <td>{{ user.email }}</td>
-                                    <td>{{ user.work_mail }}</td>
-                                    <td>{{ user.skype }}</td>
-                                    <td>{{ user.role ? user.role.name : '' }}</td>
-                                    <td>{{ user.status }}</td>
-                                    <td>{{ userTypeList[user.type] }}</td>
+                                    <td>{{ userData.username == null ? userData.name : userData.username }}</td>
+                                    <td>{{ userData.email }}</td>
+                                    <td>{{ userData.work_mail }}</td>
+                                    <td>{{ userData.skype }}</td>
+                                    <td>{{ userData.role ? userData.role.name : '' }}</td>
+                                    <td>{{ userData.status }}</td>
+                                    <td>{{ userTypeList[userData.type] }}</td>
                                     <td>
                                         <div class="btn-group">
                                             <button
+                                                v-if="user.permission_list.includes('update-management-teams')"
                                                 data-toggle="modal"
                                                 data-target="#modal-update"
                                                 class="btn btn-default"
                                                 :title="$t('message.teams.t_edit_user')"
 
-                                                @click="doUpdateUser(user)">
+                                                @click="doUpdateUser(userData)">
 
                                                 <i class="fa fa-fw fa-edit"></i>
                                             </button>
                                             <!-- <button class="btn btn-default" @click="doUpdatePermission(user)" data-toggle="modal" data-target="#modal-permission" title="Edit Country IntDomain"><i class="fa fa-fw fa-id-card"></i></button> -->
                                             <button
+                                                v-if="user.permission_list.includes('update-management-teams')"
                                                 data-toggle="modal"
                                                 data-target="#modal-permission-ext"
                                                 class="btn btn-default"
                                                 :title="$t('message.teams.t_edit_country')"
 
-                                                @click="doUpdatePermissionExt(user)">
+                                                @click="doUpdatePermissionExt(userData)">
 
                                                 <i class="fas fa-eye-dropper"></i>
                                             </button>
@@ -218,7 +226,7 @@
                                             <router-link
                                                 class="btn btn-default"
                                                 title="View detail"
-                                                :to="{ path: `/profile/${user.id}` }">
+                                                :to="{ path: `/profile/${userData.id}` }">
                                                 <i class="fa fa-fw fa-eye"></i>
                                             </router-link>
                                         </div>
@@ -1170,7 +1178,6 @@ export default {
         },
 
         doUpdateUser(user) {
-            console.log(user)
             this.$store.dispatch('clearMessageFormUser');
             this.userUpdate = JSON.parse(JSON.stringify(user))
             this.userUpdate.password = '';
@@ -1205,6 +1212,12 @@ export default {
                     that.$t('message.teams.alert_employee_added'),
                     'success'
                 )
+            } else {
+                await swal.fire(
+                    that.$t('message.draft.error'),
+                    that.messageForms.message,
+                    'error'
+                )
             }
         },
 
@@ -1230,7 +1243,12 @@ export default {
                     self.$t('message.teams.alert_info_updated'),
                     'success'
                 )
-
+            } else {
+                await swal.fire(
+                    self.$t('message.draft.error'),
+                    self.messageForms.message,
+                    'error'
+                )
             }
         },
 

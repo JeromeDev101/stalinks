@@ -122,7 +122,7 @@
                     <div class="card-body">
                         <h5 class="d-inline pull-right">{{ $t('message.seller_billing.sb_amount') }} $ {{ totalAmount }}</h5>
 
-                        <div class="row" v-if="user.isOurs != 1">
+                        <div class="row" v-if="user.isOurs != 1 && user.permission_list.includes('update-billing-seller-billing')">
                             <div class="col-md-2 my-3">
 
                                 <div class="input-group">
@@ -231,6 +231,7 @@
                                         </button>
 
                                         <button
+                                            v-if="user.permission_list.includes('upload-billing-seller-billing')"
                                             data-target="#modal-re-upload-doc"
                                             data-toggle="modal"
                                             class="btn btn-default px-3 ml-2"
@@ -334,7 +335,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            ID: 
+                                            ID:
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
@@ -587,7 +588,7 @@ export default {
             listSellerBilling : state => state.storeBillingSeller.listSellerBilling,
             messageForms : state => state.storeBillingSeller.messageForms,
             listPayment : state => state.storeBillingSeller.listPayment,
-            listSeller : state => state.storeBillingSeller.listSeller,
+            listSeller : state => state.storePublisher.listSeller,
             sellerInfo : state => state.storeBillingSeller.sellerInfo,
             user: state => state.storeAuth.currentUser,
         }),
@@ -701,8 +702,6 @@ export default {
                 this.info.seller = data.username;
                 this.info.payment_types = data.user_payment_types;
                 this.info.payment_type = data.payment_type.type;
-
-               console.log(data)
 
                 if (this.info.payment_types) {
                     this.isDisabledPay = false;
@@ -890,6 +889,14 @@ export default {
                     'success'
                 )
 
+            } else {
+                loader.hide();
+
+                await swal.fire(
+                    self.messageForms.message,
+                    '',
+                    'error'
+                )
             }
 
             this.isDisabledPay = false;
@@ -950,8 +957,8 @@ export default {
                 this.isDisabledReupload = false;
 
                 await swal.fire(
-                    self.$t('message.seller_billing.alert_error'),
-                    self.$t('message.seller_billing.alert_re_upload_error'),
+                    self.messageForms.message,
+                    '',
                     'error'
                 )
             }
@@ -1007,10 +1014,11 @@ export default {
                 )
 
                 this.getSellerBilling();
+                this.checkIds = [];
             }).catch((error) => {
                 swal.fire(
-                    self.$t('message.seller_billing.alert_error'),
-                    self.$t('message.seller_billing.alert_error'),
+                    error.response.data.message,
+                    '',
                     'error'
                 )
             })

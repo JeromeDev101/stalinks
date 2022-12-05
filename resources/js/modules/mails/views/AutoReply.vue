@@ -35,6 +35,7 @@
                                 </button>
 
                                 <button
+                                    v-if="user.permission_list.includes('create-mails-auto-replies')"
                                     type="button"
                                     :title="$t('message.auto.ar_add')"
                                     class="btn btn-success"
@@ -70,6 +71,7 @@
                             </button>
 
                             <button
+                                v-if="user.permission_list.includes('delete-mails-auto-replies')"
                                 type="button"
                                 :title="$t('message.auto.ar_trash')"
                                 class="btn btn-default"
@@ -160,6 +162,7 @@
                                     <td style="width: 15%; text-align: right">
                                         <div class="btn-group">
                                             <button
+                                                v-if="user.permission_list.includes('update-mails-auto-replies')"
                                                 title="Edit auto reply"
                                                 class="btn btn-default mr-2"
 
@@ -456,7 +459,7 @@ export default {
 
                         swal.fire(
                             self.$t('message.auto.alert_err'),
-                            self.$t('message.auto.alert_err_delete'),
+                            err.response.data.message,
                             'error'
                         )
                     })

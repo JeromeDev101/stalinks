@@ -153,7 +153,7 @@ class SendArticlesQueueEmailToWriters implements ShouldQueue
      * @return array
      */
     protected function getValidInternalWriters () {
-        return User::where('role_id', 4)->where('isOurs', 0)->where('status', 'active')->get();
+        return User::where('role_id', 13)->where('isOurs', 0)->where('status', 'active')->get();
     }
 
     /**

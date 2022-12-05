@@ -8,6 +8,7 @@ use App\Jobs\AddPurchase;
 use App\Models\Tool;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ToolController extends Controller
 {
@@ -47,6 +48,15 @@ class ToolController extends Controller
     }
 
     public function store(ToolRequest $request) {
+        if (Gate::denies('create-management-tools')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         DB::transaction(function () use ($request) {
             $tool = new Tool();
 
@@ -67,6 +77,15 @@ class ToolController extends Controller
 
     public function update(ToolRequest $request)
     {
+        if (Gate::denies('update-management-tools')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         $inputs = $request->only('url', 'name', 'username', 'password', 'details', 'expired_at', 'registered_at');
 
         $tool = Tool::find($request->id);
@@ -81,6 +100,15 @@ class ToolController extends Controller
 
     public function destroy($id)
     {
+        if (Gate::denies('delete-management-tools')) {
+            return response()->json([
+                "message" => 'Unauthorized Access',
+                "errors" => [
+                    "access" => 'Unauthorized Access',
+                ],
+            ],422);
+        }
+
         Tool::find($id)->delete();
 
         return response()->json(['success' => true]);

@@ -41,7 +41,7 @@ class DashboardController extends Controller
 
     private function inCharge()
     {
-        $seller_in_charge = User::withCount('sub_buyers')->where('isOurs', 0)->where('role_id', 6)->get();
+        $seller_in_charge = User::withCount('sub_buyers')->where('isOurs', 0)->where('role_id', 15)->get();
         $data = [];
 
         foreach ($seller_in_charge as $in_charge) {
@@ -76,7 +76,7 @@ class DashboardController extends Controller
             $list = $list->where('A.id', Auth::user()->id);
         }
 
-        if (Auth::user()->role_id == 6 && Auth::user()->isOurs == 0) {
+        if (Auth::user()->role_id == 15 && Auth::user()->isOurs == 0) {
             $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
@@ -104,7 +104,7 @@ class DashboardController extends Controller
             $list = $list->where('users.id', Auth::user()->id);
         }
 
-        if (Auth::user()->role_id == 6 && Auth::user()->isOurs == 0) {
+        if (Auth::user()->role_id == 15 && Auth::user()->isOurs == 0) {
             $list = $list->where('registration.team_in_charge', Auth::user()->id);
         }
 
@@ -142,7 +142,7 @@ class DashboardController extends Controller
             ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
             ->where('backlinks.status', 'Live');
 
-//        if( $user_id->role_id == 5 && $user_id->isOurs == 0 ){
+//        if( $user_id->role_id == 14 && $user_id->isOurs == 0 ){
 //
 //            /*
 //            * Commented the code below for QC buyers to see all buyers
@@ -207,7 +207,7 @@ class DashboardController extends Controller
             $list = $list->where('users.id', $user_id);
         }
 
-        if (Auth::user()->role_id == 6 && Auth::user()->isOurs == 0) {
+        if (Auth::user()->role_id == 15 && Auth::user()->isOurs == 0) {
             $list = $list->where('registration.team_in_charge', $user_id);
         }
 
