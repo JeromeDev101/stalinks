@@ -173,15 +173,6 @@ class WalletTransactionController extends Controller
     }
 
     public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
-        if (Gate::denies('create-billing-wallet-transaction')) {
-            return response()->json([
-                "message" => 'Unauthorized Access',
-                "errors" => [
-                    "access" => 'Unauthorized Access',
-                ],
-            ],422);
-        }
-
         $image = $request->file;
         $paymentType = $request->get('payment_type');
 
@@ -240,15 +231,6 @@ class WalletTransactionController extends Controller
     }
 
     public function updateWallet(Request $request) {
-        if (Gate::denies('update-billing-wallet-transaction')) {
-            return response()->json([
-                "message" => 'Unauthorized Access',
-                "errors" => [
-                    "access" => 'Unauthorized Access',
-                ],
-            ],422);
-        }
-
         $wallet_transaction = WalletTransaction::find($request->id);
         $proof_doc = $wallet_transaction->proof_doc;
 
