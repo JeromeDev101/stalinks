@@ -3310,11 +3310,34 @@ export default {
         async verifiedAccount() {
             let self = this;
             this.isPopupLoading = true;
+            let loader = this.$loading.show();
+
+            let id_payment_type = this.accountUpdate.id_payment_type;
+
+            if(this.accountUpdate.is_sub_account === 0
+                && !this.accountUpdate.update_method_payment_type[id_payment_type]
+                && this.accountUpdate.type !== 'Affiliate'
+                && this.accountUpdate.type !== 'Buyer') {
+
+                this.validate_error_type_update = true;
+                loader.hide();
+
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_error'),
+                    self.$t('message.registration_accounts.alert_error_update'),
+                    'error'
+                );
+
+                return false;
+            }
+
             await this.$store.dispatch('actionVerifyAccount', this.accountUpdate);
 
             if (this.messageForms.action === 'verified_account') {
                 this.isVerified = true;
+                this.validate_error_type_update = false;
 
+                loader.hide();
                 this.getAccountList();
 
                 swal.fire(
@@ -3323,6 +3346,8 @@ export default {
                     'success'
                 );
             } else {
+                loader.hide();
+
                 swal.fire(
                     self.$t('message.registration_accounts.alert_error'),
                     self.$t('message.registration_accounts.alert_account_not_verified_error'),
@@ -3794,7 +3819,7 @@ export default {
             this.accountUpdate.account_validation = that.account_validation
             this.accountUpdate.rate_type = that.rate_type == null || that.rate_type == '' ? '':that.rate_type;
             this.accountUpdate.writer_price = that.writer_price == null || that.writer_price == '' ? '' : that.writer_price;
-
+            this.accountUpdate.update_method_payment_type = [];
             // console.log(that)
 
             if(typeof account.user != "undefined" && account.user){

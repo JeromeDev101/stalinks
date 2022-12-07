@@ -1156,6 +1156,9 @@ class AccountController extends Controller
     }
 
     public function verifyAccount(UpdateAccountRequest $request) {
+        // DB transaction
+        DB::beginTransaction();
+
         $registered = Registration::find($request->id);
 
         if( $request->account_validation != 'invalid' ) {
@@ -1203,7 +1206,18 @@ class AccountController extends Controller
         $data['skype'] = $registered->skype == '' ? 'none':$registered->skype;
         $data['role_id'] = $role_id;
 
-        User::create($data);
+        $user = User::create($data);
+
+        // validate payment info
+        if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
+            $request->validate([
+//                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
+            ], [
+                'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+            ]);
+        }
+
 
         // update registration and user account
 
@@ -1215,8 +1229,13 @@ class AccountController extends Controller
 
         $this->accountRepository->updateAccount($inputs);
 
-        return response()->json(['success' => true]);
+        if($user) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
 
+        return response()->json(['success' => true]);
     }
 
     public function updateMultipleInCharge(Request $request)
