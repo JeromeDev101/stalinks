@@ -632,7 +632,8 @@ class AccountController extends Controller
             // validate payment info
             if (isset($request->payment_type) && $request->payment_type && $user) {
                 $request->validate([
-                    'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                    'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+                    'payment_type.*' => [new PaymentInfoExists($user->id)],
                 ], [
                     'payment_type.*.unique' => 'Payment info :input is already taken by another user.',
                 ]);

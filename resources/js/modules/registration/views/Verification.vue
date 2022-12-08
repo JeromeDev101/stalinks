@@ -235,12 +235,17 @@
                             </div>
 
                             <div class="row" v-if="regModel.type !== 'Affiliate'">
-
                                 <div class="col-md-12">
                                     <h4 class="text-primary my-3">
                                         {{ $t('message.verification.sub2') }}
                                         <span class="text-danger" v-show="regModel.type != 'Buyer'">*</span>
                                     </h4>
+                                </div>
+
+                                <div v-if="validate_error_type" class="col-md-12">
+                                    <span class="text-danger">
+                                        {{ $t('message.registration_accounts.r_input_selected') }}
+                                    </span>
                                 </div>
 
                                 <div class="col-md-12">
@@ -572,8 +577,39 @@
                 let self = this;
                 let id_payment_type = this.regModel.id_payment_type;
 
+                if (!id_payment_type || !this.regModel.payment_type[id_payment_type]) {
+                    this.validate_error_type = true;
+
+                    swal.fire(
+                        self.$t('message.registration_accounts.alert_error'),
+                        self.$t('message.registration_accounts.alert_error_update'),
+                        'error'
+                    );
+
+                    this.formVerified = false;
+
+                    return false;
+                }
+
                 if (this.regModel.payment_type[id_payment_type]) {
                     this.regModel.payment_type[id_payment_type] = this.regModel.payment_type[id_payment_type].replace(/\s/g,'');
+
+                    if (this.regModel.payment_type[id_payment_type] === null
+                        || this.regModel.payment_type[id_payment_type] === ''
+                        || !this.regModel.payment_type[id_payment_type]) {
+
+                        this.validate_error_type = true;
+
+                        swal.fire(
+                            self.$t('message.registration_accounts.alert_error'),
+                            self.$t('message.registration_accounts.alert_error_update'),
+                            'error'
+                        );
+
+                        this.formVerified = false;
+
+                        return false;
+                    }
                 }
 
                 //TODO: REMOVED VALIDATION FOR PAYMENT INFO - MIGHT CHANGE ACCORDING TO BOSS WHEN WE HAVE BUYERS
@@ -588,8 +624,11 @@
                     .then((res) => {
                         this.formVerified = true;
                         this.formSetPassword = false;
+                        this.validate_error_type = false;
                     })
                     .catch(err => {
+                        this.validate_error_type = false;
+
                         swal.fire(
                             self.$t('message.registration_accounts.alert_error'),
                             self.$t('message.registration_accounts.alert_error_update'),

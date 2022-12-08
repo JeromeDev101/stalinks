@@ -1728,11 +1728,11 @@
                                     {{ $t('message.registration_accounts.r_payment_info') }}
                                 </h4>
                                 <span v-if="messageForms.errors.id_payment_type" class="text-danger">
-                                {{ $t('message.registration_accounts.r_select_default') }}
-                            </span>
+                                    {{ $t('message.registration_accounts.r_select_default') }}
+                                </span>
                                 <span v-if="validate_error_type_update" class="text-danger">
-                                {{ $t('message.registration_accounts.r_input_selected') }}
-                            </span>
+                                    {{ $t('message.registration_accounts.r_input_selected') }}
+                                </span>
 
                                 <!-- payment for seller and writer -->
                                 <table class="table table-hover" v-if="accountUpdate.type === 'Seller' || accountUpdate.type === 'Writer'">
