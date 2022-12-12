@@ -647,7 +647,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('message.list_backlinks.t_prices') }} <span v-if="checkBuyerDiscount" class="text-danger">( 15% Off )</span></label>
+                                    <label>{{ $t('message.list_backlinks.t_prices') }} <span v-if="isBuyerHasDiscount" class="text-danger">( 15% Off )</span></label>
 
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
