@@ -83,5 +83,13 @@ export default {
     search: 'खोज',
     close: 'बंद करना',
     save: 'सहेजें',
-    promo: 'आपको 6 जनवरी, 2023 तक हर खरीदारी पर 15% की छूट है।', 
+    promo: 'आपको 6 जनवरी, 2023 तक हर खरीदारी पर 15% की छूट है।',
+
+    // updates
+    uninterested: 'रसहीन',
+    selected_items_not_purchased: 'चयनित आइटम की स्थिति "Purchased" नहीं होनी चाहिए',
+    selected_items_interested: 'चयनित आइटम की स्थिति "Interested" होनी चाहिए',
+    mark_not_interested: 'बैकलिंक को "Not Interested" के रूप में चिह्नित करें?',
+    mark_interested: 'बैकलिंक को "Interested" के रूप में चिह्नित करें?',
+    remove_interested: 'बैकलिंक्स में "Interested" स्थिति निकालें?',
 }

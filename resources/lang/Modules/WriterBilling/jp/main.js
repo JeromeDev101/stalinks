@@ -44,4 +44,6 @@ export default {
     search: '検索',
     close: '閉じる',
     pay: '支払い',
+
+    reupload_note: 'アップロードしたドキュメントを更新してもよろしいですか?自動メールがライターに送信されます。'
 }

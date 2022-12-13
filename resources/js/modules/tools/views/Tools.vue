@@ -140,8 +140,8 @@
                                         <th>{{ $t('message.tools.filter_username') }}</th>
                                         <th>{{ $t('message.tools.t_password') }}</th>
                                         <th>{{ $t('message.tools.filter_details') }}</th>
-                                        <th>Reg Date</th>
-                                        <th>Exp Date</th>
+                                        <th>{{ $t('message.tools.table_reg_date') }}</th>
+                                        <th>{{ $t('message.tools.table_exp_date') }}</th>
                                         <th>{{ $t('message.tools.t_action') }}</th>
                                     </tr>
                                     </thead>
@@ -185,7 +185,7 @@
                                             </span>
 
                                                 <span v-if="tool.expiring_days !== null" :class="expireBadgeColor(tool.expiring_days)">
-                                                {{ tool.expiring_days > 0 ? tool.expiring_days + ' day(s) left' : 'expired' }}
+                                                {{ tool.expiring_days > 0 ? tool.expiring_days + $t('message.tools.days_left') : $t('message.tools.expired') }}
                                             </span>
                                             </div>
 
@@ -242,8 +242,7 @@
                         <div v-if="modalMode === 'update' && updateToolModel.expiring_days <= 30" class="row">
                             <div class="col-md-12">
                                 <div class="alert alert-danger" role="alert">
-                                    This tool is about to expire or now expired. Renew this tool by clicking the renew button beside
-                                    the expiration date field.
+                                    {{ $t('message.tools.expired_reminder') }}
                                 </div>
                             </div>
                         </div>
@@ -354,7 +353,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.registered_at}">
-                                    <label>Registration Date</label>
+                                    <label>{{ $t('message.tools.registration_date') }}</label>
                                     <input
                                         v-model="modelRegisteredAt"
                                         type="date"
@@ -373,7 +372,7 @@
 
                             <div class="col-md-6">
                                 <div :class="{'form-group': true, 'has-error': messageFormsTools.errors.expired_at}">
-                                    <label>Expiration Date</label>
+                                    <label>{{ $t('message.tools.expiration_date') }}</label>
 
                                     <div class="input-group mb-3">
                                         <input
@@ -439,7 +438,7 @@
                                         id="isPurchased"
                                         class="form-check-input">
 
-                                    <label class="form-check-label" for="isPurchased">Is Purchased?</label>
+                                    <label class="form-check-label" for="isPurchased">{{ $t('message.tools.is_purchased') }}</label>
                                 </div>
                             </div>
                         </div>

@@ -44,4 +44,17 @@ export default {
     update: 'Cập nhật',
     yes_delete: 'Có, xóa nó!',
     no_delete: 'Không, giữ nó',
+
+    // updates
+    table_reg_date: 'ngày đăng kí',
+    table_exp_date: 'Ngày hết hạn',
+
+    days_left: ' ngày còn lại',
+    expired: 'hết hạn',
+
+    expired_reminder: 'Công cụ này sắp hết hạn hoặc hiện đã hết hạn. Gia hạn công cụ này bằng cách nhấp vào nút gia hạn bên cạnh trường ngày hết hạn.',
+
+    registration_date: 'ngày đăng kí',
+    expiration_date: 'Ngày hết hạn',
+    is_purchased: 'Đã mua chưa?',
 }

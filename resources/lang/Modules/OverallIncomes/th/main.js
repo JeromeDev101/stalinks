@@ -29,4 +29,10 @@ export default {
     search: 'ค้นหา',
     close: 'ปิด',
     save: 'บันทึก',
+
+    // updates
+    search_id_buyer: 'ค้นหารหัสผู้ซื้อ',
+    buyer: 'ผู้ซื้อ',
+    buyer_id: 'ผู้ซื้อ ID',
+    id_buyer: 'ผู้ซื้อ ID',
 }

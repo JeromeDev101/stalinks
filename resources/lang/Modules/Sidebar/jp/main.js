@@ -57,5 +57,12 @@ export default {
     follow_up_backlinks: 'バックリンクフォローアップ',
     purchase: '購入',
 
+    // purchases
+    purchases: '購入',
+    purchases_config: '構成',
+    purchases_summary: '概要',
+    purchases_tools: 'ツール',
+    purchases_manual: 'マニュアル',
+
     help: 'ヘルプ'
 }

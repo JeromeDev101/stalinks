@@ -31,4 +31,14 @@ export default {
     close: 'Đóng',
     save: 'Lưu',
     update: 'Cập nhật',
+
+    role_permissions: 'Quyền vai trò',
+    module_group: 'Nhóm mô-đun',
+    module_page: 'Trang mô-đun',
+    module_view: 'Lượt xem',
+    module_create: 'Tạo ra',
+    module_update: 'Cập nhật',
+    module_delete: 'Xóa bỏ',
+    module_upload: 'Tải lên',
+    module_export: 'Xuất khẩu',
 }

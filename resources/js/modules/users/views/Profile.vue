@@ -98,7 +98,7 @@
 
                                             <div class="alert alert-info">
                                                 <i class="fas fa-info-circle"></i>
-                                                Contact an administrator to change your pricing type.
+                                                {{ $t('message.profile.contact_admin') }}
                                             </div>
 
                                             <select v-model="user.user_type.rate_type" disabled class="form-control">
@@ -405,44 +405,47 @@
                                                     payment_method.wire_routing_num
                                                 "
                                                 >
-                                                <h6 class="text-primary">Other Details:</h6>
+                                                <h6 class="text-primary">
+                                                    {{ $t('message.others.other_details') }}
+                                                </h6>
+
                                                 <hr/>
 
                                                 <div class="row">
                                                     <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                        <label for="">Bank Name:</label>
+                                                        <label>{{ $t('message.others.bank_name') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.bank_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_name">
-                                                        <label for="">Account Name:</label>
+                                                        <label>{{ $t('message.others.account_name') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.account_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                        <label for="">Account IBAN:</label>
+                                                        <label>{{ $t('message.others.account_iban') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.account_iban[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                        <label for="">SWIFT Code:</label>
+                                                        <label>{{ $t('message.others.swift_code') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.swift_code[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                        <label for="">Beneficiary Address:</label>
+                                                        <label>{{ $t('message.others.beneficiary_add') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.beneficiary_add[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_holder">
-                                                        <label for="">Account Holder:</label>
+                                                        <label>{{ $t('message.others.account_holder') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.account_holder[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_type">
-                                                        <label for="">Account Type:</label>
+                                                        <label>{{ $t('message.others.account_type') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.account_type[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.routing_num">
-                                                        <label for="">Routing Number:</label>
+                                                        <label>{{ $t('message.others.routing_num') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.routing_num[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.wire_routing_num">
-                                                        <label for="">Wire Routing Number:</label>
+                                                        <label>{{ $t('message.others.wire_routing_num') }}</label>
                                                         <input type="text" class="form-control" v-model="billing.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>

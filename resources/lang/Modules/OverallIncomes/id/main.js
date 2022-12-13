@@ -29,4 +29,10 @@ export default {
     search: 'Telusuri',
     close: 'Tutup',
     save: 'Simpan',
+
+    // updates
+    search_id_buyer: 'Cari ID Pembeli',
+    buyer: 'Pembeli',
+    buyer_id: 'ID pembeli',
+    id_buyer: 'ID Pembeli',
 }

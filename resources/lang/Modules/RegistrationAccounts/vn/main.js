@@ -175,4 +175,21 @@ export default {
     save: 'Lưu',
     send: 'Gửi',
     update: 'Cập nhật',
+
+    basic: 'Nền tảng',
+    medium: 'Vừa phải',
+    premium: 'Phần thưởng',
+    recommended: 'Khuyến khích',
+
+    writer_pricing: 'Giá nhà văn',
+    price_rate_per_lang: 'Tỷ giá theo ngôn ngữ',
+    price_rate_note: 'Tỷ giá đã được thay đổi thành tỷ lệ mặc định theo loại giá đã chọn.',
+    show_history: 'Lịch sử hiển thị',
+
+    payment_info_history: 'Lịch sử thông tin thanh toán',
+    pih_account: 'Tài khoản',
+    pih_default: 'Mặc định',
+    pih_status: 'Trạng thái',
+    pih_dates: 'ngày',
+    pih_view: 'xem chi tiết',
 }

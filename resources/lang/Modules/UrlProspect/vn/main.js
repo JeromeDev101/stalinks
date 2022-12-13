@@ -227,4 +227,11 @@ export default {
     update: 'Cập nhật',
     prospect_from: 'Triển vọng Từ',
     simple_from: 'Từ',
+
+    date_status_updated: 'Ngày Trạng thái Cập nhật',
+    status_updated: 'Trạng thái được cập nhật',
+    with_cc: 'Với Cc',
+    cc_field_contain: 'Trường cc phải chứa email hợp lệ',
+    bcc_field_contain: 'Trường bcc phải chứa email hợp lệ',
+    email_auto: 'Email cá nhân tự động',
 }

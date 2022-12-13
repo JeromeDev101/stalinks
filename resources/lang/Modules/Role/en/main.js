@@ -31,4 +31,14 @@ export default {
     close: 'Close',
     save: 'Save',
     update: 'Update',
+
+    role_permissions: 'Role Permissions',
+    module_group: 'Module Group',
+    module_page: 'Module Page',
+    module_view: 'View',
+    module_create: 'Create',
+    module_update: 'Update',
+    module_delete: 'Delete',
+    module_upload: 'Upload',
+    module_export: 'Export',
 }

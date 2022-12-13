@@ -114,4 +114,6 @@ export default {
     keep: 'Không, giữ nó',
     active: 'Tích cực',
     inactive: 'Không hoạt động',
+
+    contact_admin: 'Liên hệ với quản trị viên để thay đổi loại đặt giá của bạn.',
 }

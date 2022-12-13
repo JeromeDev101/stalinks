@@ -75,4 +75,15 @@ export default {
     close: 'बंद करना',
     update: 'अद्यतन',
     save: 'सहेजें',
+
+    status_third_party: 'स्थिति तृतीय पक्ष',
+    status_stalinks: 'स्थिति StaLinks URL प्रॉस्पेक्ट',
+    is_moved: 'स्थानांतरित हो गया है?',
+    third_party_totals: 'तृतीय पक्ष स्थिति योग',
+    stalinks_totals: 'StaLinks URL संभावना स्थिति योग',
+    get_ahref: 'Ahref प्राप्त करें',
+    fetch_data: 'डेटा प्राप्त करें',
+    fetching_data: 'डेटा लाया जा रहा है ...',
+    please_wait: 'कृपया डेटा प्राप्त करते समय प्रतीक्षा करें',
+    fetch_success: 'डेटा सफलतापूर्वक प्राप्त किया गया',
 }

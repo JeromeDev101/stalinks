@@ -94,4 +94,10 @@ export default {
     delete: '消去',
     no: '番号',
     yes: 'はい',
+
+    // updates
+    recipient: '受信者',
+    with_cc: 'CC付き',
+    cc_valid: 'cc フィールドには有効な電子メールが含まれている必要があります',
+    bcc_valid: 'bcc フィールドには有効な電子メールが含まれている必要があります',
 }

@@ -31,4 +31,14 @@ export default {
     close: '閉じる',
     save: '保存する',
     update: '更新',
+
+    role_permissions: '役割の権限',
+    module_group: 'モジュールグループ',
+    module_page: 'モジュールページ',
+    module_view: '意見',
+    module_create: '作成',
+    module_update: 'アップデート',
+    module_delete: '消去',
+    module_upload: 'アップロード',
+    module_export: '書き出す',
 }

@@ -31,4 +31,14 @@ export default {
     close: 'ปิด',
     save: 'บันทึก',
     update: 'อัปเดต',
+
+    role_permissions: 'สิทธิ์ในบทบาท',
+    module_group: 'กลุ่มโมดูล',
+    module_page: 'หน้าโมดูล',
+    module_view: 'ดู',
+    module_create: 'อัปเดต',
+    module_update: 'อัปเดต',
+    module_delete: 'ลบ',
+    module_upload: 'ส่งออก',
+    module_export: 'ส่งออก',
 }

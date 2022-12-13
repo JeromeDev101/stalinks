@@ -57,5 +57,12 @@ export default {
     follow_up_backlinks: 'फॉलो अप बैकलिंक्स',
     purchase: 'खरीदना',
 
+    // purchases
+    purchases: 'खरीद',
+    purchases_config: 'विन्यास',
+    purchases_summary: 'सारांश',
+    purchases_tools: 'औजार',
+    purchases_manual: 'नियमावली',
+
     help: 'मदद'
 }

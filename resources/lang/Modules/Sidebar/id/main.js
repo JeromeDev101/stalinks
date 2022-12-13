@@ -57,5 +57,12 @@ export default {
     follow_up_backlinks: 'Menindaklanjuti backlinks',
     purchase: 'Pumbayaran',
 
+    // purchases
+    purchases: 'Pembelian',
+    purchases_config: 'Konfigurasi',
+    purchases_summary: 'Ringkasan',
+    purchases_tools: 'Peralatan',
+    purchases_manual: 'Manual',
+
     help: 'Bantuan'
 }

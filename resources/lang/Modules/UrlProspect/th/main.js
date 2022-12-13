@@ -227,4 +227,11 @@ export default {
     update: 'อัปเดต',
     prospect_from: 'ผู้มุ่งหวังจาก',
     simple_from: 'จาก',
+
+    date_status_updated: 'อัพเดทสถานะวันที่',
+    status_updated: 'อัปเดตสถานะแล้ว',
+    with_cc: 'With Cc',
+    cc_field_contain: 'ช่อง cc ต้องมีอีเมลที่ถูกต้อง',
+    bcc_field_contain: 'ช่อง bcc ต้องมีอีเมลที่ถูกต้อง',
+    email_auto: 'อีเมลบุคคลอัตโนมัติ',
 }

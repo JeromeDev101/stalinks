@@ -44,4 +44,17 @@ export default {
     update: 'अद्यतन',
     yes_delete: 'हाँ, मिटा दो!',
     no_delete: 'नहीं, इसे रखो',
+
+    // updates
+    table_reg_date: 'पंजीकरण की तारीख',
+    table_exp_date: 'समाप्ति तिथि',
+
+    days_left: ' दिन शेष',
+    expired: 'खत्म हो चुका',
+
+    expired_reminder: 'यह उपकरण समाप्त होने वाला है या अब समाप्त हो गया है। समाप्ति तिथि फ़ील्ड के पास नवीनीकरण बटन पर क्लिक करके इस उपकरण को नवीनीकृत करें।',
+
+    registration_date: 'पंजीकरण की तारीख',
+    expiration_date: 'समाप्ति तिथि',
+    is_purchased: 'खरीदा है?',
 }

@@ -139,8 +139,8 @@
                                     <div :class="{'form-group': true, 'has-error': messageForms.errors.phone}">
                                         <label>{{ $t('message.verification.l6') }} <span class="text-danger">*</span></label>
                                         <select class="form-control" v-model="regModel.company_type" @change="checkCompanyType()">
-                                            <option value="Company">Company</option>
-                                            <option value="Freelancer">Freelancer</option>
+                                            <option value="Company">{{ $t('message.verification.company') }}</option>
+                                            <option value="Freelancer">{{ $t('message.verification.freelance') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -203,7 +203,7 @@
                             </div>
 
                             <div v-if="regModel.type === 'Writer'" class="mt-4">
-                                <h4 class="text-primary">Writer Pricing</h4>
+                                <h4 class="text-primary">{{ $t('message.verification.writer_pricing') }}</h4>
                                 <hr/>
 
                                 <div v-if="regModel.rate_type && regModel.language_id.length" class="alert alert-info">
@@ -294,44 +294,44 @@
                                                 payment_method.wire_routing_num
                                             "
                                             >
-                                                <h6 class="text-primary">Other Details:</h6>
+                                                <h6 class="text-primary">{{ $t('message.others.other_details') }}</h6>
                                                 <hr/>
 
                                                 <div class="row">
                                                     <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                        <label>Bank Name:</label>
+                                                        <label>{{ $t('message.others.bank_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.bank_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_name">
-                                                        <label>Account Name:</label>
+                                                        <label>{{ $t('message.others.account_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                        <label>Account IBAN:</label>
+                                                        <label>{{ $t('message.others.account_iban') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_iban[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                        <label>SWIFT Code:</label>
+                                                        <label>{{ $t('message.others.swift_code') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.swift_code[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                        <label>Beneficiary Address:</label>
+                                                        <label>{{ $t('message.others.beneficiary_add') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.beneficiary_add[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_holder">
-                                                        <label>Account Holder:</label>
+                                                        <label>{{ $t('message.others.account_holder') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_holder[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_type">
-                                                        <label>Account Type:</label>
+                                                        <label>{{ $t('message.others.account_type') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.account_type[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.routing_num">
-                                                        <label>Routing Number:</label>
+                                                        <label>{{ $t('message.others.routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.routing_num[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.wire_routing_num">
-                                                        <label>Wire Routing Number:</label>
+                                                        <label>{{ $t('message.others.wire_routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="regModel.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>

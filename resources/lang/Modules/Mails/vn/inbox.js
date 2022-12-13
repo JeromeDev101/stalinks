@@ -94,4 +94,10 @@ export default {
     delete: 'Xóa bỏ',
     no: 'Không',
     yes: 'Có',
+
+    // updates
+    recipient: 'Người nhận',
+    with_cc: 'Với Cc',
+    cc_valid: 'Trường CC phải chứa các email hợp lệ',
+    bcc_valid: 'Trường BCC phải chứa các email hợp lệ',
 }

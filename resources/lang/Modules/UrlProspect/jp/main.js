@@ -227,4 +227,11 @@ export default {
     update: '更新',
     prospect_from: 'からの見通し',
     simple_from: 'から',
+
+    date_status_updated: '日付ステータス更新',
+    status_updated: 'ステータスが更新されました',
+    with_cc: 'CC付き',
+    cc_field_contain: 'cc フィールドには有効な電子メールが含まれている必要があります',
+    bcc_field_contain: 'bcc フィールドには有効な電子メールが含まれている必要があります',
+    email_auto: 'メール 自動 個別',
 }

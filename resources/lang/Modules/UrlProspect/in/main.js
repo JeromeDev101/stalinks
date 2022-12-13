@@ -227,4 +227,11 @@ export default {
     update: 'अद्यतन',
     prospect_from: 'से संभावना',
     simple_from: 'से',
+
+    date_status_updated: 'दिनांक स्थिति अपडेट की गई',
+    status_updated: 'स्थिति अद्यतन',
+    with_cc: 'Cc के साथ',
+    cc_field_contain: 'cc फ़ील्ड में मान्य ईमेल होने चाहिए',
+    bcc_field_contain: 'bcc फ़ील्ड में मान्य ईमेल होने चाहिए',
+    email_auto: 'ईमेल स्वचालित व्यक्ति',
 }

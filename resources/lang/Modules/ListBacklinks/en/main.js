@@ -83,5 +83,13 @@ export default {
     search: 'Search',
     close: 'Close',
     save: 'Save',
-    promo: 'You have 15% discount for every purchased until January 6, 2023.', 
+
+    // updates
+    uninterested: 'Uninterested',
+    selected_items_not_purchased: 'Selected items must not have the status "Purchased"',
+    selected_items_interested: 'Selected items must have the status "Interested"',
+    mark_not_interested: 'Mark backlink(s) as "Not Interested"?',
+    mark_interested: 'Mark backlink(s) as "Interested"?',
+    remove_interested: 'Remove "Interested" status in backlinks(s)?',
+    promo: 'You have 15% discount for every purchased until January 6, 2023.',
 }

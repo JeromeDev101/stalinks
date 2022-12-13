@@ -55,4 +55,12 @@ export default {
     close: 'Tutup',
     yes: 'Ya',
     no: 'Tidak',
+
+    language_writer_price_rate: 'Bahasa - Tingkat Harga Penulis',
+    ppa_rate: 'Tarif PPA',
+    ppw_rate: 'Tingkat PPW',
+    action: 'Tindakan',
+    update_lang_rate: 'Perbarui Tarif Bahasa',
+    success: 'Kesuksesan',
+    success_note: 'Tarif harga bahasa berhasil diperbarui.',
 }

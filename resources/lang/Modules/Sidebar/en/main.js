@@ -57,5 +57,12 @@ export default {
     follow_up_backlinks: 'Follow up Backlinks',
     purchase: 'Purchase',
 
+    // purchases
+    purchases: 'Purchases',
+    purchases_config: 'Config',
+    purchases_summary: 'Summary',
+    purchases_tools: 'Tools',
+    purchases_manual: 'Manual',
+
     help: 'Help'
 }

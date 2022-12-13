@@ -79,4 +79,11 @@ export default {
     disapprove: '不承認',
     yes: 'はい',
     no: 'いいえ',
+
+    fail_reason: '不合格の理由',
+    fail_reason_question: '試験を不承認としてマークしますか？',
+    fail_reason_provide: '（作者の理由を教えてください）',
+    update_fail_reason: '試験失敗理由の更新',
+    update_fail_reason_note: '更新された理由について、電子メールと通知がライターに送信されます。',
+    reason: '理由:',
 }

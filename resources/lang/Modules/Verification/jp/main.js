@@ -30,5 +30,9 @@ export default {
     e11: '少なくとも1つの支払い情報を提供してください',
     e12: '選択したデフォルトの支払いタイプを入力してください',
 
-    account: 'アカウント'
+    account: 'アカウント',
+
+    company: '会社',
+    freelance: 'フリーランサー',
+    writer_pricing: 'ライターの価格',
 }

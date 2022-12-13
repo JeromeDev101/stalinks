@@ -94,4 +94,10 @@ export default {
     delete: 'menghapus',
     no: 'Tidak',
     yes: 'Ya',
+
+    // updates
+    recipient: 'Penerima',
+    with_cc: 'Dengan Cc',
+    cc_valid: 'Kolom cc harus berisi email yang valid',
+    bcc_valid: 'Bidang bcc harus berisi email yang valid',
 }

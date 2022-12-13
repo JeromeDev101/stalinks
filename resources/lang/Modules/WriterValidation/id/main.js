@@ -79,4 +79,11 @@ export default {
     disapprove: 'Tidak Disetujui',
     yes: 'Ya',
     no: 'Tidak',
+
+    fail_reason: 'Alasan Gagal',
+    fail_reason_question: 'Tandai ujian sebagai tidak setuju?',
+    fail_reason_provide: '(Harap berikan alasan untuk penulis)',
+    update_fail_reason: 'Perbarui Alasan Gagal Ujian',
+    update_fail_reason_note: 'Email dan pemberitahuan akan dikirim ke penulis tentang alasan yang diperbarui.',
+    reason: 'Alasan:',
 }

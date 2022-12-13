@@ -55,4 +55,12 @@ export default {
     close: '閉じる',
     yes: 'はい',
     no: 'いいえ',
+
+    language_writer_price_rate: '言語 - ライターの価格レート',
+    ppa_rate: 'PPA レート',
+    ppw_rate: 'PPW レート',
+    action: 'アクション',
+    update_lang_rate: '言語料金の更新',
+    success: '成功',
+    success_note: '言語の価格レートが正常に更新されました。',
 }

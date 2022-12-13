@@ -44,4 +44,6 @@ export default {
     search: 'Search',
     close: 'Close',
     pay: 'Pay',
+
+    reupload_note: 'Are you sure that you want to update the uploaded document? An automatic email will be sent to the writer.'
 }

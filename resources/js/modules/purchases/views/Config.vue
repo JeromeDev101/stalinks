@@ -15,7 +15,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Purchase: Config</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.purchases_config.c_title') }}</h3>
                     </div>
                     <div class="card-body">
                         <div class="row mb-2 align-items-center">
@@ -34,6 +34,7 @@
                                 <button
                                     v-if="user.permission_list.includes('create-purchases-config')"
                                     title="Add Purchase Category"
+                                    :title="$t('message.purchases_config.c_add_category')"
                                     class="btn btn-success float-right"
 
                                     @click="modalOpener('Add')">
@@ -60,10 +61,10 @@
                                 <thead>
                                     <tr class="label-primary">
                                         <th></th>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Action</th>
+                                        <th>{{ $t('message.purchases_config.c_id') }}</th>
+                                        <th>{{ $t('message.purchases_config.c_name') }}</th>
+                                        <th>{{ $t('message.purchases_config.c_desc') }}</th>
+                                        <th>{{ $t('message.purchases_config.c_action') }}</th>
                                     </tr>
                                 </thead>
 
@@ -72,7 +73,7 @@
                                         <tr>
                                             <td class="text-center">
                                                 <button
-                                                    title="Toggle purchase types"
+                                                    :title="$t('message.purchases_config.c_toggle')"
                                                     class="btn btn-default m-1 accordion-toggle"
                                                     data-toggle="collapse"
                                                     :ref="'purchase-collapse-' + category.id"
@@ -90,6 +91,7 @@
                                                 <button
                                                     v-if="user.permission_list.includes('update-purchases-config')"
                                                     title="Edit Category"
+                                                    :title="$t('message.purchases_config.c_edit_category')"
                                                     class="btn btn-primary m-1"
 
                                                     @click="fillCategoryData(category); modalOpener('Update')">
@@ -100,6 +102,7 @@
                                                 <button
                                                     v-if="user.permission_list.includes('create-purchases-config')"
                                                     title="Add Purchase Type"
+                                                    :title="$t('message.purchases_config.c_add_type')"
                                                     class="btn btn-success m-1"
 
                                                     @click="fillTypeData('Add', category) ;modalOpenerType('Add')">
@@ -124,10 +127,10 @@
 
                                                                 <thead>
                                                                 <tr class="info">
-                                                                    <th>ID</th>
-                                                                    <th>Name</th>
-                                                                    <th>Description</th>
-                                                                    <th>Action</th>
+                                                                    <th>{{ $t('message.purchases_config.c_id') }}</th>
+                                                                    <th>{{ $t('message.purchases_config.c_name') }}</th>
+                                                                    <th>{{ $t('message.purchases_config.c_desc') }}</th>
+                                                                    <th>{{ $t('message.purchases_config.c_action') }}</th>
                                                                 </tr>
                                                                 </thead>
 
@@ -140,6 +143,7 @@
                                                                         <button
                                                                             v-if="user.permission_list.includes('update-purchases-config')"
                                                                             title="Edit Category"
+                                                                            :title="$t('message.purchases_config.c_edit_type')"
                                                                             class="btn btn-primary m-1"
 
                                                                             @click="fillTypeData('Update', category, type); modalOpenerType('Update')">
@@ -171,7 +175,7 @@
                         <div v-else class="col-md-12 text-center card">
                             <div class="card-body">
                                 <i class="fas fa-exclamation-circle"></i>
-                                No results found
+                                {{ $t('message.purchases_config.c_no_results') }}
                             </div>
                         </div>
                     </div>
@@ -192,7 +196,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">
                             {{ modalMode === 'Add' ? $t('message.signature.add') : $t('message.signature.update') }}
-                            Purchase Category
+                            {{ $t('message.purchases_config.c_purchase_category') }}
                         </h4>
                     </div>
 
@@ -200,13 +204,13 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Category Name</label>
+                                    <label style="color: #333">{{ $t('message.purchases_config.c_cat_name') }}</label>
 
                                     <input
                                         v-model="modelCategoryName"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter category name">
+                                        :placeholder="$t('message.purchases_config.c_enter_cat_name')">
 
                                     <span
                                         v-if="messageFormsCategories.errors.name"
@@ -222,14 +226,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Category Description</label>
+                                    <label style="color: #333">{{ $t('message.purchases_config.c_cat_desc') }}</label>
 
                                     <textarea
                                         v-model="modelCategoryDescription"
                                         rows="5"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter category description">
+                                        :placeholder="$t('message.purchases_config.c_enter_cat_desc')">
 
                                     </textarea>
 
@@ -273,7 +277,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">
                             {{ modalModeType === 'Add' ? $t('message.signature.add') : $t('message.signature.update') }}
-                            Purchase Type
+                            {{ $t('message.purchases_config.c_purchase_type') }}
                         </h4>
                     </div>
 
@@ -281,7 +285,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Purchase Category</label>
+                                    <label style="color: #333">{{ $t('message.purchases_config.c_purchase_category') }}</label>
 
                                     <input
                                         v-model="modelTypeCategory"
@@ -294,13 +298,13 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Type Name</label>
+                                    <label style="color: #333">{{ $t('message.purchases_config.c_type_name') }}</label>
 
                                     <input
                                         v-model="modelTypeName"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter type name">
+                                        :placeholder="$t('message.purchases_config.c_enter_type_name')">
 
                                     <span
                                         v-if="messageFormsTypes.errors.name"
@@ -316,14 +320,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Type Description</label>
+                                    <label style="color: #333">{{ $t('message.purchases_config.c_type_desc') }}</label>
 
                                     <textarea
                                         v-model="modelTypeDescription"
                                         rows="5"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter type description">
+                                        :placeholder="$t('message.purchases_config.c_enter_type_desc')">
 
                                     </textarea>
 
@@ -533,7 +537,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase category successfully added.',
+                    self.$t('message.purchases_config.a_category_added'),
                     'success'
                 )
             } else {
@@ -562,7 +566,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase category successfully updated.',
+                    self.$t('message.purchases_config.a_category_updated'),
                     'success'
                 )
             } else {
@@ -592,7 +596,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase type successfully added.',
+                    self.$t('message.purchases_config.a_type_added'),
                     'success'
                 )
             } else {
@@ -621,7 +625,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase type successfully updated.',
+                    self.$t('message.purchases_config.a_type_updated'),
                     'success'
                 )
             } else {

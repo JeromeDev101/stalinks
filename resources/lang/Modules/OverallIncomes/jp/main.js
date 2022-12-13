@@ -29,4 +29,10 @@ export default {
     search: '検索',
     close: '閉じる',
     save: '保存する',
+
+    // updates
+    search_id_buyer: '検索ID購入者',
+    buyer: '買い手',
+    buyer_id: 'バイヤーID',
+    id_buyer: 'ID購入者',
 }

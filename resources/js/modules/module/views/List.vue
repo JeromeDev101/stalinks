@@ -33,24 +33,24 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Module Group</label>
+                                    <label>{{ $t('message.module_page.m_group') }}</label>
                                     <v-select
                                         v-model="filterModel.group"
                                         :options="filterValues.group"
                                         class="style-chooser"
-                                        placeholder="Select page group"/>
+                                        :placeholder="$t('message.module_page.p_select_group')"/>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Module Page</label>
+                                    <label>{{ $t('message.module_page.m_page') }}</label>
 
                                     <v-select
                                         v-model="filterModel.page_name"
                                         :options="filterValues.page"
                                         class="style-chooser"
-                                        placeholder="Select page"/>
+                                        :placeholder="$t('message.module_page.p_select_page')"/>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                         <div v-else class="col-md-12 text-center card">
                             <div class="card-body">
                                 <i class="fas fa-exclamation-circle"></i>
-                                No results found
+                                {{ $t('message.module_page.m_no_results') }}
                             </div>
                         </div>
                     </div>
@@ -178,7 +178,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">
                             {{ modalMode === 'Add' ? $t('message.signature.add') : $t('message.signature.update') }}
-                            Module
+                            {{ $t('message.module_page.m_module') }}
                         </h4>
                     </div>
 
@@ -186,7 +186,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Module Group</label>
+                                    <label style="color: #333">{{ $t('message.module_page.m_group') }}</label>
 
                                     <v-select
                                         v-model="modelGroup"
@@ -206,7 +206,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Module Page</label>
+                                    <label style="color: #333">{{ $t('message.module_page.m_page') }}</label>
 
                                     <v-select
                                         v-model="modelPage"
@@ -242,7 +242,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Module Description</label>
+                                    <label style="color: #333">{{ $t('message.module_page.m_description') }}</label>
 
                                     <textarea
                                         v-model="modelDescription"
@@ -267,7 +267,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Module Permissions</label>
+                                    <label style="color: #333">{{ $t('message.module_page.module_permissions') }}</label>
 
                                     <div class="mt-3 card">
                                         <div class="card-header">
@@ -281,7 +281,7 @@
                                                     @change="toggleSelectPermissions()">
 
                                                 <label class="custom-control-label" for="allPermissionsToggle">
-                                                    {{ isAllPermissionsSelected ? 'Deselect' : 'Select' }} All Permissions
+                                                    {{ isAllPermissionsSelected ? 'Deselect' : 'Select' }} {{ $t('message.module_page.all_permissions') }}
                                                 </label>
                                             </div>
                                         </div>
@@ -304,7 +304,7 @@
 
                                             <div v-if="!modelGroup || !modelPage" class="mt-2">
                                                 <small class="text-secondary font-italic">
-                                                    Please select module group and page.
+                                                    {{ $t('message.module_page.please_select_module') }}
                                                 </small>
                                             </div>
                                         </div>
@@ -406,7 +406,7 @@ export default {
                 let isNotInGroup = !Constants.PAGE_GROUPS[this.addModuleModel.group].includes(this.addModuleModel.page);
 
                 this.addModulePageInfo = isNotInGroup
-                    ? 'The selected page does not belong in the selected group. Page is removed.'
+                    ? this.$t('message.module_page.a_not_belong')
                     : '';
 
                 this.addModuleModel.page = isNotInGroup ? '' : this.addModuleModel.page;
@@ -422,7 +422,7 @@ export default {
                 let isNotInGroup = !Constants.PAGE_GROUPS[this.updateModuleModel.group].includes(this.updateModuleModel.page);
 
                 this.updateModulePageInfo = isNotInGroup
-                    ? 'The selected page does not belong in the selected group. Page is removed.'
+                    ? this.$t('message.module_page.a_not_belong')
                     : '';
 
                 this.updateModuleModel.page = isNotInGroup ? '' : this.updateModuleModel.page;
@@ -439,16 +439,16 @@ export default {
             return [
                 {
                     prop : 'id',
-                    name : 'Module ID',
+                    name : this.$t('message.module_page.m_id'),
                     sortable: true,
                 },
                 {
                     prop : 'group',
-                    name : 'Module Group',
+                    name : this.$t('message.module_page.m_group'),
                 },
                 {
                     prop : 'page',
-                    name : 'Module Page',
+                    name : this.$t('message.module_page.m_page'),
                 },
                 {
                     prop : '_action',
@@ -581,7 +581,7 @@ export default {
             .then((response) => {
                 swal.fire(
                     self.$t('message.article.alert_success'),
-                    'Module successfully added.',
+                    self.$t('message.module_page.a_added'),
                     'success'
                 )
 
@@ -609,11 +609,11 @@ export default {
 
             axios.put('/api/module', self.updateModuleModel)
             .then((response) => {
-                swal.fire(
-                    self.$t('message.article.alert_success'),
-                    'Module successfully updated.',
-                    'success'
-                )
+                    swal.fire(
+                        self.$t('message.article.alert_success'),
+                        self.$t('message.module_page.a_updated'),
+                        'success'
+                    )
 
                 self.modalCloser();
                 self.clearModels('update');
@@ -637,8 +637,8 @@ export default {
             let self = this;
 
             swal.fire({
-                title : 'Delete Module',
-                text : 'Are you sure that you want to delete this module?',
+                title : self.$t('message.module_page.a_delete'),
+                text : self.$t('message.module_page.a_delete_confirm'),
                 icon : "warning",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.tools.yes_delete'),
@@ -656,7 +656,7 @@ export default {
 
                             swal.fire(
                                 self.$t('message.tools.alert_deleted'),
-                                'Module successfully deleted.',
+                                self.$t('message.module_page.a_deleted_successfully'),
                                 'success'
                             )
                         })

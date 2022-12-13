@@ -94,4 +94,10 @@ export default {
     delete: 'ลบ',
     no: 'ไม่',
     yes: 'ใช่',
+
+    // updates
+    recipient: 'ผู้รับ',
+    with_cc: 'ด้วย CC',
+    cc_valid: 'ช่อง CC ต้องมีอีเมลที่ถูกต้อง',
+    bcc_valid: 'ช่อง BCC ต้องมีอีเมลที่ถูกต้อง',
 }

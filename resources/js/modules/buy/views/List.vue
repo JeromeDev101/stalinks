@@ -721,7 +721,7 @@
 
                             @click="doUninterested(updateModel.id)">
 
-                            Uninterested
+                            {{ $t('message.list_backlinks.uninterested') }}
                         </button>
 
                         <button
@@ -2034,7 +2034,7 @@ export default {
             } else {
                 swal.fire(
                     self.$t('message.registration_accounts.alert_invalid'),
-                    "Selected items must not have the status 'Purchased'",
+                    self.$t('message.list_backlinks.selected_items_not_purchased'),
                     'error'
                 );
             }
@@ -2052,7 +2052,7 @@ export default {
             } else {
                 swal.fire(
                     self.$t('message.registration_accounts.alert_invalid'),
-                    "Selected items must not have the status 'Purchased'",
+                    self.$t('message.list_backlinks.selected_items_not_purchased'),
                     'error'
                 );
             }
@@ -2070,7 +2070,7 @@ export default {
             } else {
                 swal.fire(
                     self.$t('message.registration_accounts.alert_invalid'),
-                    "Selected items must have the status 'Interested'",
+                    self.$t('message.list_backlinks.selected_items_interested'),
                     'error'
                 );
             }
@@ -2175,7 +2175,7 @@ export default {
             // }
 
             swal.fire({
-                title : "Mark backlink(s) as 'Not Interested'?",
+                title : self.$t('message.list_backlinks.mark_not_interested'),
                 icon : "question",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.article.yes'),
@@ -2209,7 +2209,7 @@ export default {
             let self = this;
 
             swal.fire({
-                title : "Mark backlink(s) as 'Interested'?",
+                title : self.$t('message.list_backlinks.mark_interested'),
                 icon : "question",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.article.yes'),
@@ -2232,7 +2232,7 @@ export default {
             let self = this;
 
             swal.fire({
-                title : "Remove 'Interested' status in backlinks(s)?",
+                title : self.$t('message.list_backlinks.remove_interested'),
                 icon : "question",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.article.yes'),

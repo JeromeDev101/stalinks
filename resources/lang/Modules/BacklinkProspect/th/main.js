@@ -75,4 +75,15 @@ export default {
     close: 'ปิด',
     update: 'อัปเดต',
     save: 'บันทึก',
+
+    status_third_party: 'สถานะบุคคลที่สาม',
+    status_stalinks: 'ผู้มีโอกาสเป็นลูกค้า URL สถานะ StaLinks',
+    is_moved: 'ถูกย้าย?',
+    third_party_totals: 'ผลรวมของสถานะบุคคลที่สาม',
+    stalinks_totals: 'ผลรวมของสถานะผู้มีแนวโน้มจะเป็น URL ของ StaLinks',
+    get_ahref: 'รับ Ahref',
+    fetch_data: 'ดึงข้อมูล',
+    fetching_data: 'กำลังดึงข้อมูล ...',
+    please_wait: 'โปรดรอสักครู่ขณะดึงข้อมูล',
+    fetch_success: 'ดึงข้อมูลสำเร็จ',
 }

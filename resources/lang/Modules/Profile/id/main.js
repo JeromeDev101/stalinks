@@ -114,4 +114,6 @@ export default {
     keep: 'Tidak, simpan.',
     active: 'Aktif',
     inactive: 'Tidak Aktif',
+
+    contact_admin: 'Hubungi administrator untuk mengubah jenis harga Anda.',
 }

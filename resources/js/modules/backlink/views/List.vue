@@ -201,11 +201,11 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item " @click="validateSelected">
-                                                Validate
+                                                {{ $t('message.follow_backlinks.validate') }}
                                             </a>
 
                                             <a class="dropdown-item " @click="UnInterestedValidated" >
-                                                Invalidate
+                                                {{ $t('message.follow_backlinks.invalidate') }}
                                             </a>
                                         </div>
                                     </div>
@@ -607,12 +607,12 @@
                                 <div v-if="user.isAdmin || listSubAccounts.length" class="row">
                                     <div class="col">
                                         <button class="btn btn-success col" @click.prevent="validateSubBuyerOrder(modelBaclink.id)">
-                                            Validate
+                                            {{ $t('message.follow_backlinks.validate') }}
                                         </button>
                                     </div>
                                     <div class="col">
                                         <button class="btn btn-danger col mr-2" @click.prevent="uninterest">
-                                            Invalidate
+                                            {{ $t('message.follow_backlinks.invalidate') }}
                                         </button>
                                     </div>
                                 </div>
@@ -872,7 +872,7 @@
                 let ids = self.checkIds.map(a => a.id);
 
                 swal.fire({
-                    title : "Are you sure you want to invalidate the selected orders?",
+                    title : self.$t('message.follow_backlinks.selected_invalidate_confirm'),
                     icon : "question",
                     showCancelButton : true,
                     confirmButtonText : self.$t('message.article.yes'),
@@ -889,7 +889,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_success'),
-                                "Selected orders successfully invalidated",
+                                self.$t('message.follow_backlinks.selected_invalidate_success'),
                                 'success'
                             )
 
@@ -901,7 +901,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_error'),
-                                "There were some errors while invalidating the selected orders",
+                                self.$t('message.follow_backlinks.selected_invalidate_error'),
                                 'error'
                             )
                         });
@@ -1332,6 +1332,8 @@
                 } else {
                     this.sendUpdate();
                 }
+
+
             },
 
             async sendUpdate() {
@@ -1401,7 +1403,7 @@
                 }
 
                 swal.fire({
-                    title : "Are you sure that you want to validate this order?",
+                    title : self.$t('message.follow_backlinks.validate_confirm'),
                     icon : "question",
                     showCancelButton : true,
                     confirmButtonText : self.$t('message.article.yes'),
@@ -1419,7 +1421,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_bought'),
-                                "Order successfully validated",
+                                self.$t('message.follow_backlinks.validate_success'),
                                 'success'
                             );
 
@@ -1431,7 +1433,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_error'),
-                                "There were some errors while validating the order",
+                                self.$t('message.follow_backlinks.validate_error'),
                                 'error'
                             )
                         });
@@ -1443,7 +1445,7 @@
                 let self = this;
 
                 swal.fire({
-                    title : "Are you sure that you want to invalidate this order?",
+                    title : self.$t('message.follow_backlinks.invalidate_confirm'),
                     icon : "question",
                     showCancelButton : true,
                     confirmButtonText : self.$t('message.article.yes'),
@@ -1461,7 +1463,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_success'),
-                                "Order successfully invalidated",
+                                self.$t('message.follow_backlinks.invalidate_success'),
                                 'success'
                             )
 
@@ -1473,7 +1475,7 @@
 
                             swal.fire(
                                 self.$t('message.follow_backlinks.alert_error'),
-                                "There were some errors while invalidating the order",
+                                self.$t('message.follow_backlinks.invalidate_error'),
                                 'error'
                             )
                         });

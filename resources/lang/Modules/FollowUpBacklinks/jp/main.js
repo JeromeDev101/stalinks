@@ -81,5 +81,18 @@ export default {
     close: '閉じる',
     save: '保存する',
     delete_sentence: 'はい。削除します',
-    keep: 'いいえ、削除しません'
+    keep: 'いいえ、削除しません',
+
+    // updates
+    validate: '検証',
+    invalidate: '無効にする',
+    selected_invalidate_confirm: '選択した注文を無効にしてもよろしいですか?',
+    selected_invalidate_success: '選択した注文は正常に無効になりました',
+    selected_invalidate_error: '選択した注文の無効化中にエラーが発生しました',
+    validate_confirm: 'この注文を確認してもよろしいですか?',
+    validate_success: '注文が正常に検証されました',
+    validate_error: '注文の検証中にエラーが発生しました',
+    invalidate_confirm: 'この注文を無効にしてもよろしいですか?',
+    invalidate_success: '注文が正常に無効になりました',
+    invalidate_error: '注文の無効化中にエラーが発生しました',
 }

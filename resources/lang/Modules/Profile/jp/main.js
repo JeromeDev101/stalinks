@@ -114,4 +114,6 @@ export default {
     keep: 'いいえ、削除しません',
     active: 'アクティブ',
     inactive: '非活性',
+
+    contact_admin: '料金タイプを変更するには、管理者にお問い合わせください。',
 }

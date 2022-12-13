@@ -175,4 +175,21 @@ export default {
     save: 'Simpan',
     send: 'Mengirim',
     update: 'Perbaharui',
+
+    basic: 'Dasar',
+    medium: 'Sedang',
+    premium: 'Premium',
+    recommended: 'Direkomendasikan',
+
+    writer_pricing: 'Harga Penulis',
+    price_rate_per_lang: 'Tingkat Harga Per Bahasa',
+    price_rate_note: 'Tarif harga telah diubah ke tarif default sesuai dengan jenis harga yang dipilih.',
+    show_history: 'Tampilkan Sejarah',
+
+    payment_info_history: 'Riwayat Informasi Pembayaran',
+    pih_account: 'Akun',
+    pih_default: 'Bawaan',
+    pih_status: 'Status',
+    pih_dates: 'tanggal',
+    pih_view: 'melihat rincian',
 }

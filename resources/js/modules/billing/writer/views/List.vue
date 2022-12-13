@@ -275,37 +275,37 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            ID Article:
+                                            {{ $t('message.writer_billing.wb_id_article') }}:
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
                                     <tr v-show="info.bank_name != null && info.bank_name != ''">
                                         <td colspan="2">
-                                            Bank Name:
+                                            {{ $t('message.others.bank_name') }}
                                             <b>{{ info.bank_name }}</b>
                                         </td>
                                     </tr>
                                     <tr v-show="info.account_name != null && info.account_name != ''">
                                         <td colspan="2">
-                                            Account Name:
+                                            {{ $t('message.others.account_name') }}
                                             <b>{{ info.account_name }}</b>
                                         </td>
                                     </tr>
                                     <tr v-show="info.account_iban != null && info.account_iban != ''">
                                         <td colspan="2">
-                                            Account IBAN:
+                                            {{ $t('message.others.account_iban') }}
                                             <b>{{ info.account_iban }}</b>
                                         </td>
                                     </tr>
                                     <tr v-show="info.swift_code != null && info.swift_code != ''">
                                         <td colspan="2">
-                                            Swift Code:
+                                            {{ $t('message.others.swift_code') }}
                                             <b>{{ info.swift_code }}</b>
                                         </td>
                                     </tr>
                                     <tr v-show="info.beneficiary_add != null && info.beneficiary_add != ''">
                                         <td colspan="2">
-                                            Beneficiary Address:
+                                            {{ $t('message.others.beneficiary_add') }}
                                             <b>{{ info.beneficiary_add }}</b>
                                         </td>
                                     </tr>
@@ -833,7 +833,7 @@ export default {
 
             swal.fire({
                 title : self.$t('message.seller_billing.alert_re_upload'),
-                html : 'Are you sure that you want to update the uploaded document? An automatic email will be sent to the writer.',
+                html : self.$t('message.writer_billing.reupload_note'),
                 icon : "warning",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.seller_billing.yes_update'),

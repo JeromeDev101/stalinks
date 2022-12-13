@@ -958,44 +958,44 @@
                                                 payment_method.wire_routing_num
                                             "
                                             >
-                                                <h6 class="text-primary">Other Details:</h6>
+                                                <h6 class="text-primary">{{ $t('message.others.other_details') }}</h6>
                                                 <hr/>
 
                                                 <div class="row">
                                                     <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                        <label>Bank Name:</label>
+                                                        <label>{{ $t('message.others.bank_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.bank_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_name">
-                                                        <label>Account Name:</label>
+                                                        <label>{{ $t('message.others.account_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                        <label>Account IBAN:</label>
+                                                        <label>{{ $t('message.others.account_iban') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_iban[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                        <label>SWIFT Code:</label>
+                                                        <label>{{ $t('message.others.swift_code') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.swift_code[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                        <label>Beneficiary Address:</label>
+                                                        <label>{{ $t('message.others.beneficiary_add') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.beneficiary_add[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_holder">
-                                                        <label>Account Holder:</label>
+                                                        <label>{{ $t('message.others.account_holder') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_holder[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_type">
-                                                        <label>Account Type:</label>
+                                                        <label>{{ $t('message.others.account_type') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.account_type[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.routing_num">
-                                                        <label>Routing Number:</label>
+                                                        <label>{{ $t('message.others.routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.routing_num[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.wire_routing_num">
-                                                        <label>Wire Routing Number:</label>
+                                                        <label>{{ $t('message.others.wire_routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountModel.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>
@@ -1094,19 +1094,19 @@
                                     <div class="form-group">
                                         <label>{{ $t('message.registration_accounts.r_type_of_buyer') }}</label>
                                         <select class="form-control" name="" v-model="accountModel.buyer_type">
-                                            <option value="Basic">Basic</option>
-                                            <option value="Medium">Medium</option>
-                                            <option value="Premium">Premium</option>
+                                            <option value="Basic">{{ $t('message.registration_accounts.basic') }}</option>
+                                            <option value="Medium">{{ $t('message.registration_accounts.medium') }}</option>
+                                            <option value="Premium">{{ $t('message.registration_accounts.premium') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6" v-show="accountModel.type == 'Seller'">
                                     <div class="form-group">
-                                        <label>Recommended</label>
+                                        <label>{{ $t('message.registration_accounts.recommended') }}</label>
                                         <select class="form-control" name="" v-model="accountModel.is_recommended">
-                                            <option value="no">No</option>
-                                            <option value="yes">Yes</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1658,7 +1658,9 @@
                             </div>
 
                             <hr v-show="updateDisplayWriterPrice"/>
-                            <h4 class="text-primary" v-show="updateDisplayWriterPrice">Writer Pricing</h4>
+                            <h4 class="text-primary" v-show="updateDisplayWriterPrice">
+                                {{ $t('message.registration_accounts.writer_pricing') }}
+                            </h4>
 <!--                            <div v-show="updateDisplayWriterPrice" class="alert alert-info">-->
 <!--                                <p>{{ $t('message.registration_accounts.r_reminder_ppw') }}</p>-->
 <!--                            </div>-->
@@ -1680,7 +1682,7 @@
                             <div class="row" v-if="updateDisplayWriterPrice">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>Price Rate Per Language</label>
+                                        <label>{{ $t('message.registration_accounts.price_rate_per_lang') }}</label>
                                     </div>
 
                                     <div
@@ -1715,8 +1717,7 @@
                                     </div>
 
                                     <small class="text-primary" v-if="accountUpdate.rate_type !== writerPriceTypeTemp">
-                                        The price rates has been changed to the default rate according to the
-                                        selected pricing type.
+                                        {{ $t('message.registration_accounts.price_rate_note') }}
                                     </small>
                                 </div>
                             </div>
@@ -1745,7 +1746,7 @@
                                                 @click="getPaymentSolutionHistory">
 
                                                 <i class="fas fa-history"></i>
-                                                Show history
+                                                {{ $t('message.registration_accounts.show_history') }}
                                             </button>
                                         </td>
                                         <td>{{ $t('message.registration_accounts.filter_default') }}</td>
@@ -1777,44 +1778,44 @@
                                                 payment_method.wire_routing_num
                                             "
                                             >
-                                                <h6 class="text-primary">Other Details:</h6>
+                                                <h6 class="text-primary">{{ $t('message.others.other_details') }}</h6>
                                                 <hr/>
 
                                                 <div class="row">
                                                     <div class="col-sm-12" v-show="payment_method.bank_name">
-                                                        <label>Bank Name:</label>
+                                                        <label>{{ $t('message.others.bank_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.bank_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_name">
-                                                        <label>Account Name:</label>
+                                                        <label>{{ $t('message.others.account_name') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_name[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_iban">
-                                                        <label>Account IBAN:</label>
+                                                        <label>{{ $t('message.others.account_iban') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_iban[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.swift_code">
-                                                        <label>SWIFT Code:</label>
+                                                        <label>{{ $t('message.others.swift_code') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.swift_code[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.beneficiary_add">
-                                                        <label>Beneficiary Address:</label>
+                                                        <label>{{ $t('message.others.beneficiary_add') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.beneficiary_add[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_holder">
-                                                        <label>Account Holder:</label>
+                                                        <label>{{ $t('message.others.account_holder') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_holder[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.account_type">
-                                                        <label>Account Type:</label>
+                                                        <label>{{ $t('message.others.account_type') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.account_type[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.routing_num">
-                                                        <label>Routing Number:</label>
+                                                        <label>{{ $t('message.others.routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.routing_num[payment_method.id]">
                                                     </div>
                                                     <div class="col-sm-12" v-show="payment_method.wire_routing_num">
-                                                        <label>Wire Routing Number:</label>
+                                                        <label>{{ $t('message.others.wire_routing_num') }}</label>
                                                         <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.wire_routing_num[payment_method.id]">
                                                     </div>
                                                 </div>
@@ -1945,19 +1946,19 @@
                                     <div class="form-group">
                                         <label>{{ $t('message.registration_accounts.r_type_of_buyer') }}</label>
                                         <select class="form-control" name="" v-model="accountUpdate.buyer_type">
-                                            <option value="Basic">Basic</option>
-                                            <option value="Medium">Medium</option>
-                                            <option value="Premium">Premium</option>
+                                            <option value="Basic">{{ $t('message.registration_accounts.basic') }}</option>
+                                            <option value="Medium">{{ $t('message.registration_accounts.medium') }}</option>
+                                            <option value="Premium">{{ $t('message.registration_accounts.premium') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6" v-show="accountUpdate.type == 'Seller'">
                                     <div class="form-group">
-                                        <label>Recommended</label>
+                                        <label>{{ $t('message.registration_accounts.recommended') }}</label>
                                         <select class="form-control" name="" v-model="accountUpdate.is_recommended">
-                                            <option value="no">No</option>
-                                            <option value="yes">Yes</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -2044,7 +2045,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title">
-                            Payment Information History
+                            {{ $t('message.registration_accounts.payment_info_history') }}
                         </h4>
                     </div>
 
@@ -2060,10 +2061,10 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Account</th>
-                                                <th>Default</th>
-                                                <th>Status</th>
-                                                <th>Dates</th>
+                                                <th>{{ $t('message.registration_accounts.pih_account') }}</th>
+                                                <th>{{ $t('message.registration_accounts.pih_default') }}</th>
+                                                <th>{{ $t('message.registration_accounts.pih_status') }}</th>
+                                                <th>{{ $t('message.registration_accounts.pih_dates') }}</th>
                                             </tr>
                                         </thead>
 
@@ -2088,7 +2089,7 @@
 
                                                             @click="viewBankTransferDetails(solution)">
 
-                                                            <u>View Details</u>
+                                                            <u>{{ $t('message.registration_accounts.pih_view') }}</u>
                                                         </small>
                                                     </td>
                                                     <td>

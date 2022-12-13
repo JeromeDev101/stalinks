@@ -34,13 +34,13 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchase Category</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_cat') }}</label>
 
                                     <v-select
                                         v-model="filterModel.category_id"
                                         label="name"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Category"
+                                        :placeholder="$t('message.purchases_summary.f_select_pur_cat')"
                                         :searchable="true"
                                         :reduce="category => category.id"
                                         :options="categoriesSelection.data"/>
@@ -49,13 +49,13 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchase Type</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_type') }}</label>
 
                                     <v-select
                                         v-model="filterModel.type_id"
                                         label="name"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Type"
+                                        :placeholder="$t('message.purchases_summary.f_select_pur_type')"
                                         :searchable="true"
                                         :reduce="type => type.id"
                                         :options="typesSelection.data"/>
@@ -65,25 +65,25 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchased From</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_from') }}</label>
 
                                     <input
                                         v-model="filterModel.from"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Purchased From">
+                                        :placeholder="$t('message.purchases_summary.f_enter_pur_from')">
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchased By</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_by') }}</label>
 
                                     <v-select
                                         v-model="filterModel.user_id"
                                         label="username"
                                         class="style-chooser"
-                                        placeholder="Select Purchased By"
+                                        :placeholder="$t('message.purchases_summary.f_select_pur_by')"
                                         :searchable="true"
                                         :reduce="user => user.id"
                                         :options="purchasesBuyers.data"/>
@@ -92,13 +92,13 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchased Via</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_via') }}</label>
 
                                     <v-select
                                         v-model="filterModel.payment_type_id"
                                         label="type"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Via"
+                                        :placeholder="$t('message.purchases_summary.f_select_pur_via')"
                                         :searchable="true"
                                         :reduce="type => type.id"
                                         :options="listPayment.data"/>
@@ -126,13 +126,13 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Purchased Module</label>
+                                    <label>{{ $t('message.purchases_summary.f_pur_mod') }}</label>
 
                                     <v-select
                                         v-model="filterModel.module"
                                         label="name"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Module"
+                                        :placeholder="$t('message.purchases_summary.f_select_pur_mod')"
                                         :searchable="true"
                                         :reduce="module => module.value"
                                         :options="moduleSelection.data"/>
@@ -185,7 +185,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">Purchase: Summary</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.purchases_summary.s_title') }}</h3>
                     </div>
 
                     <div class="card-body">
@@ -274,7 +274,7 @@
                                 <template slot-scope="scope" slot="action-buttons">
                                     <button
                                         v-if="user.permission_list.includes('update-purchases-summary')"
-                                        title="Edit"
+                                        :title="$t('message.purchases_summary.edit')"
                                         class="btn btn-primary m-1"
 
                                         @click="fillPurchaseData(scope.row); modalOpener('Update')">
@@ -284,7 +284,7 @@
 
                                     <button
                                         v-if="user.permission_list.includes('delete-purchases-summary')"
-                                        title="Delete"
+                                        :title="$t('message.purchases_summary.delete')"
                                         class="btn btn-danger"
 
                                         @click="deletePurchase(scope.row.id)">
@@ -307,7 +307,7 @@
                         <div v-else class="col-md-12 text-center card">
                             <div class="card-body">
                                 <i class="fas fa-exclamation-circle"></i>
-                                No results found
+                                {{ $t('message.purchases_summary.no_results') }}
                             </div>
                         </div>
                     </div>
@@ -328,7 +328,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title">
                             {{ modalMode === 'Add' ? $t('message.signature.add') : $t('message.signature.update') }}
-                            Purchase
+                            {{ $t('message.purchases_summary.mp_title') }}
                         </h4>
                     </div>
 
@@ -336,7 +336,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Purchase Date</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_pur_date') }}</label>
 
                                     <input
                                         v-model="modelDate"
@@ -355,13 +355,13 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Purchase From</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_pur_from') }}</label>
 
                                     <input
                                         v-model="modelFrom"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Purchase From">
+                                        :placeholder="$t('message.purchases_summary.mp_enter_pur_from')">
 
                                     <span
                                         v-if="messageFormsPurchases.errors.from"
@@ -377,13 +377,13 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Purchase Type</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_pur_type') }}</label>
 
                                     <v-select
                                         v-model="modelTypeId"
                                         label="name"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Type"
+                                        :placeholder="$t('message.purchases_summary.mp_select_pur_type')"
                                         :searchable="true"
                                         :reduce="type => type.id"
                                         :options="typesSelection.data"/>
@@ -400,13 +400,13 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Price</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_price') }}</label>
 
                                     <input
                                         v-model="modelAmount"
                                         type="number"
                                         class="form-control"
-                                        placeholder="Enter Price">
+                                        :placeholder="$t('message.purchases_summary.mp_enter_price')">
 
                                     <span
                                         v-if="messageFormsPurchases.errors.amount"
@@ -422,13 +422,13 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Purchase Via</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_pur_via') }}</label>
 
                                     <v-select
                                         v-model="modelPaymentTypeId"
                                         label="type"
                                         class="style-chooser"
-                                        placeholder="Select Purchase Via"
+                                        :placeholder="$t('message.purchases_summary.mp_select_pur_via')"
                                         :searchable="true"
                                         :reduce="type => type.id"
                                         :options="listPayment.data"/>
@@ -447,14 +447,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Notes</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_notes') }}</label>
 
                                     <textarea
                                         v-model="modelNotes"
                                         rows="5"
                                         type="text"
                                         class="form-control"
-                                        placeholder="Enter Purchase Note">
+                                        :placeholder="$t('message.purchases_summary.mp_enter_notes')">
 
                                     </textarea>
 
@@ -472,7 +472,7 @@
                         <div v-if="modalMode !== 'Update'" class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Receipt</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_receipt') }}</label>
 
                                     <input
                                         type="file"
@@ -493,7 +493,7 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Invoice</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_invoice') }}</label>
 
                                     <input
                                         type="file"
@@ -516,7 +516,7 @@
                         <div v-if="modalMode === 'Update' && updatePurchaseModel.files.length" class="row">
                             <div v-if="checkFile(updatePurchaseModel.files, 'is_receipt')" class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Uploaded Receipt:</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_uploaded_receipt') }}</label>
 
                                     <div
                                         v-if="checkFileExtension(getFileExtension(getFile(updatePurchaseModel.files, 'is_receipt'))) === 'image'"
@@ -541,7 +541,7 @@
                                                 :href="getFile(updatePurchaseModel.files, 'is_receipt')"
                                                 download
                                                 class="btn btn-default"
-                                                title="Download uploaded receipt">
+                                                :title="$t('message.purchases_summary.mp_dl_uploaded_receipt')">
                                                 {{ getFileName(getFile(updatePurchaseModel.files, 'is_receipt')) }}
 
                                                 <i class="fas fa-download"></i>
@@ -553,7 +553,7 @@
 
                             <div v-if="checkFile(updatePurchaseModel.files, 'is_invoice')" class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Uploaded Invoice:</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_uploaded_invoice') }}</label>
 
                                     <div
                                         v-if="checkFileExtension(getFileExtension(getFile(updatePurchaseModel.files, 'is_invoice'))) === 'image'"
@@ -578,7 +578,7 @@
                                                 :href="getFile(updatePurchaseModel.files, 'is_invoice')"
                                                 download
                                                 class="btn btn-default"
-                                                title="Download uploaded invoice">
+                                                :title="$t('message.purchases_summary.mp_dl_uploaded_invoice')">
                                                 {{ getFileName(getFile(updatePurchaseModel.files, 'is_invoice')) }}
 
                                                 <i class="fas fa-download"></i>
@@ -597,7 +597,7 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Update Receipt:</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_update_receipt') }}</label>
 
                                     <input
                                         type="file"
@@ -618,7 +618,7 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Update Invoice:</label>
+                                    <label style="color: #333">{{ $t('message.purchases_summary.mp_update_invoice') }}</label>
 
                                     <input
                                         type="file"
@@ -848,41 +848,41 @@ export default {
             return [
                 {
                     prop : '_action',
-                    name : 'ID',
+                    name : this.$t('message.purchases_summary.t_id'),
                     sortable: true,
                     actionName : 'id',
                 },
                 {
                     prop : 'full_clean_date',
-                    name : 'Date',
+                    name : this.$t('message.purchases_summary.t_date'),
                 },
                 {
                     prop : '_action',
-                    name : 'Category',
+                    name : this.$t('message.purchases_summary.t_cat'),
                     actionName : 'category',
                 },
                 {
                     prop : '_action',
-                    name : 'Type',
+                    name : this.$t('message.purchases_summary.t_type'),
                     actionName : 'type',
                 },
                 {
                     prop : 'from',
-                    name : 'From',
+                    name : this.$t('message.purchases_summary.t_from'),
                 },
                 {
                     prop : 'amount',
-                    name : 'Amount',
+                    name : this.$t('message.purchases_summary.t_amount'),
                     prefix : '$ '
                 },
                 {
                     prop : '_action',
-                    name : 'Purchased By',
+                    name : this.$t('message.purchases_summary.t_purchased_by'),
                     actionName : 'purchase-by',
                 },
                 {
                     prop : '_action',
-                    name : 'Purchased Via',
+                    name : this.$t('message.purchases_summary.t_purchased_via'),
                     actionName : 'purchase-via',
                 },
                 {
@@ -962,7 +962,7 @@ export default {
 
                 await swal.fire(
                     self.$t('message.tools.alert_success'),
-                    'Purchase successfully updated.',
+                    self.$t('message.purchases_summary.a_purchase_updated'),
                     'success'
                 )
             } else {
@@ -980,8 +980,8 @@ export default {
             let self = this;
 
             let result = await swal.fire({
-                title : 'Delete Purchase',
-                text : 'Are you sure that you want to delete this purchase?',
+                title : self.$t('message.purchases_summary.a_delete_purchase'),
+                text : self.$t('message.purchases_summary.a_delete_purchase_confirm'),
                 icon : "warning",
                 showCancelButton : true,
                 confirmButtonText : self.$t('message.tools.yes_delete'),
@@ -999,7 +999,7 @@ export default {
 
                     await swal.fire(
                         self.$t('message.tools.alert_deleted'),
-                        'Purchase successfully deleted.',
+                        self.$t('message.purchases_summary.a_purchase_deleted'),
                         'success'
                     )
                 } else {

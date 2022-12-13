@@ -227,4 +227,11 @@ export default {
     update: 'Memperbarui',
     prospect_from: 'Prospek Dari',
     simple_from: 'Dari',
+
+    date_status_updated: 'Tanggal Status Diperbarui',
+    status_updated: 'Status Diperbarui',
+    with_cc: 'Dengan Cc',
+    cc_field_contain: 'Kolom cc harus berisi email yang valid',
+    bcc_field_contain: 'Kolom bcc harus berisi email yang valid',
+    email_auto: 'Email Individu Otomatis',
 }

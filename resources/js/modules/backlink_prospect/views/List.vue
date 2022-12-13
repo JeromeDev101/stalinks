@@ -128,7 +128,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Status 3rd Party</label>
+                                    <label>{{ $t('message.backlink_prospect.status_third_party') }}</label>
                                     <select class="form-control" v-model="filterModel.status">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
@@ -140,7 +140,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Status StaLinks URL Prospect</label>
+                                    <label>{{ $t('message.backlink_prospect.status_stalinks') }}</label>
                                     <select class="form-control" v-model="filterModel.status2">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status2" v-bind:value="option.value" :key="option.value">
@@ -170,11 +170,11 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Is Moved?</label>
+                                    <label>{{ $t('message.backlink_prospect.is_moved') }}</label>
                                     <select class="form-control" v-model="filterModel.is_moved">
-                                        <option value="">All</option>
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
+                                        <option value="">{{ $t('message.backlink_prospect.all') }}</option>
+                                        <option value="yes">{{ $t('message.profile.yes') }}</option>
+                                        <option value="no">{{ $t('message.profile.no') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -201,7 +201,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">3rd Party Status Totals</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.third_party_totals') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -247,7 +247,7 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">StaLinks URL Prospect Status Totals</h3>
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.stalinks_totals') }}</h3>
                         <div class="card-tools">
                         </div>
                     </div>
@@ -329,7 +329,7 @@
 
                                                 @click="downloadTemplate">
                                                 <i class="fa fa-download"></i>
-                                            </button> -->
+                                            </button>
 
                                             <export-excel
                                                 v-if="user.permission_list.includes('export-backlinks-prospect-backlinks-prospect')"
@@ -382,7 +382,7 @@
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" @click="getAhrefs();">
-                                                    Get Ahref
+                                                    {{ $t('message.backlink_prospect.get_ahref') }}
                                                 </a>
                                                 <a v-if="user.permission_list.includes('update-backlinks-prospect-backlinks-prospect')" class="dropdown-item" @click="editData();">
                                                     {{ $t('message.backlink_prospect.edit') }}
@@ -394,7 +394,7 @@
                                         </div>
 
                                         <button class="btn btn-primary mr-2" title="Data is coming from Backlinks Prospect of Apacaff" @click="fetchData();">
-                                            Fetch Data
+                                            {{ $t('message.backlink_prospect.fetch_data') }}
                                         </button>
 
                                     </div>
@@ -505,13 +505,13 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Status StaLinks URL Prospect</label>
+                                    <label>{{ $t('message.backlink_prospect.status_stalinks') }}</label>
                                     <input v-model="updateModel.status2" disabled type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Status 3rd Party</label>
+                                    <label>{{ $t('message.backlink_prospect.status_third_party') }}</label>
                                     <select class="form-control" v-model="updateModel.status">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
@@ -1126,8 +1126,8 @@ export default {
             let self = this;
 
             swal.fire({
-                title : 'Fetching data ...',
-                text : 'Please wait while fetching the data',
+                title : self.$t('message.backlink_prospect.fetching_data'),
+                text : self.$t('message.backlink_prospect.please_wait'),
                 timerProgressBar : true,
                 showConfirmButton : false,
                 allowOutsideClick : false,
@@ -1143,7 +1143,7 @@ export default {
 
                 swal.fire(
                     self.$t('message.generate_list.alert_success'),
-                    'Successfully Fetch Data',
+                    self.$t('message.backlink_prospect.fetch_success'),
                     'success'
                 )
 

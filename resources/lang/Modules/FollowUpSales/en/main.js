@@ -96,4 +96,13 @@ export default {
     no: 'No',
     confirm: 'Confirm',
     cancel: 'Cancel',
+
+    // updates
+    uia_confirm_alert: 'Upon confirmation, the system will NOT generate an article for this order.',
+    uia_update_inc_article: "Click here to update list publisher data include article to 'No'",
+    generate_article: 'Confirming will generate an article and update list publisher data - inc article to "no"',
+    article_generated: 'Article successfully generated',
+    article_generate_error: 'There were some errors while generating an article.',
+    publisher_updated_successfully: 'List publisher data: include article successfully updated.',
+    publisher_update_error: 'There were some errors while updating the list publisher data.',
 }

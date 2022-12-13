@@ -29,4 +29,10 @@ export default {
     search: 'खोज',
     close: 'बंद करना',
     save: 'सहेजें',
+
+    // updates
+    search_id_buyer: 'खोज ID क्रेता',
+    buyer: 'क्रेता',
+    buyer_id: 'क्रेता ID',
+    id_buyer: 'ID क्रेता',
 }

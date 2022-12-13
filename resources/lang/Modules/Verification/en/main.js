@@ -30,5 +30,9 @@ export default {
     e11: 'Please provide at least one Payment Information',
     e12: 'Please input the selected default payment type',
 
-    account: 'Account'
+    account: 'Account',
+
+    company: 'Company',
+    freelance: 'Freelancer',
+    writer_pricing: 'Writer Pricing',
 }

@@ -130,6 +130,14 @@ import purchase from './Purchase/en/main';
 // others
 import others from './Others/en/main';
 
+// purchases
+import purchases_config from './Purchases/en/config';
+import purchases_summary from './Purchases/en/summary';
+
+// components
+import renew from './Components/en/renew';
+import purchase_details from './Components/en/purchase';
+
 export default {
     message : {
         // profile
@@ -263,5 +271,13 @@ export default {
 
         // others
         others,
+
+        // purchases
+        purchases_config,
+        purchases_summary,
+
+        // components
+        renew,
+        purchase_details,
     }
 }

@@ -175,4 +175,21 @@ export default {
     save: 'सहेजें',
     send: 'भेजना',
     update: 'अद्यतन',
+
+    basic: 'बुनियादी',
+    medium: 'मध्यम',
+    premium: 'बीमा किस्त',
+    recommended: 'अनुशंसित',
+
+    writer_pricing: 'लेखक मूल्य निर्धारण',
+    price_rate_per_lang: 'मूल्य दर प्रति भाषा',
+    price_rate_note: 'चयनित मूल्य निर्धारण प्रकार के अनुसार मूल्य दरों को डिफ़ॉल्ट दर में बदल दिया गया है।',
+    show_history: 'इतिहास दिखाएँ',
+
+    payment_info_history: 'भुगतान सूचना इतिहास',
+    pih_account: 'खाता',
+    pih_default: 'चूक',
+    pih_status: 'दर्जा',
+    pih_dates: 'पिंड खजूर।',
+    pih_view: 'विवरण देखें',
 }

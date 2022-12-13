@@ -30,5 +30,9 @@ export default {
     e11: 'Harap berikan setidaknya satu Informasi Pembayaran',
     e12: 'Silakan masukkan jenis pembayaran default yang dipilih',
 
-    account: 'Akun'
+    account: 'Akun',
+
+    company: 'Perusahaan',
+    freelance: 'Pekerja lepas',
+    writer_pricing: 'Harga Penulis',
 }

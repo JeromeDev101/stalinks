@@ -175,4 +175,21 @@ export default {
     save: '保存する',
     send: '送信',
     update: '更新',
+
+    basic: '基本',
+    medium: '中くらい',
+    premium: 'プレミアム',
+    recommended: 'おすすめされた',
+
+    writer_pricing: 'ライターの価格',
+    price_rate_per_lang: '言語ごとの価格レート',
+    price_rate_note: '価格レートは、選択した価格設定タイプに従ってデフォルトのレートに変更されました。',
+    show_history: '履歴を表示',
+
+    payment_info_history: 'お支払い情報履歴',
+    pih_account: 'アカウント',
+    pih_default: 'デフォルト',
+    pih_status: '状態',
+    pih_dates: '日付',
+    pih_view: '詳細を見る',
 }

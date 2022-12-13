@@ -75,4 +75,15 @@ export default {
     close: 'Tutup',
     update: 'Perbaharui',
     save: 'Simpan',
+
+    status_third_party: 'Status Pihak ke-3',
+    status_stalinks: 'Status Prospek URL StaLinks',
+    is_moved: 'Dipindahkan?',
+    third_party_totals: 'Total Status Pihak Ketiga',
+    stalinks_totals: 'Total Status Prospek URL StaLinks',
+    get_ahref: 'Dapatkan Ahref',
+    fetch_data: 'Ambil Data',
+    fetching_data: 'Mengambil Data ...',
+    please_wait: 'Harap tunggu saat mengambil data',
+    fetch_success: 'Berhasil Mengambil Data',
 }

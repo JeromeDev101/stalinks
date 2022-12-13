@@ -55,4 +55,12 @@ export default {
     close: 'Đóng',
     yes: 'Có',
     no: 'Không',
+
+    language_writer_price_rate: 'Ngôn ngữ - Mức giá của nhà văn',
+    ppa_rate: 'Tỷ lệ PPA',
+    ppw_rate: 'Tỷ lệ PPW',
+    action: 'Hoạt động',
+    update_lang_rate: 'Cập nhật giá ngôn ngữ',
+    success: 'Thành công',
+    success_note: 'Tỷ giá ngôn ngữ được cập nhật thành công.',
 }

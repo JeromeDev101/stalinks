@@ -79,4 +79,11 @@ export default {
     disapprove: 'Disapprove',
     yes: 'Yes',
     no: 'No',
+
+    fail_reason: 'Fail Reason',
+    fail_reason_question: 'Mark exam as disapprove?',
+    fail_reason_provide: '(Please provide a reason for the writer)',
+    update_fail_reason: 'Update Exam Failed Reason',
+    update_fail_reason_note: 'An email and notification will be sent to the writer about the updated reason.',
+    reason: 'Reason:',
 }

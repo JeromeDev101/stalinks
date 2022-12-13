@@ -176,7 +176,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Role Permissions</label>
+                                    <label style="color: #333">{{ $t('message.role.role_permissions') }}</label>
 
                                     <div class="card">
                                         <div class="card-body">
@@ -185,8 +185,8 @@
                                                     <thead>
                                                     <tr>
                                                         <th>ID</th>
-                                                        <th>Module Group</th>
-                                                        <th>Module Page</th>
+                                                        <th>{{ $t('message.role.module_group') }}</th>
+                                                        <th>{{ $t('message.role.module_page') }}</th>
                                                         <th>
                                                             <div class="custom-control custom-switch">
                                                                 <input
@@ -198,7 +198,7 @@
                                                                     @change="toggleSelectAllPermissions('view-', 'add', isAllViewPermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allViewPermissionsToggleAdd">
-                                                                    View
+                                                                    {{ $t('message.role.module_view') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -213,7 +213,7 @@
                                                                     @change="toggleSelectAllPermissions('create-', 'add', isAllCreatePermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allCreatePermissionsToggleAdd">
-                                                                    Create
+                                                                    {{ $t('message.role.module_create') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -228,7 +228,7 @@
                                                                     @change="toggleSelectAllPermissions('update-', 'add', isAllUpdatePermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allUpdatePermissionsToggleAdd">
-                                                                    Update
+                                                                    {{ $t('message.role.module_update') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -243,7 +243,7 @@
                                                                     @change="toggleSelectAllPermissions('delete-', 'add', isAllDeletePermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allDeletePermissionsToggleAdd">
-                                                                    Delete
+                                                                    {{ $t('message.role.module_delete') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -258,7 +258,7 @@
                                                                     @change="toggleSelectAllPermissions('upload-', 'add', isAllUploadPermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allUploadPermissionsToggleAdd">
-                                                                    Upload
+                                                                    {{ $t('message.role.module_upload') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -273,7 +273,7 @@
                                                                     @change="toggleSelectAllPermissions('export-', 'add', isAllExportPermissionsSelected)">
 
                                                                 <label class="custom-control-label" for="allExportPermissionsToggleAdd">
-                                                                    Export
+                                                                    {{ $t('message.role.module_export') }}
                                                                 </label>
                                                             </div>
                                                         </th>
@@ -416,7 +416,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Role Permissions</label>
+                                    <label style="color: #333">{{ $t('message.role.role_permissions') }}</label>
 
                                     <div class="card">
                                         <div class="card-body">
@@ -425,8 +425,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID</th>
-                                                            <th>Module Group</th>
-                                                            <th>Module Page</th>
+                                                            <th>{{ $t('message.role.module_group') }}</th>
+                                                            <th>{{ $t('message.role.module_page') }}</th>
                                                             <th>
                                                                 <div class="custom-control custom-switch">
                                                                     <input
@@ -438,7 +438,7 @@
                                                                         @change="toggleSelectAllPermissions('view-', 'update', isAllViewPermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allViewPermissionsToggle">
-                                                                        View
+                                                                        {{ $t('message.role.module_view') }}
                                                                     </label>
                                                                 </div>
                                                             </th>
@@ -453,7 +453,7 @@
                                                                         @change="toggleSelectAllPermissions('create-', 'update', isAllCreatePermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allCreatePermissionsToggle">
-                                                                        Create
+                                                                        {{ $t('message.role.module_create') }}
                                                                     </label>
                                                                 </div>
                                                             </th>
@@ -468,7 +468,7 @@
                                                                         @change="toggleSelectAllPermissions('update-', 'update', isAllUpdatePermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allUpdatePermissionsToggle">
-                                                                        Update
+                                                                        {{ $t('message.role.module_update') }}
                                                                     </label>
                                                                 </div>
                                                             </th>
@@ -483,7 +483,7 @@
                                                                         @change="toggleSelectAllPermissions('delete-', 'update', isAllDeletePermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allDeletePermissionsToggle">
-                                                                        Delete
+                                                                        {{ $t('message.role.module_delete') }}
                                                                     </label>
                                                                 </div>
                                                             </th>
@@ -498,7 +498,7 @@
                                                                         @change="toggleSelectAllPermissions('upload-', 'update', isAllUploadPermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allUploadPermissionsToggle">
-                                                                        Upload
+                                                                        {{ $t('message.role.module_upload') }}
                                                                     </label>
                                                                 </div>
                                                             </th>
@@ -513,7 +513,7 @@
                                                                         @change="toggleSelectAllPermissions('export-', 'update', isAllExportPermissionsSelected)">
 
                                                                     <label class="custom-control-label" for="allExportPermissionsToggle">
-                                                                        Export
+                                                                        {{ $t('message.role.module_export') }}
                                                                     </label>
                                                                 </div>
                                                             </th>

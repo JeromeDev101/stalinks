@@ -171,7 +171,7 @@
                                             class="form-check-input"
 
                                             @click="withCcDraft = !withCcDraft">
-                                        With Cc
+                                        {{ $t('message.inbox.with_cc') }}
                                     </label>
                                 </div>
                             </div>
@@ -260,7 +260,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
-                                The cc field must contain valid emails
+                                {{ $t('message.inbox.cc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -295,7 +295,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
-                                The bcc field must contain valid emails
+                                {{ $t('message.inbox.bcc_valid') }}
                             </span>
                         </div>
                     </div>

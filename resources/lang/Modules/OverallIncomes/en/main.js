@@ -29,4 +29,10 @@ export default {
     search: 'Search',
     close: 'Close',
     save: 'Save',
+
+    // updates
+    search_id_buyer: 'Search ID Buyer',
+    buyer: 'Buyer',
+    buyer_id: 'Buyer ID',
+    id_buyer: 'ID Buyer',
 }

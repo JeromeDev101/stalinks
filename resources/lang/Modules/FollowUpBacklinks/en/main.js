@@ -81,5 +81,18 @@ export default {
     close: 'Close',
     save: 'Save',
     delete_sentence: 'Yes, delete it!',
-    keep: 'No, keep it'
+    keep: 'No, keep it',
+
+    // updates
+    validate: 'Validate',
+    invalidate: 'Invalidate',
+    selected_invalidate_confirm: 'Are you sure you want to invalidate the selected orders?',
+    selected_invalidate_success: 'Selected orders successfully invalidated',
+    selected_invalidate_error: 'There were some errors while invalidating the selected orders',
+    validate_confirm: 'Are you sure that you want to validate this order?',
+    validate_success: 'Order successfully validated',
+    validate_error: 'There were some errors while validating the order',
+    invalidate_confirm: 'Are you sure that you want to invalidate this order?',
+    invalidate_success: 'Order successfully invalidated',
+    invalidate_error: 'There were some errors while invalidating the order',
 }

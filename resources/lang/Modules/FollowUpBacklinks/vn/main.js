@@ -81,5 +81,18 @@ export default {
     close: 'Đóng',
     save: 'Lưu',
     delete_sentence: 'Có, xóa nó!',
-    keep: 'Không, giữ nó'
+    keep: 'Không, giữ nó',
+
+    // updates
+    validate: 'Xác thực',
+    invalidate: 'Làm mất hiệu lực',
+    selected_invalidate_confirm: 'Bạn có chắc chắn muốn làm mất hiệu lực các đơn hàng đã chọn không?',
+    selected_invalidate_success: 'Các đơn đặt hàng đã chọn đã bị vô hiệu hóa thành công',
+    selected_invalidate_error: 'Đã xảy ra một số lỗi khi làm mất hiệu lực các đơn hàng đã chọn',
+    validate_confirm: 'Bạn có chắc chắn muốn xác thực đơn đặt hàng này không?',
+    validate_success: 'Đơn hàng đã được xác thực thành công',
+    validate_error: 'Đã xảy ra một số lỗi khi xác thực đơn đặt hàng',
+    invalidate_confirm: 'Bạn có chắc chắn rằng bạn muốn hủy bỏ đơn đặt hàng này không?',
+    invalidate_success: 'Đơn hàng đã bị vô hiệu hóa thành công',
+    invalidate_error: 'Đã xảy ra một số lỗi khi làm mất hiệu lực đơn đặt hàng',
 }

@@ -57,5 +57,12 @@ export default {
     follow_up_backlinks: 'ติดตามแบคลิงก์',
     purchase: 'ซื้อ',
 
+    // purchases
+    purchases: 'การซื้อ',
+    purchases_config: 'การกำหนดค่า',
+    purchases_summary: 'สรุป',
+    purchases_tools: 'เครื่องมือ',
+    purchases_manual: 'คู่มือ',
+
     help: 'ช่วยเหลือ'
 }

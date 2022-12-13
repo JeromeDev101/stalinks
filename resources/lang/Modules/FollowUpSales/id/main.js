@@ -96,4 +96,13 @@ export default {
     no: 'Tidak',
     confirm: 'Setuju',
     cancel: 'Batal',
+
+    // updates
+    uia_confirm_alert: 'Setelah konfirmasi, sistem TIDAK akan menghasilkan artikel untuk pesanan ini.',
+    uia_update_inc_article: "Klik di sini untuk memperbarui daftar data penerbit termasuk artikel menjadi 'No'",
+    generate_article: 'Mengonfirmasi akan menghasilkan artikel dan memperbarui data penerbit daftar - termasuk artikel ke "no"',
+    article_generated: 'Artikel berhasil dibuat',
+    article_generate_error: 'Ada beberapa kesalahan saat membuat artikel.',
+    publisher_updated_successfully: 'Daftar data penerbit: sertakan artikel yang berhasil diperbarui.',
+    publisher_update_error: 'Ada beberapa kesalahan saat memperbarui data penerbit daftar.',
 }

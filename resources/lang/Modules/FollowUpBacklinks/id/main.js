@@ -81,5 +81,18 @@ export default {
     close: 'Tutup',
     save: 'Simpan',
     delete_sentence: 'Ya, hapus!',
-    keep: 'Tidak, simpan'
+    keep: 'Tidak, simpan',
+
+    // updates
+    validate: 'Mengesahkan',
+    invalidate: 'batalkan',
+    selected_invalidate_confirm: 'Apakah Anda yakin ingin membatalkan pesanan yang dipilih?',
+    selected_invalidate_success: 'Pesanan yang dipilih berhasil dibatalkan',
+    selected_invalidate_error: 'Ada beberapa kesalahan saat membatalkan pesanan yang dipilih',
+    validate_confirm: 'Apakah Anda yakin ingin memvalidasi pesanan ini?',
+    validate_success: 'Pesanan berhasil divalidasi',
+    validate_error: 'Ada beberapa kesalahan saat memvalidasi pesanan',
+    invalidate_confirm: 'Apakah Anda yakin ingin membatalkan pesanan ini?',
+    invalidate_success: 'Pesanan berhasil dibatalkan',
+    invalidate_error: 'Ada beberapa kesalahan saat membatalkan pesanan',
 }

@@ -75,4 +75,15 @@ export default {
     close: 'Đóng',
     update: 'Cập nhật',
     save: 'Lưu',
+
+    status_third_party: 'Trạng thái bên thứ ba',
+    status_stalinks: 'Trạng thái Triển vọng URL StaLinks',
+    is_moved: 'được di chuyển?',
+    third_party_totals: 'Tổng trạng thái của bên thứ 3',
+    stalinks_totals: 'Tổng trạng thái triển vọng URL của URL StaLinks',
+    get_ahref: 'Nhận Ahref',
+    fetch_data: 'Tìm nạp dữ liệu',
+    fetching_data: 'Đang tìm nạp dữ liệu...',
+    please_wait: 'Vui lòng đợi trong khi tìm nạp dữ liệu',
+    fetch_success: 'Đã tìm nạp thành công dữ liệu',
 }

@@ -869,15 +869,14 @@
                                                 <div v-if="sellerConfirmationData.publisher.inc_article === 'yes'
                                                     || sellerConfirmationData.publisher.inc_article === 'Yes'">
                                                     <p class="mb-1">
-                                                        Upon confirmation, the system will NOT generate an
-                                                        article for this order.
+                                                        {{ $t('message.follow.uia_confirm_alert') }}
                                                     </p>
                                                     <p
                                                         class="mb-1 text-primary"
                                                         style="cursor: pointer !important;"
 
                                                         @click="updatePublisherIncArticle(sellerConfirmationData)">
-                                                        Click here to update list publisher data include article to 'No'
+                                                        {{ $t('message.follow.uia_update_inc_article') }}
                                                     </p>
                                                 </div>
                                             </td>
@@ -1698,7 +1697,7 @@
 
                 swal.fire({
                     title: 'Generate Article for backlink ID# ' + sales.id,
-                    text: 'Confirming will generate an article and update list publisher data - inc article to "no"',
+                    text: self.$t('message.follow.generate_article'),
                     icon: "question",
                     showCancelButton: true,
                     confirmButtonText: self.$t('message.publisher.yes'),
@@ -1714,7 +1713,7 @@
 
                                 swal.fire(
                                     self.$t('message.tools.alert_success'),
-                                    'Article successfully generated',
+                                    self.$t('message.follow.article_generated'),
                                     'success'
                                 )
 
@@ -1761,7 +1760,7 @@
 
                                 swal.fire(
                                     self.$t('message.tools.alert_success'),
-                                    'List publisher data: include article successfully updated.',
+                                    self.$t('message.follow.publisher_updated_successfully'),
                                     'success'
                                 )
 
@@ -1773,7 +1772,7 @@
 
                                 swal.fire(
                                     self.$t('message.tools.alert_error'),
-                                    'There were some errors while updating the list publisher data.',
+                                    self.$t('message.follow.publisher_update_error'),
                                     'error'
                                 )
                             });

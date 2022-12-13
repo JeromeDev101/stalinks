@@ -30,5 +30,9 @@ export default {
     e11: 'Vui lòng cung cấp ít nhất một Thông tin Thanh toán',
     e12: 'Vui lòng nhập loại thanh toán mặc định đã chọn',
 
-    account: 'Tài khoản'
+    account: 'Tài khoản',
+
+    company: 'Công ty',
+    freelance: 'Người làm nghề tự do',
+    writer_pricing: 'Giá nhà văn',
 }

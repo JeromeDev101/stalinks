@@ -75,4 +75,15 @@ export default {
     close: 'Close',
     update: 'Update',
     save: 'Save',
+
+    status_third_party: 'Status 3rd Party',
+    status_stalinks: 'Status StaLinks URL Prospect',
+    is_moved: 'Is Moved?',
+    third_party_totals: '3rd Party Status Totals',
+    stalinks_totals: 'StaLinks URL Prospect Status Totals',
+    get_ahref: 'Get Ahref',
+    fetch_data: 'Fetch Data',
+    fetching_data: 'Fetching Data ...',
+    please_wait: 'Please wait while fetching the data',
+    fetch_success: 'Successfully Fetched Data',
 }

@@ -181,7 +181,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label style="color: #333">Date Status Updated</label>
+                                    <label style="color: #333">{{ $t('message.url_prospect.date_status_updated') }}</label>
                                     <div class="input-group">
                                         <date-range-picker
                                             ref="picker"
@@ -1586,7 +1586,7 @@
 
                                         @change="toggleColumn(6, tableShow.status_updated)">
 
-                                    Status Updated
+                                    {{ $t('message.url_prospect.status_updated') }}
                                 </label>
                             </div>
                             <div class="checkbox col-md-4">
@@ -1893,7 +1893,7 @@
                                 <div :class="{'form-group': true, 'has-error': messageFormsMail.errors.email}"
                                      class="form-group">
                                     <label style="color: #333">
-                                        {{ urlEmails.length > 1 ? 'Email Automatic Individual' : $t('message.url_prospect.filter_email') }}
+                                        {{ urlEmails.length > 1 ? $t('message.url_prospect.email_auto') : $t('message.url_prospect.filter_email') }}
                                     </label>
 
                                     <vue-tags-input
@@ -1927,7 +1927,7 @@
                                                     class="form-check-input"
 
                                                     @click="withCcProspect = !withCcProspect">
-                                                With Cc
+                                                {{ $t('message.url_prospect.with_cc') }}
                                             </label>
                                         </div>
                                     </div>
@@ -1979,7 +1979,7 @@
                                     </span>
 
                                     <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'cc.')" class="text-danger">
-                                        The cc field must contain valid emails
+                                        {{ $t('message.url_prospect.cc_field_contain') }}
                                     </span>
                                 </div>
                             </div>
@@ -2014,7 +2014,7 @@
                                     </span>
 
                                     <span v-if="checkCcBccValidationError(messageFormsMail.errors, 'bcc.')" class="text-danger">
-                                        The bcc field must contain valid emails
+                                        {{ $t('message.url_prospect.bcc_field_contain') }}
                                     </span>
                                 </div>
                             </div>

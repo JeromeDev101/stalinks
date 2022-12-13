@@ -96,4 +96,13 @@ export default {
     no: 'いいえ',
     confirm: '確認します',
     cancel: 'キャンセルします',
+
+    // updates
+    uia_confirm_alert: '確認後、システムはこの注文の商品を生成しません。',
+    uia_update_inc_article: "ここをクリックして、記事を含むリストの発行者データを 'No' に更新します",
+    generate_article: '確認すると、記事が生成され、リストの発行者データが更新されます - inc article が "no" に',
+    article_generated: '記事が正常に生成されました',
+    article_generate_error: '記事の生成中にエラーが発生しました。',
+    publisher_updated_successfully: 'サイト運営者データの一覧表示: 正常に更新された記事を含めます。',
+    publisher_update_error: 'リスト発行者データの更新中にエラーが発生しました。',
 }

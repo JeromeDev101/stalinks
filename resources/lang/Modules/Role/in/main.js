@@ -31,4 +31,14 @@ export default {
     close: 'बंद करना',
     save: 'सहेजें',
     update: 'अद्यतन',
+
+    role_permissions: 'भूमिका अनुमतियाँ',
+    module_group: 'मॉड्यूल समूह',
+    module_page: 'मॉड्यूल पृष्ठ',
+    module_view: 'राय',
+    module_create: 'सृजन करना',
+    module_update: 'अद्यतन',
+    module_delete: 'मिटाना',
+    module_upload: 'डालना',
+    module_export: 'निर्यात करना',
 }

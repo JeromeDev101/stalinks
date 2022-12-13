@@ -175,4 +175,21 @@ export default {
     save: 'Save',
     send: 'Send',
     update: 'Update',
+
+    basic: 'Basic',
+    medium: 'Medium',
+    premium: 'Premium',
+    recommended: 'Recommended',
+
+    writer_pricing: 'Writer Pricing',
+    price_rate_per_lang: 'Price Rate Per Language',
+    price_rate_note: 'The price rates has been changed to the default rate according to the selected pricing type.',
+    show_history: 'Show History',
+
+    payment_info_history: 'Payment Information History',
+    pih_account: 'Account',
+    pih_default: 'Default',
+    pih_status: 'Status',
+    pih_dates: 'Dates',
+    pih_view: 'view details',
 }

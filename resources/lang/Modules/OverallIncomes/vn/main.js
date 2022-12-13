@@ -29,4 +29,10 @@ export default {
     search: 'Tìm kiếm',
     close: 'Đóng',
     save: 'Lưu',
+
+    // updates
+    search_id_buyer: 'Người mua ID tìm kiếm',
+    buyer: 'Người mua',
+    buyer_id: 'ID người mua',
+    id_buyer: 'Người mua ID',
 }

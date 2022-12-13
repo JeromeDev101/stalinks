@@ -1,7 +1,7 @@
 <template>
     <div class="card card-outline card-secondary">
         <div class="card-header">
-            <h3 class="card-title">Language - Writer Price Rate</h3>
+            <h3 class="card-title">{{ $t('message.finance.language_writer_price_rate') }}</h3>
         </div>
 
         <div class="card-body" style="height: 650px; overflow: scroll;">
@@ -10,9 +10,9 @@
                 <tr class="label-primary">
                     <th>ID</th>
                     <th>{{ $t('message.IT.l_name') }}</th>
-                    <th>PPA Rate</th>
-                    <th>PPW Rate</th>
-                    <th>Action</th>
+                    <th>{{ $t('message.finance.ppa_rate') }}</th>
+                    <th>{{ $t('message.finance.ppw_rate') }}</th>
+                    <th>{{ $t('message.finance.action') }}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,7 +51,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Language Rates</h5>
+                        <h5 class="modal-title">{{ $t('message.finance.update_lang_rate') }}</h5>
                     </div>
 
                     <div class="modal-body">
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>PPA Rate</label>
+                            <label>{{ $t('message.finance.ppa_rate') }}</label>
 
                             <input
                                 v-model="languageRateModel.ppa_rate"
@@ -90,7 +90,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label>PPW Rate</label>
+                            <label>{{ $t('message.finance.ppw_rate') }}</label>
 
                             <input
                                 v-model="languageRateModel.ppw_rate"
@@ -182,8 +182,8 @@ export default {
                 loader.hide();
 
                 swal.fire(
-                    'Success!',
-                    'Language price rates successfully updated.',
+                    self.$t('message.finance.success'),
+                    self.$t('message.finance.success_note'),
                     'success'
                 )
             }).catch((err) => {

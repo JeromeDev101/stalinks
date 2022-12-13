@@ -79,4 +79,11 @@ export default {
     disapprove: 'Từ chối',
     yes: 'Có',
     no: 'Không',
+
+    fail_reason: 'Lý do thất bại',
+    fail_reason_question: 'Đánh dấu kỳ thi là không chấp thuận?',
+    fail_reason_provide: '(Vui lòng cung cấp lý do cho người viết)',
+    update_fail_reason: 'Cập nhật lý do thi không đạt',
+    update_fail_reason_note: 'Một email và thông báo sẽ được gửi đến người viết về lý do cập nhật.',
+    reason: 'Lý do:',
 }

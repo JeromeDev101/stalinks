@@ -114,4 +114,6 @@ export default {
     keep: 'No, keep it',
     active: 'Active',
     inactive: 'Inactive',
+
+    contact_admin: 'Contact an administrator to change your pricing type.',
 }

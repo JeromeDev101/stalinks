@@ -79,4 +79,11 @@ export default {
     disapprove: 'अस्वीकृत',
     yes: 'हां',
     no: 'नहीं',
+
+    fail_reason: 'विफल कारण',
+    fail_reason_question: 'परीक्षा को अस्वीकृत के रूप में चिह्नित करें?',
+    fail_reason_provide: '(कृपया लेखक के लिए एक कारण प्रदान करें)',
+    update_fail_reason: 'अद्यतन परीक्षा विफल कारण',
+    update_fail_reason_note: 'अद्यतन कारण के बारे में लेखक को एक ईमेल और सूचना भेजी जाएगी।',
+    reason: 'कारण:',
 }

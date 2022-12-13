@@ -55,4 +55,12 @@ export default {
     close: 'Close',
     yes: 'Yes',
     no: 'No',
+
+    language_writer_price_rate: 'Language - Writer Price Rate',
+    ppa_rate: 'PPA Rate',
+    ppw_rate: 'PPW Rate',
+    action: 'Action',
+    update_lang_rate: 'Update Language Rates',
+    success: 'Success',
+    success_note: 'Language price rates successfully updated.',
 }

@@ -83,5 +83,13 @@ export default {
     search: 'Tìm kiếm',
     close: 'Đóng',
     save: 'Lưu',
-    promo: 'Bạn được giảm giá 15% cho mỗi lần mua cho đến ngày 6 tháng 1 năm 2023.', 
+    promo: 'Bạn được giảm giá 15% cho mỗi lần mua cho đến ngày 6 tháng 1 năm 2023.',
+
+    // updates
+    uninterested: 'Không quan tâm',
+    selected_items_not_purchased: 'Các mặt hàng đã chọn không được có trạng thái "Purchased"',
+    selected_items_interested: 'Các mục được chọn phải có trạng thái  "Interested"',
+    mark_not_interested: 'Đánh dấu (các) liên kết ngược là "Not Interested"?',
+    mark_interested: 'Đánh dấu (các) liên kết ngược là "Interested"?',
+    remove_interested: 'Xóa trạng thái "Interested" trong (các) liên kết ngược?',
 }

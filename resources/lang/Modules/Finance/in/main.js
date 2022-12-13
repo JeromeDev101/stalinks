@@ -55,4 +55,12 @@ export default {
     close: 'बंद करना',
     yes: 'हां',
     no: 'नहीं',
+
+    language_writer_price_rate: 'भाषा - लेखक मूल्य दर',
+    ppa_rate: 'PPA दर',
+    ppw_rate: 'PPW दर',
+    action: 'गतिविधि',
+    update_lang_rate: 'भाषा दरें अपडेट करें',
+    success: 'सफलता',
+    success_note: 'भाषा मूल्य दरें सफलतापूर्वक अपडेट की गईं।',
 }

@@ -570,7 +570,7 @@
                             </h6>
 
                             <small class="text-muted">
-                                Recipient: {{ user.work_mail === email.received ? 'Me' : checkEmail(email.received) }}
+                                {{ $t('message.inbox.recipient') }}: {{ user.work_mail === email.received ? 'Me' : checkEmail(email.received) }}
                             </small>
 
                             <!-- display cc, bcc and to -->
@@ -835,7 +835,7 @@
                                             class="form-check-input"
 
                                             @click="toggleCc('Send')">
-                                        With Cc
+                                        {{ $t('message.inbox.with_cc') }}
                                     </label>
                                 </div>
                             </div>
@@ -1023,7 +1023,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
-                                The cc field must contain valid emails
+                                {{ $t('message.inbox.cc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -1058,7 +1058,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
-                                The bcc field must contain valid emails
+                                {{ $t('message.inbox.bcc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -1170,7 +1170,7 @@
                                             class="form-check-input"
 
                                             @click="toggleCc('Reply')">
-                                        With Cc
+                                        {{ $t('message.inbox.with_cc') }}
                                     </label>
                                 </div>
                             </div>
@@ -1346,7 +1346,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
-                                The cc field must contain valid emails
+                                {{ $t('message.inbox.cc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -1381,7 +1381,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
-                                The bcc field must contain valid emails
+                                {{ $t('message.inbox.bcc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -1475,7 +1475,7 @@
                                             class="form-check-input"
 
                                             @click="toggleCc('Forward')">
-                                        With Cc
+                                        {{ $t('message.inbox.with_cc') }}
                                     </label>
                                 </div>
                             </div>
@@ -1563,7 +1563,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'cc.')" class="text-danger">
-                                The cc field must contain valid emails
+                                {{ $t('message.inbox.cc_valid') }}
                             </span>
                         </div>
                     </div>
@@ -1598,7 +1598,7 @@
                             </span>
 
                             <span v-if="checkCcBccValidationError(messageForms.errors, 'bcc.')" class="text-danger">
-                                The bcc field must contain valid emails
+                                {{ $t('message.inbox.bcc_valid') }}
                             </span>
                         </div>
                     </div>

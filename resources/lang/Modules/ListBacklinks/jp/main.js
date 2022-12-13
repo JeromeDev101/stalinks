@@ -37,7 +37,7 @@ export default {
     t_backlinks: 'バックリンク',
     t_ref_dom: '参考ドメイン',
     t_ratio: '割合',
-    t_price: 'Seller Price',
+    t_price: 'Price',
     t_prices: 'Prices',
     t_status: 'ステータス',
     t_code_comb: 'コードの組み合わせ',
@@ -83,5 +83,12 @@ export default {
     search: '検索',
     close: '閉じる',
     save: '保存する',
-    promo: '2023 年 1 月 6 日まで、購入ごとに 15% の割引があります。', 
+
+    // updates
+    uninterested: '無関心',
+    selected_items_not_purchased: '選択したアイテムのステータスが "Purchased" であってはなりません',
+    selected_items_interested: '選択したアイテムのステータスは "Interested" でなければなりません',
+    mark_not_interested: 'バックリンクを "Not Interested" としてマークしますか?',
+    mark_interested: 'バックリンクを "Interested" とマークしますか?',
+    remove_interested: 'バックリンクの "Interested" ステータスを削除しますか?',
 }

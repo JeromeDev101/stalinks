@@ -81,5 +81,18 @@ export default {
     close: 'बंद करना',
     save: 'सहेजें',
     delete_sentence: 'हाँ, मिटा दो!',
-    keep: 'नहीं, इसे रखो'
+    keep: 'नहीं, इसे रखो',
+
+    // updates
+    validate: 'मान्य',
+    invalidate: 'अमान्य',
+    selected_invalidate_confirm: 'क्या आप वाकई चयनित आदेशों को अमान्य करना चाहते हैं?',
+    selected_invalidate_success: 'चयनित आदेश सफलतापूर्वक अमान्य',
+    selected_invalidate_error: 'चयनित आदेशों को अमान्य करते समय कुछ त्रुटियां थीं',
+    validate_confirm: 'क्या आप वाकई इस आदेश की पुष्टि करना चाहते हैं?',
+    validate_success: 'आदेश सफलतापूर्वक सत्यापित किया गया',
+    validate_error: 'आदेश की पुष्टि करते समय कुछ त्रुटियां थीं',
+    invalidate_confirm: 'क्या आप वाकई इस आदेश को अमान्य करना चाहते हैं?',
+    invalidate_success: 'आदेश सफलतापूर्वक अमान्य',
+    invalidate_error: 'आदेश को अमान्य करते समय कुछ त्रुटियां थीं',
 }

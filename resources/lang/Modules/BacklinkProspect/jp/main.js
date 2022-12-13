@@ -75,4 +75,15 @@ export default {
     close: '閉じる',
     update: '更新',
     save: '保存する',
+
+    status_third_party: 'ステータス サードパーティ',
+    status_stalinks: 'ステータス StaLinks URL 見通し',
+    is_moved: '移動されましたか?',
+    third_party_totals: '第三者ステータス合計',
+    stalinks_totals: 'StaLinks URL プロスペクト ステータスの合計',
+    get_ahref: 'Ahref を取得',
+    fetch_data: 'データを取得する',
+    fetching_data: 'データを取得しています...',
+    please_wait: 'データを取得しています。しばらくお待ちください',
+    fetch_success: '正常にデータを取得しました',
 }

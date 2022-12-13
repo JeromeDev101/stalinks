@@ -415,7 +415,7 @@
                                 </div>
                                 <div v-if="viewModel.status === 'Disapproved'" class="col-md-12">
                                     <div class="form-group">
-                                        <label class="text-danger">Fail Reason</label>
+                                        <label class="text-danger">{{ $t('message.writer_validation.fail_reason') }}</label>
                                         <textarea v-model="viewModel.fail_reason" class="form-control" rows="3" disabled>
 
                                         </textarea>
@@ -527,10 +527,10 @@
                             </h2>
 
                             <div class="swal2-content">
-                                Mark exam as disapprove?
+                                {{ $t('message.writer_validation.fail_reason_question') }}
 
                                 <p class="m-0">
-                                    (Please provide a reason for the writer)
+                                    {{ $t('message.writer_validation.fail_reason_provide') }}
                                 </p>
 
                                 <textarea
@@ -581,7 +581,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Update Exam Failed Reason</h5>
+                            <h5 class="modal-title">{{ $t('message.writer_validation.update_fail_reason') }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -590,7 +590,7 @@
                         <div class="modal-body text-center">
                             <div class="alert alert-info text-left">
                                 <i class="fas fa-info-circle"></i>
-                                An email and notification will be sent to the writer about the updated reason.
+                                {{ $t('message.writer_validation.update_fail_reason_note') }}
                             </div>
 
                             <textarea
@@ -677,7 +677,7 @@
                                                 {{ $t('message.writer_validation.fam_first_attempt_failed') }}
                                                 <br/> <br/>
 
-                                                Reason(s):
+                                                {{ $t('message.writer_validation.reason') }}
                                                 <br>
                                                 <span class="font-italic">{{ ExamUpdateFirst.fail_reason }}</span>
                                                 <br/> <br/>
@@ -834,7 +834,7 @@
 
                                                 <br/> <br/>
 
-                                                Reason(s):
+                                                {{ $t('message.writer_validation.reason') }}
                                                 <br>
                                                 <span class="font-italic">{{ ExamUpdateSecond.fail_reason_two }}</span>
                                                 <br/> <br/>

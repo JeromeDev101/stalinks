@@ -44,4 +44,6 @@ export default {
     search: 'Cari',
     close: 'Tutup',
     pay: 'Membayar',
+
+    reupload_note: 'Yakin ingin memperbarui dokumen yang diunggah? Email otomatis akan dikirim ke penulis.'
 }

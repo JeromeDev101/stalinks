@@ -44,4 +44,17 @@ export default {
     update: 'อัปเดต',
     yes_delete: 'ใช่ ลบออก!',
     no_delete: 'ไม่นะ เก็บไว้',
+
+    // updates
+    table_reg_date: 'วันที่ลงทะเบียน',
+    table_exp_date: 'วันหมดอายุ',
+
+    days_left: ' วันที่เหลือ',
+    expired: 'หมดอายุ',
+
+    expired_reminder: 'เครื่องมือนี้กำลังจะหมดอายุหรือหมดอายุแล้ว ต่ออายุเครื่องมือนี้โดยคลิกปุ่มต่ออายุข้างช่องวันหมดอายุ',
+
+    registration_date: 'วันที่ลงทะเบียน',
+    expiration_date: 'วันหมดอายุ',
+    is_purchased: 'ซื้อหรือไม่?',
 }

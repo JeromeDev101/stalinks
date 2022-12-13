@@ -44,4 +44,17 @@ export default {
     update: 'Update',
     yes_delete: 'Yes, delete it!',
     no_delete: 'No, keep it',
+
+    // updates
+    table_reg_date: 'Reg Date',
+    table_exp_date: 'Exp Date',
+
+    days_left: ' days left',
+    expired: 'expired',
+
+    expired_reminder: 'This tool is about to expire or is now expired. Renew this tool by clicking the renew button beside the expiration date field.',
+
+    registration_date: 'Registration Date',
+    expiration_date: 'Expiration Date',
+    is_purchased: 'Is Purchased?',
 }

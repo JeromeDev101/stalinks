@@ -175,4 +175,21 @@ export default {
     save: 'บันทึก',
     send: 'ส่ง',
     update: 'อัปเดต',
+
+    basic: 'ขั้นพื้นฐาน',
+    medium: 'ปานกลาง',
+    premium: 'พรีเมี่ยม',
+    recommended: 'ที่แนะนำ',
+
+    writer_pricing: 'ราคานักเขียน',
+    price_rate_per_lang: 'อัตราราคาต่อภาษา',
+    price_rate_note: 'อัตราราคาเปลี่ยนเป็นอัตราเริ่มต้นตามประเภทการกำหนดราคาที่เลือก',
+    show_history: 'แสดงประวัติ',
+
+    payment_info_history: 'ประวัติข้อมูลการชำระเงิน',
+    pih_account: 'บัญชี',
+    pih_default: 'ค่าเริ่มต้น',
+    pih_status: 'สถานะ',
+    pih_dates: 'วันที่',
+    pih_view: 'ดูรายละเอียด',
 }

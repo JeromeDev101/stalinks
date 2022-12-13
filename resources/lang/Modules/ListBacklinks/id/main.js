@@ -83,5 +83,13 @@ export default {
     search: 'Cari',
     close: 'Tutup',
     save: 'Simpan',
-    promo: 'Anda memiliki diskon 15% untuk setiap pembelian hingga 6 Januari 2023.', 
+    promo: 'Anda memiliki diskon 15% untuk setiap pembelian hingga 6 Januari 2023.',
+
+    // updates
+    uninterested: 'tidak tertarik',
+    selected_items_not_purchased: 'Item yang dipilih tidak boleh berstatus "Purchased"',
+    selected_items_interested: 'Item yang dipilih harus berstatus "Interested"',
+    mark_not_interested: 'Tandai backlink sebagai "Not Interested"?',
+    mark_interested: 'Tandai backlink sebagai "Interested"?',
+    remove_interested: 'Hapus status  "Interested" pada backlink??',
 }

@@ -94,4 +94,10 @@ export default {
     delete: 'delete',
     no: 'No',
     yes: 'Yes',
+
+    // updates
+    recipient: 'Recipient',
+    with_cc: 'With Cc',
+    cc_valid: 'The cc field must contain valid emails',
+    bcc_valid: 'The bcc field must contain valid emails',
 }

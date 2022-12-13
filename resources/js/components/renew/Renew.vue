@@ -15,14 +15,14 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title">Renew {{ mode }}</h4>
+                        <h4 class="modal-title">{{ $t('message.renew.title') }} {{ mode }}</h4>
                     </div>
 
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Name</label>
+                                    <label style="color: #333">{{ $t('message.renew.name') }}</label>
 
                                     <input
                                         v-model="renewDetails.name"
@@ -36,7 +36,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Registration Date</label>
+                                    <label style="color: #333">{{ $t('message.renew.reg_date') }}</label>
 
                                     <input
                                         v-model="renewDetails.registered_at"
@@ -48,7 +48,7 @@
 
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label style="color: #333">Expiration Date</label>
+                                    <label style="color: #333">{{ $t('message.renew.exp_date') }}</label>
 
                                     <input
                                         v-model="renewDetails.expired_at"
@@ -62,13 +62,13 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label style="color: #333">Renewal Period</label>
+                                    <label style="color: #333">{{ $t('message.renew.renewal_period') }}</label>
 
                                     <v-select
                                         v-model="renewDetails.renewal_period"
                                         label="name"
                                         class="style-chooser"
-                                        placeholder="Select Renewal Period"
+                                        :placeholder="$t('message.renew.select_renewal_period')"
                                         :searchable="true"
                                         :reduce="period => period.value"
                                         :options="renewalPeriod"
@@ -94,7 +94,7 @@
                                         id="isPurchasedRenew"
                                         class="form-check-input">
 
-                                    <label class="form-check-label" for="isPurchasedRenew">Is Purchased?</label>
+                                    <label class="form-check-label" for="isPurchasedRenew">{{ $t('message.renew.is_purchased') }}</label>
                                 </div>
                             </div>
                         </div>
@@ -197,55 +197,55 @@ export default {
 
             renewalPeriod: [
                 {
-                    name: '1 Month',
+                    name: this.$t('message.renew.one'),
                     value: 1,
                 },
                 {
-                    name: '2 Months',
+                    name: this.$t('message.renew.two'),
                     value: 2,
                 },
                 {
-                    name: '3 Months',
+                    name: this.$t('message.renew.three'),
                     value: 3,
                 },
                 {
-                    name: '4 Months',
+                    name: this.$t('message.renew.four'),
                     value: 4,
                 },
                 {
-                    name: '5 Months',
+                    name: this.$t('message.renew.five'),
                     value: 5,
                 },
                 {
-                    name: '6 Months',
+                    name: this.$t('message.renew.six'),
                     value: 6,
                 },
                 {
-                    name: '7 Months',
+                    name: this.$t('message.renew.seven'),
                     value: 7,
                 },
                 {
-                    name: '8 Months',
+                    name: this.$t('message.renew.eight'),
                     value: 8,
                 },
                 {
-                    name: '9 Months',
+                    name: this.$t('message.renew.nine'),
                     value: 9,
                 },
                 {
-                    name: '10 Months',
+                    name: this.$t('message.renew.ten'),
                     value: 10,
                 },
                 {
-                    name: '11 Months',
+                    name: this.$t('message.renew.eleven'),
                     value: 11,
                 },
                 {
-                    name: '1 Year',
+                    name: this.$t('message.renew.one_year'),
                     value: 12,
                 },
                 {
-                    name: '2 Years',
+                    name: this.$t('message.renew.two_years'),
                     value: 24,
                 },
             ]

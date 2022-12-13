@@ -44,4 +44,17 @@ export default {
     update: '更新',
     yes_delete: 'はい。削除します!',
     no_delete: 'いいえ、削除しません',
+
+    // updates
+    table_reg_date: '登録日',
+    table_exp_date: '有効期限',
+
+    days_left: ' 残りの日数',
+    expired: '期限切れ',
+
+    expired_reminder: 'このツールの有効期限が近づいているか、現在有効期限が切れています。有効期限フィールドの横にある更新ボタンをクリックして、このツールを更新します。',
+
+    registration_date: '登録日',
+    expiration_date: '有効期限',
+    is_purchased: '購入済みですか？',
 }

@@ -548,7 +548,7 @@
                         <a href="#" class="nav-link">
                             <img src="../../../../images/billing.png" alt="Purchases"/>
                             <p>
-                                Purchases
+                                {{ $t('message.sidebar.purchases') }}
                                 <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
@@ -560,7 +560,7 @@
                                     :class="{ active: $route.name === 'purchases-config' }">
 
                                     <i class="fas fa-cog nav-icon"></i>
-                                    <p>Config</p>
+                                    <p>{{ $t('message.sidebar.purchases_config') }}</p>
                                 </router-link>
                             </li>
                             <li v-if="user.permission_list.includes('view-purchases-summary')" class="nav-item">
@@ -570,7 +570,7 @@
                                     :class="{ active: $route.name === 'purchases-summary' }">
 
                                     <i class="fas fa-clipboard-list nav-icon"></i>
-                                    <p>Summary</p>
+                                    <p>{{ $t('message.sidebar.purchases_summary') }}</p>
                                 </router-link>
                             </li>
                             <li v-if="user.permission_list.includes('view-purchases-tools')" class="nav-item">
@@ -580,7 +580,7 @@
                                     :class="{ active: $route.name === 'purchases-tools' }">
 
                                     <i class="fas fa-tools nav-icon"></i>
-                                    <p>Tools</p>
+                                    <p>{{ $t('message.sidebar.purchases_tools') }}</p>
                                 </router-link>
                             </li>
                             <li v-if="user.permission_list.includes('view-purchases-manual')" class="nav-item">
@@ -590,7 +590,7 @@
                                     :class="{ active: $route.name === 'purchases-manual' }">
 
                                     <i class="fas fa-cash-register nav-icon"></i>
-                                    <p>Manual</p>
+                                    <p>{{ $t('message.sidebar.purchases_manual') }}</p>
                                 </router-link>
                             </li>
                         </ul>

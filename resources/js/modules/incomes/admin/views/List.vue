@@ -36,7 +36,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Search ID Buyer</label>
+                                    <label>{{ $t('message.overall_incomes.search_id_buyer') }}</label>
                                     <input
                                         type="text"
                                         class="form-control"
@@ -49,7 +49,7 @@
 
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label>Buyer</label>
+                                    <label>{{ $t('message.overall_incomes.buyer') }}</label>
                                     <v-select
                                         v-model="filterModel.buyer"
                                         multiple
@@ -166,8 +166,8 @@
                                 <tr class="label-primary">
                                     <th>#</th>
                                     <th v-show="tblOptIncomesAdmin.backlink_id">{{ $t('message.overall_incomes.i_id_backlink') }}</th>
-                                    <th v-show="tblOptIncomesAdmin.buyer_id">Buyer ID</th>
-                                    <th v-show="tblOptIncomesAdmin.buyer">Buyer</th>
+                                    <th v-show="tblOptIncomesAdmin.buyer_id">{{ $t('message.overall_incomes.buyer_id') }}</th>
+                                    <th v-show="tblOptIncomesAdmin.buyer">{{ $t('message.overall_incomes.buyer') }}</th>
                                     <th v-show="tblOptIncomesAdmin.live_date">{{ $t('message.overall_incomes.filter_date_completed') }}</th>
                                     <th v-if="user.role_id !== 11"  v-show="tblOptIncomesAdmin.selling_price">
                                         {{ $t('message.overall_incomes.i_seller_price') }}
@@ -294,7 +294,7 @@
                                         type="checkbox"
                                         :checked="tblOptIncomesAdmin.buyer_id ? 'checked':''"
                                         v-model="tblOptIncomesAdmin.buyer_id">
-                                    ID Buyer
+                                    {{ $t('message.overall_incomes.id_buyer') }}
                                 </label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -303,7 +303,7 @@
                                         type="checkbox"
                                         :checked="tblOptIncomesAdmin.buyer ? 'checked':''"
                                         v-model="tblOptIncomesAdmin.buyer">
-                                    Buyer
+                                    {{ $t('message.overall_incomes.buyer') }}
                                 </label>
                             </div>
                             <div class="checkbox col-md-6">

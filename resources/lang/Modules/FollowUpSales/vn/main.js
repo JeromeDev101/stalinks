@@ -96,4 +96,13 @@ export default {
     no: 'Không',
     confirm: 'Xác nhận',
     cancel: 'Hủy bỏ',
+
+    // updates
+    uia_confirm_alert: 'Sau khi xác nhận, hệ thống sẽ KHÔNG tạo bài viết cho đơn hàng này.',
+    uia_update_inc_article: "Nhấp vào đây để cập nhật danh sách dữ liệu nhà xuất bản bao gồm bài viết thành 'No'",
+    generate_article: 'Việc xác nhận sẽ tạo ra một bài báo và cập nhật dữ liệu danh sách nhà xuất bản - bao gồm bài viết thành "no"',
+    article_generated: 'Bài viết được tạo thành công',
+    article_generate_error: 'Đã xảy ra một số lỗi khi tạo một bài báo.',
+    publisher_updated_successfully: 'Liệt kê dữ liệu nhà xuất bản: bao gồm bài viết được cập nhật thành công.',
+    publisher_update_error: 'Đã xảy ra một số lỗi khi cập nhật dữ liệu nhà xuất bản danh sách.',
 }

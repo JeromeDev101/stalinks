@@ -31,4 +31,14 @@ export default {
     close: 'Menutup',
     save: 'Menyimpan',
     update: 'Memperbarui',
+
+    role_permissions: 'Izin Peran',
+    module_group: 'Grup Modul',
+    module_page: 'Halaman Modul',
+    module_view: 'Melihat',
+    module_create: 'Membuat',
+    module_update: 'Memperbarui',
+    module_delete: 'Menghapus',
+    module_upload: 'Mengunggah',
+    module_export: 'Ekspor',
 }

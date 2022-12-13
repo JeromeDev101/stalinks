@@ -44,4 +44,6 @@ export default {
     search: 'Tìm kiếm',
     close: 'Đóng',
     pay: 'Chi trả',
+
+    reupload_note: 'Bạn có chắc chắn muốn cập nhật tài liệu đã tải lên không? Một email tự động sẽ được gửi đến người viết.'
 }

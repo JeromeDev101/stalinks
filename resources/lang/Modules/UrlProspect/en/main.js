@@ -227,4 +227,11 @@ export default {
     update: 'Update',
     prospect_from: 'Prospect From',
     simple_from: 'From',
+
+    date_status_updated: 'Date Status Updated',
+    status_updated: 'Status Updated',
+    with_cc: 'With Cc',
+    cc_field_contain: 'The cc field must contain valid emails',
+    bcc_field_contain: 'The bcc field must contain valid emails',
+    email_auto: 'Email Automatic Individual',
 }

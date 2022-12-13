@@ -83,5 +83,13 @@ export default {
     search: 'ค้นหา',
     close: 'ปิด',
     save: 'บันทึก',
-    promo: 'คุณมีส่วนลด 15% สำหรับทุกการซื้อจนถึงวันที่ 6 มกราคม 2023', 
+    promo: 'คุณมีส่วนลด 15% สำหรับทุกการซื้อจนถึงวันที่ 6 มกราคม 2023',
+
+    // updates
+    uninterested: 'ไม่สนใจ',
+    selected_items_not_purchased: 'รายการที่เลือกต้องไม่มีสถานะเป็น "Purchased"',
+    selected_items_interested: 'รายการที่เลือกต้องมีสถานะเป็น "Interested"',
+    mark_not_interested: 'ทำเครื่องหมายลิงก์ย้อนกลับเป็น "Not Interested"?',
+    mark_interested: 'ทำเครื่องหมายลิงก์ย้อนกลับเป็น "Interested" หรือไม่',
+    remove_interested: 'ลบสถานะ "Interested" ในลิงก์ย้อนกลับหรือไม่',
 }

@@ -44,4 +44,17 @@ export default {
     update: 'Memperbarui',
     yes_delete: 'Ya, hapus!',
     no_delete: 'Tidak, simpan',
+
+    // updates
+    table_reg_date: 'tanggal registrasi',
+    table_exp_date: 'Tanggal habis tempo',
+
+    days_left: ' hari tersisa',
+    expired: 'kedaluwarsa',
+
+    expired_reminder: 'Alat ini akan kedaluwarsa atau sekarang kedaluwarsa. Perbarui alat ini dengan mengklik tombol perbarui di sebelah bidang tanggal kedaluwarsa.',
+
+    registration_date: 'tanggal registrasi',
+    expiration_date: 'Tanggal habis tempo',
+    is_purchased: 'Apakah Dibeli?',
 }

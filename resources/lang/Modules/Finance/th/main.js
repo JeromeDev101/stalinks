@@ -55,4 +55,12 @@ export default {
     close: 'ปิด',
     yes: 'ใช่',
     no: 'ไม่ใช่',
+
+    language_writer_price_rate: 'ภาษา - อัตราราคานักเขียน',
+    ppa_rate: 'อัตรา PPA',
+    ppw_rate: 'อัตรา PPW',
+    action: 'การกระทำ',
+    update_lang_rate: 'อัปเดตอัตราภาษา',
+    success: 'ความสำเร็จ',
+    success_note: 'อัปเดตอัตราราคาภาษาเรียบร้อยแล้ว',
 }
