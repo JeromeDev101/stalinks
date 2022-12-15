@@ -10,9 +10,9 @@
             </div><!-- /.container-fluid -->
         </div>
 
-        <div class="alert alert-info" v-if="isBuyerHasDiscount">
+        <!-- <div class="alert alert-info" v-if="isBuyerHasDiscount">
             {{ $t('message.list_backlinks.promo') }}
-        </div>
+        </div> -->
 
         <div class="row">
             <div class="col-sm-12">
@@ -528,12 +528,12 @@
                                 slot-scope="scope"
                                 slot="priceData">
 
-                                <span v-if="computePrice(scope.row.price,
+                                <!-- <span v-if="computePrice(scope.row.price,
                                         scope.row.inc_article, 'yes') != computePrice(scope.row.price, scope.row.inc_article, 'no')"
                                         class="text-danger" style="text-decoration: line-through;">
                                     ${{ computePrice(scope.row.price, scope.row.inc_article, 'no') }}
                                     &nbsp;
-                                </span>
+                                </span> -->
 
                                 {{
                                     scope.row.price == '' ||
@@ -647,7 +647,10 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>{{ $t('message.list_backlinks.t_prices') }} <span v-if="isBuyerHasDiscount" class="text-danger">( 15% Off )</span></label>
+                                    <label>
+                                        {{ $t('message.list_backlinks.t_prices') }} 
+                                        <!-- <span v-if="isBuyerHasDiscount" class="text-danger">( 15% Off )</span> -->
+                                    </label>
 
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
@@ -1752,7 +1755,7 @@ export default {
     },
 
     methods : {
-
+        // disabled these function 
         checkBuyerDiscount() {
             let user = this.user;
 
@@ -1940,7 +1943,9 @@ export default {
 
             this.isSearching = false;
             this.toggleSearchLoading();
-            this.checkBuyerDiscount();
+
+            // this.checkBuyerDiscount();
+
             this.btnBuy = false;
             loader.hide();
         },
@@ -2353,10 +2358,10 @@ export default {
             selling_price = parseFloat(selling_price).toFixed(0);
 
             // if buyer has a discount
-            if(this.isBuyerHasDiscount && show_discount == 'yes') {
-                let discount = selling_price * .15
-                selling_price = selling_price - discount
-            }
+            // if(this.isBuyerHasDiscount && show_discount == 'yes') {
+            //     let discount = selling_price * .15
+            //     selling_price = selling_price - discount
+            // }
 
             return selling_price;
         },
