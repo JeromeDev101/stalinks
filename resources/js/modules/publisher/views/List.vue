@@ -3768,6 +3768,10 @@ export default {
                     this.filterModel.sort = this.getSortData()
                 }
 
+                //reset selection
+                this.checkIds = [];
+                this.allSelected = false;
+
                 this.getPublisherList(1);
             },
 
