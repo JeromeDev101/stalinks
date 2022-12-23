@@ -192,4 +192,6 @@ export default {
     pih_status: 'Trạng thái',
     pih_dates: 'ngày',
     pih_view: 'xem chi tiết',
+
+    recommended_seller: 'Là người bán đề nghị?',
 }

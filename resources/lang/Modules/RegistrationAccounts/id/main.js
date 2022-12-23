@@ -192,4 +192,6 @@ export default {
     pih_status: 'Status',
     pih_dates: 'tanggal',
     pih_view: 'melihat rincian',
+
+    recommended_seller: 'Apakah Penjual yang Direkomendasikan?',
 }

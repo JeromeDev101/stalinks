@@ -268,6 +268,17 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>{{ $t('message.registration_accounts.recommended_seller') }}</label>
+                                        <select class="form-control" v-model="filterModel.recommended_seller">
+                                            <option value="">{{ $t('message.registration_accounts.all') }}</option>
+                                            <option value="yes">{{ $t('message.registration_accounts.yes') }}</option>
+                                            <option value="no">{{ $t('message.registration_accounts.no') }}</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row mb-3">
@@ -2272,6 +2283,7 @@ export default {
                     this.$route.query.account_verification || '',
                 is_sub_account : this.$route.query.is_sub_account || '',
                 buyer_transaction : this.$route.query.buyer_transaction || '',
+                recommended_seller : this.$route.query.recommended_seller || '',
                 advance_search: this.$route.query.advance_search || ''
             },
 
@@ -3921,6 +3933,7 @@ export default {
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
                     buyer_transaction : this.filterModel.buyer_transaction,
+                    recommended_seller : this.filterModel.recommended_seller,
                     advance_search : this.filterModel.advance_search,
                     page : page
                 }
@@ -3984,6 +3997,7 @@ export default {
                 account_verification : '',
                 is_sub_account: '',
                 buyer_transaction: '',
+                recommended_seller: '',
                 advance_search: this.filterModel.advance_search,
             }
 
@@ -4027,6 +4041,7 @@ export default {
                     this.filterModel.account_verification,
                     is_sub_account : this.filterModel.is_sub_account,
                     buyer_transaction : this.filterModel.buyer_transaction,
+                    recommended_seller : this.filterModel.recommended_seller,
                     advance_search : this.filterModel.advance_search,
                 }
             });

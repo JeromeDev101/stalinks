@@ -231,6 +231,7 @@ class AccountController extends Controller
         $created_at = json_decode($request->created_at);
         $isTeamSeller = $this->checkTeamSeller();
         $buyer_transaction = $request->buyer_transaction;
+        $recommended_seller = $request->recommended_seller;
 
         // advance search
 
@@ -346,6 +347,9 @@ class AccountController extends Controller
                     ->where('account_validation', 'valid')
                     ->doesntHave('user.wallet_transactions');
             }
+        })
+        ->when(isset($recommended_seller), function($query) use ($recommended_seller){
+            $query->where('is_recommended', $recommended_seller);
         })
 
         // advance search

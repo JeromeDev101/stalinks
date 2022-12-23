@@ -192,4 +192,6 @@ export default {
     pih_status: 'दर्जा',
     pih_dates: 'पिंड खजूर।',
     pih_view: 'विवरण देखें',
+
+    recommended_seller: 'अनुशंसित विक्रेता है?',
 }
