@@ -193,5 +193,5 @@ export default {
     pih_dates: 'ngày',
     pih_view: 'xem chi tiết',
 
-    recommended_seller: 'Là người bán đề nghị?',
+    recommended_seller: 'đề nghị Người Bán',
 }

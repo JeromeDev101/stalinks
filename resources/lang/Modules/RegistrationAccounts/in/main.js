@@ -193,5 +193,5 @@ export default {
     pih_dates: 'पिंड खजूर।',
     pih_view: 'विवरण देखें',
 
-    recommended_seller: 'अनुशंसित विक्रेता है?',
+    recommended_seller: 'अनुशंसित विक्रेता',
 }

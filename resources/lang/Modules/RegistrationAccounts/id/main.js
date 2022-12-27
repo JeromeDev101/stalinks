@@ -193,5 +193,5 @@ export default {
     pih_dates: 'tanggal',
     pih_view: 'melihat rincian',
 
-    recommended_seller: 'Apakah Penjual yang Direkomendasikan?',
+    recommended_seller: 'Penjual yang Direkomendasikan',
 }

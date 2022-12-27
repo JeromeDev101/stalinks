@@ -193,5 +193,5 @@ export default {
     pih_dates: '日付',
     pih_view: '詳細を見る',
 
-    recommended_seller: 'おすすめの出品者は？',
+    recommended_seller: 'おすすめの出品者',
 }
