@@ -89,7 +89,7 @@
 
             <div class="card custom-card px-5 pb-5 pt-3">
                 <h2 class="text-center">
-                    <!-- <img style="height: auto; width: 320px;" src="../../../../images/stalinks2.png" alt="User Image"> -->
+                    <img style="height: auto; width: 320px;" src="../../../../images/stalinks2.png" alt="User Image">
                 </h2>
 
                 <hr/>
@@ -215,7 +215,7 @@
     }
 
     .bg1 {
-        /*background-image: url("../../../../images/background-login2.jpg");*/
+        background-image: url("../../../../images/background-login2.jpg");
         background-color: #cccccc;
     }
 
