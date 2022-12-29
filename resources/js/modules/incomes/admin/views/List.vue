@@ -70,7 +70,7 @@
                                         v-model="filterModel.date_completed"
                                         :ranges="generateDefaultDateRange()"
                                         ref="picker"
-                                        opens="right"
+                                        opens="left"
                                         style="width: 100%"
                                         :linkedCalendars="true"
                                         :dateRange="filterModel.date_completed"
@@ -515,6 +515,8 @@ export default {
         async getListIncomesAdmin(page = 1) {
             $('#tbl_incomes_admin').DataTable().destroy();
 
+            let loader = this.$loading.show();
+
             this.filterModel.page = page;
 
             this.isSearchLoading = true;
@@ -531,6 +533,7 @@ export default {
 
             this.isSearchLoading = false;
             this.isSearchingLoading = false;
+            loader.hide();
 
             // this.computeSummary();
         },
