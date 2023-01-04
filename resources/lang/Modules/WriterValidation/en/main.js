@@ -37,7 +37,7 @@ export default {
     ew_anchor_text: 'Use the anchor text as natural as possible within your article and hyperlink it to the assigned website.',
     ew_creative_title: 'Create a creative title based on the topic(s) provided.',
     ew_meta_desc: 'Write a meta description with 110-160 characters (The spaces are counted as character).',
-    ew_2_attempts: 'You will be given 2 attempts for the writer\'s exam. If you have failed on the first attempt, no worries! we will give you a second attempt to take the exam after 3 weeks.',
+    ew_2_attempts: 'You will be given 2 attempts for the writer\'s exam. If you have failed on the first attempt, no worries! we will give you a second attempt to take the exam after 3 days.',
     ew_please_wait: 'Please wait for the writer\'s exam to be created. We will notify you about this shortly. Thank you!',
 
     // first attempt exam

@@ -60,6 +60,7 @@ import help from './Help/id/main';
 import buyer_1 from './Help/id/buyer_1';
 import buyer_2 from './Help/id/buyer_2';
 import buyer_3 from "./Help/id/buyer_3";
+import buyer_4 from "./Help/id/buyer_4";
 import seller_1 from "./Help/id/seller_1";
 import seller_2 from "./Help/id/seller_2";
 import seller_3 from "./Help/id/seller_3";
@@ -67,6 +68,7 @@ import seller_4 from "./Help/id/seller_4";
 import writer_1 from "./Help/id/writer_1";
 import writer_2 from "./Help/id/writer_2";
 import writer_3 from "./Help/id/writer_3";
+import writer_4 from "./Help/id/writer_4";
 
 // login
 import login from './Login/id/main';
@@ -202,6 +204,7 @@ export default {
         buyer_1,
         buyer_2,
         buyer_3,
+        buyer_4,
         seller_1,
         seller_2,
         seller_3,
@@ -209,6 +212,7 @@ export default {
         writer_1,
         writer_2,
         writer_3,
+        writer_4,
 
         // login
         login,

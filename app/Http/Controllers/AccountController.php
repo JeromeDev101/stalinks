@@ -1032,6 +1032,7 @@ class AccountController extends Controller
         unset($input['role_id']);
         unset($input['avatar']);
         unset($input['isOurs']);
+        $input['commission'] = 'yes'; // default
         $input['type'] = 'Buyer';
         $input['team_in_charge'] = Auth::user()->id;
         $input['is_sub_account'] = 1;

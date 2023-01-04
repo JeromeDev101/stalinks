@@ -37,7 +37,7 @@ export default {
     ew_anchor_text: 'Gunakan anchor teks se-alami mungkin dalam artikel Anda dan hyperlink kan ke situs web yang ditetapkan.',
     ew_creative_title: 'Buat judul yang kreatif berdasarkan topik yang disediakan.',
     ew_meta_desc: 'Tulis meta deskripsi dengan 110-160 karakter (spasi dihitung sebagai karakter).',
-    ew_2_attempts: 'Anda akan diberikan 2 kali percobaan untuk ujian penulis. Jika Anda gagal pada percobaan pertama, jangan khawatir! kami akan memberi Anda kesempatan kedua untuk mengikuti ujian setelah 3 minggu.',
+    ew_2_attempts: 'Anda akan diberikan 2 kali percobaan untuk ujian penulis. Jika Anda gagal pada percobaan pertama, jangan khawatir! kami akan memberi Anda kesempatan kedua untuk mengikuti ujian setelah 3 hari.',
     ew_please_wait: 'Harap tunggu sampai ujian penulis dibuat. Kami akan segera memberi tahu Anda tentang hal ini. Terima kasih!',
 
     // first attempt exam

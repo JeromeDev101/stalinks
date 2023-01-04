@@ -594,7 +594,9 @@
                                                 account.team_in_charge == null
                                                     ? 'N/A'
                                                     : account.is_sub_account == 1
-                                                        ? account.team_in_charge.registration.team_in_charge.username
+                                                        ? account.team_in_charge.registration.team_in_charge
+                                                            ? account.team_in_charge.registration.team_in_charge.username
+                                                            : 'N/A'
                                                         : account.team_in_charge.username
                                             }}
 

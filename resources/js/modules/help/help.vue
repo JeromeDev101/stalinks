@@ -1,191 +1,216 @@
 <template>
    <div>
-      <div v-if="$route.name == 'help'">
+      <div v-if="$route.name === 'help'">
          <div class="row">
-            <div class="col-sm-12">
+            <div class="col">
                <div class="box">
-                  <div class="box-header">
+                  <div class="box-header" style="padding: 18px !important;">
                      <div class="row">
-                        <div class="col-md-12 help-content">
-                           <div ref="buyer" v-if="user.isOurs === 0 || user.role_id === 5">
-                               <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h1') }}</h4>
-                               <p>{{ $t('message.help.p1') }}</p>
-                               <p style="font-weight: 600;color: #497EB1; font-size:20px;">{{ $t('message.help.h2') }}</p>
-                               <p>{{ $t('message.help.p2') }}</p>
-                               <p>{{ $t('message.help.p3') }}</p>
-                               <!-- Buyer -->
-                               <h4 class="bg-primary text-white p-2 mt-3 text-bold">{{ $t('message.help.h3') }}</h4>
-                               <p>
-                                   {{ $t('message.help.p4') }}
-                               </p>
-                               <ul class="no-dot">
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">-->
-                                       <!--                                    <div class="image-overlay "> </div>-->
-                                       <!--                              <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                        <div class="help-content w-100">
+                            <div v-if="user.isOurs === 0 || user.role_id === 5" class="row" ref="welcome">
+                                <div class="col">
+                                    <div class="card card-outline card-secondary">
+                                        <div class="card-header">
+                                            <h4 class="help-header font-weight-bold">
+                                                {{ $t('message.help.h1') }}
+                                            </h4>
+                                            <div class="card-tools">
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <p class="help-paragraph">{{ $t('message.help.p1') }}</p>
 
+                                            <h5 class="help-sub-header">{{ $t('message.help.h2') }}</h5>
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 1-->
-                                       <!--                                    </div>-->
+                                            <p class="help-paragraph">{{ $t('message.help.p2') }}</p>
+                                            <p class="help-paragraph">{{ $t('message.help.p3') }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                       <!--                                 </div>-->
+                            <div v-if="user.isOurs === 0 || user.role_id === 5" class="row" ref="buyer">
+                                <div class="col">
+                                    <div class="card card-outline card-secondary">
+                                        <div class="card-header py-3">
+                                            <div class="card-title">
+                                                <h4 class="help-header font-weight-bold m-0">
+                                                    {{ $t('message.help.h3') }}
+                                                </h4>
+                                            </div>
+                                            <div class="card-tools">
+                                                <a href="../../../images/buyer-guide/stalinks-buyer-guide.docx" title="Download Guide" download>
+                                                    <button
+                                                        class="btn btn-primary btn-sm"
+                                                        style="background-color: #007E93 !important; border-color: #007E93 !important;">
 
-                                       <img src="../../../images/step-icons/Buyer_Navigate.png" alt="">
+                                                        <i class="fas fa-download"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <p class="help-paragraph">{{ $t('message.help.p4') }}</p>
 
-                                       <router-link :to="{ path: $t('message.help.b1.url') }">
-                                           {{ $t('message.help.b1.text') }}
-                                       </router-link>
+                                            <ul class="no-dot">
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
 
-                                   </li>
-                                   <li class="flex mb-3">
-                                       <!--                                 <div class="circle">-->
-                                       <!--                                  <div class="image-overlay "> </div>-->
-                                       <!--                                   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                    <router-link :to="{ path: $t('message.help.b1.url') }">
+                                                        {{ $t('message.help.b1.text') }}
+                                                    </router-link>
+                                                </li>
 
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 2-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
+                                                    <router-link :to="{ path: $t('message.help.b2.url') }">
+                                                        {{ $t('message.help.b2.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <img src="../../../images/step-icons/Buyer_Backlink.png" alt="">
-                                       <router-link :to="{ path: $t('message.help.b2.url') }">
-                                           {{ $t('message.help.b2.text') }}
-                                       </router-link>
-                                   </li>
-                                   <li class="flex mb-3">
-                                       <!--                                 <div class="circle">-->
-                                       <!--                                  <div class="image-overlay "> </div>-->
-                                       <!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Buyer_Backlink.png" alt="">
 
+                                                    <router-link :to="{ path: $t('message.help.b22.url') }">
+                                                        {{ $t('message.help.b22.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 3-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Buyer_Follow Up.png" alt="">
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Buyer_Follow Up.png" alt="">
 
-                                       <router-link :to="{ path: $t('message.help.b3.url') }">
-                                           {{ $t('message.help.b3.text') }}
-                                       </router-link>
-                                   </li>
-                               </ul>
-                           </div>
-                           <div ref="seller"  v-if="user.isOurs === 0 || user.role_id === 6">
-                               <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h4') }}</h4>
-                               <p>{{ $t('message.help.p5') }}</p>
-                               <ul class="no-dot">
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">-->
-                                       <!--                                  <div class="image-overlay "> </div>-->
-                                       <!--                                    <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                    <router-link :to="{ path: $t('message.help.b3.url') }">
+                                                        {{ $t('message.help.b3.text') }}
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div v-if="user.isOurs === 0 || user.role_id === 6" class="row" ref="seller">
+                                <div class="col">
+                                    <div class="card card-outline card-secondary">
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h4 class="help-header font-weight-bold m-0">
+                                                    {{ $t('message.help.h4') }}
+                                                </h4>
+                                            </div>
+                                            <div class="card-tools">
+                                                <a href="../../../images/seller-guide/stalinks-seller-guide.docx" title="Download Guide" download>
+                                                    <button
+                                                        class="btn btn-primary btn-sm"
+                                                        style="background-color: #007E93 !important; border-color: #007E93 !important;">
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 1-->
-                                       <!--                                    </div>-->
-                                       <!--                                    </div>-->
-                                       <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
+                                                        <i class="fas fa-download"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <p class="help-paragraph">{{ $t('message.help.p5') }}</p>
 
-                                       <router-link :to="{ path: $t('message.help.b4.url') }">
-                                           {{ $t('message.help.b4.text') }}
-                                       </router-link>
-                                   </li>
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
-                                       <!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                            <ul class="no-dot">
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
 
+                                                    <router-link :to="{ path: $t('message.help.b4.url') }">
+                                                        {{ $t('message.help.b4.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 2-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Seller_Upload.png" alt="">
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Seller_Upload.png" alt="">
 
-                                       <router-link :to="{ path: $t('message.help.b5.url') }">
-                                           {{ $t('message.help.b5.text') }}
-                                       </router-link> </li>
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
-                                       <!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                    <router-link :to="{ path: $t('message.help.b5.url') }">
+                                                        {{ $t('message.help.b5.text') }}
+                                                    </router-link>
+                                                </li>
 
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Seller_Follow Up.png" alt="">
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 3-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Seller_Follow Up.png" alt="">
+                                                    <router-link :to="{ path: $t('message.help.b6.url') }">
+                                                        {{ $t('message.help.b6.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <router-link :to="{ path: $t('message.help.b6.url') }">
-                                           {{ $t('message.help.b6.text') }}
-                                       </router-link>  </li>
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
-                                       <!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
 
+                                                    <router-link :to="{ path: $t('message.help.b7.url') }">
+                                                        {{ $t('message.help.b7.text') }}
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 4-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
+                            <div v-if="user.isOurs === 0 || user.role_id === 4" class="row" ref="writer">
+                                <div class="col">
+                                    <div class="card card-outline card-secondary">
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                <h4 class="help-header font-weight-bold m-0">
+                                                    {{ $t('message.help.h5') }}
+                                                </h4>
+                                            </div>
+                                            <div class="card-tools">
+                                                <a href="../../../images/writer-guide/stalinks-writer-guide.docx" title="Download Guide" download>
+                                                    <button
+                                                        class="btn btn-primary btn-sm"
+                                                        style="background-color: #007E93 !important; border-color: #007E93 !important;">
 
-                                       <router-link :to="{ path: $t('message.help.b7.url') }">
-                                           {{ $t('message.help.b7.text') }}
-                                       </router-link>
-                                   </li>
-                               </ul>
-                           </div>
-                           <div ref="writer"  v-if="user.isOurs === 0 || user.role_id === 4">
-                               <h4 class="bg-primary text-white p-3 mt-3 text-bold">{{ $t('message.help.h5') }}</h4>
-                               <p>{{ $t('message.help.p6') }}</p>
-                               <ul class="no-dot">
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">   <div class="image-overlay "> </div>   <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                        <i class="fas fa-download"></i>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-0">
+                                            <p class="help-paragraph">{{ $t('message.help.p6') }}</p>
 
+                                            <ul class="no-dot">
+                                                <li class="mb-3">
+                                                    <img src="../../../images/step-icons/Seller_Dashboard.png" alt="">
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 1-->
-                                       <!--                                    </div>  </div>-->
-                                       <img src="../../../images/step-icons/Writer_Register.png" alt="">
+                                                    <router-link :to="{ path: $t('message.help.b8.url') }">
+                                                        {{ $t('message.help.b8.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <router-link :to="{ path: $t('message.help.b8.url') }">
-                                           {{ $t('message.help.b8.text') }}
-                                       </router-link>
-                                   </li>
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
-                                       <!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                <li class="flex mb-3">
+                                                    <img src="../../../images/step-icons/Writer_Content.png" alt="">
 
+                                                    <router-link :to="{ path: $t('message.help.b9.url') }">
+                                                        {{ $t('message.help.b9.text') }}
+                                                    </router-link>
+                                                </li>
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 2-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Writer_Content.png" alt="">
+                                                <li class="flex mb-3">
+                                                    <img src="../../../images/step-icons/Writer_Register.png" alt="">
 
-                                       <router-link :to="{ path: $t('message.help.b9.url') }">
-                                           {{ $t('message.help.b9.text') }}
-                                       </router-link>
-                                   </li>
-                                   <li class="flex mb-3" >
-                                       <!--                                 <div class="circle">  <div class="image-overlay "> </div>-->
-                                       <!--                                     <span class="image" style="background-image:url(../../../images/seller-guide/url-guide-1.png"></span>-->
+                                                    <router-link :to="{ path: $t('message.help.b99.url') }">
+                                                        {{ $t('message.help.b99.text') }}
+                                                    </router-link>
+                                                </li>
 
+                                                <li class="flex mb-3">
+                                                    <img src="../../../images/step-icons/Sellet_Paid.png" alt="">
 
-                                       <!--                                    <div class="caption">-->
-                                       <!--                                                STEP 3-->
-                                       <!--                                    </div>-->
-                                       <!--                                 </div>-->
-                                       <img src="../../../images/step-icons/Writer_Income.png" alt="">
-
-                                       <router-link :to="{ path: $t('message.help.b10.url') }">
-                                           {{ $t('message.help.b10.text') }}
-                                       </router-link>
-                                   </li>
-                               </ul>
-                           </div>
+                                                    <router-link :to="{ path: $t('message.help.b10.url') }">
+                                                        {{ $t('message.help.b10.text') }}
+                                                    </router-link>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                      </div>
                   </div>
@@ -201,8 +226,13 @@
 
 <script>
 import {mapState} from "vuex";
+import Stepper from '@/components/stepper/Stepper';
 
 export default {
+    components: {
+        Stepper
+    },
+
     computed : {
         ...mapState({
             user : state => state.storeAuth.currentUser,
@@ -299,5 +329,21 @@ export default {
    padding:25px!important;
 }
 
+    .help-header {
+        margin-top: 15px;
+        color: #007E93;
+    }
 
+    .help-paragraph {
+    }
+
+    .help-sub-header {
+        color: #FF9B00;
+    }
+
+    .help-separator {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        border-bottom: 3px solid #ced4da;
+    }
 </style>

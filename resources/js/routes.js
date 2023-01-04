@@ -70,11 +70,13 @@ import SellerGuide4 from '@/modules/help/seller_guide/views/help_4.vue'
 import WriterGuide1 from '@/modules/help/writer_guide/views/Help_1.vue'
 import WriterGuide2 from '@/modules/help/writer_guide/views/Help_2.vue'
 import WriterGuide3 from '@/modules/help/writer_guide/views/Help_3.vue'
+import WriterGuide4 from '@/modules/help/writer_guide/views/Help_4.vue'
 
 // buyers guide
 import BuyerGuide1 from '@/modules/help/buyer_guide/views/Help_1.vue'
 import BuyerGuide2 from '@/modules/help/buyer_guide/views/Help_2.vue'
 import BuyerGuide3 from '@/modules/help/buyer_guide/views/Help_3.vue'
+import BuyerGuide4 from '@/modules/help/buyer_guide/views/Help_4.vue'
 
 // tools
 import Tools from '@/modules/tools/views/Tools.vue'
@@ -222,6 +224,11 @@ const routes = [
                         component : WriterGuide3,
                     },
                     {
+                        path : 'writer-guide-4',
+                        name : 'writer-guide-4',
+                        component : WriterGuide4,
+                    },
+                    {
                         path : 'buyer-guide-1',
                         name : 'buyer-guide-1',
                         component : BuyerGuide1,
@@ -235,6 +242,11 @@ const routes = [
                         path : 'buyer-guide-3',
                         name : 'buyer-guide-3',
                         component : BuyerGuide3,
+                    },
+                    {
+                        path : 'buyer-guide-4',
+                        name : 'buyer-guide-4',
+                        component : BuyerGuide4,
                     },
                 ],
             },

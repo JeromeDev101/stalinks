@@ -1,53 +1,61 @@
 export default {
-    h1 : 'Welcome on Stalinks',
-    p1 : 'StaLinks is a link building company designed to cater to all business niche. We provide perfect and reliable solutions for both publishers and link advertisers. We connect thousands of different professionals from bloggers, SEO professionals and webmasters in one reliable and easy-to-use platform. Whether you are interested in buying or selling backlink from your website, Stalinks has all the features you need.',
-    h2 : 'How does StaLinks work?',
-    p2 : 'Backlink remains to be the highest and most important ranking factor of Google. This the main reasons why many website owners buy or sell backlinks. However, not all backlinks are safe. In fact, low quality links can do more harm than good to your website. That is where StaLinks steps in.',
-    p3 : 'We are using reliable tools to generate SEO scores. We don’t allow any advertisers to post any pages that resemble spam links. All the domains and pages on our platforms follow s industry practices. These pages were hand-picked and verified by our team. We also provide you in advance urls and generate SEO scores from ahref.',
-    h3 : 'Buyer\'s Guide',
-    p4 : 'Take your site\'s ranking & traffic to the next level with us! Click on the required guide to learn more. To climb up the Google\'s ladder and choose relevant backlink pages for your links, benefit from Backlink Inventory.',
+    h1 : 'StaLinks में आपका स्वागत है',
+    p1 : 'StaLinks एक लिंक बिल्डिंग कंपनी है जिसे सभी व्यावसायिक आला को पूरा करने के लिए डिज़ाइन किया गया है। हम प्रकाशकों और लिंक विज्ञापनदाताओं दोनों के लिए सटीक और विश्वसनीय समाधान प्रदान करते हैं। हम ब्लॉगर्स, एसईओ पेशेवरों और वेबमास्टर्स से हजारों अलग-अलग पेशेवरों को एक विश्वसनीय और उपयोग में आसान प्लेटफॉर्म से जोड़ते हैं। चाहे आप अपनी वेबसाइट से बैकलिंक खरीदने या बेचने में रुचि रखते हों, StaLinks में वे सभी सुविधाएँ हैं जिनकी आपको आवश्यकता है।',
+    h2 : 'स्टैलिंक्स कैसे काम करता है?',
+    p2 : 'बैकलिंक Google का सर्वोच्च और सबसे महत्वपूर्ण रैंकिंग कारक बना हुआ है। यह मुख्य कारण है कि कई वेबसाइट मालिक बैकलिंक्स खरीदते या बेचते हैं। हालाँकि, सभी बैकलिंक्स सुरक्षित नहीं हैं। वास्तव में, निम्न गुणवत्ता वाले लिंक आपकी वेबसाइट के लिए अच्छे से अधिक नुकसान कर सकते हैं। यहीं पर StaLinks कदम रखता है।',
+    p3 : 'हम SEO स्कोर उत्पन्न करने के लिए विश्वसनीय टूल का उपयोग कर रहे हैं। हम किसी भी विज्ञापनदाता को स्पैम लिंक से मिलते-जुलते पेज पोस्ट करने की अनुमति नहीं देते हैं। हमारे प्लेटफॉर्म पर सभी डोमेन और पेज उद्योग प्रथाओं का पालन करते हैं। इन पृष्ठों को हमारी टीम द्वारा हाथ से चुना और सत्यापित किया गया था। हम आपको अग्रिम url भी प्रदान करते हैं और ahref से SEO स्कोर उत्पन्न करते हैं।',
+    h3 : 'क्रेता गाइड',
+    p4 : 'हमारे साथ अपनी साइट की रैंकिंग और ट्रैफ़िक को अगले स्तर पर ले जाएँ! अधिक जानने के लिए आवश्यक मार्गदर्शिका पर क्लिक करें। Google की सीढ़ी पर चढ़ने और अपने लिंक के लिए प्रासंगिक बैकलिंक पेज चुनने के लिए, बैकलिंक इन्वेंटरी से लाभ उठाएं।',
     b1 : {
-        text : 'How to navigate the dashboard',
+        text : 'डैशबोर्ड कैसे नेविगेट करें',
         url : '/help/buyer-guide-1'
     },
     b2 : {
-        text : 'How to Purchase backlink that fits your website',
+        text : 'अपने खाते में क्रेडिट कैसे जोड़ें',
         url : '/help/buyer-guide-2'
     },
-    b3 : {
-        text : 'How to Follow up your orders',
+    b22 : {
+        text : 'बैकलिंक कैसे खरीदें जो आपकी वेबसाइट के अनुकूल हो',
         url : '/help/buyer-guide-3'
     },
-    h4 : 'Seller\'s Guide',
-    p5 : 'As a StaLinks publisher, you will earn monthly reoccurring revenue for each link that an advertiser chooses to purchase on your site(s). From there, you will continue to earn credits for each link every month, as long as the link(s) are active.',
+    b3 : {
+        text : 'अपने आदेशों का पालन कैसे करें',
+        url : '/help/buyer-guide-4'
+    },
+    h4 : 'विक्रेता की गाइड',
+    p5 : 'एक StaLinks प्रकाशक के रूप में, आप प्रत्येक लिंक के लिए मासिक पुनरावर्ती आय अर्जित करेंगे जिसे एक विज्ञापनदाता आपकी साइट(साइटों) पर खरीदना चुनता है। वहां से, जब तक लिंक सक्रिय हैं, तब तक आप हर महीने प्रत्येक लिंक के लिए क्रेडिट अर्जित करना जारी रखेंगे।',
     b4 : {
-        text : 'Learn about the dashboard',
+        text : 'डैशबोर्ड के बारे में जानें',
         url : '/help/seller-guide-1'
     },
     b5 : {
-        text : 'How to Upload your list of urls',
+        text : 'अपने URL जोड़ने का तरीका जानें',
         url : '/help/seller-guide-2'
     },
     b6 : {
-        text : 'How to Follow up your orders',
+        text : 'अपने आदेशों का पालन कैसे करें',
         url : '/help/seller-guide-3'
     },
     b7 : {
-        text : 'How to get Pay',
+        text : 'भुगतान कैसे प्राप्त करें',
         url : '/help/seller-guide-4'
     },
-    h5 : 'Writer\'s Guide',
-    p6 : 'Writers are responsible for writing quality content that will become the backbone in building backlinks. The writer team will need to collaborate with the SEO team, Customer Service Sellers, and country managers to create the content for StaLinks clients. The writer must know how to research and write content based on various topics and industry trends that match the target website',
+    h5 : 'लेखक की मार्गदर्शिका',
+    p6 : 'गुणवत्ता सामग्री लिखने के लिए लेखक जिम्मेदार हैं जो बैकलिंक्स बनाने में रीढ़ बनेंगे। StaLinks ग्राहकों के लिए सामग्री बनाने के लिए लेखक टीम को SEO टीम, ग्राहक सेवा विक्रेताओं और देश प्रबंधकों के साथ सहयोग करने की आवश्यकता होगी। लेखक को पता होना चाहिए कि लक्षित वेबसाइट से मेल खाने वाले विभिन्न विषयों और उद्योग के रुझानों के आधार पर सामग्री को कैसे शोध और लिखना है',
     b8 : {
-        text : 'How to Register and setup your price',
+        text : 'डैशबोर्ड को नेविगेट करना सीखें',
         url : '/help/writer-guide-1'
     },
     b9 : {
-        text : 'How to start writing content',
+        text : 'लेखक सत्यापन के बारे में जानें',
         url : '/help/writer-guide-2'
     },
-    b10 : {
-        text : 'How to Follow up your income ',
+    b99 : {
+        text : 'गुणवत्ता सामग्री लिखने के बारे में जानें',
         url : '/help/writer-guide-3'
+    },
+    b10 : {
+        text : 'अपनी आय का पालन कैसे करें',
+        url : '/help/writer-guide-4'
     },
 }

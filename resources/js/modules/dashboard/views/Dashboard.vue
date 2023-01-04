@@ -11,7 +11,7 @@
                 </div><!-- /.container-fluid -->
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate && !isExtSeller">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -105,7 +105,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate">
+            <div class="row" v-if="!isExtWriter && !isBuyer && !isAffiliate && !isExtSeller">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -226,64 +226,74 @@
                                 <div class="col-sm-12">
                                     <table class="table table-hover tbl-custom">
                                         <thead>
-                                        <tr>
-                                            <th v-if="!isExtWriter">
-                                                {{ $t('message.dashboard.tbs_seller') }}
-                                                <span class="text-primary">({{ backlink_seller.total }})</span>
-                                            </th>
-                                            <th v-if="!isExtWriter">
-                                                {{ $t('message.dashboard.tbs_total') }}
-                                                <span class="text-primary">({{ backlink_seller.num_total }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_processing') }}
-                                                <span class="text-primary">({{ backlink_seller.num_processing }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_content_writing') }}
-                                                <span class="text-primary">({{ backlink_seller.writing }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_content_done') }}
-                                                <span class="text-primary">({{ backlink_seller.num_done }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_content_sent') }}
-                                                <span class="text-primary">({{ backlink_seller.num_sent }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_issue') }}
-                                                <span class="text-primary">({{ backlink_seller.num_issue }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_lip') }}
-                                                <span class="text-primary">
-                                                    ({{ backlink_seller.num_live_in_process }})
-                                                </span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_live') }}
-                                                <span class="text-primary">({{ backlink_seller.num_live }})</span>
-                                            </th>
-                                            <th>
-                                                {{ $t('message.dashboard.tbs_cancelled') }}
-                                                <span class="text-primary">({{ backlink_seller.num_canceled }})</span>
-                                            </th>
-                                        </tr>
+                                            <tr>
+                                                <th v-if="!isExtWriter">
+                                                    {{ $t('message.dashboard.tbs_seller') }}
+                                                    <span class="text-primary">({{ backlink_seller.total }})</span>
+                                                </th>
+                                                <th v-if="!isExtWriter">
+                                                    {{ $t('message.dashboard.tbs_total') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_total }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_processing') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_processing }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_content_writing') }}
+                                                    <span class="text-primary">({{ backlink_seller.writing }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_content_done') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_done }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_content_sent') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_sent }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_issue') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_issue }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_lip') }}
+                                                    <span class="text-primary">
+                                                        ({{ backlink_seller.num_live_in_process }})
+                                                    </span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_live') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_live }})</span>
+                                                </th>
+                                                <th>
+                                                    {{ $t('message.dashboard.tbs_cancelled') }}
+                                                    <span class="text-primary">({{ backlink_seller.num_canceled }})</span>
+                                                </th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr v-for="(seller, index) in listData.backlink_seller" :key="index">
-                                            <td v-if="!isExtWriter">{{ upperCase(seller.username) }}</td>
-                                            <td v-if="!isExtWriter">{{ seller.num_total }}</td>
-                                            <td>{{ seller.num_processing }}</td>
-                                            <td>{{ seller.writing }}</td>
-                                            <td>{{ seller.num_done }}</td>
-                                            <td>{{ seller.num_sent }}</td>
-                                            <td>{{ seller.num_issue }}</td>
-                                            <td>{{ seller.num_live_in_process }}</td>
-                                            <td>{{ seller.num_live }}</td>
-                                            <td>{{ seller.num_canceled }}</td>
-                                        </tr>
+                                            <tr v-if="!isExtWriter" v-for="(seller, index) in listData.backlink_seller" :key="index">
+                                                <td v-if="!isExtWriter">{{ upperCase(seller.username) }}</td>
+                                                <td v-if="!isExtWriter">{{ seller.num_total }}</td>
+                                                <td>{{ seller.num_processing }}</td>
+                                                <td>{{ seller.writing }}</td>
+                                                <td>{{ seller.num_done }}</td>
+                                                <td>{{ seller.num_sent }}</td>
+                                                <td>{{ seller.num_issue }}</td>
+                                                <td>{{ seller.num_live_in_process }}</td>
+                                                <td>{{ seller.num_live }}</td>
+                                                <td>{{ seller.num_canceled }}</td>
+                                            </tr>
+                                            <tr v-if="isExtWriter">
+                                                <td>{{ extWriterTotals.num_processing }}</td>
+                                                <td>{{ extWriterTotals.writing }}</td>
+                                                <td>{{ extWriterTotals.num_done }}</td>
+                                                <td>{{ extWriterTotals.num_sent }}</td>
+                                                <td>{{ extWriterTotals.num_issue }}</td>
+                                                <td>{{ extWriterTotals.num_live_in_process }}</td>
+                                                <td>{{ extWriterTotals.num_live }}</td>
+                                                <td>{{ extWriterTotals.num_canceled }}</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -341,7 +351,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isExtSeller">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -399,7 +409,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isExtSeller">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -488,7 +498,7 @@
                 </div>
             </div>
 
-            <div class="row" v-if="!isExtWriter">
+            <div class="row" v-if="!isExtWriter && !isExtSeller">
                 <div class="col-sm-12">
                     <div class="card card-outline card-secondary">
                         <div class="card-header">
@@ -693,13 +703,43 @@ export default {
             return result;
         },
 
+        isExtSeller () {
+            return this.user.isOurs === 1 && this.user.role_id === 6;
+        },
+
         isBuyer() {
             return [5, 14].includes(this.user.role_id)
         },
 
         isAffiliate() {
             return this.user.role_id === 11;
-        }
+        },
+
+        extWriterTotals () {
+            let newValue = [];
+
+            if (this.user.role_id === 4) {
+                if (Object.keys(this.listData).length !== 0) {
+                    if (this.listData.backlink_seller.length) {
+                        newValue = this.listData.backlink_seller.reduce(function(previousValue, currentValue) {
+                            return {
+                                num_canceled: Number(previousValue.num_canceled) + Number(currentValue.num_canceled),
+                                num_done: Number(previousValue.num_done) + Number(currentValue.num_done),
+                                num_issue: Number(previousValue.num_issue) + Number(currentValue.num_issue),
+                                num_live: Number(previousValue.num_live) + Number(currentValue.num_live),
+                                num_live_in_process: Number(previousValue.num_live_in_process) + Number(currentValue.num_live_in_process),
+                                num_processing: Number(previousValue.num_processing) + Number(currentValue.num_processing),
+                                num_sent: Number(previousValue.num_sent) + Number(currentValue.num_sent),
+                                num_total: Number(previousValue.num_total) + Number(currentValue.num_total),
+                                writing: Number(previousValue.writing) + Number(currentValue.writing),
+                            }
+                        });
+                    }
+                }
+            }
+
+            return newValue;
+        },
     },
 
     async created() {

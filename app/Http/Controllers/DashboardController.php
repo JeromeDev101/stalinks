@@ -117,11 +117,11 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        if (isset($user->registration->is_sub_account) && $user->registration->is_sub_account == 1) {
-            if (isset($user->registration->team_in_charge)) {
-                $user = $user->registration->team_in_charge->id ?? $user->id;
-            }
-        }
+//        if (isset($user->registration->is_sub_account) && $user->registration->is_sub_account == 1) {
+//            if (isset($user->registration->team_in_charge)) {
+//                $user = $user->registration->team_in_charge->id ?? $user->id;
+//            }
+//        }
 
 //        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id->id)->pluck('email');
 
@@ -226,11 +226,11 @@ class DashboardController extends Controller
     {
         $user_id = auth()->user();
 
-        if (isset($user_id->registration->is_sub_account) && $user_id->registration->is_sub_account == 1) {
-            if (isset($user_id->registration->team_in_charge)) {
-                $user_id = $user_id->registration->team_in_charge->id ?? $user_id->id;
-            }
-        }
+//        if (isset($user_id->registration->is_sub_account) && $user_id->registration->is_sub_account == 1) {
+//            if (isset($user_id->registration->team_in_charge)) {
+//                $user_id = $user_id->registration->team_in_charge->id ?? $user_id->id;
+//            }
+//        }
 
         $columns = [
             'A.username',

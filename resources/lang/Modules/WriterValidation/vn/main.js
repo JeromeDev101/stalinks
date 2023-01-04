@@ -37,7 +37,7 @@ export default {
     ew_anchor_text: 'Sử dụng  anchor text tự nhiên nhất có thể trong bài viết của bạn và siêu liên kết nó với trang web được chỉ định.',
     ew_creative_title: 'Tạo tiêu đề sáng tạo dựa trên (các) chủ đề được cung cấp.',
     ew_meta_desc: 'Viết thẻ mô tả với 110-160 ký tự (Khoảng trắng được tính là ký tự).',
-    ew_2_attempts: 'Bạn sẽ có 2 lần thử cho kỳ thi viết. Nếu bạn đã thất bại trong lần thử đầu tiên, đừng lo lắng! chúng tôi sẽ cho bạn lần thứ hai để làm bài kiểm tra sau 3 tuần.',
+    ew_2_attempts: 'Bạn sẽ được thử 2 lần cho bài kiểm tra của nhà văn. Nếu bạn đã thất bại trong lần thử đầu tiên, đừng lo lắng! chúng tôi sẽ cho bạn thử làm bài kiểm tra lần thứ hai sau 3 ngày.',
     ew_please_wait: 'Hãy chờ kỳ kiểm tra của người viết được tạo ra. Chúng tôi sẽ thông báo cho bạn về điều này trong thời gian ngắn. Cảm ơn bạn!',
 
     // first attempt exam

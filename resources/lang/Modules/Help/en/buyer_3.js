@@ -1,28 +1,19 @@
 export default {
-    h1 : 'STEP 3: Follow up your orders',
-    p1 : 'How to place orders?',
-    p2 : 'Go to the “list of backlinks to buy” at the buyer page.\n' +
-        'From the list of domains, select the best one for your website. Consider comparing the SEO score and the price before buying. We also recommend to visit the site first before making any purchase decision.',
-    p3 : 'Use the Filter to help you to look for what you need',
-    ul1 : 'Search URL',
-    ul2 : 'Status of Purchased',
-    ul3 : 'Language',
-    ul4 : 'Continent',
-    ul5 : 'Accept Casino & Betting Sites',
-    ul6 : 'Topic',
-    ul7 : 'Price Basis',
-    ul8 : 'UR',
-    ul9 : 'DR',
-    ul10 : 'Org Kw',
-    ul11 : 'Org Traffic',
-    ul12 : 'Price',
-    p4 : 'After you have chosen the urls',
-    p5 : 'Choose by clicking :',
-    ul13 : '"BUY" - To make a direct purchase order. When you found the domain you like, then fill the needed information on the Pop up.',
-    ul14 : '"INTERESTED" - If you are considering to buy in the future.',
-    ul15 : '"NOT INTERESTED" - If you don’t want to see the domain on your table.',
-    p6 : 'Enter your',
-    ol1 : 'Anchor Text: where the link will be',
-    ol2 : 'Link to: Yoursite.com/example',
-    ol3 : 'Url Advertiser: Yoursite.com'
+    h1 : 'Purchasing Backlinks',
+    p1 : 'After adding credits to your account, you can now purchase backlinks.',
+    p2 : 'To be able to purchase backlinks on StaLinks, you have to add credit.',
+
+    ol1 : 'Navigate to the ‘List Backlinks to Buy’ page under the Buyer section of the sidebar.',
+
+    ol2 : 'Use the filters and sort features to find the best backlink for your website. Consider the SEO score and price before purchasing. We also recommend to visit and check the website first.',
+
+    ol3 : 'The ‘Buy Backlinks’ table contains the information that you need to select the correct backlinks for your website including the URL, topic, language and numerical data like UR and DR. The table also has three action buttons under the action column.',
+
+    ol4 : 'The ‘Buy Backlink’ form will appear if you clicked the buy button.   This form includes the details that you need to input in order to purchase a backlink.',
+
+    ul1 : 'Input the required details for the purchase:',
+    ul2 : 'Anchor Text – the text that will include the link',
+    ul3 : 'Link to – e.g. yourwebsite.com/example',
+    ul4 : 'Domain Name – e.g. yourwebsite.com',
+    ul5 : 'After filling up the form, click the ‘Buy’ button.',
 }
