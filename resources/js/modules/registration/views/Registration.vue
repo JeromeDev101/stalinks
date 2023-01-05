@@ -88,7 +88,7 @@
 
         <div class="container">
         <div class="row">
-        
+
             <div class="col-md-8 d-none d-lg-block d-xl-block align-middle">
                 <div class="pr-5" v-if="RegisterModel.type == '' || RegisterModel.type == 'Affiliate'">
                     <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_1') }}</h1>
@@ -189,7 +189,7 @@
                                     <div class="col-md-12">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.type}">
                                             <label>{{ $t('message.registration.l1') }} <span class="text-danger">*</span></label>
-                                            <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isCompanySelected">
+                                            <select name="" class="form-control" v-model="RegisterModel.type" :disabled="isTypeDisabled">
                                                 <option value="">{{ $t('message.registration.ph1') }}</option>
 
                                                 <option value="Seller">
@@ -308,7 +308,7 @@
         </div>
         </div>
 
-                
+
 
         <terms-and-conditions></terms-and-conditions>
     </div>
@@ -363,11 +363,13 @@
                 // countryList: [],
                 BtnAccept: false,
                 pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
+                isTypeDisabled: false,
             }
         },
 
         created() {
             this.RegisterModel.type = this.$route.query.type ? this.$route.query.type:''
+            this.isTypeDisabled = !!this.$route.query.type
         },
 
         computed: {
