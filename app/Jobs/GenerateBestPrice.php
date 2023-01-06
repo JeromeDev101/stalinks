@@ -54,7 +54,10 @@ class GenerateBestPrice implements ShouldQueue
             $url = $this->cleanUrl($url);
             $publisher = $this->publisher->getPublisherByUrl($url, ['user.registration']);
 
-            $publisherQcValidNoIds = $publisher->where('qc_validation', 'no')
+//            $publisherQcValidNoIds = $publisher->where('qc_validation', 'no')
+//                                    ->pluck('id')->toArray();
+
+            $publisherQcValidNoIds = $publisher->whereIn('qc_validation', ['no', 'No'])
                                     ->pluck('id')->toArray();
 
             //QC valid = no to valid = Invalid'
@@ -75,11 +78,19 @@ class GenerateBestPrice implements ShouldQueue
                     return $item;
                 });
 
+//                $bestPrice = $publisher
+//                    ->where('price', '!=', '0')
+//                    ->where('price', '!=', null)
+//                    ->where('user', '!=', null)
+//                    ->where('qc_validation', '!=', 'no')
+//                    ->where('user.registration.account_validation', '!=', 'invalid')
+//                    ->sortBy('price')->first();
+
                 $bestPrice = $publisher
                     ->where('price', '!=', '0')
                     ->where('price', '!=', null)
                     ->where('user', '!=', null)
-                    ->where('qc_validation', '!=', 'no')
+                    ->whereNotIn('qc_validation', ['no', 'No'])
                     ->where('user.registration.account_validation', '!=', 'invalid')
                     ->sortBy('price')->first();
 
@@ -94,28 +105,41 @@ class GenerateBestPrice implements ShouldQueue
                         if ($this->oneUrlHasArticle($publisherIncArticlesByPrice)) {
 
                             // checking if has a recommended seller
+//                            $bPrice = $publisher
+//                                ->where('price', $bestPrice->price)
+//                                ->where('user.registration.account_validation', '!=', 'invalid')
+//                                ->where('user.registration.is_recommended', 'yes')
+//                                ->where('inc_article', 'Yes')
+//                                ->sortBy('created_at')
+//                                ->first();
+
                             $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('user.registration.is_recommended', 'yes')
-                                ->where('inc_article', 'Yes')
+                                ->whereIn('inc_article', ['Yes', 'yes'])
                                 ->sortBy('created_at')
                                 ->first();
 
-
                             if(!$bPrice) {
+//                                $bestPrice = $publisher
+//                                    ->where('price', $bestPrice->price)
+//                                    ->where('user.registration.account_validation', '!=', 'invalid')
+//                                    ->where('inc_article', 'Yes')
+//                                    ->sortBy('created_at')
+//                                    ->first();
+
                                 $bestPrice = $publisher
                                     ->where('price', $bestPrice->price)
                                     ->where('user.registration.account_validation', '!=', 'invalid')
-                                    ->where('inc_article', 'Yes')
+                                    ->whereIn('inc_article', ['Yes', 'yes'])
                                     ->sortBy('created_at')
                                     ->first();
                             } else {
                                 $bestPrice = $bPrice;
                             }
-                            
+
                         } else {
-                            
                             // checking if has a recommended seller
                             $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
@@ -169,11 +193,19 @@ class GenerateBestPrice implements ShouldQueue
             } else {
                 if ($publisher) {
                     //Get best price among URLs
+//                    $bestPrice = $publisher
+//                        ->where('price', '!=', '0')
+//                        ->where('price', '!=', null)
+//                        ->where('user', '!=', null)
+//                        ->where('qc_validation', '!=', 'no')
+//                        ->where('user.registration.account_validation', '!=', 'invalid')
+//                        ->sortBy('price')->first();
+
                     $bestPrice = $publisher
                         ->where('price', '!=', '0')
                         ->where('price', '!=', null)
                         ->where('user', '!=', null)
-                        ->where('qc_validation', '!=', 'no')
+                        ->whereNotIn('qc_validation', ['no', 'No'])
                         ->where('user.registration.account_validation', '!=', 'invalid')
                         ->sortBy('price')->first();
 
