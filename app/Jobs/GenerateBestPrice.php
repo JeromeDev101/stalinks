@@ -96,6 +96,7 @@ class GenerateBestPrice implements ShouldQueue
 
                 if ($bestPrice) {
                     //If 2 or more URLs has best price
+
                     if ($publisher->where('price', $bestPrice->price)->count() > 1) {
                         $publisherIncArticlesByPrice = $publisher
                             ->where('price', $bestPrice->price)
@@ -129,16 +130,17 @@ class GenerateBestPrice implements ShouldQueue
 //                                    ->sortBy('created_at')
 //                                    ->first();
 
-                                $bestPrice = $publisher
+                                $temp = $publisher
                                     ->where('price', $bestPrice->price)
                                     ->where('user.registration.account_validation', '!=', 'invalid')
                                     ->whereIn('inc_article', ['Yes', 'yes'])
                                     ->sortBy('created_at')
                                     ->first();
+
+                                $bestPrice = $temp ? $temp : $bestPrice;
                             } else {
                                 $bestPrice = $bPrice;
                             }
-
                         } else {
                             // checking if has a recommended seller
                             $bPrice = $publisher
