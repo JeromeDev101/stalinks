@@ -3407,12 +3407,15 @@ export default {
 
             async submitAdd() {
                 let self = this;
+                let loader = this.$loading.show();
                 self.isSubmitAdd = true;
                 this.addModel.account_valid = this.checkAccountValidity();
 
                 await this.$store.dispatch('actionAddUrl', this.addModel);
 
                 if (this.messageForms.action === 'saved'){
+                    loader.hide();
+
                     $("#modal-add-url").modal('hide')
                     this.getPublisherList(this.filterModel.page);
 
@@ -3438,6 +3441,8 @@ export default {
 
                     self.isSubmitAdd = false;
                 } else {
+                    loader.hide();
+
                     swal.fire(
                         self.$t('message.publisher.alert_failed'),
                         self.messageForms.message,
