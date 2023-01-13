@@ -52,6 +52,7 @@ class Registration extends Model
         'can_validate_backlink',
         'is_exam_passed',
         'affiliate_id',
+        'affiliate_code_id',
         'affiliate_code',
         'deposit_reminded_at',
         'survey_code',
@@ -71,6 +72,10 @@ class Registration extends Model
 
     public function affiliate() {
         return $this->belongsTo('App\Models\User', 'affiliate_id');
+    }
+
+    public function affiliateCode() {
+        return $this->belongsTo('App\Models\AffiliateCode', 'affiliate_code_id');
     }
 
     public function user() {

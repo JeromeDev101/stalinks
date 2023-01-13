@@ -577,27 +577,8 @@
                 let self = this;
                 let id_payment_type = this.regModel.id_payment_type;
 
-                if (!id_payment_type || !this.regModel.payment_type[id_payment_type]) {
-                    this.validate_error_type = true;
-
-                    swal.fire(
-                        self.$t('message.registration_accounts.alert_error'),
-                        self.$t('message.registration_accounts.alert_error_update'),
-                        'error'
-                    );
-
-                    this.formVerified = false;
-
-                    return false;
-                }
-
-                if (this.regModel.payment_type[id_payment_type]) {
-                    this.regModel.payment_type[id_payment_type] = this.regModel.payment_type[id_payment_type].replace(/\s/g,'');
-
-                    if (this.regModel.payment_type[id_payment_type] === null
-                        || this.regModel.payment_type[id_payment_type] === ''
-                        || !this.regModel.payment_type[id_payment_type]) {
-
+                if (this.regModel.type !== 'Affiliate') {
+                    if (!id_payment_type || !this.regModel.payment_type[id_payment_type]) {
                         this.validate_error_type = true;
 
                         swal.fire(
@@ -609,6 +590,27 @@
                         this.formVerified = false;
 
                         return false;
+                    }
+
+                    if (this.regModel.payment_type[id_payment_type]) {
+                        this.regModel.payment_type[id_payment_type] = this.regModel.payment_type[id_payment_type].replace(/\s/g,'');
+
+                        if (this.regModel.payment_type[id_payment_type] === null
+                            || this.regModel.payment_type[id_payment_type] === ''
+                            || !this.regModel.payment_type[id_payment_type]) {
+
+                            this.validate_error_type = true;
+
+                            swal.fire(
+                                self.$t('message.registration_accounts.alert_error'),
+                                self.$t('message.registration_accounts.alert_error_update'),
+                                'error'
+                            );
+
+                            this.formVerified = false;
+
+                            return false;
+                        }
                     }
                 }
 

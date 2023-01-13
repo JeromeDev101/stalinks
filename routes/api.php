@@ -458,6 +458,10 @@ Route::middleware('auth:api')->group(function () {
 
     // users payment type
     Route::name('users-payment-type-history')->get('/users-payment-type/history/{id}','UsersPaymentTypeController@getHistory');
+
+    // Affiliate Code
+    Route::name('generate-affiliate-code')->post('/generate-affiliate-code', 'AffiliateCodeController@store');
+    Route::name('get-affiliate-codes')->get('/get-affiliate-codes', 'AffiliateCodeController@index');
 });
 
 //Mailgun external

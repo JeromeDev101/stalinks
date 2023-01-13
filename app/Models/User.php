@@ -210,6 +210,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\WriterExam', 'writer_id')->orderBy('writer_exam.id', 'asc');
     }
 
+    public function affiliateCodes()
+    {
+        return $this->hasMany('App\Models\AffiliateCode', 'user_id');
+    }
+
     /**
      * Route notifications for the Slack channel.
      *

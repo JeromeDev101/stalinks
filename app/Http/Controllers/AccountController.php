@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\TeamInChargeUpdatedEvent;
 use App\Mail\SendResetPasswordEmail;
+use App\Models\AffiliateCode;
 use App\Models\Language;
 use App\Repositories\Contracts\AccountRepositoryInterface;
 use App\Rules\PaymentInfoExists;
@@ -707,10 +708,12 @@ class AccountController extends Controller
             if ($input['affiliate_code']) {
 
                 // find affiliate
-                $affiliate = Registration::where('affiliate_code', $input['affiliate_code'])->first();
+                $affiliate = AffiliateCode::where('affiliate_code', $input['affiliate_code'])->first();
 
                 if ($affiliate) {
-                    $affiliate_user = User::where('email', $affiliate->email)->first();
+//                    $affiliate_user = User::where('email', $affiliate->email)->first();
+
+                    $affiliate_user = User::where('id', $affiliate->user_id)->where('status', 'active')->first();
 
                     if (!$affiliate_user) {
                         return response()->json([
@@ -722,6 +725,7 @@ class AccountController extends Controller
                     } else {
                         // add affiliate_id
                         $input['affiliate_id'] = $affiliate_user->id;
+                        $input['affiliate_code_id'] = $affiliate->id;
 
                         // remove affiliate_code from input
                         unset($input['affiliate_code']);
@@ -1277,16 +1281,27 @@ class AccountController extends Controller
 
     public function getAffiliateCodeSet ()
     {
-        $user_email = Auth::user()->email;
+//        $user_email = Auth::user()->email;
+//        $is_affiliate_code_set = false;
+//
+//        if ($user_email) {
+//            if (Auth::user()->email) {
+//                $affiliate = Registration::select('affiliate_code')->where('email', $user_email)->value('affiliate_code');
+//
+//                if ($affiliate) {
+//                    $is_affiliate_code_set = true;
+//                }
+//            }
+//        }
+
+        $user_id = auth()->user()->id;
         $is_affiliate_code_set = false;
 
-        if ($user_email) {
-            if (Auth::user()->email) {
-                $affiliate = Registration::select('affiliate_code')->where('email', $user_email)->value('affiliate_code');
+        if ($user_id) {
+            $codes = AffiliateCode::where('user_id', $user_id)->count();
 
-                if ($affiliate) {
-                    $is_affiliate_code_set = true;
-                }
+            if ($codes > 0) {
+                $is_affiliate_code_set = true;
             }
         }
 
@@ -1300,6 +1315,7 @@ class AccountController extends Controller
         return Registration::where('affiliate_id', auth()->user()->id)
             ->where('status', 'active')
             ->with('user:id,email')
+            ->with('affiliateCode:id,name,affiliate_code')
             ->paginate(10);
     }
 }

@@ -244,38 +244,72 @@
 
                         <div class="card-body">
                             <div class="row" v-if="user.user_type">
+                                <div class="col-12 mb-3">
+<!--                                    <div class="input-group">-->
+<!--                                        <div class="input-group-prepend">-->
+<!--                                            <button-->
+<!--                                                type="button"-->
+<!--                                                class="btn btn-outline-success"-->
+
+<!--                                                @click="generateAffiliateCode">-->
+<!--                                                {{ $t('message.profile.ac_generate') }}-->
+<!--                                            </button>-->
+
+<!--                                            <button-->
+<!--                                                type="button"-->
+<!--                                                :title="$t('message.profile.ac_copy')"-->
+<!--                                                class="btn btn-outline-secondary"-->
+<!--                                                :disabled="!user.user_type.affiliate_code"-->
+
+<!--                                                @click="copyAffiliateCode">-->
+
+<!--                                                <i class="fa fa-copy"></i>-->
+<!--                                            </button>-->
+<!--                                        </div>-->
+
+<!--                                        <input-->
+<!--                                            v-model="user.user_type.affiliate_code"-->
+<!--                                            readonly-->
+<!--                                            type="text"-->
+<!--                                            ref="affiliateCode"-->
+<!--                                            class="form-control"-->
+<!--                                            :placeholder="$t('message.profile.ac_code_empty')"-->
+
+<!--                                            @focus="$event.target.select()">-->
+<!--                                    </div>-->
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-success"
+                                        data-toggle="modal"
+                                        data-target="#modal-generate-affiliate-code">
+
+                                        {{ $t('message.profile.ac_generate') }}
+                                    </button>
+                                </div>
+
                                 <div class="col-12">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <button
-                                                type="button"
-                                                class="btn btn-outline-success"
-
-                                                @click="generateAffiliateCode">
-                                                {{ $t('message.profile.ac_generate') }}
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                :title="$t('message.profile.ac_copy')"
-                                                class="btn btn-outline-secondary"
-                                                :disabled="!user.user_type.affiliate_code"
-
-                                                @click="copyAffiliateCode">
-
-                                                <i class="fa fa-copy"></i>
-                                            </button>
-                                        </div>
-
-                                        <input
-                                            v-model="user.user_type.affiliate_code"
-                                            readonly
-                                            type="text"
-                                            ref="affiliateCode"
-                                            class="form-control"
-                                            :placeholder="$t('message.profile.ac_code_empty')"
-
-                                            @focus="$event.target.select()">
+                                    <div class="table-responsive">
+                                        <table id="tbl_affiliate_codes" class="table table-condensed table-hover table-bordered">
+                                            <thead>
+                                                <tr class="label-primary">
+                                                    <th>ID</th>
+                                                    <th>{{ $t('message.profile.p_name') }}</th>
+                                                    <th>Code</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(code, index) in affiliateCodes.data" :key="index">
+                                                    <td>{{ code.id }}</td>
+                                                    <td>
+                                                        <span :class="!code.name ? 'badge badge-danger' : ''">
+                                                            {{ code.name ? code.name : 'N/A' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ code.affiliate_code }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -292,41 +326,57 @@
                 </div>
 
                 <div class="box-body no-padding">
-                    <div class="col-12">
-                        <div class="table-responsive">
-                            <table id="tbl_affiliate_buyers" class="table table-condensed table-hover table-bordered">
-                                <thead>
-                                    <tr class="label-primary">
-                                        <th>{{ $t('message.profile.ac_user_id') }}</th>
-                                        <th>{{ $t('message.profile.ac_date_registered') }}</th>
-                                        <th>{{ $t('message.profile.p_email') }}</th>
-                                        <th>{{ $t('message.profile.p_name') }}</th>
-                                        <th>{{ $t('message.profile.p_company_type') }}</th>
-                                        <th>{{ $t('message.profile.ac_account_validation') }}</th>
-                                        <th>{{ $t('message.profile.ac_status') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(account, index) in affiliateBuyers.data" :key="index">
-                                        <td>{{ account.user == null ? $t('message.profile.ac_not_yet_verified') : account.user.id }}</td>
-                                        <td>{{ account.created_at }}</td>
-                                        <td>{{ account.email }}</td>
-                                        <td>{{ account.name }}</td>
-                                        <td>{{ account.is_freelance == 1 ? $t('message.profile.p_freelancer') : $t('message.profile.p_company') }}</td>
-                                        <td>{{ account.account_validation }}</td>
-                                        <td>{{ account.status }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table id="tbl_affiliate_buyers" class="table table-condensed table-hover table-bordered">
+                                            <thead>
+                                            <tr class="label-primary">
+                                                <th>{{ $t('message.profile.ac_user_id') }}</th>
+                                                <th>Affiliate Code</th>
+                                                <th>{{ $t('message.profile.ac_date_registered') }}</th>
+                                                <th>{{ $t('message.profile.p_email') }}</th>
+                                                <th>{{ $t('message.profile.p_name') }}</th>
+                                                <th>{{ $t('message.profile.p_company_type') }}</th>
+                                                <th>{{ $t('message.profile.ac_account_validation') }}</th>
+                                                <th>{{ $t('message.profile.ac_status') }}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="(account, index) in affiliateBuyers.data" :key="index">
+                                                <td>{{ account.user == null ? $t('message.profile.ac_not_yet_verified') : account.user.id }}</td>
+                                                <td>
+                                                    <div>
+                                                <span :class="!account.affiliate_code.name ? 'badge badge-danger' : 'badge badge-success'">
+                                                    {{ account.affiliate_code.name ? account.affiliate_code.name : 'N/A' }}
+                                                </span>
+                                                    </div>
+
+                                                    <small class="text-secondary">AFFILIATE ID # {{ account.affiliate_code_id }}</small>
+                                                </td>
+                                                <td>{{ account.created_at }}</td>
+                                                <td>{{ account.email }}</td>
+                                                <td>{{ account.name }}</td>
+                                                <td>{{ account.is_freelance == 1 ? $t('message.profile.p_freelancer') : $t('message.profile.p_company') }}</td>
+                                                <td>{{ account.account_validation }}</td>
+                                                <td>{{ account.status }}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <pagination
+                                        :limit="8"
+                                        :data="affiliateBuyers"
+
+                                        @pagination-change-page="getAffiliateBuyers">
+
+                                    </pagination>
+                                </div>
+                            </div>
                         </div>
-
-                        <pagination
-                            :limit="8"
-                            :data="affiliateBuyers"
-
-                            @pagination-change-page="getAffiliateBuyers">
-
-                        </pagination>
                     </div>
                 </div>
             </div>
@@ -738,6 +788,47 @@
         </div>
         <!-- End of Modal Edit Sub Account -->
 
+        <!-- Modal Generate Affiliate Code -->
+        <div
+            tabindex="-1"
+            role="dialog"
+            class="modal fade"
+            id="modal-generate-affiliate-code"
+            aria-hidden="true"
+            aria-labelledby="modelTitleId">
+
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ $t('message.profile.ac_generate') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>{{ $t('message.profile.p_name') }}</label>
+                                    <input type="text" class="form-control" v-model="affiliateCodeModel.name" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ $t('message.profile.close') }}
+                        </button>
+                        <button type="button" class="btn btn-success" @click="generateAffiliateCodeTwo()">
+                            Generate
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Generate Affiliate Code -->
+
         <terms-and-conditions></terms-and-conditions>
     </div>
 </template>
@@ -860,6 +951,16 @@ export default {
                 data: []
             },
 
+            affiliateCodes: {
+                data: []
+            },
+
+            affiliateCodeModel: {
+                name: '',
+                code: '',
+                user_id: '',
+            },
+
             validate_error_type: false,
         };
     },
@@ -938,6 +1039,7 @@ export default {
 
         this.$root.$refs.AppHeader.liveGetWallet()
 
+        this.getAffiliateCodes();
         this.getAffiliateBuyers();
     },
 
@@ -1158,6 +1260,26 @@ export default {
                 })
         },
 
+        getAffiliateCodes (page = 1) {
+            let table = $("#tbl_affiliate_codes");
+
+            table.DataTable().destroy();
+
+            axios.get('/api/get-affiliate-codes', {params: {
+                page: page
+            }})
+            .then((res) => {
+                this.affiliateCodes = res.data;
+
+                this.$nextTick(() => {
+                    table.DataTable({
+                        paging: false,
+                        searching: false,
+                    });
+                });
+            })
+        },
+
         getAffiliateBuyers(page = 1) {
             let table = $("#tbl_affiliate_buyers");
 
@@ -1373,6 +1495,46 @@ export default {
                     'error'
                 )
             })
+        },
+
+        generateAffiliateCodeTwo () {
+            let self = this;
+            let loader = this.$loading.show();
+
+            this.affiliateCodeModel.user_id = this.user.id;
+            this.affiliateCodeModel.code = this.generateRandomString(10);
+
+            axios.post('/api/generate-affiliate-code', this.affiliateCodeModel)
+            .then((res) => {
+                loader.hide();
+                this.clearModel();
+                this.getAffiliateCodes();
+                this.getAffiliateCodeSet();
+
+                $("#modal-generate-affiliate-code").modal('hide')
+
+                swal.fire(
+                    self.$t('message.profile.alert_saved'),
+                    self.$t('message.profile.alert_affiliate_code_generated'),
+                    'success'
+                )
+            })
+            .catch((err) => {
+                console.log(err)
+                loader.hide();
+
+                swal.fire(
+                    self.$t('message.profile.alert_error'),
+                    self.$t('message.profile.alert_error_affiliate_code'),
+                    'error'
+                )
+            })
+        },
+
+        clearModel () {
+            this.affiliateCodeModel.name = '';
+            this.affiliateCodeModel.code = '';
+            this.affiliateCodeModel.user_id = '';
         },
 
         copyAffiliateCode() {
