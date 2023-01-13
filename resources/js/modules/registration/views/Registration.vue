@@ -252,7 +252,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-12" v-if="RegisterModel.type === 'Buyer'">
+                                    <div class="col-12" v-if="RegisterModel.type === 'Buyer' && !isAffiliateCodeHidden">
                                         <div :class="{'form-group': true, 'has-error': messageForms.errors.affiliate_code}">
                                             <label class="mb-0">{{ $t('message.registration.l7') }}</label>
                                             <br>
@@ -364,12 +364,16 @@
                 BtnAccept: false,
                 pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
                 isTypeDisabled: false,
+                isAffiliateCodeHidden: false,
             }
         },
 
         created() {
-            this.RegisterModel.type = this.$route.query.type ? this.$route.query.type:''
+            this.RegisterModel.type = this.$route.query.type ? this.$route.query.type : ''
+            this.RegisterModel.affiliate_code = this.$route.query.code ? this.$route.query.code : ''
+
             this.isTypeDisabled = !!this.$route.query.type
+            this.isAffiliateCodeHidden = !!this.$route.query.code
         },
 
         computed: {
