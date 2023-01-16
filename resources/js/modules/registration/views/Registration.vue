@@ -369,10 +369,19 @@
         },
 
         created() {
-            this.RegisterModel.type = this.$route.query.type ? this.$route.query.type : ''
+            if(this.$route.query.type === 'Seller' || 
+            this.$route.query.type === 'Buyer' ||
+            this.$route.query.type === 'Writer' ||
+            this.$route.query.type === 'Affiliate'
+            ) {
+                this.RegisterModel.type = this.$route.query.type
+                this.isTypeDisabled = true
+            } else {
+                this.RegisterModel.type = ''
+                this.isTypeDisabled = false
+            }
+            
             this.RegisterModel.affiliate_code = this.$route.query.code ? this.$route.query.code : ''
-
-            this.isTypeDisabled = !!this.$route.query.type
             this.isAffiliateCodeHidden = !!this.$route.query.code
         },
 

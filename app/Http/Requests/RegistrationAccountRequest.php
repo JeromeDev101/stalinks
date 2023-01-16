@@ -43,7 +43,8 @@ class RegistrationAccountRequest extends FormRequest
                 Rule::unique('users')->ignore($this->id),
             ],
             'type' => [
-                'required'
+                'required',
+                Rule::in(['Seller', 'Buyer', 'Writer', 'Affiliate']),
             ],
             'password' => [
                 'required',
