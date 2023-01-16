@@ -122,8 +122,28 @@ class IncomesAdminController extends Controller
             ->where('backlinks.status', 'Live')
             ->get();
 
+        $datas = [];
+        foreach($list as $data) {
+
+            $registration = Registration::with('team_in_charge_username')
+                                ->where('is_sub_account', 1)
+                                ->where('email', $data->email)
+                                ->first();
+            $in_charge = '';
+            if($registration) {
+                $in_charge = ' ['.$registration['team_in_charge_username']['username'].']';
+            }
+
+            array_push($datas, [
+                'id' => $data->id,
+                'name' => $data->name,
+                'email' => $data->email,
+                'username' => $data->username.$in_charge
+            ]);
+        }
+
         return response()->json([
-            'data' => $list
+            'data' => $datas
         ]);
     }
 

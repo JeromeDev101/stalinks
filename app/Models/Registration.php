@@ -66,6 +66,10 @@ class Registration extends Model
         return $this->belongsTo('App\Models\User', 'team_in_charge');
     }
 
+    public function team_in_charge_username() {
+        return $this->belongsTo('App\Models\User', 'team_in_charge');
+    }
+
     public function in_charge() {
         return $this->belongsTo('App\Models\User', 'team_in_charge');
     }
