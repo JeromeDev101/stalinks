@@ -10,58 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="{{ asset('/css/app.css') }}">
 
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-19XCRLGRK2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-19XCRLGRK2');
-    </script>
-
-    <script>
-        function gtag_report_conversion(url) {
-            var callback = function () {
-                if (typeof(url) != 'undefined') {
-                window.location = url;
-                }
-            };
-            gtag('event', 'conversion', {
-                'send_to': 'AW-11019584298/inx7CLesvIMYEKqGxoYp',
-                'event_callback': callback
-            });
-            return false;
-        }
-        gtag('config', 'AW-11019584298');
-    </script>
-
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQGJGDL5X7"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-PQGJGDL5X7');
-    </script>
-
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FYEJD188TH"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-FYEJD188TH');
-    </script>
-
 </head>
 
-    
+
 
 <body class="sidebar-mini layout-fixed skin-blue">
     <div id="app" class="wrapper">
