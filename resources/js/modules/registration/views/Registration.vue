@@ -86,10 +86,8 @@
             </div>
         </div>
 
-        <div class="container">
-        <div class="row">
-
-            <div class="col-md-8 d-none d-lg-block d-xl-block align-middle">
+        <div class="row px-5">
+            <div class="col-md-8 d-none d-lg-block d-xl-block align-middle pl-5">
                 <div class="pr-5" v-if="RegisterModel.type == '' || RegisterModel.type == 'Affiliate'">
                     <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_1') }}</h1>
                     <br>
@@ -154,7 +152,7 @@
 <!--                    <br>-->
 
                     <div class="row my-5">
-                        <div style="width: 90% !important;">
+                        <div style="width: 75% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -180,7 +178,7 @@
                     </div>
 
                     <div class="row mb-5 justify-content-end">
-                        <div style="width: 90% !important;">
+                        <div style="width: 75% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
@@ -206,7 +204,7 @@
                     </div>
 
                     <div class="row mb-5">
-                        <div style="width: 90% !important;">
+                        <div style="width: 75% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -232,7 +230,7 @@
                     </div>
 
                     <div class="row mb-5 justify-content-end">
-                        <div style="width: 90% !important;">
+                        <div style="width: 75% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
@@ -258,7 +256,7 @@
                     </div>
 
                     <div class="row mb-5">
-                        <div style="width: 90% !important;">
+                        <div style="width: 75% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -310,7 +308,7 @@
                 </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 pr-5">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card pb-3 px-2 custom-card">
@@ -444,9 +442,6 @@
                 </div>
             </div>
         </div>
-        </div>
-
-
 
         <terms-and-conditions></terms-and-conditions>
     </div>
@@ -485,12 +480,14 @@
         display: flex;
         text-align: left;
         flex-direction: row;
+        align-items: center;
     }
 
     .subtitle-container .box-icon-wrapper-right {
         display: flex;
         text-align: right;
         flex-direction: row-reverse;
+        align-items: center;
     }
 
     .subtitle-container .icon-box {

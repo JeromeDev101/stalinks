@@ -35,25 +35,25 @@ export default {
     banner2_text4: 'Mulai Menghasilkan',
 
     //banner 3
-    banner_3: 'Mulailah untuk meningkatkan peringkat situs web Anda dengan membeli backlink posting tamu dari StaLinks.',
+    banner_3: 'Percepat! Beli backlink dari StaLinks untuk meningkatkan peringkat situs web Anda!',
     banner3_text1: 'Daftar',
     banner3_text2: 'Buat Pesanan',
-    banner3_text3: 'Tindak lanjuti pesanan Anda',
+    banner3_text3: 'Buat Pesanan',
 
     // update banner 3
 
-    u_banner_3: 'Perlu Tautan Balik Posting Tamu Untuk Situs SEO Anda?',
-    u_banner3_text1: 'Penyedia Backlink #1 di Asia',
+    u_banner_3: 'Hai, Pembuat Tautan! Perlu Tautan Balik Posting Tamu untuk Situs SEO Anda?',
+    u_banner3_text1: 'Penyedia Backlink Terbaik di Asia',
     u_banner3_text2: 'Harga terjangkau',
-    u_banner3_text3: 'Sistem Sangat Aman',
-    u_banner3_text4: '20rb+ Situs Berkualitas Tinggi',
-    u_banner3_text5: 'Banyak Pilihan Bahasa',
+    u_banner3_text3: 'Manajemen Meja yang Sangat Aman',
+    u_banner3_text4: '20k++ URL Berkualitas Tinggi',
+    u_banner3_text5: 'Platform Multibahasa',
 
     u_banner3_sub1: 'StaLinks adalah manajemen layanan pembuatan tautan SEO pertama dan paling andal di Asia.',
-    u_banner3_sub2: 'StaLinks menawarkan harga terjangkau untuk kiriman tamu dan jaminan uang kembali 100%.',
-    u_banner3_sub3: 'StaLinks memiliki sistem yang sangat aman yang melindungi transaksi Anda dari penipu.',
-    u_banner3_sub4: 'StaLinks memiliki 20rb+ situs berkualitas tinggi yang akan membantu Anda memilih backlink dengan mudah sesuai dengan Topik, UR/DR, Lalu Lintas Organik, Kata Kunci Organik, dan banyak lagi.',
-    u_banner3_sub5: 'StaLinks memiliki banyak pilihan bahasa seperti Inggris, Indonesia, Jepang, Vietnam, Thailand, dll.',
+    u_banner3_sub2: 'StaLinks menawarkan harga yang terjangkau untuk posting tamu. Jaminan uang kembali 100%.',
+    u_banner3_sub3: 'StaLinks memiliki manajemen meja yang sangat aman yang melindungi transaksi Anda dari penipu.',
+    u_banner3_sub4: 'StaLinks memiliki 20k++ URL berkualitas tinggi yang akan membantu Anda memilih backlink dengan mudah sesuai dengan Topik Anda, UR/DR, Lalu Lintas Organik, Kata Kunci Organik, dan masih banyak lagi.',
+    u_banner3_sub5: 'StaLinks menyediakan multi bahasa seperti Inggris, Indonesia, Jepang, Vietnam, Thailand, dll.',
 
     //banner 4
     banner_4: 'Bagaimana menjadi penulis posting tamu dan mulai menghasilkan uang!',

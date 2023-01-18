@@ -35,25 +35,25 @@ export default {
     banner2_text4: 'Bắt đầu kiếm tiền',
 
     //banner 3
-    banner_3: 'Bắt đầu tăng xếp hạng trang web của bạn bằng cách mua các liên kết ngược bài đăng của khách từ Stalinks.',
+    banner_3: 'Nhanh lên! Mua liên kết ngược từ StaLinks để tăng thứ hạng trang web của bạn!',
     banner3_text1: 'Đăng ký',
     banner3_text2: 'Đặt hàng',
     banner3_text3: 'Theo dõi đơn đặt hàng của bạn',
 
     // update banner 3
 
-    u_banner_3: 'Cần Guest Post Backlinks cho các trang web SEO của bạn?',
-    u_banner3_text1: 'Nhà cung cấp backlink số 1 ở Châu Á',
+    u_banner_3: 'Xin chào, Trình tạo liên kết! Cần Guest Post Backlinks cho trang web SEO của bạn?',
+    u_banner3_text1: 'Nhà cung cấp backlinks tốt nhất ở châu Á',
     u_banner3_text2: 'Giá cả phải chăng',
-    u_banner3_text3: 'Hệ thống bảo mật cao',
-    u_banner3_text4: 'Hơn 20 nghìn trang web chất lượng cao',
-    u_banner3_text5: 'Nhiều lựa chọn ngôn ngữ',
+    u_banner3_text3: 'Quản lý bàn bảo mật cao',
+    u_banner3_text4: '20 nghìn ++ URL chất lượng cao',
+    u_banner3_text5: 'Nền tảng đa ngôn ngữ',
 
     u_banner3_sub1: 'StaLinks là dịch vụ quản lý xây dựng liên kết SEO đầu tiên và đáng tin cậy nhất ở Châu Á.',
-    u_banner3_sub2: 'StaLinks cung cấp giá cả phải chăng trên các bài đăng của khách và đảm bảo hoàn lại tiền 100%.',
-    u_banner3_sub3: 'StaLinks có một hệ thống bảo mật cao giúp bảo vệ các giao dịch của bạn khỏi những kẻ lừa đảo.',
-    u_banner3_sub4: 'StaLinks có hơn 20 nghìn trang web chất lượng cao sẽ giúp bạn dễ dàng chọn các liên kết ngược theo Chủ đề, UR/DR, Lưu lượng truy cập không phải trả tiền, Từ khóa không phải trả tiền, v.v.',
-    u_banner3_sub5: 'StaLinks có rất nhiều lựa chọn ngôn ngữ như tiếng Anh, tiếng Indonesia, tiếng Nhật, tiếng Việt, tiếng Thái, v.v.',
+    u_banner3_sub2: 'StaLinks cung cấp giá cả phải chăng trên các bài đăng của khách. Đảm bảo hoàn lại tiền 100%.',
+    u_banner3_sub3: 'StaLinks có một hệ thống quản lý bàn bảo mật cao giúp bảo vệ các giao dịch của bạn khỏi những kẻ lừa đảo.',
+    u_banner3_sub4: 'StaLinks có 20 nghìn ++ URL chất lượng cao sẽ giúp bạn dễ dàng chọn các liên kết ngược theo Chủ đề, UR/DR, Lưu lượng truy cập không phải trả tiền, Từ khóa không phải trả tiền, v.v.',
+    u_banner3_sub5: 'StaLinks đang cung cấp nhiều ngôn ngữ như tiếng Anh, tiếng Indonesia, tiếng Nhật, tiếng Việt, tiếng Thái, v.v.',
 
     //banner 4
     banner_4: 'Làm thế nào để trở thành một người viết bài guest post và bắt đầu kiếm tiền!',

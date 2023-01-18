@@ -35,25 +35,25 @@ export default {
     banner2_text4: 'Start Earning',
 
     //banner 3
-    banner_3: 'Start to increase your website ranking by buying guest post backlinks from Stalinks.',
+    banner_3: 'Hurry up! Buy backlinks from StaLinks to increase your website ranking!',
     banner3_text1: 'Register',
     banner3_text2: 'Make an Order',
     banner3_text3: 'Follow-up your orders',
 
     // update banner 3
 
-    u_banner_3: 'Need Guest Post Backlinks For Your SEO Sites?',
-    u_banner3_text1: '#1 Backlinks Provider in Asia',
+    u_banner_3: 'Hi, Link Builder! Need Guest Post Backlinks for Your SEO Sites?',
+    u_banner3_text1: 'Best Backlinks Provider in Asia',
     u_banner3_text2: 'Affordable Price',
-    u_banner3_text3: 'Highly Secured System',
-    u_banner3_text4: '20k+ High Quality Sites',
-    u_banner3_text5: 'Lots of Language Choices',
+    u_banner3_text3: 'Highly Secured Desk Management',
+    u_banner3_text4: '20k++ High Quality URLs',
+    u_banner3_text5: 'Multilingual Platform',
 
     u_banner3_sub1: 'StaLinks is the first and most reliable SEO link-building service management in Asia.',
-    u_banner3_sub2: 'StaLinks offers affordable prices on guest posts and a 100% money-back guarantee.',
-    u_banner3_sub3: 'StaLinks has a highly secured system that protects your transactions from scammers.',
-    u_banner3_sub4: 'StaLinks has 20k+ high-quality sites that will help you to choose backlinks easily according to your Topic, UR/DR, Organic Traffic, Organic Keywords, and many more.',
-    u_banner3_sub5: 'StaLinks has a lot of language choices like English, Indonesian, Japanese, Vietnamese, Thai, etc.',
+    u_banner3_sub2: 'StaLinks offers affordable prices on guest posts. 100% money-back guarantee.',
+    u_banner3_sub3: 'StaLinks has a highly secured desk management that protects your transactions from scammers.',
+    u_banner3_sub4: 'StaLinks has 20k++ high-quality URLs that will help you to choose backlinks easily according to your Topic, UR/DR, Organic Traffic, Organic Keywords, and many more.',
+    u_banner3_sub5: 'StaLinks is providing multi languages like English, Indonesian, Japanese, Vietnamese, Thai, etc.',
 
     //banner 4
     banner_4: 'How to become a guest post writer and start making money!',
