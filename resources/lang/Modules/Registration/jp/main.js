@@ -35,24 +35,24 @@ export default {
     banner2_text4: '利益率アップ',
 
     //banner 3
-    banner_3: 'バックリンクを獲得しアンカーテキストが含まれるゲストポストを購入することでランキングを上げることができます。',
-    banner3_text1: 'ご登録',
-    banner3_text2: 'ご注文',
-    banner3_text3: 'ご注文を簡単管理',
+    banner_3: 'StaLinks からゲスト投稿のバックリンクを購入して、Web サイトのランキングを上げ始めます。',
+    banner3_text1: '登録',
+    banner3_text2: '注文する',
+    banner3_text3: 'ご注文のフォローアップ',
 
     // update banner 3
 
     u_banner_3: 'SEO サイトにゲスト投稿のバックリンクが必要ですか?',
-    u_banner3_text1: '#1 世界的なバックリンク プロバイダー',
+    u_banner3_text1: 'アジアでナンバーワンの被リンク提供者',
     u_banner3_text2: '手頃な価格',
     u_banner3_text3: '高度にセキュアなシステム',
     u_banner3_text4: '20,000 以上の高品質サイト',
     u_banner3_text5: '多くの言語の選択肢',
 
-    u_banner3_sub1: 'StaLinks は、南アジアで最初の信頼できる SEO リンク構築サービス管理です。',
-    u_banner3_sub2: 'StaLinks は、ゲスト投稿で手頃な価格と 100% 返金保証を提供しています。',
-    u_banner3_sub3: 'StaLinks には、取引が詐欺師から保護されることを保証する高度に安全なシステムがあります。',
-    u_banner3_sub4: 'StaLinks には Ahrefs のスコアに基づく 20,000 以上の高品質なサイトがあり、トピック、UR/DR、オーガニック トラフィック、オーガニック キーワードなどに応じてバックリンクを簡単に選択できます。',
+    u_banner3_sub1: 'StaLinks は、アジアで最初で最も信頼できる SEO リンク構築サービス管理です。',
+    u_banner3_sub2: 'StaLinks は、ゲスト投稿を手頃な価格で提供し、100% 返金保証を提供しています。',
+    u_banner3_sub3: 'StaLinks には、取引を詐欺師から保護する高度に安全なシステムがあります。',
+    u_banner3_sub4: 'StaLinks には 20,000 以上の高品質なサイトがあり、トピック、UR/DR、オーガニック トラフィック、オーガニック キーワードなどに応じてバックリンクを簡単に選択できます。',
     u_banner3_sub5: 'StaLinks には、英語、インドネシア語、日本語、ベトナム語、タイ語など、多くの言語の選択肢があります。',
 
     //banner 4
