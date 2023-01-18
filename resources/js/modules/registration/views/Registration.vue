@@ -127,23 +127,161 @@
                 </div>
 
                 <div class="pr-5" v-if="RegisterModel.type == 'Buyer'">
-                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_3') }}</h1>
-                    <br>
-                    <p class="text-white lead custom-text">
-                        <img src="/images/icon_registration/register-new.png" alt="">
-                        {{ $t('message.registration.banner3_text1') }}
-                    </p>
-                    <br>
-                    <p class="text-white lead custom-text">
-                        <img src="/images/icon_registration/order-1.png" alt="">
-                        {{ $t('message.registration.banner3_text2') }}
-                    </p>
-                    <br>
-                    <p class="text-white lead custom-text">
-                        <img src="/images/icon_registration/follow-up-1-1.png" alt="">
-                        {{ $t('message.registration.banner3_text3') }}
-                    </p>
-                    <br>
+                    <h1 class="text-yellow display-4 font-weight-bold">
+<!--                        {{ $t('message.registration.banner_3') }}-->
+
+                        {{ $t('message.registration.u_banner_3') }}
+                    </h1>
+
+                    <h5 class="mt-4" style="color: #E6E6E6">
+                        {{ $t('message.registration.banner_3') }}
+                    </h5>
+<!--                    <br>-->
+<!--                    <p class="text-white lead custom-text">-->
+<!--                        <img src="/images/icon_registration/register-new.png" alt="">-->
+<!--                        {{ $t('message.registration.banner3_text1') }}-->
+<!--                    </p>-->
+<!--                    <br>-->
+<!--                    <p class="text-white lead custom-text">-->
+<!--                        <img src="/images/icon_registration/order-1.png" alt="">-->
+<!--                        {{ $t('message.registration.banner3_text2') }}-->
+<!--                    </p>-->
+<!--                    <br>-->
+<!--                    <p class="text-white lead custom-text">-->
+<!--                        <img src="/images/icon_registration/follow-up-1-1.png" alt="">-->
+<!--                        {{ $t('message.registration.banner3_text3') }}-->
+<!--                    </p>-->
+<!--                    <br>-->
+
+                    <div class="row my-5">
+                        <div style="width: 90% !important;">
+                            <div class="subtitle-container">
+                                <div class="box-icon-wrapper">
+                                    <div class="icon-box">
+                                        <span class="icon-box-wrapper">
+				                            <i aria-hidden="true" class="fas fa-trophy"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="text-box">
+                                        <div class="text-box-title">
+                                            <h4>{{ $t('message.registration.u_banner3_text1') }}</h4>
+                                        </div>
+
+                                        <div class="text-box-content">
+                                            <p>
+                                                {{ $t('message.registration.u_banner3_sub1') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5 justify-content-end">
+                        <div style="width: 90% !important;">
+                            <div class="subtitle-container">
+                                <div class="box-icon-wrapper-right">
+                                    <div class="icon-box">
+                                        <span class="icon-box-wrapper">
+				                            <i aria-hidden="true" class="fas fa-dollar-sign"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="text-box">
+                                        <div class="text-box-title">
+                                            <h4>{{ $t('message.registration.u_banner3_text2') }}</h4>
+                                        </div>
+
+                                        <div class="text-box-content">
+                                            <p>
+                                                {{ $t('message.registration.u_banner3_sub2') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div style="width: 90% !important;">
+                            <div class="subtitle-container">
+                                <div class="box-icon-wrapper">
+                                    <div class="icon-box">
+                                        <span class="icon-box-wrapper">
+				                            <i aria-hidden="true" class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="text-box">
+                                        <div class="text-box-title">
+                                            <h4>{{ $t('message.registration.u_banner3_text3') }}</h4>
+                                        </div>
+
+                                        <div class="text-box-content">
+                                            <p>
+                                                {{ $t('message.registration.u_banner3_sub3') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5 justify-content-end">
+                        <div style="width: 90% !important;">
+                            <div class="subtitle-container">
+                                <div class="box-icon-wrapper-right">
+                                    <div class="icon-box">
+                                        <span class="icon-box-wrapper">
+				                            <i aria-hidden="true" class="fas fa-link"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="text-box">
+                                        <div class="text-box-title">
+                                            <h4>{{ $t('message.registration.u_banner3_text4') }}</h4>
+                                        </div>
+
+                                        <div class="text-box-content">
+                                            <p>
+                                                {{ $t('message.registration.u_banner3_sub4') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div style="width: 90% !important;">
+                            <div class="subtitle-container">
+                                <div class="box-icon-wrapper">
+                                    <div class="icon-box">
+                                        <span class="icon-box-wrapper">
+				                            <i aria-hidden="true" class="fas fa-globe"></i>
+                                        </span>
+                                    </div>
+
+                                    <div class="text-box">
+                                        <div class="text-box-title">
+                                            <h4>{{ $t('message.registration.u_banner3_text5') }}</h4>
+                                        </div>
+
+                                        <div class="text-box-content">
+                                            <p>
+                                                {{ $t('message.registration.u_banner3_sub5') }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="pr-5" v-if="RegisterModel.type == 'Writer'">
@@ -331,6 +469,75 @@
     .custom-text { font-size: 2.5em; }
 
     h1 { text-shadow: -3px 3px 4px rgba(0,0,0,0.71); }
+
+    .subtitle-container {
+        background: linear-gradient(to right, rgba(33, 130, 150, 0.1), rgba(33, 130, 150,0.2)) !important;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+
+        padding: 20px 20px 20px 20px;
+        background-color: #2B6ABA;
+        border-radius: 99px 99px 99px 99px;
+        box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 50%);
+    }
+
+    .subtitle-container .box-icon-wrapper {
+        display: flex;
+        text-align: left;
+        flex-direction: row;
+    }
+
+    .subtitle-container .box-icon-wrapper-right {
+        display: flex;
+        text-align: right;
+        flex-direction: row-reverse;
+    }
+
+    .subtitle-container .icon-box {
+        margin-right: var(--icon-box-icon-margin,15px);
+        margin-left: 0;
+        margin-bottom: unset;
+    }
+
+    .subtitle-container .box-icon-wrapper-right .icon-box {
+        margin-left: var(--icon-box-icon-margin,15px);
+        margin-right: 0;
+        margin-bottom: unset;
+    }
+
+    .icon-box .icon-box-wrapper {
+        border-radius: 50%;
+        background-color: #FFFFFF;
+        fill: #218296;
+        color: #218296;
+        padding: .4em;
+
+        display: inline-block;
+        line-height: 1;
+        transition: all .3s;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    .icon-box .icon-box-wrapper i {
+        width: 1em;
+        height: 1em;
+        position: relative;
+    }
+
+    .text-box-title {
+        font-weight: 600;
+        color: white;
+    }
+
+    .text-box-content {
+        color: #E6E6E6;
+        font-weight: 400;
+    }
+
+    .text-box-content p {
+        margin-bottom: 0;
+    }
 </style>
 
 <script>
@@ -369,7 +576,7 @@
         },
 
         created() {
-            if(this.$route.query.type === 'Seller' || 
+            if(this.$route.query.type === 'Seller' ||
             this.$route.query.type === 'Buyer' ||
             this.$route.query.type === 'Writer' ||
             this.$route.query.type === 'Affiliate'
@@ -380,7 +587,7 @@
                 this.RegisterModel.type = ''
                 this.isTypeDisabled = false
             }
-            
+
             this.RegisterModel.affiliate_code = this.$route.query.code ? this.$route.query.code : ''
             this.isAffiliateCodeHidden = !!this.$route.query.code
         },

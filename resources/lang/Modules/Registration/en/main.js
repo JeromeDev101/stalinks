@@ -40,6 +40,21 @@ export default {
     banner3_text2: 'Make an Order',
     banner3_text3: 'Follow-up your orders',
 
+    // update banner 3
+
+    u_banner_3: 'Need Guest Post Backlinks For Your SEO Sites?',
+    u_banner3_text1: '#1 Worldwide Backlinks Provider',
+    u_banner3_text2: 'Affordable Price',
+    u_banner3_text3: 'Highly Secured System',
+    u_banner3_text4: '20k+ High Quality Sites',
+    u_banner3_text5: 'Lots of Language Choices',
+
+    u_banner3_sub1: 'StaLinks is the first and reliable SEO link building service management in South Asia.',
+    u_banner3_sub2: 'StaLinks offers affordable prices on the guest post and a 100% money-back guarantee.',
+    u_banner3_sub3: 'StaLinks has a highly secured system that guarantee your transactions are protected from scammers.',
+    u_banner3_sub4: 'StaLinks has 20k+ high quality sites based on Ahrefs’ score that will help you easily choose backlinks according to your Topic, UR/DR, Organic Traffic, Organic Keyword and many more.',
+    u_banner3_sub5: 'StaLinks has a lot of language choices such as English, Indonesian, Japanese, Vietnamese, and Thai.',
+
     //banner 4
     banner_4: 'How to become a guest post writer and start making money!',
     banner4_text1: 'Register',
