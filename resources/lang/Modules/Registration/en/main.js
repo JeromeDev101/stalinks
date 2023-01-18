@@ -53,7 +53,7 @@ export default {
     u_banner3_sub2: 'StaLinks offers affordable prices on guest posts. 100% money-back guarantee.',
     u_banner3_sub3: 'StaLinks has a highly secured desk management that protects your transactions from scammers.',
     u_banner3_sub4: 'StaLinks has 20k++ high-quality URLs that will help you to choose backlinks easily according to your Topic, UR/DR, Organic Traffic, Organic Keywords, and many more.',
-    u_banner3_sub5: 'StaLinks is providing multi languages like English, Indonesian, Japanese, Vietnamese, Thai, etc.',
+    u_banner3_sub5: 'StaLinks provides multi languages such as English, Indonesian, Indian, Japanese, Vietnamese, and Thai.',
 
     //banner 4
     banner_4: 'How to become a guest post writer and start making money!',

@@ -53,7 +53,7 @@ export default {
     u_banner3_sub2: 'StaLinks menawarkan harga yang terjangkau untuk posting tamu. Jaminan uang kembali 100%.',
     u_banner3_sub3: 'StaLinks memiliki manajemen meja yang sangat aman yang melindungi transaksi Anda dari penipu.',
     u_banner3_sub4: 'StaLinks memiliki 20k++ URL berkualitas tinggi yang akan membantu Anda memilih backlink dengan mudah sesuai dengan Topik Anda, UR/DR, Lalu Lintas Organik, Kata Kunci Organik, dan masih banyak lagi.',
-    u_banner3_sub5: 'StaLinks menyediakan multi bahasa seperti Inggris, Indonesia, Jepang, Vietnam, Thailand, dll.',
+    u_banner3_sub5: 'StaLinks menyediakan multi bahasa seperti Inggris, Indonesia, India, Jepang, Vietnam, dan Thailand.',
 
     //banner 4
     banner_4: 'Bagaimana menjadi penulis posting tamu dan mulai menghasilkan uang!',

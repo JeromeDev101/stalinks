@@ -53,7 +53,7 @@ export default {
     u_banner3_sub2: 'StaLinks cung cấp giá cả phải chăng trên các bài đăng của khách. Đảm bảo hoàn lại tiền 100%.',
     u_banner3_sub3: 'StaLinks có một hệ thống quản lý bàn bảo mật cao giúp bảo vệ các giao dịch của bạn khỏi những kẻ lừa đảo.',
     u_banner3_sub4: 'StaLinks có 20 nghìn ++ URL chất lượng cao sẽ giúp bạn dễ dàng chọn các liên kết ngược theo Chủ đề, UR/DR, Lưu lượng truy cập không phải trả tiền, Từ khóa không phải trả tiền, v.v.',
-    u_banner3_sub5: 'StaLinks đang cung cấp nhiều ngôn ngữ như tiếng Anh, tiếng Indonesia, tiếng Nhật, tiếng Việt, tiếng Thái, v.v.',
+    u_banner3_sub5: 'StaLinks cung cấp nhiều ngôn ngữ như tiếng Anh, tiếng Indonesia, tiếng Ấn Độ, tiếng Nhật, tiếng Việt và tiếng Thái.',
 
     //banner 4
     banner_4: 'Làm thế nào để trở thành một người viết bài guest post và bắt đầu kiếm tiền!',
