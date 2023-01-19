@@ -2212,6 +2212,7 @@ export default {
     data() {
         return {
             paginate : [
+                10,
                 15,
                 25,
                 50,
@@ -2264,7 +2265,7 @@ export default {
                 type : this.$route.query.type || '',
                 search : this.$route.query.search || '',
                 status : this.$route.query.status || '',
-                paginate : this.$route.query.paginate || '15',
+                paginate : this.$route.query.paginate || '10',
                 team_in_charge : this.$route.query.team_in_charge || '',
                 affiliate : this.$route.query.affiliate || '',
                 country : this.$route.query.country || '',
@@ -3979,7 +3980,7 @@ export default {
                 type : '',
                 status : '',
                 search : '',
-                paginate : '15',
+                paginate : '10',
                 team_in_charge : '',
                 affiliate : '',
                 company_type : '',
