@@ -42,7 +42,7 @@ export default {
 
     // update banner 3
 
-    u_banner_3: 'こんにちは、リンクビルダーです！ SEO サイトにゲスト投稿のバックリンクが必要ですか?',
+    u_banner_3: 'こんにちはリンクビルダー！ SEO サイトに常にゲスト投稿が必要ですか?',
     u_banner3_text1: 'アジアで最高のバックリンク プロバイダー',
     u_banner3_text2: '手頃な価格',
     u_banner3_text3: '安全性の高いデスク管理',

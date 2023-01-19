@@ -42,7 +42,7 @@ export default {
 
     // update banner 3
 
-    u_banner_3: 'Xin chào, Trình tạo liên kết! Cần Guest Post Backlinks cho trang web SEO của bạn?',
+    u_banner_3: 'Xin chào Trình tạo liên kết! Luôn cần bài viết của khách cho các trang web SEO của bạn?',
     u_banner3_text1: 'Nhà cung cấp backlinks tốt nhất ở châu Á',
     u_banner3_text2: 'Giá cả phải chăng',
     u_banner3_text3: 'Quản lý bàn bảo mật cao',

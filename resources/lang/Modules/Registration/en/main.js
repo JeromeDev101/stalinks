@@ -42,7 +42,7 @@ export default {
 
     // update banner 3
 
-    u_banner_3: 'Hi, Link Builder! Need Guest Post Backlinks for Your SEO Sites?',
+    u_banner_3: 'Hi Link Builder! Always Need Guest Posts for Your SEO Sites?',
     u_banner3_text1: 'Best Backlinks Provider in Asia',
     u_banner3_text2: 'Affordable Price',
     u_banner3_text3: 'Highly Secured Desk Management',

@@ -42,7 +42,7 @@ export default {
 
     // update banner 3
 
-    u_banner_3: 'Hai, Pembuat Tautan! Perlu Tautan Balik Posting Tamu untuk Situs SEO Anda?',
+    u_banner_3: 'Hai Pembuat Tautan! Selalu Membutuhkan Posting Tamu untuk Situs SEO Anda?',
     u_banner3_text1: 'Penyedia Backlink Terbaik di Asia',
     u_banner3_text2: 'Harga terjangkau',
     u_banner3_text3: 'Manajemen Meja yang Sangat Aman',
