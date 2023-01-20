@@ -7,6 +7,7 @@ use App\Models\Registration;
 use Illuminate\Http\Request;
 use App\Models\AffiliateCode;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
 
 class AffiliateCodeController extends Controller
 {
@@ -37,20 +38,26 @@ class AffiliateCodeController extends Controller
         return User::where('role_id', 11)
             ->where('status', 'active')
             ->with('affiliateCodes')
-            ->withCount('affiliateBuyers')
+            ->withCount(['affiliateBuyers' => function (Builder $query) {
+                $query->where('status', 'active');
+            }])
             ->paginate(10);
     }
 
     public function getAllAffiliateCampaigns () {
         return AffiliateCode::with('user:id,username,name,email,created_at')
-            ->withCount('buyers')
+            ->withCount(['buyers' => function (Builder $query) {
+                $query->where('status', 'active');
+            }])
             ->paginate(10);
     }
 
     public function getAffiliateUserCampaigns ($id) {
         return AffiliateCode::where('user_id', $id)
             ->with('user:id,username,name,email,created_at')
-            ->withCount('buyers')
+            ->withCount(['buyers' => function (Builder $query) {
+                $query->where('status', 'active');
+            }])
             ->paginate(10);
     }
 
