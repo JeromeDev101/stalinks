@@ -358,6 +358,18 @@
                         </router-link>
                     </li>
 
+                    <!-- Campaign Setup -->
+                    <li v-if="user.permission_list.includes('view-campaign-setup-campaign-setup')" class="nav-item">
+                        <router-link
+                            class="nav-link"
+                            :to="{ path: '/campaign-setup' }"
+                            :class="{ active: $route.name == 'campaign-setup' }">
+
+                            <img src="../../../../images/admin-settings.png"/>
+                            <p>Campaign Setup</p>
+                        </router-link>
+                    </li>
+
                     <!-- URL Prospect -->
                     <li v-if="user.permission_list.includes('view-url-prospect-url-prospect')" class="nav-item">
                         <router-link

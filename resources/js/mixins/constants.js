@@ -92,6 +92,10 @@ export const Constants = {
             path: '/',
         },
         {
+            name: 'Campaign Setup',
+            path: '/campaign-setup',
+        },
+        {
             name: 'URL Prospect',
             path: '/url-prospect',
         },
@@ -223,6 +227,9 @@ export const Constants = {
         ],
         'Dashboard': [
             'Dashboard'
+        ],
+        'Campaign Setup': [
+            'Campaign Setup'
         ],
         'URL Prospect': [
             'URL Prospect'

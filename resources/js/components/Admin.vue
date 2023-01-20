@@ -27,7 +27,7 @@
                     <i class="fa fa-info-circle"></i>
                     AFFILIATE CODE is not set. Generate your code now and start inviting buyers by clicking
 
-                    <router-link :to="{ path:'/profile/' + user.id }">
+                    <router-link :to="{ path:'/campaign-setup'}">
                         here
                     </router-link>
 

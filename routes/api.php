@@ -462,6 +462,11 @@ Route::middleware('auth:api')->group(function () {
     // Affiliate Code
     Route::name('generate-affiliate-code')->post('/generate-affiliate-code', 'AffiliateCodeController@store');
     Route::name('get-affiliate-codes')->get('/get-affiliate-codes', 'AffiliateCodeController@index');
+    Route::name('get-all-affiliates')->get('/get-all-affiliates', 'AffiliateCodeController@getAllAffiliates');
+    Route::name('get-all-affiliate-campaigns')->get('/get-all-affiliate-campaigns', 'AffiliateCodeController@getAllAffiliateCampaigns');
+    Route::name('get-affiliate-user-campaigns')->get('/get-affiliate-user-campaigns/{id}', 'AffiliateCodeController@getAffiliateUserCampaigns');
+    Route::name('get-affiliate-user-buyers')->get('/get-affiliate-user-buyers/{id}', 'AffiliateCodeController@getAffiliateUserBuyers');
+    Route::name('get-affiliate-campaign-buyers')->get('/get-affiliate-campaign-buyers/{id}', 'AffiliateCodeController@getAffiliateCampaignBuyers');
 });
 
 //Mailgun external

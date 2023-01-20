@@ -398,12 +398,6 @@
     </div>
 </template>
 
-<style scoped>
-    .btn-radio-custom {
-        transform: scale(2);
-    }
-</style>
-
 <script>
     import { mapState } from 'vuex';
     import axios from 'axios';
@@ -671,3 +665,9 @@
         }
     }
 </script>
+
+<style scoped>
+    .btn-radio-custom {
+        transform: scale(2);
+    }
+</style>

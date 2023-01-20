@@ -95,6 +95,9 @@ import Manual from '@/modules/purchases/views/Manual.vue'
 import Summary from '@/modules/purchases/views/Summary.vue'
 import PurchaseTools from '@/modules/purchases/views/Tools.vue'
 
+// campaign setup
+import CampaignSetup from '@/modules/campaign/views/CampaignSetup.vue'
+
 import store from './store';
 
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
@@ -791,6 +794,18 @@ const routes = [
                 component : Manual,
                 beforeEnter: (to, from, next) => {
                     if(store.state.storeAuth.currentUser.permission_list.includes('view-purchases-manual')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/campaign-setup',
+                name : 'campaign-setup',
+                component : CampaignSetup,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-campaign-setup-campaign-setup')) {
                         next();
                     } else {
                         next('*');

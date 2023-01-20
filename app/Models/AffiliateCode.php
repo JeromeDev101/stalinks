@@ -10,7 +10,11 @@ class AffiliateCode extends Model
 {
     use SoftDeletes, Loggable;
 
-    public function user() {
+    public function user () {
         return $this->belongsTo('App\Models\User', 'user_id');
+    }
+
+    public function buyers () {
+        return $this->hasMany('App\Models\Registration', 'affiliate_code_id');
     }
 }

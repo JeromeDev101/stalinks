@@ -215,6 +215,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\AffiliateCode', 'user_id');
     }
 
+    public function affiliateBuyers()
+    {
+        return $this->hasMany('App\Models\Registration', 'affiliate_id');
+    }
+
     /**
      * Route notifications for the Slack channel.
      *
