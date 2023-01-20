@@ -1436,11 +1436,18 @@
                 let total_price = [];
                 let total = 0;
                 sales.forEach(function(item, index){
-                    if (item.publisher !==
-                        null && typeof item.publisher.price
+                    // if (item.publisher !==
+                    //     null && typeof item.publisher.price
+                    //     !==
+                    //     'undefined') {
+                    //     total_price.push( parseFloat(item.publisher.price))
+                    // }
+
+                    if (item.price !==
+                        null && typeof item.price
                         !==
                         'undefined') {
-                        total_price.push( parseFloat(item.publisher.price))
+                        total_price.push( parseFloat(item.price))
                     }
                 })
 
