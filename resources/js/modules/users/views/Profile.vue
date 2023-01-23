@@ -17,12 +17,13 @@
                                 <h3>{{ user.username }}</h3>
                             </li>
                             <li>
-                                <input type="file"
-                                           class="form-control mb-2"
-                                           enctype="multipart/form-data"
-                                           ref="photo"
-                                           accept="image/png, image/gif, image/jpeg"
-                                           name="photo">
+                                <input 
+                                    type="file"
+                                    class="form-control mb-2"
+                                    enctype="multipart/form-data"
+                                    ref="photo"
+                                    accept="image/png, image/gif, image/jpeg"
+                                    name="photo">
                                 <button class="btn btn-block btn-default btn-sm" @click="submitUpload">
                                     {{ $t('message.profile.p_upload_photo') }}
                                 </button>
@@ -68,6 +69,16 @@
                                     <td><b>{{ $t('message.profile.p_email') }}</b></td>
                                     <td>
                                         <input type="text" class="form-control" v-model="user.email" :disabled="true">
+                                    </td>
+                                </tr>
+                                <tr v-if="user.isOurs === 0">
+                                    <td><b>Email Display Name</b></td>
+                                    <td>
+                                        <input 
+                                            v-model="user.work_mail_display_name" 
+                                            type="text" 
+                                            class="form-control"
+                                            :placeholder="'Type Email Display Name'">
                                     </td>
                                 </tr>
                                 <tr>

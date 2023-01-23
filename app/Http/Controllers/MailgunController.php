@@ -185,6 +185,8 @@ class MailgunController extends Controller
 
         $work_mail = $request->has('work_mail') ? $request->work_mail : Auth::user()->work_mail;
 
+        $work_mail_final = Auth::user()->work_mail_display_name ? Auth::user()->work_mail_display_name . ' <' . $work_mail . '>' : $work_mail;
+
         $signature = MailSignature::select('content')->where('work_mail', $work_mail)->first();
 
         $signature = $signature ? "<div style='width:100%'>" . $signature->content . "</div>" : '';
@@ -203,7 +205,7 @@ class MailgunController extends Controller
 
         foreach ($list_emails as $address) {
             $params = [
-                'from'                => $work_mail,
+                'from'                => $work_mail_final,
                 'to'                  => $address,
                 'subject'             => $request->title,
                 'cc'                  => $myCcString,

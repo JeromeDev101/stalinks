@@ -137,6 +137,10 @@ class AuthController extends Controller
             $input['work_mail'] = '';
         }
 
+        if (!isset($input['work_mail_display_name'])) {
+            $input['work_mail_display_name'] = '';
+        }
+
         if (!isset($input['work_mail_pass'])) {
             $input['work_mail_pass'] = '';
         }
