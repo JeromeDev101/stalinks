@@ -80,16 +80,6 @@ class AuthController extends Controller
 
     // UpdateUserRequest
     public function edit(UpdateUserRequest $request) {
-        if (Gate::denies('update-management-teams')) {
-            return response()->json([
-                "message" => 'Unauthorized Access',
-                "errors" => [
-                    "access" => 'Unauthorized Access',
-                ],
-            ],422);
-        }
-
-
         $response = ['success' => false];
         $input_2 = $request->only('payment_type');
         $input = $request->except(
