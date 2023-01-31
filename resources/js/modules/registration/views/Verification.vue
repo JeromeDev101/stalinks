@@ -571,7 +571,7 @@
                 let self = this;
                 let id_payment_type = this.regModel.id_payment_type;
 
-                if (this.regModel.type !== 'Affiliate') {
+                if (this.regModel.type !== 'Affiliate' && this.regModel.type !== 'Buyer') {
                     if (!id_payment_type || !this.regModel.payment_type[id_payment_type]) {
                         this.validate_error_type = true;
 
