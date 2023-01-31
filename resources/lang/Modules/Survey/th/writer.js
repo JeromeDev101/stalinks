@@ -8,10 +8,12 @@ export default {
     writer_survey_a_q_2: '2. คุณพอใจกับบริการที่เราจัดให้แล้วหรือไม่?',
 
     // writer survey a q3
+    // writer_survey_a_q_3: '3. คุณพบปัญหาใด ๆ ในการเขียนเนื้อหาบทความหรือไม่?',
     writer_survey_a_q_3: '3. คุณพบปัญหาใด ๆ ในการเขียนเนื้อหาบทความหรือไม่?',
 
     // writer survey a q4
-    writer_survey_a_q_4: '4. จากประสบการณ์ล่าสุดของคุณ โปรดให้คะแนนความพึงพอใจของคุณโดยการใช้บริการของเรา',
+    // writer_survey_a_q_4: '4. จากประสบการณ์ล่าสุดของคุณ โปรดให้คะแนนความพึงพอใจของคุณโดยการใช้บริการของเรา',
+    writer_survey_a_q_4: '4. คุณพอใจกับการใช้บริการของเราหรือไม่?',
     writer_survey_a_q_4_a: 'ไม่พอใจอย่างยิ่ง',
     writer_survey_a_q_4_b: 'ค่อนข้างไม่พอใจ',
     writer_survey_a_q_4_c: 'ไม่ใช่ทั้งสองอย่าง',
@@ -19,17 +21,18 @@ export default {
     writer_survey_a_q_4_e: 'พอใจมาก',
 
     // writer survey a q5
-    writer_survey_a_q_5: '5. กรุณาให้คะแนนถ้าคุณจะแนะนำเราและบริการของเราให้กับคนรู้จักของคุณ',
+    // writer_survey_a_q_5: '5. กรุณาให้คะแนนถ้าคุณจะแนะนำเราและบริการของเราให้กับคนรู้จักของคุณ',
+    writer_survey_a_q_5: '5. คุณจะแนะนำให้เรารู้จักกับการเชื่อมต่อของคุณหรือไม่?',
     writer_survey_a_q_5_a: '1-4 ฉันจะไม่แนะนำให้กับคนอื่น',
     writer_survey_a_q_5_b: '5-7 จะพิจารณา',
     writer_survey_a_q_5_c: '7-10 ฉันจะแนะนำให้คนรู้จักของฉันใช้บริการของคุณอย่างแน่นอน',
 
     // writer survey a q6
-    writer_survey_a_q_6: '6. คุณรู้เกี่ยวกับ stalinks ได้อย่างไร?',
+    writer_survey_a_q_6: '6. คุณรู้จัก StaLinks ได้อย่างไร?',
     writer_survey_a_q_6_fb: 'Facebook',
     writer_survey_a_q_6_li: 'LinkedIn',
-    writer_survey_a_q_6_others: 'Others',
-
+    // writer_survey_a_q_6_others: 'Others',
+    writer_survey_a_q_6_others: 'อื่นๆ (Google, เพื่อน ฯลฯ)',
 
     // aside
     writer_survey_aside: 'นอกจากประเด็นที่คุณได้กล่าวไว้ข้างต้นแล้ว มีความคิดเห็นอื่นๆ ที่คุณอยากจะแบ่งปันอีกไหม?',
@@ -59,4 +62,8 @@ export default {
     enter: 'เข้า …',
     submit: 'ส่ง',
     login: 'ไปยังระบบ',
+
+    // legacy 1.0
+    writer_survey_a_q_4_legacy: '4. จากประสบการณ์ล่าสุดของคุณ โปรดให้คะแนนความพึงพอใจของคุณโดยใช้บริการของเรา',
+    writer_survey_a_q_5_legacy: '5. โปรดให้คะแนนหากคุณจะแนะนำเราและบริการของเราให้กับคนรู้จักของคุณ',
 }

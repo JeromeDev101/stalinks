@@ -109,7 +109,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','one')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.one"
@@ -135,23 +136,26 @@
 
                                     </textarea>
                                 </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.one">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.one"
+                                        class="text-danger"
+                                        :key="err">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.one"
-                                    v-for="err in sellerSurveyErrors.errors.one"
-                                    class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </template>
+                                
+                                <template v-if="sellerSurveyErrors.errors.one_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.one_other"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
-
-                                <span
-                                    v-if="sellerSurveyErrors.errors.one_other"
-                                    v-for="err in sellerSurveyErrors.errors.one_other"
-                                    class="text-danger">
-
-                                    {{ err }}
-                                </span>
-
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -163,7 +167,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','two')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.two"
@@ -189,23 +194,26 @@
 
                                     </textarea>
                                 </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.two">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.two"
+                                        class="text-danger"
+                                        :key="err">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.two"
-                                    v-for="err in sellerSurveyErrors.errors.two"
-                                    class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </template>
 
-                                    {{ err }}
-                                </span>
+                                <template v-if="sellerSurveyErrors.errors.two_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.two_other"
+                                        class="text-danger"
+                                        :key="err">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.two_other"
-                                    v-for="err in sellerSurveyErrors.errors.two_other"
-                                    class="text-danger">
-
-                                    {{ err }}
-                                </span>
-
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -217,7 +225,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','three')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.three"
@@ -243,23 +252,26 @@
 
                                     </textarea>
                                 </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.three">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.three"
+                                        class="text-danger"
+                                        :key="err">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.three"
-                                    v-for="err in sellerSurveyErrors.errors.three"
-                                    class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </template>
+                                
+                                <template v-if="sellerSurveyErrors.errors.three_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.three_other"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
-
-                                <span
-                                    v-if="sellerSurveyErrors.errors.three_other"
-                                    v-for="err in sellerSurveyErrors.errors.three_other"
-                                    class="text-danger">
-
-                                    {{ err }}
-                                </span>
-
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -271,7 +283,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','four')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.four"
@@ -297,23 +310,27 @@
 
                                     </textarea>
                                 </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.four">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.four"
+                                        class="text-danger"
+                                        :key="err">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.four"
-                                    v-for="err in sellerSurveyErrors.errors.four"
-                                    class="text-danger">
+                                        {{ err }}
+                                    </span>
+                                </template>
 
-                                    {{ err }}
-                                </span>
-
-                                <span
-                                    v-if="sellerSurveyErrors.errors.four_other"
+                                <template v-if="sellerSurveyErrors.errors.four_other">
+                                    <span
+                                    
                                     v-for="err in sellerSurveyErrors.errors.four_other"
-                                    class="text-danger">
+                                    class="text-danger"
+                                    :key="err">
 
                                     {{ err }}
                                 </span>
-
+                                </template>
                                 <hr/>
                             </div>
 
@@ -325,7 +342,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','five')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.five"
@@ -341,22 +359,37 @@
                                     </div>
                                 </div>
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.five"
-                                    v-for="err in sellerSurveyErrors.errors.five"
-                                    class="text-danger">
+                                <div v-if="survey.answers.five === 'Dissatisfied'" class="form-group">
+                                    <label>{{ $t('message.seller_survey.improve_dissatisfied') }}</label>
 
-                                    {{ err }}
-                                </span>
+                                    <textarea
+                                        v-model="survey.answers.five_other"
+                                        rows="3"
+                                        class="form-control"
+                                        :placeholder="$t('message.seller_survey.enter')">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.five_other"
-                                    v-for="err in sellerSurveyErrors.errors.five_other"
-                                    class="text-danger">
+                                    </textarea>
+                                </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.five">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.five"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
+                                        {{ err }}
+                                    </span>
+                                </template>
+                                
+                                <template v-if="sellerSurveyErrors.errors.five_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.five_other"
+                                        class="text-danger"
+                                        :key="err">
 
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -368,7 +401,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','six')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.six"
@@ -384,22 +418,37 @@
                                     </div>
                                 </div>
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.six"
-                                    v-for="err in sellerSurveyErrors.errors.six"
-                                    class="text-danger">
+                                <div v-if="survey.answers.six === 'no'" class="form-group">
+                                    <label>{{ $t('message.seller_survey.improve_no') }}</label>
 
-                                    {{ err }}
-                                </span>
+                                    <textarea
+                                        v-model="survey.answers.six_other"
+                                        rows="3"
+                                        class="form-control"
+                                        :placeholder="$t('message.seller_survey.enter')">
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.six_other"
-                                    v-for="err in sellerSurveyErrors.errors.six_other"
-                                    class="text-danger">
+                                    </textarea>
+                                </div>
+                                
+                                <template v-if="sellerSurveyErrors.errors.six">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.six"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
+                                        {{ err }}
+                                    </span>
+                                </template>
 
+                                <template v-if="sellerSurveyErrors.errors.six_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.six_other"
+                                        class="text-danger"
+                                        :key="err">
+
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -411,7 +460,8 @@
                                 <div class="form-group">
                                     <div
                                         v-for="answerSetAOne in sellerSurveyAnswers('a','seven')"
-                                        class="custom-control custom-radio">
+                                        class="custom-control custom-radio"
+                                        :key="answerSetAOne.id">
 
                                         <input
                                             v-model="survey.answers.seven"
@@ -439,22 +489,25 @@
                                     </textarea>
                                 </div>
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.seven"
-                                    v-for="err in sellerSurveyErrors.errors.seven"
-                                    class="text-danger">
+                                <template v-if="sellerSurveyErrors.errors.seven">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.seven"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
+                                        {{ err }}
+                                    </span>
+                                </template>
 
-                                <span
-                                    v-if="sellerSurveyErrors.errors.seven_other"
-                                    v-for="err in sellerSurveyErrors.errors.seven_other"
-                                    class="text-danger">
+                                <template v-if="sellerSurveyErrors.errors.seven_other">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.seven_other"
+                                        class="text-danger"
+                                        :key="err">
 
-                                    {{ err }}
-                                </span>
-
+                                        {{ err }}
+                                    </span>
+                                </template>
                                 <hr/>
                             </div>
 
@@ -473,6 +526,16 @@
 
                                     </textarea>
                                 </div>
+
+                                <template v-if="sellerSurveyErrors.errors.comment">
+                                    <span
+                                        v-for="err in sellerSurveyErrors.errors.comment"
+                                        class="text-danger"
+                                        :key="err">
+
+                                        {{ err }}
+                                    </span>
+                                </template>
 
                                 <hr/>
                             </div>
@@ -623,7 +686,7 @@ export default {
                         {
                             id: 'question-' + number + 'a-no',
                             name: 'question-' + number + 'a-no',
-                            value: 'No, I am okay with the current payment methods options',
+                            value: 'No, I am okay with the current payment method options',
                             label: self.$t('message.seller_survey.seller_survey_a_q_3_no')
                         },
                         {
@@ -653,53 +716,66 @@ export default {
                         {
                             id: 'question-' + number + 'a-a',
                             name: 'question-' + number + 'a-a',
-                            value: 'Extremely dissatisfied',
+                            value: 'Satisfied',
                             label: self.$t('message.seller_survey.seller_survey_a_q_5_a')
                         },
                         {
                             id: 'question-' + number + 'a-b',
                             name: 'question-' + number + 'a-b',
-                            value: 'Somewhat dissatisfied',
+                            value: 'Dissatisfied',
                             label: self.$t('message.seller_survey.seller_survey_a_q_5_b')
                         },
-                        {
-                            id: 'question-' + number + 'a-c',
-                            name: 'question-' + number + 'a-c',
-                            value: 'Neither',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_5_c')
-                        },
-                        {
-                            id: 'question-' + number + 'a-d',
-                            name: 'question-' + number + 'a-d',
-                            value: 'Somewhat satisfied',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_5_d')
-                        },
-                        {
-                            id: 'question-' + number + 'a-e',
-                            name: 'question-' + number + 'a-e',
-                            value: 'Extremely satisfied',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_5_e')
-                        }
+                        // {
+                        //     id: 'question-' + number + 'a-c',
+                        //     name: 'question-' + number + 'a-c',
+                        //     value: 'Neither',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_5_c')
+                        // },
+                        // {
+                        //     id: 'question-' + number + 'a-d',
+                        //     name: 'question-' + number + 'a-d',
+                        //     value: 'Somewhat satisfied',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_5_d')
+                        // },
+                        // {
+                        //     id: 'question-' + number + 'a-e',
+                        //     name: 'question-' + number + 'a-e',
+                        //     value: 'Extremely satisfied',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_5_e')
+                        // }
                     ],
 
                     six: [
+                        // {
+                        //     id: 'question-' + number + 'a-a',
+                        //     name: 'question-' + number + 'a-a',
+                        //     value: '1-4 I will not recommend to anyone',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_6_a')
+                        // },
+                        // {
+                        //     id: 'question-' + number + 'a-b',
+                        //     name: 'question-' + number + 'a-b',
+                        //     value: '5-7 I will consider it',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_6_b')
+                        // },
+                        // {
+                        //     id: 'question-' + number + 'a-c',
+                        //     name: 'question-' + number + 'a-c',
+                        //     value: '7-10 I will definitely recommend to my connections to use your services',
+                        //     label: self.$t('message.seller_survey.seller_survey_a_q_6_c')
+                        // }
+
                         {
-                            id: 'question-' + number + 'a-a',
-                            name: 'question-' + number + 'a-a',
-                            value: '1-4 I will not recommend to anyone',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_6_a')
+                            id: 'question-' + number + 'a-yes',
+                            name: 'question-' + number + 'a-yes',
+                            value: 'yes',
+                            label: self.$t('message.seller_survey.yes')
                         },
                         {
-                            id: 'question-' + number + 'a-b',
-                            name: 'question-' + number + 'a-b',
-                            value: '5-7 I will consider it',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_6_b')
-                        },
-                        {
-                            id: 'question-' + number + 'a-c',
-                            name: 'question-' + number + 'a-c',
-                            value: '7-10 I will definitely recommend to my connections to use your services',
-                            label: self.$t('message.seller_survey.seller_survey_a_q_6_c')
+                            id: 'question-' + number + 'a-no',
+                            name: 'question-' + number + 'a-no',
+                            value: 'no',
+                            label: self.$t('message.seller_survey.no')
                         }
                     ],
 
@@ -780,22 +856,22 @@ export default {
                 code: this.survey.answers.code,
                 type: 'seller'
             })
-                .then((response) => {
-                    if (this.survey.answers.set === 'a') {
-                        this.isSetAAnswered = Object.keys(response.data).length !== 0;
-                    } else {
-                        this.isSetBAnswered = Object.keys(response.data).length !== 0;
-                    }
-                });
+            .then((response) => {
+                if (this.survey.answers.set === 'a') {
+                    this.isSetAAnswered = Object.keys(response.data).length !== 0;
+                } else {
+                    this.isSetBAnswered = Object.keys(response.data).length !== 0;
+                }
+            });
         },
 
         checkSurveyCode () {
             axios.post('/api/survey/check-survey-code', {
                 code: this.survey.answers.code
             })
-                .then((response) => {
-                    this.survey.isCodeError = Object.keys(response.data).length === 0;
-                });
+            .then((response) => {
+                this.survey.isCodeError = Object.keys(response.data).length === 0;
+            });
         },
 
         redirectToLogin () {

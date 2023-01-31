@@ -19,7 +19,8 @@ import Finance from "./modules/system/views/Finance";
 import IT from "./modules/system/views/IT";
 import Devs from "./modules/system/views/Devs";
 import MailTemplate from '@/modules/template_email/views/List.vue';
-import AdminSurvey from './modules/survey/views/AdminSurvey'
+import AdminSurvey from './modules/survey/views/AdminSurveyTwo'
+import AdminSurveyLegacy from './modules/survey/views/AdminSurvey'
 // import MailLog from '@/modules/logs/views/MailLog.vue';
 import Publisher from '@/modules/publisher/views/List.vue'
 import FollowupSales from '@/modules/followup_sales/views/List.vue'
@@ -590,6 +591,18 @@ const routes = [
                 path : '/survey-dashboard',
                 name : 'survey-dashboard',
                 component : AdminSurvey,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-survey-dashboard-survey-dashboard')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/survey-dashboard-legacy',
+                name : 'survey-dashboard-legacy',
+                component : AdminSurveyLegacy,
                 beforeEnter: (to, from, next) => {
                     if(store.state.storeAuth.currentUser.permission_list.includes('view-survey-dashboard-survey-dashboard')) {
                         next();

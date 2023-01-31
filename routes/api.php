@@ -32,9 +32,12 @@ Route::name('cancel-order-confirmation-get-info')->get('/cancel-order-confirmati
 Route::name('registration-languages')->get('/registration-languages-list', 'CountryController@getListLanguages');
 
 //survey
-Route::name('store-survey-code')->post('/survey-code', 'SurveyController@store');
-Route::name('check-survey-code')->post('/survey/check-survey-code', 'SurveyController@checkSurveyCode');
-Route::name('check-survey-code-set')->post('/survey/check-survey-code-set', 'SurveyController@hasUserAnsweredSurveySet');
+// Route::name('store-survey-code')->post('/survey-code', 'SurveyController@store');
+Route::name('store-survey-code')->post('/survey-code', 'SurveyTwoController@store');
+// Route::name('check-survey-code')->post('/survey/check-survey-code', 'SurveyController@checkSurveyCode');
+Route::name('check-survey-code')->post('/survey/check-survey-code', 'SurveyTwoController@checkSurveyCode');
+// Route::name('check-survey-code-set')->post('/survey/check-survey-code-set', 'SurveyController@hasUserAnsweredSurveySet');
+Route::name('check-survey-code-set')->post('/survey/check-survey-code-set', 'SurveyTwoController@hasUserAnsweredSurveySet');
 
 //subscription
 Route::name('subscribe-user')->post('/subscription/subscribe-user', 'UserController@subscribeUser');
@@ -49,17 +52,24 @@ Route::middleware('auth:api')->group(function () {
 
     //Surveys
     Route::name('get-survey-list')->get('/surveys', 'SurveyController@getList');
-    Route::name('store-survey')->post('survey', 'SurveyController@store');
+    Route::name('get-survey-list-two')->get('/surveys-two', 'SurveyTwoController@getList');
+    // Route::name('store-survey')->post('survey', 'SurveyController@store');
+    Route::name('store-survey')->post('survey', 'SurveyTwoController@store');
     Route::name('survey-last-set')->get('/survey/last-set', 'SurveyController@getLastSurveySet');
-    Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
-    Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyController@hasUserAnsweredSurveySet');
+    // Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyController@hasUserAnsweredBothSurveys');
+    Route::name('check-user-answered-survey')->get('/survey/check-both', 'SurveyTwoController@hasUserAnsweredBothSurveys');
+    // Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyController@hasUserAnsweredSurveySet');
+    Route::name('check-survey-set')->post('/survey/check-survey-set', 'SurveyTwoController@hasUserAnsweredSurveySet');
     Route::name('survey-question-full-details')->get('/survey/survey-question-full-details', 'SurveyController@getSurveyQuestionFullDetails');
+    Route::name('survey-question-full-details-two')->get('/survey/survey-question-full-details-two', 'SurveyTwoController@getSurveyQuestionFullDetails');
 
     //Seller Surveys
-    Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyController@hasSellerAnsweredSurvey');
+    // Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyController@hasSellerAnsweredSurvey');
+    Route::name('check-seller-answered-survey')->post('/survey/seller/check', 'SurveyTwoController@hasSellerAnsweredSurvey');
 
     //Writer Surveys
-    Route::name('check-writer-answered-survey')->post('/survey/writer/check', 'SurveyController@hasWriterAnsweredSurvey');
+    // Route::name('check-writer-answered-survey')->post('/survey/writer/check', 'SurveyController@hasWriterAnsweredSurvey');
+    Route::name('check-writer-answered-survey')->post('/survey/writer/check', 'SurveyTwoController@hasWriterAnsweredSurvey');
 
     //User
     Route::resource('users', 'UserController');

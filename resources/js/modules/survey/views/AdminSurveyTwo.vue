@@ -10,16 +10,13 @@
             </div><!-- /.container-fluid -->
         </div>
 
-        <div class="row">
+        <div class="row mb-2">
             <div class="col-12">
-                <div class="alert alert-secondary" role="alert">
-                    You are currently viewing survey 1.0 results - For latest survey results click 
-                    <router-link
-                        class="font-italic"
-                        :to="{ path: '/survey-dashboard' }">
-                        here
-                    </router-link>
-                </div>
+                <router-link
+                    class="small font-italic"
+                    :to="{ path: '/survey-dashboard-legacy' }">
+                    View Survey 1.0
+                </router-link>
             </div>
         </div>
 
@@ -58,6 +55,14 @@
                                 <div class="card card-outline card-secondary">
                                     <div class="card-header d-flex align-items-center">
                                         <h3 class="card-title text-primary mr-3">{{ this.$t('message.survey_dashboard.bs_title_a') }}</h3>
+
+                                        <button
+                                            class="btn btn-primary"
+
+                                            @click="viewSurveyOverallComments('a', 'buyer', 'one')">
+
+                                            View Overall Comments
+                                        </button>
 
 <!--                                        <button-->
 <!--                                            data-toggle="modal"-->
@@ -137,7 +142,7 @@
                                                                     'a',
                                                                     'buyer',
                                                                     'two',
-                                                                     buyerSetAQuestions[1].question)">
+                                                                    buyerSetAQuestions[1].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -172,7 +177,7 @@
                                                                     'a',
                                                                     'buyer',
                                                                     'three',
-                                                                     buyerSetAQuestions[2].question)">
+                                                                    buyerSetAQuestions[2].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -207,7 +212,7 @@
                                                                     'a',
                                                                     'buyer',
                                                                     'four',
-                                                                     buyerSetAQuestions[3].question)">
+                                                                    buyerSetAQuestions[3].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -242,7 +247,7 @@
                                                                     'a',
                                                                     'buyer',
                                                                     'five',
-                                                                     buyerSetAQuestions[4].question)">
+                                                                    buyerSetAQuestions[4].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -268,9 +273,18 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card card-outline card-secondary">
-                                    <div class="card-header">
-                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.bs_title_b') }}</h3>
-                                        <div class="card-tools">
+                                    <div class="card-header d-flex align-items-center">
+                                        <h3 class="card-title text-primary mr-3">{{ this.$t('message.survey_dashboard.bs_title_b') }}</h3>
+
+                                        <button
+                                            class="btn btn-primary"
+
+                                            @click="viewSurveyOverallComments('b', 'buyer', 'one')">
+
+                                            View Overall Comments
+                                        </button>
+
+                                        <div class="card-tools ml-auto">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
@@ -295,7 +309,7 @@
                                                                     'b',
                                                                     'buyer',
                                                                     'one',
-                                                                     buyerSetBQuestions[0].question)">
+                                                                    buyerSetBQuestions[0].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -330,7 +344,7 @@
                                                                     'b',
                                                                     'buyer',
                                                                     'two',
-                                                                     buyerSetBQuestions[1].question)">
+                                                                    buyerSetBQuestions[1].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -365,7 +379,7 @@
                                                                     'b',
                                                                     'buyer',
                                                                     'three',
-                                                                     buyerSetBQuestions[2].question)">
+                                                                    buyerSetBQuestions[2].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -400,7 +414,7 @@
                                                                     'b',
                                                                     'buyer',
                                                                     'four',
-                                                                     buyerSetBQuestions[3].question)">
+                                                                    buyerSetBQuestions[3].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -435,7 +449,7 @@
                                                                     'b',
                                                                     'buyer',
                                                                     'five',
-                                                                     buyerSetBQuestions[4].question)">
+                                                                    buyerSetBQuestions[4].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -452,42 +466,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <!-- set b 6 -->
-                                            <div class="col-12 col-md-6">
-                                                <div class="card">
-                                                    <div class="card-header">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <span class="font-weight-bold">
-                                                                {{ buyerSetBQuestions[5].question }}
-                                                            </span>
-
-                                                            <button
-                                                                class="btn btn-primary"
-                                                                title="View Question Answers Full Details"
-
-                                                                @click="viewSurveyQuestionFullDetails(
-                                                                    'b',
-                                                                    'buyer',
-                                                                    'six',
-                                                                     buyerSetBQuestions[5].question)">
-
-                                                                <i class="fas fa-list-alt"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="card-body">
-                                                        <apexchart
-                                                            :series="setBSixData"
-                                                            :options="setBSixChartOptions"
-                                                            type="donut">
-
-                                                        </apexchart>
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -508,9 +486,18 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card card-outline card-secondary">
-                                    <div class="card-header">
-                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.ss_title_a') }}</h3>
-                                        <div class="card-tools">
+                                    <div class="card-header d-flex align-items-center">
+                                        <h3 class="card-title text-primary mr-3">{{ this.$t('message.survey_dashboard.ss_title_a') }}</h3>
+                                        
+                                        <button
+                                            class="btn btn-primary"
+
+                                            @click="viewSurveyOverallComments('a', 'seller', 'one')">
+
+                                            View Overall Comments
+                                        </button>
+
+                                        <div class="card-tools ml-auto">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
@@ -536,7 +523,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'one',
-                                                                     sellerSetAQuestions[0].question)">
+                                                                    sellerSetAQuestions[0].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -571,7 +558,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'two',
-                                                                     sellerSetAQuestions[1].question)">
+                                                                    sellerSetAQuestions[1].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -606,7 +593,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'three',
-                                                                     sellerSetAQuestions[2].question)">
+                                                                    sellerSetAQuestions[2].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -641,7 +628,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'four',
-                                                                     sellerSetAQuestions[3].question)">
+                                                                    sellerSetAQuestions[3].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -676,7 +663,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'five',
-                                                                     sellerSetAQuestions[4].question)">
+                                                                    sellerSetAQuestions[4].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -711,7 +698,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'six',
-                                                                     sellerSetAQuestions[5].question)">
+                                                                    sellerSetAQuestions[5].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -746,7 +733,7 @@
                                                                     'a',
                                                                     'seller',
                                                                     'seven',
-                                                                     sellerSetAQuestions[6].question)">
+                                                                    sellerSetAQuestions[6].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -783,9 +770,18 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card card-outline card-secondary">
-                                    <div class="card-header">
-                                        <h3 class="card-title text-primary">{{ this.$t('message.survey_dashboard.ws_title_a') }}</h3>
-                                        <div class="card-tools">
+                                    <div class="card-header d-flex align-items-center">
+                                        <h3 class="card-title text-primary mr-3">{{ this.$t('message.survey_dashboard.ws_title_a') }}</h3>
+                                        
+                                        <button
+                                            class="btn btn-primary"
+
+                                            @click="viewSurveyOverallComments('a', 'writer', 'one')">
+
+                                            View Overall Comments
+                                        </button>
+
+                                        <div class="card-tools ml-auto">
                                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                                 <i class="fas fa-minus"></i>
                                             </button>
@@ -811,7 +807,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'one',
-                                                                     writerSetAQuestions[0].question)">
+                                                                    writerSetAQuestions[0].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -846,7 +842,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'two',
-                                                                     writerSetAQuestions[1].question)">
+                                                                    writerSetAQuestions[1].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -881,7 +877,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'three',
-                                                                     writerSetAQuestions[2].question)">
+                                                                    writerSetAQuestions[2].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -916,7 +912,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'four',
-                                                                     writerSetAQuestions[3].question)">
+                                                                    writerSetAQuestions[3].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -951,7 +947,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'five',
-                                                                     writerSetAQuestions[4].question)">
+                                                                    writerSetAQuestions[4].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -986,7 +982,7 @@
                                                                     'a',
                                                                     'writer',
                                                                     'six',
-                                                                     writerSetAQuestions[5].question)">
+                                                                    writerSetAQuestions[5].question)">
 
                                                                 <i class="fas fa-list-alt"></i>
                                                             </button>
@@ -1086,7 +1082,7 @@
 
                     <div class="modal-body">
 
-                        <div class="row px-3">
+                        <div v-if="!isOverallMode" class="row px-3">
                             <div class="card col-12">
                                 <div class="card-body">
                                     <strong>{{ this.$t('message.survey_dashboard.bq_question') }}:</strong>
@@ -1121,14 +1117,16 @@
 
                                 <export-excel
                                     v-if="user.permission_list.includes('export-survey-dashboard-survey-dashboard')"
+                                    type="csv"
                                     worksheet="My Worksheet"
                                     :name="surveyQuestionFullDetails.type
                                     + '_survey_answers_set_'
                                     + surveyQuestionFullDetails.set
                                     + '_'
-                                    + surveyQuestionFullDetails.number"
+                                    + surveyQuestionFullDetails.number
+                                    + '.xls'"
                                     class="btn btn-primary float-right"
-                                    :data=sortDataForExport(surveyQuestionFullDetailsData.data.data,surveyQuestionFullDetails.number)>
+                                    :data="sortDataForExport(surveyQuestionFullDetailsData.data.data,surveyQuestionFullDetails.number, 'normal')">
 
                                     <i class="fa fa-list"></i>
                                     {{ this.$t('message.survey_dashboard.export_text') }}
@@ -1140,58 +1138,216 @@
                         <div class="row px-3">
                             <div class="table-responsive mb-2">
                                 <table
+                                    v-if="!isOverallMode"
                                     id="tbl_survey_question_details"
                                     class="table table-hover table-bordered table-striped rlink-table">
                                     <thead>
-                                    <tr>
-                                        <th>{{ this.$t('message.survey_dashboard.t_user') }}</th>
-                                        <th>{{ this.$t('message.survey_dashboard.t_answer') }}</th>
-                                        <th>{{ this.$t('message.survey_dashboard.t_additional') }}</th>
-                                        <th>{{ this.$t('message.survey_dashboard.t_overall_comment') }}</th>
-                                        <th>{{ this.$t('message.survey_dashboard.t_date') }}</th>
-                                    </tr>
+                                        <tr>
+                                            <th>{{ this.$t('message.survey_dashboard.t_user') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_answer') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_additional') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_date') }}</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
-                                        <td>
-                                            <span v-if="survey.user">
-                                                {{ survey.user.username }} <br>
-                                                <span class="text-primary">{{ survey.user.email }}</span>
-                                            </span>
+                                        <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
+                                            <td>
+                                                <span v-if="survey.user">
+                                                    {{ survey.user.username }} <br>
+                                                    <span class="text-primary">{{ survey.user.email }}</span>
+                                                </span>
 
-                                            <span v-else class="badge badge-danger">
-                                                N/A
-                                            </span>
-                                        </td>
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
 
-                                        <td>
-                                            {{ survey[surveyQuestionFullDetails.number] }}
-                                        </td>
+                                            <td>
+                                                {{ survey[surveyQuestionFullDetails.number] }}
+                                            </td>
 
-                                        <td>
-                                            <span v-if="survey[surveyQuestionFullDetails.number + '_other']">
-                                                {{ survey[surveyQuestionFullDetails.number + '_other'] }}
-                                            </span>
+                                            <td>
+                                                <span v-if="survey[surveyQuestionFullDetails.number + '_other']">
+                                                    {{ survey[surveyQuestionFullDetails.number + '_other'] }}
+                                                </span>
 
-                                            <span v-else class="badge badge-danger">
-                                                N/A
-                                            </span>
-                                        </td>
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
 
-                                        <td>
-                                            <span v-if="survey.comment">
-                                                {{ survey.comment }}
-                                            </span>
+                                            <td>
+                                                {{ survey.created_at }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-                                            <span v-else class="badge badge-danger">
-                                                N/A
-                                            </span>
-                                        </td>
+                                <table
+                                    v-else
+                                    id="tbl_survey_question_details_overall"
+                                    class="table table-hover table-bordered table-striped rlink-table">
 
-                                        <td>
-                                            {{ survey.created_at }}
-                                        </td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>{{ this.$t('message.survey_dashboard.t_user') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_overall_comment') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_date') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
+                                            <td>
+                                                <span v-if="survey.user">
+                                                    {{ survey.user.username }} <br>
+                                                    <span class="text-primary">{{ survey.user.email }}</span>
+                                                </span>
+
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span v-if="survey.comment">
+                                                    {{ survey.comment }}
+                                                </span>
+
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                {{ survey.created_at }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <pagination
+                                :data="surveyQuestionFullDetailsData.data"
+                                :limit="8"
+
+                                @pagination-change-page="getSurveyFullDetails">
+
+                            </pagination>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            {{ this.$t('message.survey_dashboard.close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Overall Comments -->
+        <div
+            aria-hidden="true"
+            aria-labelledby="modelTitleId"
+            data-backdrop="static"
+            tabindex="-1"
+            role="dialog"
+            class="modal fade"
+            ref="surveyDetailsOverallModal"
+            id="modal-survey-questions-details-overall"
+            style="z-index: 9999">
+
+            <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary">{{ surveyQuestionFullDetails.modalTitle }}</h5>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="row px-3 mb-2">
+                            <div class="col-6 px-0 align-self-center">
+                                <b v-if="surveyQuestionFullDetails.pagination !== 'All'">
+                                    {{ $t('message.others.table_entries', { from: surveyQuestionFullDetailsData.data.from, to: surveyQuestionFullDetailsData.data.to, end: surveyQuestionFullDetailsData.data.total }) }}
+                                </b>
+
+                                <b v-else>
+                                    {{ $t('message.others.table_all_entries', { total: surveyQuestionFullDetailsData.data.total }) }}
+                                </b>
+                            </div>
+
+                            <div class="col-6 px-0">
+                                <select
+                                    v-model="surveyQuestionFullDetails.pagination"
+                                    class="form-control float-right ml-2"
+                                    style="min-width: 100px; width: 100px"
+
+                                    @change="getSurveyFullDetails">
+
+                                    <option v-for="option in surveyQuestionPaginateOptions" v-bind:value="option">
+                                        {{ option }}
+                                    </option>
+                                </select>
+
+                                <export-excel
+                                    v-if="user.permission_list.includes('export-survey-dashboard-survey-dashboard')"
+                                    type="csv"
+                                    worksheet="My Worksheet"
+                                    :name="surveyQuestionFullDetails.type
+                                    + '_survey_set_'
+                                    + surveyQuestionFullDetails.set
+                                    + '_'
+                                    + 'overall_comments.xls'"
+                                    class="btn btn-primary float-right"
+                                    :data="sortDataForExport(surveyQuestionFullDetailsData.data.data,surveyQuestionFullDetails.number, 'overall')">
+
+                                    <i class="fa fa-list"></i>
+                                    {{ this.$t('message.survey_dashboard.export_text') }}
+
+                                </export-excel>
+                            </div>
+                        </div>
+
+                        <div class="row px-3">
+                            <div class="table-responsive mb-2">
+                                <table
+                                    id="tbl_survey_question_details_overall"
+                                    class="table table-hover table-bordered table-striped rlink-table">
+
+                                    <thead>
+                                        <tr>
+                                            <th>{{ this.$t('message.survey_dashboard.t_user') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_overall_comment') }}</th>
+                                            <th>{{ this.$t('message.survey_dashboard.t_date') }}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(survey, index) in surveyQuestionFullDetailsData.data.data" :key="index">
+                                            <td>
+                                                <span v-if="survey.user">
+                                                    {{ survey.user.username }} <br>
+                                                    <span class="text-primary">{{ survey.user.email }}</span>
+                                                </span>
+
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                <span v-if="survey.comment">
+                                                    {{ survey.comment }}
+                                                </span>
+
+                                                <span v-else class="badge badge-danger">
+                                                    N/A
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                {{ survey.created_at }}
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -1219,10 +1375,10 @@
 
 <script>
 import set_a from "../data/set_a";
-import set_a_2 from "../data/set_a_2";
-import set_b from "../data/set_b";
-import seller_set_a from "../data/seller_set_a";
-import writer_set_a from "../data/writer_set_a";
+import set_a_2 from "../data/set_a_2_two";
+import set_b from "../data/set_b_two";
+import seller_set_a from "../data/seller_set_a_two";
+import writer_set_a from "../data/writer_set_a_two";
 import {stringManipulation} from "../../../mixins/stringManipulation";
 import axios from "axios";
 import {mapState} from "vuex";
@@ -1276,6 +1432,8 @@ export default {
                 250,
                 'All'
             ],
+
+            isOverallMode: false,
 
             setAChartOptions: {},
             setAData: [],
@@ -1392,7 +1550,7 @@ export default {
                 },
                 {
                     number: 'four',
-                    question: this.$t('message.buyer_survey.buyer_survey_a_q_4_legacy')
+                    question: this.$t('message.buyer_survey.buyer_survey_a_q_4')
                 },
                 {
                     number: 'five',
@@ -1409,22 +1567,22 @@ export default {
                 },
                 {
                     number: 'two',
-                    question: this.$t('message.buyer_survey.buyer_survey_b_q_2_legacy')
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_2')
                 },
+                // {
+                //     number: 'three',
+                //     question: this.$t('message.buyer_survey.buyer_survey_b_q_3')
+                // },
                 {
                     number: 'three',
-                    question: this.$t('message.buyer_survey.buyer_survey_b_q_3')
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_4')
                 },
                 {
                     number: 'four',
-                    question: this.$t('message.buyer_survey.buyer_survey_b_q_4_legacy')
+                    question: this.$t('message.buyer_survey.buyer_survey_b_q_5')
                 },
                 {
                     number: 'five',
-                    question: this.$t('message.buyer_survey.buyer_survey_b_q_5_legacy')
-                },
-                {
-                    number: 'six',
                     question: this.$t('message.buyer_survey.buyer_survey_b_q_6')
                 },
             ];
@@ -1450,11 +1608,11 @@ export default {
                 },
                 {
                     number: 'five',
-                    question: this.$t('message.seller_survey.seller_survey_a_q_5_legacy')
+                    question: this.$t('message.seller_survey.seller_survey_a_q_5')
                 },
                 {
                     number: 'six',
-                    question: this.$t('message.seller_survey.seller_survey_a_q_6_legacy')
+                    question: this.$t('message.seller_survey.seller_survey_a_q_6')
                 },
                 {
                     number: 'seven',
@@ -1479,11 +1637,11 @@ export default {
                 },
                 {
                     number: 'four',
-                    question: this.$t('message.writer_survey.writer_survey_a_q_4_legacy')
+                    question: this.$t('message.writer_survey.writer_survey_a_q_4')
                 },
                 {
                     number: 'five',
-                    question: this.$t('message.writer_survey.writer_survey_a_q_5_legacy')
+                    question: this.$t('message.writer_survey.writer_survey_a_q_5')
                 },
                 {
                     number: 'six',
@@ -1534,7 +1692,7 @@ export default {
 
     methods: {
         async getSurveyList () {
-            await axios.get('/api/surveys')
+            await axios.get('/api/surveys-two')
                 .then((response) => {
                     this.surveys = response.data;
                     this.setAData = set_a.graphData(this.surveys);
@@ -1574,6 +1732,18 @@ export default {
                 })
         },
 
+        viewSurveyOverallComments (set, type, number) {
+            this.isOverallMode = true;
+
+            this.surveyQuestionFullDetails.set = set;
+            this.surveyQuestionFullDetails.type = type;
+            this.surveyQuestionFullDetails.number = number;
+            this.surveyQuestionFullDetails.modalTitle = this.capitalizeFirstLetter(type)
+            + ' Survey ' + this.capitalizeFirstLetter(set) + ' Overall Comments'
+
+            this.getSurveyFullDetailsOverall()
+        },
+
         viewSurveyQuestionFullDetails (set, type, number, question) {
             this.surveyQuestionFullDetails.set = set;
             this.surveyQuestionFullDetails.type = type;
@@ -1583,6 +1753,8 @@ export default {
             + ' Survey ' + this.capitalizeFirstLetter(set) + ' Question ' + this.capitalizeFirstLetter(number)
             + ' Details'
 
+            this.isOverallMode = false;
+
             this.getSurveyFullDetails()
         },
 
@@ -1590,22 +1762,22 @@ export default {
             let loader = this.$loading.show();
             this.surveyQuestionFullDetails.page = page;
 
-            axios.get('/api/survey/survey-question-full-details', {
+            axios.get('/api/survey/survey-question-full-details-two', {
                 params: this.surveyQuestionFullDetails
             })
             .then((res) => {
                 loader.hide();
 
-                this.surveyQuestionFullDetailsData.data = res.data
-
-                let table = $('#tbl_survey_question_details');
-
+                let table = $('#tbl_survey_question_details_overall');
                 table.DataTable().destroy();
+
+                this.surveyQuestionFullDetailsData.data = res.data
 
                 this.$nextTick(() => {
                     table.DataTable({
                         paging : false,
                         searching : false,
+                        info: false,
                         order: [],
                         columnDefs : {orderable : true, targets : '_all'},
                     });
@@ -1617,17 +1789,59 @@ export default {
             })
         },
 
-        sortDataForExport (data, number) {
-            if (data) {
-                return data.map(function(item) {
-                    return {
-                        user: item.user ? item.user.username : 'N/A',
-                        answer: item[number],
-                        additional: item[number + '_other'],
-                        'overall comment': item.comment,
-                        date: item.created_at
-                    };
+        getSurveyFullDetailsOverall (page = 1) {
+            let loader = this.$loading.show();
+
+            this.surveyQuestionFullDetails.page = page;
+
+            axios.get('/api/survey/survey-question-full-details-two', {
+                params: this.surveyQuestionFullDetails
+            })
+            .then((res) => {
+                loader.hide();
+
+                let table = $('#tbl_survey_question_details_overall');
+
+                table.DataTable().destroy();
+
+                this.surveyQuestionFullDetailsData.data = res.data
+
+                this.$nextTick(() => {
+                    table.DataTable({
+                        paging : false,
+                        searching : false,
+                        info: false,
+                        order: [],
+                        columnDefs : {orderable : true, targets : '_all'},
+                    });
                 });
+
+                // open survey modal
+                let element = this.$refs.surveyDetailsOverallModal
+                $(element).modal('show')
+            })
+        },
+
+        sortDataForExport (data, number, mode) {
+            if (data) {
+                if (mode === 'overall') {
+                    return data.map(function(item) {
+                        return {
+                            user: item.user ? item.user.username : 'N/A',
+                            'overall comment': item.comment,
+                            date: item.created_at
+                        };
+                    });
+                } else {
+                    return data.map(function(item) {
+                        return {
+                            user: item.user ? item.user.username : 'N/A',
+                            answer: item[number],
+                            additional: item[number + '_other'],
+                            date: item.created_at
+                        };
+                    });
+                }
             }
         }
     },

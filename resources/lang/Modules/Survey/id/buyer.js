@@ -1,5 +1,5 @@
 export default {
-    s_title: 'Survei Stalinks',
+    s_title: 'Survei StaLinks',
 
     // survey a
     buyer_survey_a_q_1: '1. Apakah menurut Anda menggunakan sistem kami efisien?',
@@ -7,7 +7,8 @@ export default {
     buyer_survey_a_q_2: '2. Apakah sistem kami menyediakan URL yang Anda cari?',
     buyer_survey_a_q_2_no: 'Jika tidak, beri tahu kami apa lagi yang harus ditambahkan…',
     buyer_survey_a_q_3: '3. Apakah menurut Anda halaman BANTUAN kami mudah diikuti?',
-    buyer_survey_a_q_4: '4. Apakah menurut Anda metode pembayaran kami terlalu rumit untuk Anda?',
+    // buyer_survey_a_q_4: '4. Apakah menurut Anda metode pembayaran kami terlalu rumit untuk Anda?',
+    buyer_survey_a_q_4: '4. Apakah menurut Anda metode pembayaran kami mudah bagi Anda?',
     buyer_survey_a_q_4_yes: 'Jika ya, beri tahu kami metode lain yang Anda inginkan untuk mempermudah transaksi Anda',
     buyer_survey_a_q_5: '5. Apakah anda puas dengan pelayanan yang kami berikan saat ini?',
     buyer_survey_a_q_5_no: 'Jika tidak, beri tahu kami apa yang bisa kami tingkatkan',
@@ -21,10 +22,12 @@ export default {
     buyer_survey_b_q_1_b: 'Pengguna antarmuka yang baik',
     buyer_survey_b_q_1_c: 'Transaksi aman',
     buyer_survey_b_q_1_d: 'Harga yang pantas',
-    buyer_survey_b_q_1_others: 'Yang lain. Silakan tentukan',
+    // buyer_survey_b_q_1_others: 'Yang lain. Silakan tentukan',
+    buyer_survey_b_q_1_others: 'Yang lain',
 
     // survey b q2
-    buyer_survey_b_q_2: '2. Dari 1-6, bagaimana Anda menilai alat kami?',
+    // buyer_survey_b_q_2: '2. Dari 1-6, bagaimana Anda menilai alat kami?',
+    buyer_survey_b_q_2: '2. Apakah menurut Anda alat kami mudah digunakan?',
     buyer_survey_b_q_2_6: '6-> Sangat Mudah',
     buyer_survey_b_q_2_5: '5-> Mudah',
     buyer_survey_b_q_2_4: '4-> Butuh waktu untuk melihat tapi ok',
@@ -33,24 +36,29 @@ export default {
     buyer_survey_b_q_2_1: '1-> Sangat sulit',
 
     // survey b q3
-    buyer_survey_b_q_3: '3. Dari 1-10, seberapa baik Anda memahami Stalinks dan apa yang dapat kami lakukan untuk membantu Anda?',
+    buyer_survey_b_q_3: '3. Dari 1-10, seberapa baik Anda memahami StaLinks dan apa yang dapat kami lakukan untuk membantu Anda?',
 
     // survey b q4
-    buyer_survey_b_q_4: '4. Apa yang ingin Anda lihat di Stalinks?',
+    // buyer_survey_b_q_4: '4. Apa yang ingin Anda lihat di Stalinks?',
+    buyer_survey_b_q_4: '3. Apa yang ingin Anda lihat lebih banyak di StaLinks?',
     buyer_survey_b_q_4_a: 'Lebih banyak promosi',
     buyer_survey_b_q_4_b: 'Panduan terperinci tentang cara menggunakan perangkat',
-    buyer_survey_b_q_4_c: 'Personalisasi bantuan untuk memilih URL yang tepat',
+    // buyer_survey_b_q_4_c: 'Personalisasi bantuan untuk memilih URL yang tepat',
+    buyer_survey_b_q_4_c: 'Bantuan yang dipersonalisasi untuk memilih URL yang tepat',
 
     // survey b q5
-    buyer_survey_b_q_5: '5. Bagaimana Anda menilai interaksi tim kami dengan Anda?',
+    // buyer_survey_b_q_5: '5. Bagaimana Anda menilai interaksi tim kami dengan Anda?',
+    buyer_survey_b_q_5: '4. Apakah tim kami tampak terlatih dengan baik saat berinteraksi dengan Anda?',
     buyer_survey_b_q_5_1: '1-> Kecewa',
     buyer_survey_b_q_5_10: '10-> Sangat puas, akan merekomendasikan',
 
     // survey b q6
-    buyer_survey_b_q_6: '6. Bagaimana Anda tahu tentang stalink?',
+    // buyer_survey_b_q_6: '6. Bagaimana Anda tahu tentang stalink?',
+    buyer_survey_b_q_6: '5. Bagaimana Anda tahu tentang StaLinks?',
     buyer_survey_b_q_6_fb: 'Facebook',
     buyer_survey_b_q_6_li: 'LinkedIn',
-    buyer_survey_b_q_6_others: 'Others',
+    // buyer_survey_b_q_6_others: 'Others',
+    buyer_survey_b_q_6_others: 'Lainnya (Google, teman, dll.)',
 
     // thanks
     thanks_1: 'Terima kasih telah menjawab survei ini!',
@@ -75,4 +83,10 @@ export default {
     comment: 'Komentar',
     submit: 'Kirim',
     login: 'Masuk ke Login',
+
+    // legacy 1.0
+    buyer_survey_a_q_4_legacy: '4. Apakah menurut Anda metode pembayaran kami terlalu rumit untuk Anda?',
+    buyer_survey_b_q_2_legacy: '2. Dari 1-6, bagaimana Anda menilai alat kami?',
+    buyer_survey_b_q_4_legacy: '4. Apa yang ingin Anda lihat di Stalinks?',
+    buyer_survey_b_q_5_legacy: '5. Bagaimana Anda menilai interaksi tim kami dengan Anda?'
 }

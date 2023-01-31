@@ -7,7 +7,8 @@ export default {
     buyer_survey_a_q_2: '2. Hệ thống của chúng tôi có cung cấp các URL mà bạn đang tìm kiếm không?',
     buyer_survey_a_q_2_no: 'Nếu không, vui lòng cho chúng tôi biết thêm thông tin cần bổ sung…',
     buyer_survey_a_q_3: '3. Bạn có thấy trang TRỢ GIÚP của chúng tôi dễ theo dõi không?',
-    buyer_survey_a_q_4: '4. Bạn có thấy các phương thức thanh toán của chúng tôi quá phức tạp đối với bạn không?',
+    // buyer_survey_a_q_4: '4. Bạn có thấy các phương thức thanh toán của chúng tôi quá phức tạp đối với bạn không?',
+    buyer_survey_a_q_4: '4. Bạn có thấy các phương thức thanh toán của chúng tôi dễ dàng với bạn không?',
     buyer_survey_a_q_4_yes: 'Nếu có, vui lòng cho chúng tôi biết các phương pháp khác mà bạn ưa thích để giúp bạn giao dịch dễ dàng hơn',
     buyer_survey_a_q_5: '5. Bạn có hài lòng với dịch vụ mà chúng tôi cung cấp ngay bây giờ không?',
     buyer_survey_a_q_5_no: 'Nếu không, vui lòng cho chúng tôi biết chúng tôi có thể cải thiện điều gì',
@@ -21,10 +22,12 @@ export default {
     buyer_survey_b_q_1_b: 'Giao diện người dùng tốt',
     buyer_survey_b_q_1_c: 'Giao dịch an toàn',
     buyer_survey_b_q_1_d: 'Giá tốt',
-    buyer_survey_b_q_1_others: 'Khác. Xin hãy chỉ ra cụ thể',
+    // buyer_survey_b_q_1_others: 'Khác. Xin hãy chỉ ra cụ thể',
+    buyer_survey_b_q_1_others: 'Khác',
 
     // survey b q2
-    buyer_survey_b_q_2: '2. Thang điểm từ 1-6, bạn đánh giá thế nào về các công cụ của chúng tôi?',
+    // buyer_survey_b_q_2: '2. Thang điểm từ 1-6, bạn đánh giá thế nào về các công cụ của chúng tôi?',
+    buyer_survey_b_q_2: '2. Bạn có nghĩ rằng các công cụ của chúng tôi dễ sử dụng?',
     buyer_survey_b_q_2_6: '6-> Thật sự dễ dàng',
     buyer_survey_b_q_2_5: '5-> Dễ dàng',
     buyer_survey_b_q_2_4: '4-> Mất một thời gian để xem xét nhưng không sao',
@@ -33,24 +36,29 @@ export default {
     buyer_survey_b_q_2_1: '1-> Rất khó',
 
     // survey b q3
-    buyer_survey_b_q_3: '3. Thang điểm từ 1-10, bạn hiểu Stalinks đến mức nào và chúng tôi có thể làm gì để giúp bạn?',
+    buyer_survey_b_q_3: '3. Thang điểm từ 1-10, bạn hiểu StaLinks đến mức nào và chúng tôi có thể làm gì để giúp bạn?',
 
     // survey b q4
-    buyer_survey_b_q_4: '4. Bạn muốn thấy điều gì ở Stalinks?',
+    // buyer_survey_b_q_4: '4. Bạn muốn thấy điều gì ở StaLinks?',
+    buyer_survey_b_q_4: '3. Bạn muốn xem thêm điều gì ở StaLinks?',
     buyer_survey_b_q_4_a: 'Thêm khuyến mãi',
     buyer_survey_b_q_4_b: 'Hướng dẫn chi tiết về cách sử dụng các công cụ',
-    buyer_survey_b_q_4_c: 'Trợ giúp người dùng chọn đúng URL',
+    // buyer_survey_b_q_4_c: 'Trợ giúp người dùng chọn đúng URL',
+    buyer_survey_b_q_4_c: 'Trợ giúp được cá nhân hóa về việc chọn đúng URL',
 
     // survey b q5
-    buyer_survey_b_q_5: '5. Bạn đánh giá thế nào về sự tương tác giữa nhóm của chúng tôi với bạn?',
+    // buyer_survey_b_q_5: '5. Bạn đánh giá thế nào về sự tương tác giữa nhóm của chúng tôi với bạn?',
+    buyer_survey_b_q_5: '4. Nhóm của chúng tôi có vẻ được đào tạo bài bản khi họ tương tác với bạn không?',
     buyer_survey_b_q_5_1: '1-> Thất vọng',
     buyer_survey_b_q_5_10: '10-> Rất hài lòng, muốn giới thiệu',
 
     // survey b q6
-    buyer_survey_b_q_6: '6. Làm thế nào để bạn biết về rình rập?',
+    // buyer_survey_b_q_6: '6. Làm thế nào để bạn biết về rình rập?',
+    buyer_survey_b_q_6: '5. Làm thế nào để bạn biết về StaLinks?',
     buyer_survey_b_q_6_fb: 'Facebook',
     buyer_survey_b_q_6_li: 'LinkedIn',
-    buyer_survey_b_q_6_others: 'Others',
+    // buyer_survey_b_q_6_others: 'Others',
+    buyer_survey_b_q_6_others: 'Những người khác (Google, bạn bè, v.v.)',
 
     // thanks
     thanks_1: 'Cảm ơn bạn đã trả lời cuộc khảo sát này!',
@@ -75,4 +83,10 @@ export default {
     comment: 'Nhận xét',
     submit: 'Gửi',
     login: 'Đi tới Đăng nhập',
+
+    // legacy 1.0
+    buyer_survey_a_q_4_legacy: '4. Bạn có thấy phương thức thanh toán của chúng tôi quá phức tạp đối với bạn không?',
+    buyer_survey_b_q_2_legacy: '2. Từ 1-6, bạn đánh giá các công cụ của chúng tôi như thế nào?',
+    buyer_survey_b_q_4_legacy: '4. Bạn muốn thấy gì ở Stalinks?',
+    buyer_survey_b_q_5_legacy: '5. Bạn đánh giá tương tác nhóm của chúng tôi với bạn như thế nào?'
 }

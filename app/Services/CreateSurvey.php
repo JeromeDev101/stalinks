@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Registration;
 use App\Models\Survey;
+use App\Models\SurveyTwo;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -27,23 +28,28 @@ class CreateSurvey
                 'three' => 'required',
                 'three_other' => 'required_if:three,==,no',
                 'four' => 'required',
-                'four_other' => 'required_if:four,==,yes',
+                'four_other' => 'required_if:four,==,no',
                 'five' => 'required',
-                'five_other' => 'required_if:five,==,no',
-                'user_id' => 'required'
+                'five_other' => 'required_if:five,==,Dissatisfied',
+                'user_id' => 'required',
+                'comment' => 'required',
             ];
         } else if ($data['set'] === 'b' && $data['type'] === 'buyer') {
             return [
                 'one' => 'required',
-                'one_other' => 'required_if:one,==,other',
+                'one_other' => 'required_if:one,==,Others',
                 'two' => 'required',
+                'two_other' => 'required_if:two,==,no',
                 'three' => 'required',
+                'three_other' => 'required_if:three,==,Others',
                 'four' => 'required',
-                'four_other' => 'required_if:four,==,other',
+                'four_other' => 'required_if:four,==,no',
                 'five' => 'required',
-                'six' => 'required',
-                'six_other' => 'required_if:six,==,Others',
-                'user_id' => 'required'
+                'five_other' => 'required_if:five,==,Others',
+                // 'six' => 'required',
+                // 'six_other' => 'required_if:six,==,Others',
+                'user_id' => 'required',
+                'comment' => 'required',
             ];
         } else if ($data['set'] === 'a' && $data['type'] === 'seller') {
             return [
@@ -56,10 +62,13 @@ class CreateSurvey
                 'four' => 'required',
                 'four_other' => 'required_if:four,==,no',
                 'five' => 'required',
+                'five_other' => 'required_if:five,==,Dissatisfied',
                 'six' => 'required',
+                'six_other' => 'required_if:six,==,no',
                 'seven' => 'required',
                 'seven_other' => 'required_if:seven,==,Others',
-                'user_id' => 'required'
+                'user_id' => 'required',
+                'comment' => 'required',
             ];
         } else if ($data['set'] === 'a' && $data['type'] === 'writer') {
             return [
@@ -70,10 +79,13 @@ class CreateSurvey
                 'three' => 'required',
                 'three_other' => 'required_if:three,==,yes',
                 'four' => 'required',
+                'four_other' => 'required_if:four,==,Dissatisfied',
                 'five' => 'required',
+                'five_other' => 'required_if:five,==,no',
                 'six' => 'required',
                 'six_other' => 'required_if:six,==,Others',
-                'user_id' => 'required'
+                'user_id' => 'required',
+                'comment' => 'required',
             ];
         } else {
             return [
@@ -99,6 +111,7 @@ class CreateSurvey
             'five.required' => 'Please specify an answer for question five.',
             'six.required' => 'Please specify an answer for question six.',
             'seven.required' => 'Please specify an answer for question seven.',
+            'comment.required' => 'Please specify an answer for the overall comment.',
 
             'one_other.required_if' => 'Please specify an answer to the input box if question one answer is ":value"',
             'two_other.required_if' => 'Please specify an answer to the input box if question two answer is ":value"',
@@ -152,7 +165,8 @@ class CreateSurvey
 
         $this->validate($data);
 
-        return Survey::create($data);
+        // return Survey::create($data);
+        return SurveyTwo::create($data);
     }
 
     /**

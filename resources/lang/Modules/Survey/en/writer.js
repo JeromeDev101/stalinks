@@ -1,5 +1,5 @@
 export default {
-    s_title: 'Stalinks Writer Survey',
+    s_title: 'StaLinks Writer Survey',
 
     // writer survey a q1
     writer_survey_a_q_1: '1. Do you think our system is efficient to use?',
@@ -8,10 +8,12 @@ export default {
     writer_survey_a_q_2: '2. Are you satisfied with the services that we already provide?',
 
     // writer survey a q3
-    writer_survey_a_q_3: '3. Do you find any difficulties in writing article contents?',
+    // writer_survey_a_q_3: '3. Do you find any difficulties in writing article contents?',
+    writer_survey_a_q_3: '3. Do you find any difficulties in writing article content?',
 
     // writer survey a q4
-    writer_survey_a_q_4: '4. Based on your most recent experience, please rate your satisfaction by using our services.',
+    // writer_survey_a_q_4: '4. Based on your most recent experience, please rate your satisfaction by using our services.',
+    writer_survey_a_q_4: '4. Are you satisfied with using our service?',
     writer_survey_a_q_4_a: 'Extremely dissatisfied',
     writer_survey_a_q_4_b: 'Somewhat dissatisfied',
     writer_survey_a_q_4_c: 'Neither',
@@ -19,16 +21,18 @@ export default {
     writer_survey_a_q_4_e: 'Extremely satisfied',
 
     // writer survey a q5
-    writer_survey_a_q_5: '5. Please rate if you would recommend us and our services to your connections.',
+    // writer_survey_a_q_5: '5. Please rate if you would recommend us and our services to your connections.',
+    writer_survey_a_q_5: '5. Would you recommend us to your connection?',
     writer_survey_a_q_5_a: '1-4 I will not recommend to anyone',
     writer_survey_a_q_5_b: '5-7 I will consider it',
     writer_survey_a_q_5_c: '7-10 I will definitely recommend to my connections to use your services',
 
     // writer survey a q6
-    writer_survey_a_q_6: '6. How do you know about stalinks?',
+    writer_survey_a_q_6: '6. How do you know about StaLinks?',
     writer_survey_a_q_6_fb: 'Facebook',
     writer_survey_a_q_6_li: 'LinkedIn',
-    writer_survey_a_q_6_others: 'Others',
+    // writer_survey_a_q_6_others: 'Others',
+    writer_survey_a_q_6_others: 'Others (Google, friends, etc.)',
 
     // aside
     writer_survey_aside: 'Aside from the issues you have already mentioned above, are there any other comments you would like to share?',
@@ -58,4 +62,8 @@ export default {
     enter: 'Enter ...',
     submit: 'Submit',
     login: 'Go to Login',
+
+    // legacy 1.0
+    writer_survey_a_q_4_legacy: '4. Based on your most recent experience, please rate your satisfaction by using our services.',
+    writer_survey_a_q_5_legacy: '5. Please rate if you would recommend us and our services to your connections.',
 }

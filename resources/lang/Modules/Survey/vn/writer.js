@@ -8,10 +8,12 @@ export default {
     writer_survey_a_q_2: '2. Bạn có hài lòng với các dịch vụ mà chúng tôi đã cung cấp không?',
 
     // writer survey a q3
+    // writer_survey_a_q_3: '3. Bạn có thấy khó khăn gì khi viết nội dung bài viết không?',
     writer_survey_a_q_3: '3. Bạn có thấy khó khăn gì khi viết nội dung bài viết không?',
 
     // writer survey a q4
-    writer_survey_a_q_4: '4. Dựa trên trải nghiệm gần đây nhất của bạn, vui lòng đánh giá mức độ hài lòng của bạn khi sử dụng dịch vụ của chúng tôi.',
+    // writer_survey_a_q_4: '4. Dựa trên trải nghiệm gần đây nhất của bạn, vui lòng đánh giá mức độ hài lòng của bạn khi sử dụng dịch vụ của chúng tôi.',
+    writer_survey_a_q_4: '4. Bạn có hài lòng khi sử dụng dịch vụ của chúng tôi không?',
     writer_survey_a_q_4_a: 'Cực kỳ không hài lòng',
     writer_survey_a_q_4_b: 'Hơi không hài lòng',
     writer_survey_a_q_4_c: 'Bình thường',
@@ -19,17 +21,18 @@ export default {
     writer_survey_a_q_4_e: 'Vô cùng hài lòng',
 
     // writer survey a q5
-    writer_survey_a_q_5: '5. Vui lòng đánh giá nếu bạn muốn giới thiệu chúng tôi và các dịch vụ của chúng tôi cho mối quan hệ kinh doanh của bạn.',
+    // writer_survey_a_q_5: '5. Vui lòng đánh giá nếu bạn muốn giới thiệu chúng tôi và các dịch vụ của chúng tôi cho mối quan hệ kinh doanh của bạn.',
+    writer_survey_a_q_5: '5. Bạn có giới thiệu chúng tôi với kết nối của bạn?',
     writer_survey_a_q_5_a: '1-4 Tôi sẽ không giới thiệu cho bất cứ ai',
     writer_survey_a_q_5_b: '5-7 Tôi sẽ xem xét nó',
     writer_survey_a_q_5_c: '7-10 Tôi chắc chắn sẽ giới thiệu cho các mối liên kết của tôi sử dụng dịch vụ của bạn',
 
     // writer survey a q6
-    writer_survey_a_q_6: '6. Làm thế nào để bạn biết về rình rập?',
+    writer_survey_a_q_6: '6. Làm thế nào để bạn biết về StaLinks?',
     writer_survey_a_q_6_fb: 'Facebook',
     writer_survey_a_q_6_li: 'LinkedIn',
-    writer_survey_a_q_6_others: 'Others',
-
+    // writer_survey_a_q_6_others: 'Others',
+    writer_survey_a_q_6_others: 'Những người khác (Google, bạn bè, v.v.)',
 
     // aside
     writer_survey_aside: 'Ngoài những vấn đề bạn đã đề cập ở trên, bạn có bất kỳ ý kiến ​​nào khác muốn chia sẻ không?',
@@ -59,4 +62,8 @@ export default {
     enter: 'Đi vào …',
     submit: 'Gửi',
     login: 'Đi tới Đăng nhập',
+
+    // legacy 1.0
+    writer_survey_a_q_4_legacy: '4. Dựa trên trải nghiệm gần đây nhất của bạn, vui lòng đánh giá mức độ hài lòng của bạn khi sử dụng dịch vụ của chúng tôi.',
+    writer_survey_a_q_5_legacy: '5. Vui lòng đánh giá nếu bạn muốn giới thiệu chúng tôi và các dịch vụ của chúng tôi cho các kết nối của bạn.',
 }
