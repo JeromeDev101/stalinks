@@ -237,9 +237,25 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <button data-toggle="modal"
-                                            data-target="#modal-setting"
-                                            class="btn btn-default float-right"><i class="fa fa-cog"></i></button>
+
+                                    <button 
+                                        data-toggle="modal"
+                                        data-target="#modal-setting"
+                                        class="btn btn-default float-right mr-2">
+                                        <i class="fa fa-cog"></i>
+                                    </button>
+
+                                    <export-excel
+                                        v-if="user.isOurs === 0 && user.permission_list.includes('export-seller-follow-up-sale')"
+                                        :data="sortDataForExportFollowUpOrder(listSales.data)"
+                                        type="csv"
+                                        name="follow_up_order.xls"
+                                        worksheet="My Worksheet"
+                                        class="btn btn-primary mr-2 float-right mr-2">
+
+                                        <i class="fa fa-list"></i>
+                                        {{ $t('message.backlink_prospect.bp_export') }}
+                                    </export-excel>
                                 </td>
                             </tr>
                         </table>
@@ -249,8 +265,9 @@
                         </span>
 
                         <div class="table-responsive">
-                            <table id="tbl-followupsales"
-                                   class="table table-hover table-bordered table-striped rlink-table">
+                            <table
+                                id="tbl-followupsales"
+                                class="table table-hover table-bordered table-striped rlink-table">
                                 <thead>
                                 <tr class="label-primary">
                                     <th>{{ $t('message.follow.fus_action') }}</th>
@@ -1798,6 +1815,38 @@
                             }
                         }
                     }
+                }
+            },
+
+            sortDataForExportFollowUpOrder (data) {
+                let self = this;
+
+                if (data) {
+                    return data.map(function(item) {
+                        return {
+                            'URL Pub': item.publisher === null ? 'N/A' : item.publisher.id,
+                            'Blink': item.id,
+                            'Artc': item.article_id === null ? 'N/A' : item.article_id,
+                            'Country': item.publisher === null ? 'N/A' : (item.publisher.country === null ? 'N/A' : item.publisher.country.name),
+                            'In-charge': item.in_charge === null ? 'N/A' : item.in_charge,
+                            'Seller': item.publisher === null 
+                                ? 'N/A' 
+                                : (item.publisher.user == null
+                                    ? 'N/A'
+                                    : (item.publisher.user.username == null
+                                        ? item.publisher.user.name
+                                        : item.publisher.user.username)),
+                            'Buyer': item.user == null ? 'N/A' : (item.user.username == null ? item.user.name : item.user.username),
+                            'URL Publisher': item.publisher === null ? 'N/A' : item.publisher.url,
+                            'Price': item.price == null ? '' : '$ ' + item.price,
+                            'Link From': item.link_from,
+                            'Link To': item.link,
+                            'Anchor Text': item.anchor_text,
+                            'Date for Process': item.date_process,
+                            'Date Completed': item.live_date,
+                            'Status': item.status,
+                        };
+                    });
                 }
             }
         }

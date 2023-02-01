@@ -515,7 +515,7 @@
                                 <div class="input-group justify-content-end">
                                     <export-excel
                                         v-if="user.isOurs === 0 && user.permission_list.includes('export-seller-list-publisher')"
-                                        :data=sortDataForExportListPublisher(listPublish.data)
+                                        :data="sortDataForExportListPublisher(listPublish.data)"
                                         type="csv"
                                         name="list_publisher.xls"
                                         worksheet="My Worksheet"
