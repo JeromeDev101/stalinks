@@ -157,6 +157,17 @@ const actions = {
         return Helper.handleError(vue, errorResponse.status);
     },
 
+    async actionGetCurrentUserInfoUpdated({ commit }, { vue }) {
+        let response = await UserService.getCurrentUserInfo();
+
+        if (response.status === 200) {
+            return commit(CURRENT_USER, { currentUser: response.data });
+        }
+
+        let errorResponse = response.response;
+        return Helper.handleError(vue, errorResponse.status);
+    },
+
     async actionUpdateCurrentUserCountries({commit}, { vue, userId }) {
         if (userId === 0) return;
         let response = await UserService.getCountryList({ params: { user_id: userId } });

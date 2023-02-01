@@ -872,6 +872,8 @@ export default {
             id: userId,
         });
 
+        await this.$store.dispatch('actionGetCurrentUserInfoUpdated', { vue: this });
+
         this.checkAccountType();
         this.getPublisherSummaryCountry();
         this.bindPayment();
@@ -1155,7 +1157,6 @@ export default {
         bindPayment() {
             let that = this.user.user_type
 
-            console.log(this.currentUser, that)
             if( this.currentUser.isOurs == 1 ) {
                 // this.billing.paypal_account = that.paypal_account;
                 // this.billing.skrill_account = that.skrill_account;
