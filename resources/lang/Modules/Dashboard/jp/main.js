@@ -71,5 +71,6 @@ export default {
     p_paid: '支払い済み',
 
     // texts/paragraphs
-    tp_reminder: '注意: お客様のアカウントは現在処理中です。管理者に連絡し、アカウント状態の処理をしてください。'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'リマインダー: アカウントの検証は現在進行中です。管理者 (電子メール: admin@stalinks.com) に連絡して、アカウントの検証ステータスを処理してください。',
 }

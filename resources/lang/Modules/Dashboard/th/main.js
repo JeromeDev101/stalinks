@@ -71,5 +71,6 @@ export default {
     p_paid: 'จ่ายแล้ว',
 
     // texts/paragraphs
-    tp_reminder: 'คำเตือน: บัญชีของคุณอยู่ในระหว่างดำเนินการ โปรดติดต่อผู้ดูแลระบบเพื่อดำเนินการกับสถานะบัญชีของคุณ'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'คำเตือน: การตรวจสอบบัญชีของคุณอยู่ในระหว่างดำเนินการ โปรดติดต่อผู้ดูแลระบบ (อีเมล: admin@stalinks.com) เพื่อประมวลผลสถานะการตรวจสอบบัญชีของคุณ',
 }

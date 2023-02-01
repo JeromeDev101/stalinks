@@ -71,5 +71,6 @@ export default {
     p_paid: 'Đã Thanh toán',
 
     // texts/paragraphs
-    tp_reminder: 'Nhắc nhở: Tài khoản của bạn hiện đang được xử lý. Vui lòng liên hệ với quản trị viên để xử lý trạng thái tài khoản của bạn'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'Nhắc nhở: Xác thực tài khoản của bạn hiện đang được xử lý. Vui lòng liên hệ với quản trị viên (email: admin@stalinks.com) để xử lý trạng thái xác thực tài khoản của bạn',
 }

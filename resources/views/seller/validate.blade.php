@@ -133,8 +133,8 @@
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $name }},</p> <br />
                     <p style="margin: 0;">Thank you for registering with Stalinks.</p> <br />
-                    <p style="margin: 0;">We have validated your account and you can start uploading your URLs to the system now.</p> <br/>
-                    <p style="margin: 0;">You can do this by going to the "List Publisher" menu and choose "Add URL". If you have multiple websites, feel free to download our CSV template and Master List as your guide filling the template.</p> <br/>
+                    <p style="margin: 0;">We are glads to inform you that your account has been validated. If you are already logged in, please re-login to your account.</p> <br/>
+                    <p style="margin: 0;">You can now start uploading your URLs to the system. You can do this by going to the "List Publisher" menu and choose "Add URL". If you have multiple websites, feel free to download our CSV template and Master List as your guide filling the template.</p> <br/>
                     <p style="margin: 0;">Please do not hesitate to contact us if your have any further question.</p> <br/>
                 @endslot
 

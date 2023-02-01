@@ -132,7 +132,7 @@
             @component('components.email_body')
                 @slot('main')
                     <p style="margin: 0;">Hello {{ $name }},</p> <br />
-                    <p style="margin: 0;">Thank you for completing your data on StaLinks! We have already validated your account. You can start adding credit to your balance and purchasing orders!</p> <br />
+                    <p style="margin: 0;">Thank you for completing your data on StaLinks! We have already validated your account. If you are already logged in, please re-login to your account. You can now start adding credit to your balance and purchasing orders!</p> <br />
                     <p style="margin: 0;">If you need help on anything, feel free to contact us through this email marketing@stalinks.com and our team will contact you shortly.</p>
                 @endslot
 

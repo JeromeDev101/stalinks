@@ -71,5 +71,6 @@ export default {
     p_paid: 'Paid',
 
     // texts/paragraphs
-    tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'Reminder:  Your account validation is currently on process. Please contact the administrator (email: admin@stalinks.com) to process your account validation status',
 }

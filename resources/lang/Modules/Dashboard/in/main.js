@@ -71,5 +71,6 @@ export default {
     p_paid: 'भुगतान किया गया',
 
     // texts/paragraphs
-    tp_reminder: 'रिमाइंडर: आपका खाता इस समय प्रक्रिया में है। अपने खाते की स्थिति संसाधित करने के लिए कृपया व्यवस्थापक से संपर्क करें'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'रिमाइंडर: आपका खाता सत्यापन अभी प्रक्रिया में है। अपने खाते की सत्यापन स्थिति को संसाधित करने के लिए कृपया व्यवस्थापक (ईमेल: admin@stalinks.com) से संपर्क करें',
 }

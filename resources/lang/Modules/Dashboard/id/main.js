@@ -71,5 +71,6 @@ export default {
     p_paid: 'Lunas',
 
     // texts/paragraphs
-    tp_reminder: 'Pengingat: Akun Anda sedang dalam proses. Silakan hubungi administrator untuk memproses status akun Anda'
+    // tp_reminder: 'Reminder:  Your account is currently on process. Please contact the administrator to process you account status',
+    tp_reminder: 'Pengingat: Validasi akun Anda sedang dalam proses. Silakan hubungi administrator (email: admin@stalinks.com) untuk memproses status validasi akun Anda',
 }
