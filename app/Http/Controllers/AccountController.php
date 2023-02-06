@@ -741,7 +741,7 @@ class AccountController extends Controller
             }
         }
 
-        if ($input['type'] === 'Seller') {
+        if ($input['type'] === 'Seller' || $input['type'] === 'Buyer') {
             $input['survey_code'] =  md5(uniqid(rand(), true));
         }
 

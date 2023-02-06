@@ -452,6 +452,14 @@ class BuyController extends Controller
             ]);
         }
 
+        // add survey code
+        
+        if ($user->isOurs === 1 && $user->registration->survey_code === null) {
+            $user->registration->update([
+                'survey_code' => md5(uniqid(rand(), true))
+            ]);
+        }
+
         event(new BuyEvent($backlink, $user));
 
         if ($status === 'Pending') {

@@ -156,16 +156,18 @@
                                         <table border="0" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td align="center" style="border-radius: 3px;">
-                                                    <a href="{{ url('/survey/a/' . $registration->survey_code) }}"
-                                                       target="_blank" class="button-text"
-                                                       style="background-color: #FF9B00; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey A
+                                                    <a 
+                                                        href="{{ url('/survey/a/' . $registration->survey_code) }}"
+                                                        target="_blank" class="button-text"
+                                                        style="background-color: #FF9B00; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey A
                                                     </a>
 
                                                     <br/>
 
-                                                    <a href="{{ url('/survey/b/' . $registration->survey_code) }}"
-                                                       target="_blank" class="button-text"
-                                                       style="background-color: #FF9B00; margin-top: 10px !important; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey B
+                                                    <a 
+                                                        href="{{ url('/survey/b/' . $registration->survey_code) }}"
+                                                        target="_blank" class="button-text"
+                                                        style="background-color: #FF9B00; margin-top: 10px !important; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey B
                                                     </a>
                                                 </td>
                                             </tr>

@@ -214,6 +214,14 @@ class WalletTransactionController extends Controller
     }
 
     protected function addUserSubscriptionCode($user, $amount) {
+
+        // add survey code
+        if ($user->isOurs === 1 && $user->registration->survey_code === null) {
+            $user->registration->update([
+                'survey_code' => md5(uniqid(rand(), true))
+            ]);
+        }
+
         if ($user->subscription_code === null) {
             $sub = User::find($user->id);
 
