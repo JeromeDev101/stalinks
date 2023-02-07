@@ -144,15 +144,16 @@ class AccountController extends Controller
             $insert_input_users_payment_type = [];
             if(is_array($request->add_method_payment_type)) {
 
+                // temporarily removed as of boss - 02-07-2023
                 // validate payment info
-                if (isset($request->add_method_payment_type) && $request->add_method_payment_type && $user) {
-                    $request->validate([
-//                        'add_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
-                        'add_method_payment_type.*' => [new PaymentInfoExists($user->id)],
-                    ], [
-                        'add_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
-                    ]);
-                }
+//                 if (isset($request->add_method_payment_type) && $request->add_method_payment_type && $user) {
+//                     $request->validate([
+// //                        'add_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                         'add_method_payment_type.*' => [new PaymentInfoExists($user->id)],
+//                     ], [
+//                         'add_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+//                     ]);
+//                 }
 
                 foreach($request->add_method_payment_type as $key => $types) {
                     if($types != '') {
@@ -178,7 +179,7 @@ class AccountController extends Controller
             }
 
             if (count($insert_input_users_payment_type)) {
-                 UsersPaymentType::insert($insert_input_users_payment_type);
+                UsersPaymentType::insert($insert_input_users_payment_type);
             }
 
             // insert language writer price rate
@@ -459,15 +460,16 @@ class AccountController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
+        // temporarily removed as of boss - 02-07-2023
         // validate payment info
-        if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
-            $request->validate([
-//                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
-                'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
-            ], [
-                'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
-            ]);
-        }
+//         if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
+//             $request->validate([
+// //                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                 'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
+//             ], [
+//                 'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+//             ]);
+//         }
 
         $data = $this->accountRepository->updateAccount($inputs);
         $response['success'] = true;
@@ -634,15 +636,16 @@ class AccountController extends Controller
             $data['id_payment_type'] = $registration->id_payment_type;
             $user = User::create($data);
 
+            // temporarily removed as of boss - 02-07-2023
             // validate payment info
-            if (isset($request->payment_type) && $request->payment_type && $user) {
-                $request->validate([
-//                    'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
-                    'payment_type.*' => [new PaymentInfoExists($user->id)],
-                ], [
-                    'payment_type.*.unique' => 'Payment info :input is already taken by another user.',
-                ]);
-            }
+//             if (isset($request->payment_type) && $request->payment_type && $user) {
+//                 $request->validate([
+// //                    'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                     'payment_type.*' => [new PaymentInfoExists($user->id)],
+//                 ], [
+//                     'payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+//                 ]);
+//             }
 
             // Insert users payments types
             $insert_input_users_payment_type = [];

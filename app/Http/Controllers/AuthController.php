@@ -185,15 +185,16 @@ class AuthController extends Controller
             $registered->update($dataRegistered);
         }
 
+        // temporarily removed as of boss - 02-07-2023
         // validate payment info
-        if (isset($request->payment_type) && $request->payment_type && $user) {
-            $request->validate([
-//                'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
-                'payment_type.*' => [new PaymentInfoExists($user->id)],
-            ], [
-                'payment_type.*.unique' => 'Payment solution :input is already taken by another user.',
-            ]);
-        }
+//         if (isset($request->payment_type) && $request->payment_type && $user) {
+//             $request->validate([
+// //                'payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                 'payment_type.*' => [new PaymentInfoExists($user->id)],
+//             ], [
+//                 'payment_type.*.unique' => 'Payment solution :input is already taken by another user.',
+//             ]);
+//         }
 
         // Insert users payments types
 //        $users_payment_type = UsersPaymentType::where('user_id', $input['id']);
