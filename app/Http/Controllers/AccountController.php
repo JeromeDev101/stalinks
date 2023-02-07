@@ -1221,15 +1221,16 @@ class AccountController extends Controller
 
         $user = User::create($data);
 
+        // temporarily removed as of boss - 02-07-2023
         // validate payment info
-        if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
-            $request->validate([
-//                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
-                'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
-            ], [
-                'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
-            ]);
-        }
+//         if (isset($request->update_method_payment_type) && $request->update_method_payment_type && $user) {
+//             $request->validate([
+// //                'update_method_payment_type.*' => 'unique:users_payment_type,account,' . $user->id . ',user_id'
+//                 'update_method_payment_type.*' => [new PaymentInfoExists($user->id)],
+//             ], [
+//                 'update_method_payment_type.*.unique' => 'Payment info :input is already taken by another user.',
+//             ]);
+//         }
 
 
         // update registration and user account
