@@ -21,6 +21,8 @@ export default {
     filter_issue: 'Issue',
     filter_topic: 'Topic',
     filter_ac_cb: 'Accept Casino & Betting Sites',
+    filter_reedit: 'Re-edit',
+    filter_cvalidated: 'Content Validated',
 
     // articles
     ar_title: 'Articles',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'Note',
     ec_mk: 'Meta Keywords',
     ec_md: 'Meta Description',
+    ec_si: 'Seller Instruction',
 
     // create article
     ca_title: 'Create Article',

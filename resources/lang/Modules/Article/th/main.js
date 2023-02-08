@@ -21,6 +21,8 @@ export default {
     filter_issue: 'มีปัญหา',
     filter_topic: 'หัวข้อ',
     filter_ac_cb: 'ยอมรับคาสิโน & เว็บไซต์เดิมพัน',
+    filter_reedit: 'แก้ไขอีกครั้ง',
+    filter_cvalidated: 'ตรวจสอบเนื้อหาแล้ว',
 
     // articles
     ar_title: 'บทความ',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'บันทึก',
     ec_mk: 'คีย์เวิร์ด Meta',
     ec_md: 'คำอธิบายเมตา',
+    ec_si: 'คำแนะนำผู้ขาย',
 
     // create article
     ca_title: 'สร้างบทความ',

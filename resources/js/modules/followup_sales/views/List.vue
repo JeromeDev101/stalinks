@@ -905,6 +905,7 @@
                                                         :value="true"
                                                         id="incArticleRadio1"
                                                         name="incArticleRadio"
+                                                        @change="onChange($event)"
                                                         class="custom-control-input text-success">
 
                                                     <label class="custom-control-label" for="incArticleRadio1">
@@ -919,11 +920,19 @@
                                                         :value="false"
                                                         id="incArticleRadio2"
                                                         name="incArticleRadio"
+                                                        @change="onChange($event)"
                                                         class="custom-control-input text-danger">
 
                                                     <label class="custom-control-label" for="incArticleRadio2">
                                                     </label>
                                                 </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr v-if="isIncArticleNo">
+                                            <td colspan="3" class="py-3">
+                                                <span> {{ $t('message.follow.sc_inc_no_instruction') }}</span>
+                                                <textarea v-model="seller_instruction" class="form-control" cols="30" rows="5"></textarea>
                                             </td>
                                         </tr>
 
@@ -1218,7 +1227,9 @@
                     inc_article: null,
                     permanent_article: null
                 },
+                seller_instruction: '',
                 isDisabledUpdate: false,
+                isIncArticleNo: false,
             }
         },
 
@@ -1300,6 +1311,10 @@
         },
 
         methods: {
+            onChange(event) {
+                var data = event.target.value;
+                this.isIncArticleNo = JSON.parse(data)
+            },
 
             checkReason() {
                 if(this.updateModel.reason == 'Other'){
@@ -1671,6 +1686,8 @@
                     inc_article: null,
                     permanent_article: null
                 }
+
+                this.seller_instruction = ''
             },
 
             processPendingSellerOrder(id, process) {
@@ -1679,7 +1696,8 @@
 
                 axios.post('/api/process-pending-order', {
                     id: id,
-                    process: process
+                    process: process,
+                    seller_instruction: this.seller_instruction
                 }).then((res) => {
                     this.resetConfirmationValues();
 

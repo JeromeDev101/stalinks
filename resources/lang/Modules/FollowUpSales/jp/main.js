@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: '永久保存版記事:',
     sc_no_perm_article: '記事は、永久に使用できません.',
     sc_yes_perm_article: '記事は、永久に使用できます.',
+    sc_inc_no_instruction: '記事に関するライターへの指示の提供', 
 
     // deleted by seller
     dbs_filter: 'セーラーによって削除済みを表示',

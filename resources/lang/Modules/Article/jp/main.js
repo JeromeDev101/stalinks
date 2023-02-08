@@ -21,6 +21,8 @@ export default {
     filter_issue: '問題',
     filter_topic: '話題',
     filter_ac_cb: 'カジノとベッティングサイトの受け入れ',
+    filter_reedit: '再編集',
+    filter_cvalidated: 'コンテンツ検証済み',
 
     // articles
     ar_title: '記事',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'メモ',
     ec_mk: 'Metaキーワード',
     ec_md: 'Meta概要',
+    ec_si: '売り手の指示',
 
     // create article
     ca_title: '記事の作成',

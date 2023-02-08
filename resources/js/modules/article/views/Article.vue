@@ -90,7 +90,7 @@
                                             {{ option.username }}
                                         </option>
                                     </select>
-                                </div>
+                                </div> 
                             </div>
 
                             <div class="col-md-3">
@@ -101,6 +101,8 @@
                                         <option value="Queue">{{ $t('message.article.filter_queue') }}</option>
                                         <option value="In Writing">{{ $t('message.article.filter_in_wr') }}</option>
                                         <option value="Done">{{ $t('message.article.filter_done') }}</option>
+                                        <option value="Re-edit">{{ $t('message.article.filter_reedit') }}</option>
+                                        <option value="Content Validated">{{ $t('message.article.filter_cvalidated') }}</option>
                                         <option value="Canceled">{{ $t('message.article.filter_cancel') }}</option>
                                         <option value="Issue">{{ $t('message.article.filter_issue') }}</option>
                                     </select>
@@ -518,19 +520,19 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6" v-if="user.isOurs == '0' || user.role_id == 4">
+                            <div class="col-sm-6" v-if="(user.isOurs == '0' || user.role_id == 4) && contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue' && contentModel.status != 'Issue'">
                                 <div class="form-group">
                                     <label>{{ $t('message.article.ec_status_writer') }}</label>
-                                    <select name="" class="form-control" v-model="contentModel.status">
+                                    <select name="" class="form-control" v-model="contentModel.status" @change="checkStat($event)">
                                         <option value="">{{ $t('message.article.ec_select_status') }}</option>
-                                        <option v-for="option in writer_status" v-bind:value="option">
+                                        <option v-for="option in writerStatus" v-bind:value="option" :key="option">
                                             {{ option }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="col-sm-12" v-if="contentModel.backlink_status == 'Issue' && contentModel.status == 'Issue'">
+                            <!-- <div class="col-sm-12" v-if="contentModel.backlink_status == 'Issue' && contentModel.status == 'Issue'">
                                 <div class="card border border-danger">
                                     <div class="card-header">
                                         <i class="fa fa-exclamation-circle text-danger"></i>
@@ -564,9 +566,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>{{ $t('message.article.ec_si') }}</label>
+                                    <textarea class="form-control" cols="30" rows="3" v-model="contentModel.seller_instruction" disabled></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12" v-if="contentModel.status === 'Re-edit' || isReedit">
                                 <div class="form-group">
                                     <label>{{ $t('message.article.ec_note_2') }}</label>
                                     <textarea class="form-control" cols="30" rows="3" v-model="contentModel.note"></textarea>
@@ -779,7 +788,8 @@
                     allow_script_urls: false,
                 },
 
-                writer_status: ['Queue', 'In Writing', 'Issue', 'Done'],
+                writer_status: ['Queue', 'In Writing', 'Done'],
+                writer_status_internal: ['Queue', 'In Writing', 'Done', 'Re-edit', 'Content Validated'],
                 viewModel: {
                     backlink: '',
                 },
@@ -809,6 +819,7 @@
                     meta_description: '',
                     note: '',
                     meta_keyword: '',
+                    seller_instruction: '',
                 },
 
                 contentModelTemp: {
@@ -881,6 +892,7 @@
                 },
 
                 externalWriters: [],
+                isReedit: false,
             }
         },
 
@@ -904,6 +916,10 @@
                 user: state => state.storeAuth.currentUser,
                 listLanguages : state => state.storePublisher.listLanguages,
             }),
+
+            writerStatus() {
+                return this.user.isOurs == 0  ? this.writer_status_internal:this.writer_status;        
+            },
 
             isProcessing() {
                 // return this.user.isOurs === 0
@@ -1021,6 +1037,15 @@
         },
 
         methods: {
+            checkStat(event) {
+                var data = event.target.value;
+
+                if(data === 'Re-edit') {
+                    this.isReedit = true;
+                } else {
+                    this.isReedit = false;
+                }
+            },
 
             Export2Word(element, filename = ''){
                 console.log(element, filename)
@@ -1358,12 +1383,15 @@
 
             doUpdate(backlink, article){
 
+                console.log(article)
+
                 this.clearIssue();
 
                 this.clearMessageform()
                 this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price == null ? '':article.price.price;
                 this.contentModel.id = article.id;
+                this.contentModel.seller_instruction = article.seller_instruction;
                 this.contentModel.title = backlink == null ? '':backlink.title;
                 this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;
                 this.contentModel.status = article.status_writer == null ? '':article.status_writer;
@@ -1388,9 +1416,9 @@
 
                 // if issue
 
-                this.issueModel.reason = backlink.reason
-                this.issueModel.details = backlink.reason_detailed
-                this.issueModel.file = backlink.reason_file
+                this.issueModel.reason = backlink == null ? '':backlink.reason
+                this.issueModel.details = backlink == null ? '':backlink.reason_detailed
+                this.issueModel.file = backlink == null ? '':backlink.reason_file
 
                 this.isSaved = false;
 

@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: 'บทความถาวร:',
     sc_no_perm_article: 'บทความจะไม่สามารถใช้ได้ตลอด',
     sc_yes_perm_article: 'บทความจะสามารถใช้ได้ตลอด',
+    sc_inc_no_instruction: 'ให้คำแนะนำแก่ผู้เขียนเกี่ยวกับบทความ', 
 
     // deleted by seller
     dbs_filter: 'แสดง ถูกลบโดยผู้ขาย',

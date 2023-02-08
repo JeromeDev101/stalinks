@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: 'Permanent Article:',
     sc_no_perm_article: 'Article will not be available for lifetime.',
     sc_yes_perm_article: 'Article will be available for lifetime.',
+    sc_inc_no_instruction: 'Provide an instruction to Writer about the Article', 
 
     // deleted by seller
     dbs_filter: 'Show Deleted by Seller',

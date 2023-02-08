@@ -21,6 +21,8 @@ export default {
     filter_issue: 'मुद्दा',
     filter_topic: 'विषय',
     filter_ac_cb: 'कैसीनो और सट्टेबाजी साइटों को स्वीकार करें',
+    filter_reedit: 'पुनः संपादित करें',
+    filter_cvalidated: 'सामग्री मान्य',
 
     // articles
     ar_title: 'सामग्री',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'ध्यान दें',
     ec_mk: 'मेटा खोजशब्दों',
     ec_md: 'मेटा विवरण',
+    ec_si: 'विक्रेता निर्देश',
 
     // create article
     ca_title: 'लेख बनाएं',

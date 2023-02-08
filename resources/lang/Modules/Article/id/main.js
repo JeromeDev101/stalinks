@@ -21,6 +21,8 @@ export default {
     filter_issue: 'Isu',
     filter_topic: 'Tema',
     filter_ac_cb: 'Terima Situs Kasino & Taruhan',
+    filter_reedit: 'Sunting ulang',
+    filter_cvalidated: 'Konten Divalidasi',
 
     // articles
     ar_title: 'Artikel',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'Catatan',
     ec_mk: 'Kata Kunci Meta',
     ec_md: 'Deskripsi meta',
+    ec_si: 'instruksi penjual',
 
     // create article
     ca_title: 'Buat Artikel',

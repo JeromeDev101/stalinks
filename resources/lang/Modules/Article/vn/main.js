@@ -21,6 +21,8 @@ export default {
     filter_issue: 'Phát hành',
     filter_topic: 'Đề tài',
     filter_ac_cb: 'Chấp nhận các trang web cá cược & Casino',
+    filter_reedit: 'chỉnh sửa lại',
+    filter_cvalidated: 'Nội dung đã được xác thực',
 
     // articles
     ar_title: 'Bài viết',
@@ -56,6 +58,7 @@ export default {
     ec_note_2: 'Ghi chú',
     ec_mk: 'Từ khóa meta',
     ec_md: 'Mô tả meta',
+    ec_si: 'hướng dẫn người bán',
 
     // create article
     ca_title: 'Tạo bài viết',

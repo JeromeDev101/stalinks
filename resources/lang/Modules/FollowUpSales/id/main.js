@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: 'Artikel permanen:',
     sc_no_perm_article: 'Artikel tidak tersedia dalam jangka waktu seumur hidup',
     sc_yes_perm_article: 'Artikel tersedia untuk jangka waktu seumur hidup',
+    sc_inc_no_instruction: 'Memberikan instruksi kepada Penulis tentang Artikel', 
 
     // deleted by seller
     dbs_filter: 'Tampilkan Dihapus oleh Penjual',

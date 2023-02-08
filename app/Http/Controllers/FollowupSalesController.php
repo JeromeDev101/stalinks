@@ -11,6 +11,7 @@ use App\Events\SellerConfirmedPendingOrderEvent;
 use App\Notifications\BacklinkLiveSeller;
 use App\Notifications\BacklinkOrderCanceled;
 use App\Notifications\BacklinkOrderRefund;
+use App\Notifications\NotifyWriterCancelIssueOrder;
 use App\Repositories\Contracts\NotificationInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ use App\Models\Article;
 use App\Events\NotificationEvent;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class FollowupSalesController extends Controller
 {
@@ -262,11 +264,19 @@ class FollowupSalesController extends Controller
             }
 
             $input['live_date'] = null;
+
+            // notify assigned writer
+            $this->notifyWriter($backlink);
+
         } else if ($input['status'] == 'Canceled') {
             // notify buyer of order cancellation
             if ($backlink->status !== 'Canceled') {
                 $backlink->user->notify(new BacklinkOrderCanceled($backlink));
             }
+
+            // notify assigned writer
+            $this->notifyWriter($backlink);
+
         } else if ($input['status'] == 'Refund') {
             // notify buyer of order refund
             if ($backlink->status !== 'Refund') {
@@ -285,6 +295,21 @@ class FollowupSalesController extends Controller
         $backlink->update($input);
 
         return response()->json(['success' => true], 200);
+    }
+
+    protected function notifyWriter ($backlink) {
+        if ($backlink->article) {
+            $article = Article::where('id_backlink', $backlink->id)->first();
+            if ($backlink->article->user) {
+                
+                $backlink->article->user->notify(new NotifyWriterCancelIssueOrder($article));
+            }
+            $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
+
+            Notification::send($internal_writers, new NotifyWriterCancelIssueOrder($article));
+        }
+
+        return;
     }
 
     public function generateArticle (Request $request) {
@@ -435,6 +460,7 @@ class FollowupSalesController extends Controller
                                 $article = Article::create([
                                     'id_backlink' => $backlink->id,
                                     'id_language' => $backlink->publisher->language_id,
+                                    'instruction' => $request->seller_instruction == null ? null:$request->seller_instruction
                                 ]);
 
                                 // notify internal and external valid writers

@@ -16,7 +16,10 @@ use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\Price;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NotifyInternalWriterToValidate;
+use App\Notifications\ArticleValidated;
+use App\Notifications\ArticleReedit;
 
 class ArticlesController extends Controller
 {
@@ -375,14 +378,30 @@ class ArticlesController extends Controller
 //        }
 
         $backlink = Backlink::find($article->id_backlink);
+
         if( $request->content['status'] == 'Done' ){
             if ( $backlink->status != 'Live' ) {
-                $backlink->update(['status' => 'Content Done']);
+
+                // check if 1000 words meet by the writer
+                if ($request->content['num_words'] < 1000) {
+                    return response()->json(['message'=> 'Minimum words must be 1000.'], 422);
+                }
+
+                // validate title and meta description 
+                if($request->get('content')['title'] == '') {
+                    return response()->json(['message'=> 'Please provide title.'], 422);
+                } 
+
+                if($request->get('content')['meta_description'] == '') {
+                    return response()->json(['message'=> 'Please provide meta description.'], 422);
+                } 
+
+                
 
                 // check if writer is external
-
                 if ($article->user->isOurs === 1) {
-                    // save article price
+
+                    // to avoid save multiple times
                     if ($article->status_writer !== 'Done') {
 
                         // calculate price
@@ -433,20 +452,51 @@ class ArticlesController extends Controller
 
                             $price_id = $price->id;
                         }
+
+                        // notify internal writer to validate the article
+                        $_article = Article::where('id_backlink', $backlink->id)->first();
+                        $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
+
+                        Notification::send($internal_writers, new NotifyInternalWriterToValidate($_article));
+
                     }
                 }
             }
 
-            event(new ArticleDoneEvent($article, auth()->user()));
         }
 
         if( $request->content['status'] == 'In Writing' ){
             $backlink->update(['status' => 'Content In Writing']);
         }
 
-        if (isset($request->get('content')['title'])) {
-            $backlink->update(['title' => $request->get('content')['title']]);
+        if( $request->content['status'] == 'Re-edit' ){
+            // notify the writer for reedit
+            if ($backlink->article->user) {
+                $backlink->article->user->notify(new ArticleReedit($article));
+            }
+
+            // need to provide notes if re-edit status
+            if($request->get('content')['note'] == '') {
+                return response()->json(['message'=> 'Please provide notes.'], 422);
+            }
         }
+
+        if( $request->content['status'] == 'Content Validated' ){
+
+            // update backlink status
+            $backlink->update(['status' => 'Content Done']);
+
+            // notify the writer that the article has been validated
+            if ($backlink->article->user) {
+                $backlink->article->user->notify(new ArticleValidated($article));
+            }
+
+            // notify the internal writers 
+            $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
+            Notification::send($internal_writers, new ArticleValidated($article));
+        }
+
+        $backlink->update(['title' => $request->get('content')['title']]);
 
         $article->update([
             'id_writer_price' => $price_id,
@@ -485,6 +535,10 @@ class ArticlesController extends Controller
                 'status_writer' => 'In Writing',
                 'date_start' => Carbon::now()
             ]);
+
+            // update the status of backlink
+            $backlink = Backlink::find($article->id_backlink);
+            $backlink->update(['status' => 'Content In Writing']);
 
             // add survey code for writer if null
             if ($article->user->isOurs === 1) {

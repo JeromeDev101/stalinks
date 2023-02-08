@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: 'स्थायी लेख:',
     sc_no_perm_article: 'लेख जीवन भर उपलब्ध नहीं रहेगा।',
     sc_yes_perm_article: 'लेख जीवन भर उपलब्ध रहेगा।',
+    sc_inc_no_instruction: 'लेख के बारे में लेखक को एक निर्देश प्रदान करें', 
 
     // deleted by seller
     dbs_filter: 'विक्रेता द्वारा हटाया गया दिखाएँ',

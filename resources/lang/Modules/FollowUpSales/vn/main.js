@@ -68,6 +68,7 @@ export default {
     sc_permanent_article: 'Bài viết vĩnh viễn:',
     sc_no_perm_article: 'Bài viết vĩnh viễn sẽ không có sẵn.',
     sc_yes_perm_article: 'Bài viết sẽ có sẵn vĩnh viễn.',
+    sc_inc_no_instruction: 'Cung cấp hướng dẫn cho Người viết về Bài viết', 
 
     // deleted by seller
     dbs_filter: 'Hiển thị Đã xóa bởi Người bán',
