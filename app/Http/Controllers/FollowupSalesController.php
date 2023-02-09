@@ -242,8 +242,10 @@ class FollowupSalesController extends Controller
 
                 if ($backlink->article) {
                     if ($backlink->article->status_writer) {
-                        if ($backlink->article->status_writer === 'Done') {
+                        if ($backlink->article->status_writer === 'Content Validated') {
                             $writer = $backlink->article->user ?: null;
+                        } else {
+                            return response()->json(['message' => 'Article is not yet finish.' ], 422);
                         }
                     }
                 }

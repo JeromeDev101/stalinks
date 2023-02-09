@@ -399,19 +399,23 @@
                             {{ messageForms.message }}
                         </span>
 
-                        <button
-                            v-if="contentModel.backlink_status !== 'Canceled'
-                            && (contentModel.status === 'In Writing' || contentModel.status === 'Issue')
-                            && contentModel.status !== null
-                            && contentModel.writer !== null
-                            && (user.isOurs === 1 && user.role_id === 4) || (user.isOurs === 0 && (user.role_id === 8 || user.role_id === 13)) || user.isAdmin"
-                            class="btn btn-danger"
+                        <!-- no one can cancel if the backlinks status is Live -->
+                        <span v-if="contentModel.backlink_status !== 'Live'">
+                            <button
+                                v-if="contentModel.backlink_status !== 'Canceled'
+                                && (contentModel.status === 'In Writing' || contentModel.status === 'Issue')
+                                && contentModel.status !== null
+                                && contentModel.writer !== null
+                                && (user.isOurs === 1 && user.role_id === 4) || (user.isOurs === 0 && (user.role_id === 8 || user.role_id === 13)) || user.isAdmin"
+                                class="btn btn-danger"
 
-                            @click="cancelWritingArticle(contentModel)">
+                                @click="cancelWritingArticle(contentModel)">
 
-                            <i class="fas fa-times-circle"></i>
-                            {{ $t('message.article.ec_cancel_wr') }}
-                        </button>
+                                <i class="fas fa-times-circle"></i>
+                                {{ $t('message.article.ec_cancel_wr') }}
+                            </button>
+                        </span>
+
                     </div>
                     <div class="modal-body">
                         <div class="row">

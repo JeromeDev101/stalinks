@@ -524,7 +524,8 @@
                             <div class="col-sm-6" v-if="updateModel.article_id != ''">
                                 <div class="form-group">
                                     <label>{{ $t('message.follow.si_status_writer') }}</label>
-                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || [6, 15].includes(user.role_id)" >
+                                    <!-- <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="isLive || [6, 15].includes(user.role_id)" > -->
+                                    <select name="" class="form-control" v-model="updateModel.status_writer" :disabled="true" >
                                         <option value="">{{ $t('message.follow.si_select_status') }}</option>
                                         <option v-for="option in writer_status" v-bind:value="option">
                                             {{ option }}
@@ -1145,7 +1146,7 @@
                     'Deleted',
                     'Refund'
                 ],
-                writer_status: ['In Writing', 'Done'],
+                writer_status: ['In Writing', 'Done', 'Re-edit', 'Content Validated'],
                 updateModel: {
                     id: '',
                     url_publisher: '',
