@@ -179,7 +179,7 @@ class BacklinkProspectController extends Controller
             }
         }
 
-        dd($data);
+        // dd($data);
     }
 
     public function importCsv(Request $request) {
