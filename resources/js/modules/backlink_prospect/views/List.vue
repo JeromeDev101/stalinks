@@ -1136,7 +1136,7 @@ export default {
                 },
             });
 
-            axios.get('/api/fetch-backlink-prospects')
+            axios.get('/api/fetch-backlink-prospects-from-apacaff')
                 .then((res) => {
 
                 console.log(res)

@@ -123,7 +123,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Backlinks Prospect
     Route::name('get-backlink-prospect')->get('backlink-prospect', 'BacklinkProspectController@getList');
-    Route::name('fetch-backlink-prospect')->get('fetch-backlink-prospect', 'BacklinkProspectController@fetchBacklinkProspect');
+    Route::name('fetch-backlink-prospects-from-apacaff')->get('fetch-backlink-prospects-from-apacaff', 'BacklinkProspectController@fetchBacklinkProspect');
     Route::name('get-backlink-prospect-ahrefs')->post('backlink-prospect/ahrefs', 'BacklinkProspectController@getAhrefs');
     Route::name('backlink-prospect-upload-csv')->post('backlink-prospect-upload-csv', 'BacklinkProspectController@importCsv');
     Route::name('backlink-prospect-delete')->post('backlink-prospect-delete', 'BacklinkProspectController@delete');
