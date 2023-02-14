@@ -117,6 +117,7 @@ class BacklinkProspectController extends Controller
 
     public function fetchBacklinkProspect(Request $request) {
 
+<<<<<<< HEAD
         $json = file_get_contents('https://mad.apacaff.com/api/fetch-backlink-prospect-data');
         $obj = json_decode($json);
 
@@ -148,6 +149,33 @@ class BacklinkProspectController extends Controller
 
         // $data = [];
         // $result = [];
+=======
+        $link = 'https://mad.apacaff.com/api/fetch-backlink-prospect-data';
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $link,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "cache-control: no-cache"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+
+        curl_close($curl);
+
+        dd($response);
+
+        $response = json_decode($response, true);
+
+        $data = [];
+        $result = [];
+>>>>>>> master
 
         
 
