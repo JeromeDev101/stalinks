@@ -140,7 +140,7 @@ class BacklinkProspectController extends Controller
         $response = json_decode($response, true);
 
         $data = [];
-        $res = [];
+        $result = [];
 
         if(isset($response['data']) && count($response['data']) > 0) {
             foreach($response['data'] as $res) {
@@ -178,14 +178,14 @@ class BacklinkProspectController extends Controller
                                 'date_created' => $date_created,
                             ]);
 
-                            $res[] = $blp;
+                            $result[] = $blp;
                         }
                     }
                 }
             }
         }
 
-        return $res;
+        return $result;
     }
 
     public function importCsv(Request $request) {
