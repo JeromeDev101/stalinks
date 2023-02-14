@@ -93,6 +93,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-article-list-admin')->get('article-list-admin', 'ArticlesController@getArticleListAdmin');
     Route::name('delete-article')->post('delete-article', 'ArticlesController@deleteArticle');
     Route::name('accept-decline-article')->post('accept-decline-article', 'ArticlesController@acceptDeclineArticle');
+    Route::name('confirm-article')->post('confirm-article', 'ArticlesController@confirmArticle');
 
     //Billing
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');

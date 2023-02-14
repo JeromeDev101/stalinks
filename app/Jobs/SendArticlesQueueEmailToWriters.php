@@ -86,6 +86,7 @@ class SendArticlesQueueEmailToWriters implements ShouldQueue
             ->leftJoin('users', 'article.id_writer', '=', 'users.id')
             ->with('language:id,name')
             ->where('backlinks.status' ,'!=', 'Pending')
+            ->where('article.is_confirmed', 1)
             ->whereNull('article.status_writer')
             ->whereNotIn('backlinks.status', ['Issue', 'Canceled'])
             ->orderBy('article.id', 'desc')

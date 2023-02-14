@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ArticleCreated extends Notification
+class ArticleConfirmed extends Notification
 {
     use Queueable;
     public $article;
@@ -16,7 +16,7 @@ class ArticleCreated extends Notification
     /**
      * Create a new notification instance.
      *
-     * @param Article $article
+     * @return void
      */
     public function __construct(Article $article)
     {
@@ -38,7 +38,7 @@ class ArticleCreated extends Notification
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return MailMessage
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
@@ -57,7 +57,7 @@ class ArticleCreated extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'A new article was created (Article ID: ' . $this->article->id . '). Please mark it as confirmed so our external writers can see it on the queue list.'
+            'message' => 'New article on queue (#ID ' . $this->article->id .  '). You can now accept it and start writing!'
         ];
     }
 }

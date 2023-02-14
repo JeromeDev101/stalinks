@@ -247,6 +247,8 @@ class FollowupSalesController extends Controller
                         } else {
                             return response()->json(['message' => 'Article is not yet finish.' ], 422);
                         }
+                    } else {
+                        return response()->json(['message' => 'Article is not yet finish.' ], 422);
                     }
                 }
 
@@ -335,6 +337,7 @@ class FollowupSalesController extends Controller
                     $article = Article::create([
                         'id_backlink' => $backlink->id,
                         'id_language' => $backlink->publisher->language_id,
+                        'is_confirmed' => 0
                     ]);
 
                     // notify internal and external valid writers
@@ -377,6 +380,7 @@ class FollowupSalesController extends Controller
                             $article = Article::create([
                                 'id_backlink' => $backlink->id,
                                 'id_language' => $backlink->publisher->language_id,
+                                'is_confirmed' => 0,
                             ]);
 
                             // notify internal and external valid writers
@@ -462,7 +466,8 @@ class FollowupSalesController extends Controller
                                 $article = Article::create([
                                     'id_backlink' => $backlink->id,
                                     'id_language' => $backlink->publisher->language_id,
-                                    'instruction' => $request->seller_instruction == null ? null:$request->seller_instruction
+                                    'instruction' => $request->seller_instruction == null ? null:$request->seller_instruction,
+                                    'is_confirmed' => 0
                                 ]);
 
                                 // notify internal and external valid writers

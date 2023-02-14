@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Registration;
 use App\Models\Publisher;
 use App\Models\Price;
+use App\Notifications\ArticleConfirmed;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NotifyInternalWriterToValidate;
@@ -139,7 +140,8 @@ class ArticlesController extends Controller
                                         ->whereNull('status_writer')
                                         ->where('backlinks.status', '!=', 'Canceled');
                                 })->orWhere('id_writer', $user->id);
-                            })->whereIn('article.id_language', json_decode($user->registration->language_id));
+                            })->whereIn('article.id_language', json_decode($user->registration->language_id))
+                            ->where('article.is_confirmed', 1);
                         })
                         ->where('backlinks.status' ,'!=', 'Pending')
                         // ->where('backlinks.status' ,'!=', 'Issue')
@@ -159,6 +161,10 @@ class ArticlesController extends Controller
 
         if( isset($filter['casino_sites']) && $filter['casino_sites'] != ""){
             $list->where('publisher.casino_sites', $filter['casino_sites']);
+        }
+
+        if( isset($filter['confirm']) && $filter['confirm'] != ""){
+            $list->where('article.is_confirmed', $filter['confirm']);
         }
 
         if( isset($filter['topic']) && $filter['topic'] != ""){
@@ -266,7 +272,8 @@ class ArticlesController extends Controller
                             ->whereNull('status_writer')
                             ->where('backlinks.status', '!=', 'Canceled');
                     })->orWhere('id_writer', $user->id);
-                })->whereIn('article.id_language', json_decode($user->registration->language_id));
+                })->whereIn('article.id_language', json_decode($user->registration->language_id))
+                ->where('article.is_confirmed', 1);
             })->first();
     }
 
@@ -558,5 +565,41 @@ class ArticlesController extends Controller
         }
 
         return response()->json(['success'=>true], 200);
+    }
+
+    public function confirmArticle (Request $request) {
+        $article = Article::where('id', $request->article_id)->first();
+
+        $this->notifyExternalWritersForConfirmedArticle($article);
+
+        $article->update([
+            'is_confirmed' => 1,
+        ]);
+
+        return response()->json(['success'=>true], 200);
+    }
+
+    public function notifyExternalWritersForConfirmedArticle ($article) {
+        // notify external writers based on language
+
+        $columns = [
+            'users.*',
+            'registration.language_id',
+            'registration.is_exam_passed'
+        ];
+
+        $external = User::select($columns)
+            ->where('role_id', 4)
+            ->leftJoin('registration', 'users.email', '=', 'registration.email')
+            ->where('users.isOurs', 1)
+            ->where('users.status', 'active')
+            ->where('registration.account_validation', 'valid')
+            ->where('registration.is_exam_passed', 1)
+            ->whereRaw("FIND_IN_SET(". $article->id_language .", REPLACE(REPLACE(language_id,'[',''), ']',''))")
+            ->get();
+
+        if (count($external)) {
+            Notification::send($external, new ArticleConfirmed($article));
+        }
     }
 }

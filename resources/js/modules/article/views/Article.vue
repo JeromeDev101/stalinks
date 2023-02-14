@@ -137,8 +137,16 @@
                                 </div>
                             </div>
 
-
-
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Confirmed Article</label>
+                                    <select name="" class="form-control" v-model="filterModel.confirm">
+                                        <option value="">{{ $t('message.article.all') }}</option>
+                                        <option value="1">{{ $t('message.article.yes') }}</option>
+                                        <option value="0">{{ $t('message.article.no') }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row mb-3">
@@ -267,13 +275,34 @@
                             :item-height="60"
                             :config="tableConfig"
                             :data="listArticles.data.data">
+
+                            <template
+                                slot-scope="scope"
+                                slot="idData">
+                                <div :class="scope.row.is_confirmed === 0 ? 'badge badge-danger' : ''">
+                                    {{ scope.row.id }}
+                                </div>
+                                
+                                <div v-if="scope.row.is_confirmed === 0" class="ml-2">
+                                    <button 
+                                        v-if="user.isOurs === 0 && user.permission_list.includes('update-article-article')"
+                                        class="btn btn-success"
+                                        title="Confirm Article"
+                                        
+                                        @click="confirmArticle(scope.row.id)">
+
+                                        <i class="fas fa-check-circle"></i>
+                                    </button>
+                                </div>
+                            </template>
+
                             <template
                                 slot-scope="scope"
                                 slot="actionButton">
                                 <div class="btn-group">
                                     <button
                                         v-if="(user.role_id === 4 || user.role_id === 13)
-                                         && user.permission_list.includes('create-article-article')"
+                                        && user.permission_list.includes('create-article-article')"
                                         :disabled="!isStatusOnQueue(scope.row) || isProcessing"
                                         :id="'accept-article-' + scope.row.id"
                                         class="btn btn-default"
@@ -372,7 +401,7 @@
                                     {{ $t('message.article.ar_reminder_sent') }}
 
                                     <span>
-                                       - {{ scope.row.reminded_via }}h
+                                        - {{ scope.row.reminded_via }}h
                                     </span>
                                 </span>
                             </template>
@@ -852,6 +881,7 @@
                     casino_sites: this.$route.query.casino_sites || '',
                     topic: this.$route.query.topic || '',
                     writer: this.$route.query.writer || '',
+                    confirm: this.$route.query.confirm || '',
                 },
 
                 searchLoading: false,
@@ -953,11 +983,13 @@
                         isHidden: false
                     },
                     {
-                        prop : 'id',
+                        prop : '_action',
                         name : self.$t('message.article.ar_id'),
+                        actionName : 'idData',
                         sortable: true,
                         width: 100,
-                        isHidden: false
+                        isHidden: false,
+                        eClass: {'flexColumnClass': '${is_confirmed}===0'}
                     },
                     {
                         prop : 'id_backlink',
@@ -1105,6 +1137,51 @@
                 }
 
                 document.body.removeChild(downloadLink);
+            },
+
+            confirmArticle (id) {
+                let self = this;
+
+                swal.fire({
+                        title : 'Are you sure that you want to confirm this article (ID# ' + id + ')?',
+                        text : 'A notification will be sent to the external writers',
+                        icon : "question",
+                        showCancelButton : true,
+                        confirmButtonText : self.$t('message.article.yes'),
+                        cancelButtonText : self.$t('message.article.no')
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            self.submitConfirmArticle(id);
+                        }
+                    });
+            },
+
+            submitConfirmArticle (id) {
+                let self = this;
+                let loader = this.$loading.show();
+
+                axios.post('/api/confirm-article', {
+                    article_id: id,
+                }).then((response) => {
+                    swal.fire(
+                        self.$t('message.article.alert_success'),
+                        'Article Confirmed Successfully',
+                        'success'
+                    )
+
+                    this.getListArticles();
+
+                    loader.hide();
+                }).catch((error) => {
+                    swal.fire(
+                        self.$t('message.article.alert_err'),
+                        error.response.data.message,
+                        'error'
+                    )
+
+                    loader.hide();
+                });
             },
 
             acceptArticle (data) {
@@ -1289,6 +1366,7 @@
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
                         writer: this.filterModel.writer,
+                        confirm: this.filterModel.confirm
                     }
                 });
                 this.searchLoading = false;
@@ -1455,6 +1533,7 @@
                         casino_sites: this.filterModel.casino_sites,
                         topic: this.filterModel.topic,
                         writer: this.filterModel.writer,
+                        confirm: this.filterModel.confirm
                     }
                 });
             },
@@ -1469,6 +1548,7 @@
                     casino_sites: '',
                     topic: '',
                     writer: '',
+                    confirm: '',
                 }
 
                 this.getListArticles({
@@ -1578,3 +1658,7 @@
         },
     }
 </script>
+
+<style>
+    
+</style>

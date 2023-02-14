@@ -29,28 +29,28 @@ class ArticleCreatedListener
      */
     public function handle(ArticleCreatedEvent $event)
     {
-        // notify valid inter writers
+        // notify valid inter writers to confirm article
         $internal = User::where('role_id', 13)->where('isOurs', 0)->where('status', 'active')->get();
 
         Notification::send($internal, new ArticleCreated($event->article));
 
         // notify external writers based on language
-        $columns = [
-            'users.*',
-            'registration.language_id',
-            'registration.is_exam_passed'
-        ];
+        // $columns = [
+        //     'users.*',
+        //     'registration.language_id',
+        //     'registration.is_exam_passed'
+        // ];
 
-        $external = User::select($columns)
-            ->where('role_id', 4)
-            ->leftJoin('registration', 'users.email', '=', 'registration.email')
-            ->where('users.isOurs', 1)
-            ->where('users.status', 'active')
-            ->where('registration.account_validation', 'valid')
-            ->where('registration.is_exam_passed', 1)
-            ->whereRaw("FIND_IN_SET(". $event->article->id_language .", REPLACE(REPLACE(language_id,'[',''), ']',''))")
-            ->get();
+        // $external = User::select($columns)
+        //     ->where('role_id', 4)
+        //     ->leftJoin('registration', 'users.email', '=', 'registration.email')
+        //     ->where('users.isOurs', 1)
+        //     ->where('users.status', 'active')
+        //     ->where('registration.account_validation', 'valid')
+        //     ->where('registration.is_exam_passed', 1)
+        //     ->whereRaw("FIND_IN_SET(". $event->article->id_language .", REPLACE(REPLACE(language_id,'[',''), ']',''))")
+        //     ->get();
 
-        Notification::send($external, new ArticleCreated($event->article));
+        // Notification::send($external, new ArticleCreated($event->article));
     }
 }
