@@ -117,8 +117,8 @@ class BacklinkProspectController extends Controller
 
     public function fetchBacklinkProspect(Request $request) {
 
-        $json = file_get_contents('https://mad.apacaff.com/api/fetch-backlink-prospect-data');
-        $obj = json_decode($json);
+        // $json = file_get_contents('https://mad.apacaff.com/api/fetch-backlink-prospect-data');
+        // $obj = json_decode($json);
 
         $blp = BacklinkProspect::all();
 
