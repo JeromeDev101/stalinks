@@ -120,7 +120,8 @@ class BacklinkProspectController extends Controller
         $json = file_get_contents('https://mad.apacaff.com/api/fetch-backlink-prospect-data');
         $obj = json_decode($json);
 
-        dd($obj);
+
+        return response()->json(['data' => $obj], 200);
         // $curl = curl_init();
 
         // $link = 'https://mad.apacaff.com/api/fetch-backlink-prospect-data';
