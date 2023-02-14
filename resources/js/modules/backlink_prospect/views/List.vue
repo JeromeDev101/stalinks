@@ -1141,11 +1141,11 @@ export default {
 
                 console.log(res)
 
-                swal.fire(
-                    self.$t('message.generate_list.alert_success'),
-                    self.$t('message.backlink_prospect.fetch_success'),
-                    'success'
-                )
+                // swal.fire(
+                //     self.$t('message.generate_list.alert_success'),
+                //     self.$t('message.backlink_prospect.fetch_success'),
+                //     'success'
+                // )
 
                 this.getBacklinkProspect(this.filterModel.page);
             })
