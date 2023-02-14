@@ -142,6 +142,8 @@ class BacklinkProspectController extends Controller
         $data = [];
         $result = [];
 
+        dd($response['data']);
+
         if(isset($response['data']) && count($response['data']) > 0) {
             foreach($response['data'] as $res) {
                 $data[] = $res['ref_domain'];
