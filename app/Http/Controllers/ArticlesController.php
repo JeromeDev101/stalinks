@@ -66,7 +66,7 @@ class ArticlesController extends Controller
                             ->with('user:id,name');
                         }])
                         ->with('user:id,name,username')
-                        ->where('status_writer', 'Done')
+                        ->where('status_writer', 'Content Validated')
                         ->orderBy('id', 'desc');
 
         if( isset($filter['date']) && $filter['date'] ){

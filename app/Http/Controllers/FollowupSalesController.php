@@ -43,7 +43,11 @@ class FollowupSalesController extends Controller
             ->leftJoin('users as A', 'publisher.user_id', '=', 'A.id')
             ->leftJoin('registration', 'A.email', '=', 'registration.email')
             ->leftJoin('users as B', 'registration.team_in_charge', '=', 'B.id')
-            ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+            // ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+            ->leftJoin('article', function ($join) {
+                $join->on('backlinks.id', '=', 'article.id_backlink')
+                    ->whereNull('article.deleted_at');
+            })
             ->where('backlinks.status', '!=', 'To Be Validated')
             ->with([
                 'publisher' => function ($query) {
