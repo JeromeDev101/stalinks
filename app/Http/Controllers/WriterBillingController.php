@@ -29,7 +29,7 @@ class WriterBillingController extends Controller
                         ->leftJoin('billing_writer', 'article.id', '=', 'billing_writer.id_article')
                         ->with('backlink:id,title,status')
                         ->with('country:id,name')
-                        ->where('article.status_writer', 'Done')
+                        ->where('article.status_writer', 'Content Validated')
                         ->where('users.role_id', 4)
                         ->where('users.isOurs', 1)
                         ->with('user.languages')
