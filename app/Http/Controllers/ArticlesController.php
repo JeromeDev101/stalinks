@@ -532,6 +532,17 @@ class ArticlesController extends Controller
         return response()->json(['success' => true], 200);
     }
 
+    public function deleteArticleInternal(Request $request) {
+        if (Gate::denies('delete-article-article')) {
+            abort(422, 'Unauthorized Access');
+        }
+
+        $article = Article::find($request->id);
+        $article->delete();
+
+        return response()->json(['success' => true], 200);
+    }
+
     public function acceptDeclineArticle(Request $request)
     {
         $article = Article::find($request->article_id);

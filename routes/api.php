@@ -94,6 +94,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('delete-article')->post('delete-article', 'ArticlesController@deleteArticle');
     Route::name('accept-decline-article')->post('accept-decline-article', 'ArticlesController@acceptDeclineArticle');
     Route::name('confirm-article')->post('confirm-article', 'ArticlesController@confirmArticle');
+    Route::name('delete-article-internal')->post('delete-article-internal', 'ArticlesController@deleteArticleInternal');
 
     //Billing
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');

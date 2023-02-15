@@ -285,13 +285,23 @@
                                 
                                 <div v-if="scope.row.is_confirmed === 0" class="ml-2">
                                     <button 
-                                        v-if="user.isOurs === 0 && user.permission_list.includes('update-article-article')"
+                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('update-article-article'))"
                                         class="btn btn-success"
                                         title="Confirm Article"
                                         
                                         @click="confirmArticle(scope.row.id)">
 
                                         <i class="fas fa-check-circle"></i>
+                                    </button>
+
+                                    <button 
+                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('delete-article-article'))"
+                                        class="btn btn-danger"
+                                        title="Delete Article"
+                                        
+                                        @click="deleteArticle(scope.row.id)">
+
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </template>
@@ -1167,6 +1177,50 @@
                     swal.fire(
                         self.$t('message.article.alert_success'),
                         'Article Confirmed Successfully',
+                        'success'
+                    )
+
+                    this.getListArticles();
+
+                    loader.hide();
+                }).catch((error) => {
+                    swal.fire(
+                        self.$t('message.article.alert_err'),
+                        error.response.data.message,
+                        'error'
+                    )
+
+                    loader.hide();
+                });
+            },
+
+            deleteArticle (id) {
+                let self = this;
+
+                swal.fire({
+                        title : 'Are you sure that you want to delete this article (ID# ' + id + ')?',
+                        icon : "question",
+                        showCancelButton : true,
+                        confirmButtonText : self.$t('message.article.yes'),
+                        cancelButtonText : self.$t('message.article.no')
+                    })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            self.submitDeleteArticle(id);
+                        }
+                    });
+            },
+
+            submitDeleteArticle (id) {
+                let self = this;
+                let loader = this.$loading.show();
+
+                axios.post('/api/delete-article-internal', {
+                    id: id,
+                }).then((response) => {
+                    swal.fire(
+                        self.$t('message.article.alert_success'),
+                        'Article Deleted Successfully',
                         'success'
                     )
 

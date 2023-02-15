@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Article extends Model
 {
-    use Loggable;
+    use Loggable, SoftDeletes;
 
     protected $table = 'article';
     protected $guarded = [];
