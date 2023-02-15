@@ -339,7 +339,8 @@
                                     </button>
 
                                     <button
-                                        v-if="scope.row.status_writer === 'Done'
+                                        v-if="(scope.row.status_writer === 'Done'
+                                        || scope.row.status_writer === 'Content Validated')
                                         && scope.row.backlink_status != 'Canceled'
                                         && user.permission_list.includes('export-article-article')"
                                         class="btn btn-default"
