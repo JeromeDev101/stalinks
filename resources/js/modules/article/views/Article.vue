@@ -567,7 +567,13 @@
                             <div class="col-sm-6" v-if="(user.isOurs == '0' || user.role_id == 4) && contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue' && contentModel.status != 'Issue'">
                                 <div class="form-group">
                                     <label>{{ $t('message.article.ec_status_writer') }}</label>
-                                    <select name="" class="form-control" v-model="contentModel.status" @change="checkStat($event)">
+                                    <select 
+                                        v-model="contentModel.status"
+                                        class="form-control"
+                                        :disabled="user.role_id === 15"
+                                        
+                                        @change="checkStat($event)">
+
                                         <option value="">{{ $t('message.article.ec_select_status') }}</option>
                                         <option v-for="option in writerStatus" v-bind:value="option" :key="option">
                                             {{ option }}
