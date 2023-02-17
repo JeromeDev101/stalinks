@@ -59,7 +59,7 @@ class BacklinkLiveWriter extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Your article for backlink order ID ' . $this->backlink->id . ' is now live.'
+            'message' => 'Your article for backlink order ID ' . $this->backlink . ' is now live.'
         ];
     }
 }

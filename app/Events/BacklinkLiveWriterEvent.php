@@ -25,7 +25,7 @@ class BacklinkLiveWriterEvent implements ShouldBroadcast
      * @param Backlink $backlink
      * @param User $writer
      */
-    public function __construct(Backlink $backlink, User $writer)
+    public function __construct($backlink, User $writer)
     {
         $this->backlink = $backlink;
         $this->writer = $writer;

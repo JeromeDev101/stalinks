@@ -217,6 +217,11 @@
                             </div>
 
                             <div class="col p-3">
+                                Content Validated
+                                <b>({{ statusSummary.total_validated ? statusSummary.total_validated : '0' }})</b>
+                            </div>
+
+                            <div class="col p-3">
                                 {{ $t('message.article.filter_cancel') }}
                                 <b>({{ statusSummary.total_cancelled ? statusSummary.total_cancelled : '0' }})</b>
                             </div>
@@ -458,8 +463,25 @@
 
                     </div>
                     <div class="modal-body">
-                        <div class="row">
+                        <div v-if="user.isOurs === 1 && contentModel.status === 'Content Validated'" class="row">
+                            <div class="col-12">
+                                <div class="alert alert-success" role="alert">
+                                    <i class="fas fa-info-circle"></i>
+                                    The article's content is already validated, editing the status and content is not available.
+                                </div>
+                            </div>
+                        </div>
 
+                        <div v-if="user.isOurs === 1 && contentModel.backlink_status === 'Live'" class="row">
+                            <div class="col-12">
+                                <div class="alert alert-primary" role="alert">
+                                    <i class="fas fa-info-circle"></i>
+                                    This article's backlink is already in 'Live' status, editing the status and content is not available.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>{{ $t('message.article.ec_in_title') }}</label>
@@ -570,7 +592,7 @@
                                     <select 
                                         v-model="contentModel.status"
                                         class="form-control"
-                                        :disabled="user.role_id === 15"
+                                        :disabled="user.role_id === 15 || user.isOurs === 1 && (contentModel.status === 'Content Validated' || contentModel.backlink_status === 'Live')"
                                         
                                         @change="checkStat($event)">
 
@@ -653,6 +675,7 @@
 
                                 <tiny-editor
                                     v-model="data"
+                                    :readonly="user.isOurs === 1 && (contentModel.status === 'Content Validated' || contentModel.backlink_status === 'Live')"
                                     ref="composeEditorArticle"
                                     editor-id="composeEditorArticle">
 
@@ -938,6 +961,8 @@
                     total_queue: 0,
                     total_in_writing: 0,
                     total_done: 0,
+                    total_validated: 0,
+                    total_validated: 0,
                     total_cancelled: 0,
                     total_issue: 0
                 },
@@ -1368,6 +1393,7 @@
                     this.statusSummary.num_done += parseInt(_status[index].num_done);
                     this.statusSummary.num_issue += parseInt(_status[index].num_issue);
                     this.statusSummary.num_canceled += parseInt(_status[index].num_canceled);
+                    this.statusSummary.num_canceled += parseInt(_status[index].num_canceled);
                 }
             },
 
@@ -1526,7 +1552,7 @@
 
             doUpdate(backlink, article){
 
-                console.log(article)
+                // console.log(article)
 
                 this.clearIssue();
 
@@ -1534,7 +1560,7 @@
                 this.data = article.content == null ? '':article.content;
                 this.contentModel.price = article.price == null ? '':article.price.price;
                 this.contentModel.id = article.id;
-                this.contentModel.seller_instruction = article.seller_instruction;
+                this.contentModel.seller_instruction = article.instruction;
                 this.contentModel.title = backlink == null ? '':backlink.title;
                 this.contentModel.anchor_text = backlink == null ? '':backlink.anchor_text;
                 this.contentModel.status = article.status_writer == null ? '':article.status_writer;

@@ -6,6 +6,7 @@
             :id="editorId"
             :value="value"
             :other_options="options"
+            :readonly="readonly"
 
             @editorChange="changeData"
             @editorInit="editorInit">
@@ -16,7 +17,17 @@
 
 <script>
 export default {
-    props: ['value', 'editorId'],
+    // props: ['value', 'editorId'],
+
+    props: {
+        value: '',
+        editorId: '',
+        readonly: {
+            type: Boolean,
+            default: false
+        }
+    },
+
     data() {
         return {
             editorData: '',

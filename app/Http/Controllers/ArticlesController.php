@@ -256,6 +256,7 @@ class ArticlesController extends Controller
             DB::raw('SUM(CASE WHEN article.status_writer is null and backlinks.status not in ("Issue", "Canceled") THEN 1 ELSE 0 END) AS total_queue'),
             DB::raw('SUM(CASE WHEN article.status_writer = "In Writing" THEN 1 ELSE 0 END) AS total_in_writing'),
             DB::raw('SUM(CASE WHEN article.status_writer = "Done" THEN 1 ELSE 0 END) AS total_done'),
+            DB::raw('SUM(CASE WHEN article.status_writer = "Content Validated" THEN 1 ELSE 0 END) AS total_validated'),
             DB::raw('SUM(CASE WHEN exists (select * from backlinks where article.id_backlink = backlinks.id and status = "Canceled" and backlinks.deleted_at is null) AND article.status_writer is null THEN 1 ELSE 0 END) AS total_cancelled'),
             DB::raw('SUM(CASE WHEN exists (select * from backlinks where article.id_backlink = backlinks.id and status = "Issue" and backlinks.deleted_at is null) AND article.status_writer is null OR article.status_writer = "Issue" THEN 1 ELSE 0 END) AS total_issue'),
         ];
@@ -403,8 +404,6 @@ class ArticlesController extends Controller
                     return response()->json(['message'=> 'Please provide meta description.'], 422);
                 } 
 
-                
-
                 // check if writer is external
                 if ($article->user->isOurs === 1) {
 
@@ -473,7 +472,9 @@ class ArticlesController extends Controller
         }
 
         if( $request->content['status'] == 'In Writing' ){
-            $backlink->update(['status' => 'Content In Writing']);
+            if ( $backlink->status != 'Live' ) {
+                $backlink->update(['status' => 'Content In Writing']);
+            }
         }
 
         if( $request->content['status'] == 'Re-edit' ){
@@ -489,18 +490,21 @@ class ArticlesController extends Controller
         }
 
         if( $request->content['status'] == 'Content Validated' ){
+            if ($backlink->status != 'Live') {
+                // update backlink status
+                $backlink->update(['status' => 'Content Done']);
 
-            // update backlink status
-            $backlink->update(['status' => 'Content Done']);
+                if ($backlink->article->status_writer !== 'Content Validated') {
+                    // notify the writer that the article has been validated
+                    if ($backlink->article->user) {
+                        $backlink->article->user->notify(new ArticleValidated($article));
+                    }
 
-            // notify the writer that the article has been validated
-            if ($backlink->article->user) {
-                $backlink->article->user->notify(new ArticleValidated($article));
+                    // notify the internal writers
+                    $internal_writers = User::whereIn('role_id', [13])->where('isOurs', 0)->where('status', 'active')->get();
+                    Notification::send($internal_writers, new ArticleValidated($article));
+                }
             }
-
-            // notify the internal writers 
-            $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
-            Notification::send($internal_writers, new ArticleValidated($article));
         }
 
         $backlink->update(['title' => $request->get('content')['title']]);

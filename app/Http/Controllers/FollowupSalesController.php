@@ -257,7 +257,7 @@ class FollowupSalesController extends Controller
                 }
 
                 if ($writer) {
-                    event(new BacklinkLiveWriterEvent($backlink, $writer));
+                    event(new BacklinkLiveWriterEvent($backlink->id, $writer));
                 }
             }
 
