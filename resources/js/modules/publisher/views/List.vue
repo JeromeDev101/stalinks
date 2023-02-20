@@ -1613,7 +1613,7 @@
                                                 clicking the 'Download CSV Template' button.
                                             </li>
                                             <li>
-                                                The maximum items for the file is 500.
+                                                The maximum items for the file is 200.
                                             </li>
                                             <li>
                                                 The price must be in USD.
@@ -1629,7 +1629,7 @@
                                                 to 'No' if only URL.
                                             </li>
                                             <li>
-                                               The file format must be CSV.
+                                                The file format must be CSV.
                                             </li>
                                         </ol>
                                     </div>

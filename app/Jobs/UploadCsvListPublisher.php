@@ -105,8 +105,8 @@ class UploadCsvListPublisher implements ShouldQueue
                 array_shift($this->records);
 
                 // check number of lines, must not exceed 500, if invalid throw error
-                if (count($this->records) > 500) {
-                    $message = "Invalid file: Please upload only 500 urls at a time. Number of urls in file: "
+                if (count($this->records) > 200) {
+                    $message = "Invalid file: Please upload only 200 urls at a time. Number of urls in file: "
                         . count($this->records);
 
                     $result = false;
