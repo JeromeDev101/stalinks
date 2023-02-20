@@ -83,8 +83,9 @@ class PublisherController extends Controller
 //        $data = $this->publisherRepository->importExcel($file);
 //        $data = $this->publisherRepository->importExcelTwo($request);
 
-        $path = $request->file('file')->getRealPath();
-        $records = array_map('str_getcsv', file($path));
+        // $path = $request->file('file')->getRealPath();
+        // $records = array_map('str_getcsv', file($path));
+        $records = $this->csvToArray($request->file);
 
         $log = CsvUploadLog::create([
             'user_id' => Auth::user()->id,
@@ -116,6 +117,26 @@ class PublisherController extends Controller
             'valid' => [],
             'invalid' => []
         ], 200);
+    }
+
+    private function csvToArray ($file, $delimiter = ',') {
+        if (($handle = fopen($file, 'r')) !== FALSE) {
+
+            $i = 0;
+            while (($lineArray = fgetcsv($handle, 4000, $delimiter, '"')) !== FALSE) {
+                if (count($lineArray) == 1 && is_null($lineArray[0])) {
+                    continue;
+                }
+                // remove white spaces and numeric white spaces
+                for ($j = 0; $j < count($lineArray); $j++) {
+                    $temp = trim($lineArray[$j]);
+                    $arr[$i][$j] = preg_replace("/[\xA0\xC2]/", "", $temp);
+                }
+                $i++;
+            }
+            fclose($handle);
+        }
+        return $arr;
     }
 
     public function viewCsvUploads (Request $request) {
