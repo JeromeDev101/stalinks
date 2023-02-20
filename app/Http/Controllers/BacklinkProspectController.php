@@ -117,86 +117,76 @@ class BacklinkProspectController extends Controller
 
     public function fetchBacklinkProspect(Request $request) {
 
-        // $json = file_get_contents('https://mad.apacaff.com/api/fetch-backlink-prospect-data');
-        // $obj = json_decode($json);
+        $curl = curl_init();
 
-        $blp = BacklinkProspect::all();
+        $link = 'https://mad.apacaff.com/api/fetch-backlink-prospect-data';
 
-        return $blp;
-        // $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $link,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                "cache-control: no-cache"
+            ),
+        ));
 
-        // $link = 'https://mad.apacaff.com/api/fetch-backlink-prospect-data';
-
-        // curl_setopt_array($curl, array(
-        //     CURLOPT_URL => $link,
-        //     CURLOPT_RETURNTRANSFER => true,
-        //     CURLOPT_TIMEOUT => 30,
-        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        //     CURLOPT_CUSTOMREQUEST => "GET",
-        //     CURLOPT_HTTPHEADER => array(
-        //         "cache-control: no-cache"
-        //     ),
-        // ));
-
-        // $response = curl_exec($curl);
-        // $err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
 
 
-        // curl_close($curl);
+        curl_close($curl);
 
-        // dd($response);
+        $response = json_decode($response, true);
 
-        // $response = json_decode($response, true);
+        $data = [];
+        $result = [];
 
-        // $data = [];
-        // $result = [];
+        if(isset($response['data']) && count($response['data']) > 0) {
+            foreach($response['data'] as $res) {
+                $data[] = $res['ref_domain'];
 
-        
+                $referring_domain = $res['ref_domain'];
+                $ur = $res['ur'];
+                $dr = $res['dr'];
+                $backlinks = $res['backlinks'];
+                $org_kw = $res['org_keywords'];
+                $org_traffic = $res['org_traffic'];
+                $ref_domain = $res['ref_domains'];
+                // $category = $res['ref_domain'];
+                // $status = $res['ref_domain'];
+                $note = $res['notes'];
+                $date_created = $res['created_at'];
 
-        // if(isset($response['data']) && count($response['data']) > 0) {
-        //     foreach($response['data'] as $res) {
-        //         $data[] = $res['ref_domain'];
+                if( trim($referring_domain, " ") != '' ){
 
-        //         $referring_domain = $res['ref_domain'];
-        //         $ur = $res['ur'];
-        //         $dr = $res['dr'];
-        //         $backlinks = $res['backlinks'];
-        //         $org_kw = $res['org_keywords'];
-        //         $org_traffic = $res['org_traffic'];
-        //         $ref_domain = $res['ref_domains'];
-        //         // $category = $res['ref_domain'];
-        //         // $status = $res['ref_domain'];
-        //         $note = $res['notes'];
-        //         $date_created = $res['created_at'];
+                    if(isset($res['status_dropdown']['name']) && strtolower($res['status_dropdown']['name']) == 'new') {
+                        $isRefDomainExist = $this->checkRefDomainExist($referring_domain);
 
-        //         if( trim($referring_domain, " ") != '' ){
+                        if(!$isRefDomainExist) {
+                            $blp = BacklinkProspect::create([
+                                'referring_domain' => $referring_domain,
+                                'ur' => $ur,
+                                'dr' => $dr,
+                                'backlinks' => $backlinks,
+                                'ref_domain_ahref' => $ref_domain,
+                                'org_kw' => $org_kw,
+                                'org_traffic' => $org_traffic,
+                                'category' => isset($res['category_dropdown']['name']) ? $res['category_dropdown']['name']:null,
+                                'status' => $res['status_dropdown']['name'],
+                                'note' => $note,
+                                'date_created' => $date_created,
+                            ]);
 
-        //             if(isset($res['status_dropdown']['name']) && strtolower($res['status_dropdown']['name']) == 'new') {
-        //                 $isRefDomainExist = $this->checkRefDomainExist($referring_domain);
+                            $result[] = $blp;
+                        }
+                    }
+                }
+            }
+        }
 
-        //                 if(!$isRefDomainExist) {
-        //                     $blp = BacklinkProspect::create([
-        //                         'referring_domain' => $referring_domain,
-        //                         'ur' => $ur,
-        //                         'dr' => $dr,
-        //                         'backlinks' => $backlinks,
-        //                         'ref_domain_ahref' => $ref_domain,
-        //                         'org_kw' => $org_kw,
-        //                         'org_traffic' => $org_traffic,
-        //                         'category' => isset($res['category_dropdown']['name']) ? $res['category_dropdown']['name']:null,
-        //                         'status' => $res['status_dropdown']['name'],
-        //                         'note' => $note,
-        //                         'date_created' => $date_created,
-        //                     ]);
-
-        //                     $result[] = $blp;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // return $result;
+        return $result;
     }
 
     public function importCsv(Request $request) {
