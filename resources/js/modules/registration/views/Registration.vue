@@ -157,7 +157,7 @@
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
                                         <span class="icon-box-wrapper">
-				                            <i aria-hidden="true" class="fas fa-trophy"></i>
+                                            <i aria-hidden="true" class="fas fa-trophy"></i>
                                         </span>
                                     </div>
 
@@ -183,7 +183,7 @@
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
                                         <span class="icon-box-wrapper">
-				                            <i aria-hidden="true" class="fas fa-dollar-sign"></i>
+                                            <i aria-hidden="true" class="fas fa-dollar-sign"></i>
                                         </span>
                                     </div>
 
@@ -209,7 +209,7 @@
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
                                         <span class="icon-box-wrapper">
-				                            <i aria-hidden="true" class="fas fa-lock"></i>
+                                            <i aria-hidden="true" class="fas fa-lock"></i>
                                         </span>
                                     </div>
 
@@ -235,7 +235,7 @@
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
                                         <span class="icon-box-wrapper">
-				                            <i aria-hidden="true" class="fas fa-link"></i>
+                                            <i aria-hidden="true" class="fas fa-link"></i>
                                         </span>
                                     </div>
 
@@ -261,7 +261,7 @@
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
                                         <span class="icon-box-wrapper">
-				                            <i aria-hidden="true" class="fas fa-globe"></i>
+                                            <i aria-hidden="true" class="fas fa-globe"></i>
                                         </span>
                                     </div>
 
@@ -587,6 +587,17 @@
 
             this.RegisterModel.affiliate_code = this.$route.query.code ? this.$route.query.code : ''
             this.isAffiliateCodeHidden = !!this.$route.query.code
+
+            if (this.$route.query.type && this.$route.query.code) {
+                if (this.$route.query.type === 'Buyer') {
+                    window.dataLayer = window.dataLayer || [];
+                    window.dataLayer.push({
+                        'event': 'buyerLanded',
+                        'affiliateCode': this.$route.query.code,
+                        'pageUrl': window.location.href
+                    });
+                }
+            }
         },
 
         computed: {
@@ -624,6 +635,15 @@
                     this.isEnableSubmit = true;
                     this.BtnAccept = false;
 
+                    if (this.$route.query.type && this.$route.query.code) {
+                        if (this.$route.query.type === 'Buyer') {
+                            this.$router.push({ path: '/registration-successful', query: { type: 'Buyer', code: this.$route.query.code } })
+                        } else {
+                            this.$router.push({ path: '/registration-successful'})
+                        }
+                    } else {
+                        this.$router.push({ path: '/registration-successful'})
+                    }
                 }
             },
 

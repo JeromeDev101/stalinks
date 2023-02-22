@@ -32,6 +32,7 @@ import BillingWriter from '@/modules/billing/writer/views/List.vue'
 import Registration from '@/modules/registration/views/List.vue'
 import ForgotPassword from '@/modules/registration/views/ForgotPassword.vue'
 import RegistrationPage from '@/modules/registration/views/Registration.vue'
+import RegistrationSuccess from '@/modules/registration/views/RegistrationSuccess.vue'
 import Verification from '@/modules/registration/views/Verification.vue'
 import OrderConfirmation from '@/modules/registration/views/order_verification.vue'
 import CancelOrderConfirmation from '@/modules/registration/views/cancel_order_verification.vue'
@@ -113,6 +114,11 @@ const routes = [
         path : '/registration',
         name : 'registration',
         component : RegistrationPage,
+    },
+    {
+        path : '/registration-successful',
+        name : 'Registration Successful',
+        component : RegistrationSuccess,
     },
     {
         path : '/forgot-password',
