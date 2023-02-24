@@ -227,20 +227,6 @@ class FollowupSalesController extends Controller
             }
 
             if ($backlink->status !== 'Live') {
-                // notify buyer
-                event(new BacklinkLiveEvent($backlink, $backlink->user));
-
-                // notify seller
-                $seller = null;
-
-                if ($backlink->publisher) {
-                    $seller = $backlink->publisher->user ?: null;
-                }
-
-                if ($seller) {
-                    event(new BacklinkLiveSellerEvent($backlink, $seller));
-                }
-
                 // notify writer
                 $writer = null;
 
@@ -254,6 +240,20 @@ class FollowupSalesController extends Controller
                     } else {
                         return response()->json(['message' => 'Article is not yet finish.' ], 422);
                     }
+                }
+
+                // notify buyer
+                event(new BacklinkLiveEvent($backlink->unsetRelation('article'), $backlink->user));
+
+                // notify seller
+                $seller = null;
+
+                if ($backlink->publisher) {
+                    $seller = $backlink->publisher->user ?: null;
+                }
+
+                if ($seller) {
+                    event(new BacklinkLiveSellerEvent($backlink, $seller));
                 }
 
                 if ($writer) {
@@ -296,7 +296,7 @@ class FollowupSalesController extends Controller
 
         if ($backlink->publisher) {
             if ($backlink->publisher->user_id) {
-                event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
+                event(new BacklinkStatusChangedEvent($backlink->unsetRelation('article'), $backlink->publisher->user));
             }
         }
 
@@ -312,7 +312,7 @@ class FollowupSalesController extends Controller
                 
                 $backlink->article->user->notify(new NotifyWriterCancelIssueOrder($article));
             }
-            $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
+            $internal_writers = User::whereIn('role_id', [13])->where('isOurs', 0)->where('status', 'active')->get();
 
             Notification::send($internal_writers, new NotifyWriterCancelIssueOrder($article));
         }
