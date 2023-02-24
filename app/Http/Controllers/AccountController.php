@@ -29,9 +29,11 @@ use App\Models\Backlink;
 use App\Models\PaymentType;
 use App\Models\UsersPaymentType;
 use App\Models\WalletTransaction;
+use App\Notifications\BuyerRegistered;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
@@ -766,8 +768,19 @@ class AccountController extends Controller
         // $email = new SendEmailVerification( $request->email, $request->name, $verification_code );
         // $email->sendEmail();
 
+        // send notification to qc when buyer registers
+        if ($input['type'] === 'Buyer') {
+            $this->sendBuyerRegisteredNotification($input['username']);
+        }
+
         Registration::create($input);
         return response()->json(['success' => true], 200);
+    }
+
+    private function sendBuyerRegisteredNotification ($username) {
+        // get qc
+        $qc = User::where('role_id', 8)->where('status', 'active')->where('isOurs', 0)->get();
+        Notification::send($qc, new BuyerRegistered($username));
     }
 
     public function checkVerificationCode(Request $request) {
