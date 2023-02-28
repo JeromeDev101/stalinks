@@ -11,16 +11,16 @@ class NotifyInternalWriterToValidate extends Notification
 {
     use Queueable;
 
-    protected $article;
+    protected $articleId;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($article)
+    public function __construct($articleId)
     {
-        $this->article = $article;
+        $this->articleId = $articleId;
     }
 
     /**
@@ -57,7 +57,7 @@ class NotifyInternalWriterToValidate extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => 'You have a (Article ID# ' . $this->article->id . ') that need to validated.'
+            'message' => 'New article content to be validated (ID# ' . $this->articleId . ').'
         ];
     }
 }

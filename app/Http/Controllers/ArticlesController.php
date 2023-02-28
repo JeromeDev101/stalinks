@@ -461,9 +461,9 @@ class ArticlesController extends Controller
 
                         // notify internal writer to validate the article
                         $_article = Article::where('id_backlink', $backlink->id)->first();
-                        $internal_writers = User::whereIn('role_id', [4])->where('isOurs', 0)->where('status', 'active')->get();
+                        $internal_writers = User::whereIn('role_id', [13])->where('isOurs', 0)->where('status', 'active')->get();
 
-                        Notification::send($internal_writers, new NotifyInternalWriterToValidate($_article));
+                        Notification::send($internal_writers, new NotifyInternalWriterToValidate($_article->id));
 
                     }
                 }
