@@ -1018,6 +1018,8 @@ class AccountController extends Controller
                     ->where(function($query) use ($role_id, $request) {
                         if($request->role == 'Buyer') {
                             $query->whereIn('role_id', [14, 8]);
+                        } if($request->role == 'Seller') {
+                            $query->whereIn('role_id', [15, 8]);
                         } else{
                             $query->where('role_id', $role_id);
                         }
