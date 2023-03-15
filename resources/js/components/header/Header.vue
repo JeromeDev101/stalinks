@@ -670,7 +670,7 @@
                             <table id="all-notifications-table" class="table table-hover table-bordered">
                                 <tbody>
                                 <tr v-for="(notification, index) in allNotifications.data" :key="index">
-                                    <td>
+                                    <td style="word-break: break-all !important">
                                         <span v-if="notification.data">
                                             {{ JSON.parse(notification.data).message }}
                                         </span>
