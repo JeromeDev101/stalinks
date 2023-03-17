@@ -335,7 +335,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            ID:
+                                            STALINKS ID 
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
