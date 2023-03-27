@@ -116,6 +116,7 @@ class GenerateBestPrice implements ShouldQueue
 
                             $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
+                                ->whereNotIn('qc_validation', ['no', 'No'])
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('user.registration.is_recommended', 'yes')
                                 ->whereIn('inc_article', ['Yes', 'yes'])
@@ -132,6 +133,7 @@ class GenerateBestPrice implements ShouldQueue
 
                                 $temp = $publisher
                                     ->where('price', $bestPrice->price)
+                                    ->whereNotIn('qc_validation', ['no', 'No'])
                                     ->where('user.registration.account_validation', '!=', 'invalid')
                                     ->whereIn('inc_article', ['Yes', 'yes'])
                                     ->sortBy('created_at')
@@ -145,6 +147,7 @@ class GenerateBestPrice implements ShouldQueue
                             // checking if has a recommended seller
                             $bPrice = $publisher
                                 ->where('price', $bestPrice->price)
+                                ->whereNotIn('qc_validation', ['no', 'No'])
                                 ->where('user.registration.account_validation', '!=', 'invalid')
                                 ->where('user.registration.is_recommended', 'yes')
                                 ->sortBy('created_at')
@@ -153,6 +156,7 @@ class GenerateBestPrice implements ShouldQueue
                             if(!$bPrice) {
                                 $bestPrice = $publisher
                                     ->where('price', $bestPrice->price)
+                                    ->whereNotIn('qc_validation', ['no', 'No'])
                                     ->where('user.registration.account_validation', '!=', 'invalid')
                                     ->sortBy('created_at')
                                     ->first();
