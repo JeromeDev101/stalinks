@@ -134,6 +134,7 @@
                 @slot('main')
                     <p style="margin: 0;">Greetings {{ $user->name }},</p> <br />
                     <p style="margin: 0;">You have completed the order(s) on {{ Carbon\Carbon::parse(Carbon\Carbon::now())->format('F j, Y') }}.</p> <br />
+                    <p style="margin: 0;">You will get paid automatically within 48 hours. You will be notified when you already received your payment.</p> <br />
                     <p style="margin: 0;">Thank you for choosing StaLinks as media selling backlinks!.</p> <br />
                     <p style="margin: 0;">We hope you are satisfied for using our platform.</p> <br />
                     <p style="margin: 0;">Feel free to give us feedback.</p>
