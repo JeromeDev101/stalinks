@@ -35,23 +35,50 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_search_url') }}</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           v-model="filterModel.search"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           :placeholder="$t('message.list_backlinks.type')">
+                                    <input
+                                        v-model="filterModel.search"
+                                        name=""
+                                        type="text"
+                                        class="form-control"
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.list_backlinks.type')">
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_status_purchased') }}</label>
-                                    <v-select multiple
-                                              v-model="filterModel.status_purchase"
-                                              :options="['New', 'Interested', 'Not interested', 'Purchased']"
-                                              :searchable="false"
-                                              :placeholder="$t('message.list_backlinks.all')"/>
+
+                                    <div v-if="user.role_id == 5 && (user.registration != null && user.registration.is_sub_account != 1)" class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button
+                                                class="btn btn-outline-secondary"
+                                                type="button"
+                                                @click="buttonState.status_purchase = buttonState.status_purchase === 'User' ? 'Team' : 'User'">
+
+                                                {{ buttonState.status_purchase }}
+                                            </button>
+                                        </div>
+
+                                        <v-select
+                                            v-model="filterModel.status_purchase"
+                                            multiple
+                                            class="style-chooser-group style-chooser"
+                                            :options="['New', 'Interested', 'Not interested', 'Purchased']"
+                                            :searchable="false"
+                                            :placeholder="$t('message.list_backlinks.all')"/>
+                                    </div>
+
+                                    <div v-else class="input-group mb-3">
+                                        <v-select
+                                            v-model="filterModel.status_purchase"
+                                            multiple
+                                            class="style-chooser-group style-chooser"
+                                            :options="['New', 'Interested', 'Not interested', 'Purchased']"
+                                            :searchable="false"
+                                            :placeholder="$t('message.list_backlinks.all')"/>
+                                    </div>
+
                                     <!-- <v-select multiple v-model="filterModel.status_purchase" :options="['New', 'Interested', 'Not interested', 'Purchased']" id="custom" ></v-select> -->
                                 </div>
                             </div>
@@ -63,6 +90,7 @@
                                         v-model="filterModel.language_id"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="listLanguages.data"
@@ -77,6 +105,7 @@
                                         v-model="filterModel.continent_id"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="listContinent.data"
@@ -91,6 +120,7 @@
                                         v-model="filterModel.country_id"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.list_backlinks.all')"
                                         :searchable="true"
                                         :options="filterCountrySelect"
@@ -142,11 +172,13 @@
                                             {{ option }}
                                         </option>
                                     </select> -->
-                                    <v-select multiple
-                                              v-model="filterModel.topic"
-                                              :options="topic"
-                                              :searchable="false"
-                                              :placeholder="$t('message.list_backlinks.all')"/>
+                                    <v-select
+                                        multiple
+                                        class="style-chooser"
+                                        v-model="filterModel.topic"
+                                        :options="topic"
+                                        :searchable="false"
+                                        :placeholder="$t('message.list_backlinks.all')"/>
                                 </div>
                             </div>
 
@@ -157,6 +189,7 @@
                                         v-model="filterModel.domain_zone"
                                         multiple
                                         label="name"
+                                        class="style-chooser"
                                         :placeholder="$t('message.list_backlinks.all')"
                                         :options="listDomainZones.data"
                                         :searchable="true"
@@ -189,11 +222,11 @@
                                             </button>
                                         </div>
                                         <input type="text"
-                                               class="form-control"
-                                               :placeholder="$t('message.list_backlinks.type')"
-                                               aria-label=""
-                                               aria-describedby="basic-addon1"
-                                               v-model="filterModel.ur">
+                                            class="form-control"
+                                            :placeholder="$t('message.list_backlinks.type')"
+                                            aria-label=""
+                                            aria-describedby="basic-addon1"
+                                            v-model="filterModel.ur">
                                     </div>
                                 </div>
                             </div>
@@ -301,6 +334,7 @@
                                     <v-select
                                         v-model="filterModel.code"
                                         multiple
+                                        class="style-chooser"
                                         :placeholder="$t('message.list_backlinks.all')"
                                         :options="listCode"
                                         :searchable="false"
@@ -311,11 +345,13 @@
                             <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_price_basis') }}</label>
-                                    <v-select multiple
-                                              v-model="filterModel.price_basis"
-                                              :options="['Good', 'Average', 'High']"
-                                              :searchable="false"
-                                              :placeholder="$t('message.list_backlinks.all')"/>
+                                    <v-select
+                                        v-model="filterModel.price_basis"
+                                        multiple
+                                        class="style-chooser"
+                                        :options="['Good', 'Average', 'High']"
+                                        :searchable="false"
+                                        :placeholder="$t('message.list_backlinks.all')"/>
                                     <!--                                <select name="" class="form-control" v-model="filterModel.price_basis">-->
                                     <!--                                    <option value="">All</option>-->
                                     <!--                                    <option value="Good">Good</option>-->
@@ -648,7 +684,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>
-                                        {{ $t('message.list_backlinks.t_prices') }} 
+                                        {{ $t('message.list_backlinks.t_prices') }}
                                         <!-- <span v-if="isBuyerHasDiscount" class="text-danger">( 15% Off )</span> -->
                                     </label>
 
@@ -1230,7 +1266,8 @@ export default {
                 dr : 'Above',
                 org_kw : 'Above',
                 org_traffic : 'Above',
-                price : 'Above'
+                price : 'Above',
+                status_purchase: 'User',
             },
             searchLoading : false,
             dataTable : null,
@@ -1755,7 +1792,7 @@ export default {
     },
 
     methods : {
-        // disabled these function 
+        // disabled these function
         checkBuyerDiscount() {
             let user = this.user;
 
@@ -1916,6 +1953,7 @@ export default {
                     search : this.filterModel.search,
                     language_id : this.filterModel.language_id,
                     status_purchase : this.filterModel.status_purchase,
+                    status_purchase_mode : this.buttonState.status_purchase,
                     seller : this.filterModel.seller,
                     code : this.filterModel.code,
                     paginate : this.filterModel.paginate,
@@ -2097,6 +2135,7 @@ export default {
                     search : this.filterModel.search,
                     language_id : this.filterModel.language_id,
                     status_purchase : this.filterModel.status_purchase,
+                    status_purchase_mode : this.buttonState.status_purchase,
                     seller : this.filterModel.seller,
                     code : this.filterModel.code,
                     paginate : this.filterModel.paginate,
@@ -2460,3 +2499,12 @@ export default {
     },
 }
 </script>
+
+<style>
+    .style-chooser-group {
+        flex: 1 1 auto;
+        width: 1%;
+        min-width: 0;
+        margin-bottom: 0;
+    }
+</style>

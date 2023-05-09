@@ -69,9 +69,21 @@ class BuyController extends Controller
             ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
             ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
             ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-            ->leftJoin('buyer_purchased', function ($q) use ($user) {
-                $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+            ->leftJoin('buyer_purchased', function ($q) use ($user, $filter) {
+
+                if ($filter['status_purchase_mode'] === 'Team') {
+                    $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
+                    $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+                        ->where(function($query) use ($user, $sub_buyer_ids) {
+                            $query->where('buyer_purchased.user_id_buyer', $user->id)
+                            ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+                        });
+                } else {
+                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                     ->where('buyer_purchased.user_id_buyer', $user->id);
+                }
             })
             ->whereNotNull('users.id') // to remove all seller's URL that deleted
             ->where('registration.account_validation', 'valid')
@@ -288,6 +300,10 @@ class BuyController extends Controller
             $list->orderBy('created_at', 'desc');
         }
 
+        // $sql = str_replace_array('?', $list->getBindings(), $list->toSql());
+
+        // dd($sql);
+
         if (isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All') {
             $result = $list->orderBy('id', 'desc')->get();
         } else {
@@ -453,7 +469,7 @@ class BuyController extends Controller
         }
 
         // add survey code
-        
+
         if ($user->isOurs === 1 && $user->registration->survey_code === null) {
             $user->registration->update([
                 'survey_code' => md5(uniqid(rand(), true))

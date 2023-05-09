@@ -396,9 +396,18 @@ class DashboardController extends Controller
             * Mar 03, 2021 - Adrian
             */
 
-            $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
-                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+            // for sub buyer
+            if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
+                $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id);
+            } else {
+                // $buyer_purchased = $buyer_purchased->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+                // ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
 
+                $buyer_purchased = $buyer_purchased->where(function($query) use ($sub_buyer_ids) {
+                            $query->where('buyer_purchased.user_id_buyer', Auth::user()->id)
+                            ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+                        });
+            }
             // $buyer_purchased = $buyer_purchased->where(function ($query) use ($user_id, $sub_buyer_ids){
             //     $query->where('buyer_purchased.user_id_buyer', $user_id)
             //         ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
@@ -416,6 +425,9 @@ class DashboardController extends Controller
         $buyer_purchased = $buyer_purchased->groupBy('users.username', 'users.id')
             ->orderBy('users.username', 'asc')
             ->get();
+
+        // $sql = str_replace_array('?', $buyer_purchased->getBindings(), $buyer_purchased->toSql());
+        // dd($sql);
 
         $list = [];
         foreach ($buyer_purchased as $purchased) {
