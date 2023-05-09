@@ -378,12 +378,17 @@ class DashboardController extends Controller
         $buyer_purchased = BuyerPurchased::select($columns)
             ->leftJoin('users', 'buyer_purchased.user_id_buyer', '=', 'users.id')
             ->leftJoin('publisher', 'buyer_purchased.publisher_id', '=', 'publisher.id')
-            ->leftJoin('backlinks', 'publisher.id', '=', 'backlinks.publisher_id')
-            ->whereNull('backlinks.deleted_at')
+            ->leftJoin('users as pub_user', 'publisher.user_id', '=', 'pub_user.id')
+            ->leftJoin('registration', 'pub_user.email', '=', 'registration.email')
+            // ->leftJoin('backlinks', 'publisher.id', '=', 'backlinks.publisher_id')
+            // ->whereNull('backlinks.deleted_at')
             ->whereNull('publisher.deleted_at')
-            ->where('publisher.valid', '=', 'valid')
-            ->where('publisher.ur', '!=', '0')
-            ->where('publisher.dr', '!=', '0');
+
+            ->whereNotNull('pub_user.id')
+            ->where('registration.account_validation', 'valid')
+            ->where('publisher.valid', 'valid')
+            ->where('publisher.qc_validation', 'yes')
+            ->whereNotNull('publisher.href_fetched_at');
 
         if (Auth::user()->role_id == 5 && Auth::user()->isOurs == 1 && !empty($sub_buyer_ids)) {
             /*
@@ -398,7 +403,9 @@ class DashboardController extends Controller
             //     $query->where('buyer_purchased.user_id_buyer', $user_id)
             //         ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
             // });
+            // dd($sub_buyer_ids);
         }
+
 
         // for affiliates, only users(buyers) under them
         if (Auth::user()->isOurs == 1 && Auth::user()->role_id == 11) {
