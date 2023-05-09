@@ -71,15 +71,20 @@ class BuyController extends Controller
             ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
             ->leftJoin('buyer_purchased', function ($q) use ($user, $filter) {
 
-                if ($filter['status_purchase_mode'] === 'Team') {
-                    $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
-                    $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+                if (isset($filter['status_purchase_mode']) && !empty($filter['status_purchase_mode'])) {
+                    if ($filter['status_purchase_mode'] === 'Team') {
+                        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
+                        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
-                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where(function($query) use ($user, $sub_buyer_ids) {
-                            $query->where('buyer_purchased.user_id_buyer', $user->id)
-                            ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-                        });
+                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+                            ->where(function($query) use ($user, $sub_buyer_ids) {
+                                $query->where('buyer_purchased.user_id_buyer', $user->id)
+                                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+                            });
+                    } else {
+                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+                        ->where('buyer_purchased.user_id_buyer', $user->id);
+                    }
                 } else {
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
                     ->where('buyer_purchased.user_id_buyer', $user->id);
