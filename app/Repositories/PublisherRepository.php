@@ -339,169 +339,179 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         }
     }
 
-    /**
-     *
-     * get code combination of list publisher
-     *
-     * @param integer $a
-     * @param integer $b
-     * @param string  $type
-     *
-     * @return string
-     */
-    private function getCodeCombination($a, $b, $type)
+    private function checkCombination($val) {
+        $combination = [
+            'AAA' => 'A',
+            'AAB' => 'A',
+            'AAC' => 'B',
+            'AAD' => 'C',
+            'AAE' => 'B',
+
+            'BBA' => 'A',
+            'BBB' => 'B',
+            'BBC' => 'B',
+            'BBD' => 'C',
+            'BBE' => 'D',
+
+            'CCA' => 'B',
+            'CCB' => 'C',
+            'CCC' => 'C',
+            'CCD' => 'D',
+            'CCE' => 'E',
+
+            'DDA' => 'D',
+            'DDB' => 'D',
+            'DDC' => 'E',
+            'DDD' => 'E',
+            'DDE' => 'E',
+
+            'EEA' => 'E',
+            'EEB' => 'E',
+            'EEC' => 'E',
+            'EED' => 'E',
+            'EEE' => 'E',
+
+            'BAA' => 'A',
+            'BAB' => 'A',
+            'BAC' => 'B',
+            'BAD' => 'B',
+
+            'BCC' => 'B',
+            'BCD' => 'C',
+            'BCE' => 'E',
+
+            'BDC' => 'C',
+            'BDD' => 'D',
+            'BDE' => 'E',
+            'BEE' => 'E',
+
+            'CAC' => 'D',
+            'CAD' => 'E',
+
+            'CBC' => 'D',
+            'CBB' => 'C',
+            'CBD' => 'E',
+
+            'CDD' => 'D',
+            'CEE' => 'E',
+
+            'DAD' => 'D',
+            'DBC' => 'D',
+            'DCA' => 'D',
+            'DCB' => 'D',
+            'DCC' => 'E'
+        ];
+
+        if(array_key_exists($val , $combination)) {
+            return $combination[$val];
+        } else {
+            return 'E';
+        }
+    }
+
+    private function getCodeCombination( $a , $b, $type )
     {
-        switch ($type) {
+
+        switch ( $type ) {
+
             case "value1":
+                $val = 'E';
+                $comb1 = ''; // UR
+                $comb2 = ''; // UR
+                $comb3 = ''; // Condition 2
+
+                // UR
+                if($a >= 50 && $a <= 100) {
+                    $comb1 = 'A';
+                } else if($a >= 26 && $a <= 49) {
+                    $comb1 = 'B';
+                } else if($a >= 10 && $a <= 25) {
+                    $comb1 = 'C';
+                } else if($a >= 6 && $a <= 9) {
+                    $comb1 = 'D';
+                } else if($a >= 0 && $a <= 5) {
+                    $comb1 = 'E';
+                }
+
+                // DR
+                if($b >= 50 && $b <= 100) {
+                    $comb2 = 'A';
+                } else if($b >= 26 && $b <= 49) {
+                    $comb2 = 'B';
+                } else if($b >= 10 && $b <= 25) {
+                    $comb2 = 'C';
+                } else if($b >= 6 && $b <= 9) {
+                    $comb2 = 'D';
+                } else if($b == 0 && $b <= 5) {
+                    $comb2 = 'E';
+                }
+
                 $score = $b - $a;
-
-                // ur = $a
-                // dr = $b
-
-                $val = '';
-
-                if (($a >= 0 && $a <= 9) || ($b >= 0 && $b <= 9)) {
-                    $val = 'E';
-
-                    return $val;
+                //condition 2
+                if($score >= 0 && $score <= 7) {
+                    $comb3 = 'A';
+                } else if($score >= 8 && $score <= 15) {
+                    $comb3 = 'B';
+                } else if( ($score >= 16 && $score <= 21) || ($score >= -5 && $score <= -1) ) {
+                    $comb3 = 'C';
+                } else if( ($score >= 22 ) || ($score >= -10 && $score <= -6) ) {
+                    $comb3 = 'D';
+                } else if ($score <= -11){
+                    $comb3 = 'E';
                 }
 
-                if (($a >= 10 && $a <= 100) && ($b >= 10 && $b <= 19)) {
-                    if ($score >= -9 && $score <= 9) {
-                        $val = 'D';
-                    } else {
-                        $val = 'E';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 10 && $a <= 19) && ($b >= 20 && $b <= 100)) {
-                    if ($score >= 1 && $score <= 15) {
-                        $val = 'D';
-                    } else {
-                        $val = 'E';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 20 && $a <= 100) && ($b >= 20 && $b <= 34)) {
-                    if ($score >= -15 && $score <= -1) {
-                        $val = 'D';
-                    } else if ($score <= -16) {
-                        $val = 'E';
-                    } else {
-                        $val = 'C';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 20 && $a <= 34) && ($b >= 35 && $b <= 100)) {
-                    if ($score >= 1 && $score <= 16) {
-                        $val = 'B';
-                    } else {
-                        $val = 'C';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 35 && $a <= 49) && ($b >= 35 && $b <= 49)) {
-                    if ($score >= -9 && $score <= 9) {
-                        $val = 'B';
-                    } else {
-                        $val = 'C';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 50 && $a <= 100) && ($b >= 35 && $b <= 49)) {
-                    if ($score >= -15 && $score <= -5) {
-                        $val = 'D';
-                    } else if ($score <= -16) {
-                        $val = 'E';
-                    } else {
-                        $val = 'A';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 35 && $a <= 49) && ($b >= 50 && $b <= 100)) {
-                    if ($score >= 1 && $score <= 5) {
-                        $val = 'A';
-                    } else {
-                        $val = 'B';
-                    }
-
-                    return $val;
-                }
-
-                if (($a >= 50 && $a <= 100) && ($b >= 50 && $b <= 100)) {
-                    if ($score >= -5 && $score <= 15) {
-                        $val = 'A';
-                    } else {
-                        $val = 'B';
-                    }
-
-                    return $val;
-                }
-
+                $val = $this->checkCombination($comb1.$comb2.$comb3);
+                
                 return $val;
 
             case "value2":
-                if ($a == 0) {
-                    return '';
-                }
-                $score = number_format(floatVal(divnum($a, $b)), 2, '.', '');
+
                 $val = '';
-                if ($score >= 1 && $score < 3) {
+
+                if( $a == 0 || $b == 0){
+                    $score = 0;
                     $val = 'A';
-                } else if ($score >= 3 && $score < 8) {
-                    $val = 'C';
-                } else if ($score >= 8 && $score < 16) {
-                    $val = 'D';
-                } else if ($score >= 16) {
-                    $val = 'E';
+                }else{
+                    $score = number_format( floatVal($a / $b) , 2, '.', '');
                 }
 
+                if( $score >= 0.99 && $score < 3){  $val = 'A'; }
+                else if( $score >= 3 && $score < 8){ $val = 'C'; }
+                else if( $score >= 8 && $score < 16){ $val = 'D'; }
+                else if( $score >= 16 || $score < 0.99 ){ $val = 'E'; }
+
                 return $val;
+
             case "value3":
+
                 $val = '';
-                if ($a >= 1000) {
-                    $val = 'A';
-                } else if ($a >= 500 && $a < 1000) {
-                    $val = 'B';
-                } else if ($a >= 100 && $a < 500) {
-                    $val = 'C';
-                } else if ($a >= 50 && $a < 100) {
-                    $val = 'D';
-                } else if ($a < 50) {
-                    $val = 'E';
-                }
+
+                if( $a >= 500){ $val = 'A'; }
+                else if( $a >= 200 && $a < 500){ $val = 'B'; }
+                else if( $a >= 100 && $a < 200){ $val = 'C'; }
+                else if( $a >= 50 && $a < 100){ $val = 'D'; }
+                else if( $a < 50 ){ $val = 'E'; }
 
                 return $val;
+
             case "value4":
+
                 $val = '';
-                if ($a >= 10000) {
-                    $val = 'A';
-                } else if ($a >= 5000 && $a < 10000) {
-                    $val = 'B';
-                } else if ($a >= 1000 && $a < 5000) {
-                    $val = 'C';
-                } else if ($a >= 500 && $a < 1000) {
-                    $val = 'D';
-                } else if ($a < 500) {
-                    $val = 'E';
-                }
+
+                if( $a >= 10000){ $val = 'A'; }
+                else if( $a >= 5000 && $a < 10000){ $val = 'B'; }
+                else if( $a >= 1000 && $a < 5000){ $val = 'C'; }
+                else if( $a >= 500 && $a < 1000){ $val = 'D'; }
+                else if( $a < 500 ){ $val = 'E'; }
 
                 return $val;
+
             default:
+
                 return '';
+
         }
+
     }
 
     public function importExcelTwo ($request) {
