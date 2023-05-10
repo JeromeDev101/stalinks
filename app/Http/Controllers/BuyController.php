@@ -73,12 +73,23 @@ class BuyController extends Controller
 
                 if (isset($filter['status_purchase_mode']) && !empty($filter['status_purchase_mode'])) {
                     if ($filter['status_purchase_mode'] === 'Team') {
-                        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user->id)->pluck('email');
+                        $user_id = $user->id;
+
+                        // check if sub account
+                        $registered = Registration::where('email', Auth::user()->email)->first();
+                        if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
+                            if (isset($registered->team_in_charge)) {
+                                $user_model = User::where('id', $registered->team_in_charge)->first();
+                                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+                            }
+                        }
+
+                        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
                         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
                         $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                            ->where(function($query) use ($user, $sub_buyer_ids) {
-                                $query->where('buyer_purchased.user_id_buyer', $user->id)
+                            ->where(function($query) use ($user_id, $sub_buyer_ids) {
+                                $query->where('buyer_purchased.user_id_buyer', $user_id)
                                 ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
                             });
                     } else {

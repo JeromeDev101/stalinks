@@ -49,7 +49,7 @@
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_status_purchased') }}</label>
 
-                                    <div v-if="user.role_id == 5 && (user.registration != null && user.registration.is_sub_account != 1)" class="input-group mb-3">
+                                    <div v-if="(user.role_id == 5 && user.sub_buyers_count > 0) || (user.role_id == 5 && (user.registration != null && user.registration.is_sub_account == 1))" class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <button
                                                 class="btn btn-outline-secondary"
