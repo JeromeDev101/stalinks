@@ -472,13 +472,15 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                     $score = 0;
                     $val = 'A';
                 }else{
-                    $score = number_format( floatVal($a / $b) , 2, '.', '');
+                    $score = number_format( floatVal($a / $b) , 0, '.', '');
                 }
 
-                if( $score >= 0.99 && $score < 3){  $val = 'A'; }
-                else if( $score >= 3 && $score < 8){ $val = 'C'; }
-                else if( $score >= 8 && $score < 16){ $val = 'D'; }
-                else if( $score >= 16 || $score < 0.99 ){ $val = 'E'; }
+                if( $score >= 0.99 && $score <= 5){  $val = 'A'; }
+                else if( $score >= 6 && $score <= 16){ $val = 'B'; }
+                else if( $score >= 17 && $score <= 22){ $val = 'D'; }
+                else if( $score >= 23 && $score <= 60){ $val = 'C'; }
+                else if( $score >= 61 ){ $val = 'E'; }
+                else if( $score < 0.99 ){ $val = 'E'; }
 
                 return $val;
 
