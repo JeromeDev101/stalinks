@@ -488,11 +488,11 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                 $val = '';
 
-                if( $a >= 500){ $val = 'A'; }
-                else if( $a >= 200 && $a < 500){ $val = 'B'; }
-                else if( $a >= 100 && $a < 200){ $val = 'C'; }
-                else if( $a >= 50 && $a < 100){ $val = 'D'; }
-                else if( $a < 50 ){ $val = 'E'; }
+                if( $a >= 1000){ $val = 'A'; }
+                else if( $a > 501 && $a < 1000){ $val = 'B'; }
+                else if( $a >= 100 && $a <= 500){ $val = 'C'; }
+                else if( $a >= 50 && $a <= 99){ $val = 'D'; }
+                else if( $a <= 49 ){ $val = 'E'; }
 
                 return $val;
 
@@ -501,10 +501,10 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 $val = '';
 
                 if( $a >= 10000){ $val = 'A'; }
-                else if( $a >= 5000 && $a < 10000){ $val = 'B'; }
-                else if( $a >= 1000 && $a < 5000){ $val = 'C'; }
-                else if( $a >= 500 && $a < 1000){ $val = 'D'; }
-                else if( $a < 500 ){ $val = 'E'; }
+                else if( $a >= 3501 && $a < 10000){ $val = 'B'; }
+                else if( $a >= 1001 && $a <= 3500){ $val = 'C'; }
+                else if( $a >= 500 && $a <= 1000){ $val = 'D'; }
+                else if( $a <= 499 ){ $val = 'E'; }
 
                 return $val;
 
@@ -1289,6 +1289,53 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         return $data;
     }
 
+    private function priceList($code, $type) {
+        $score1 = [
+            'A' => 40,
+            'B' => 30,
+            'C' => 20,
+            'D' => 5,
+            'E' => -10,
+        ];
+
+        $score2 = [
+            'A' => 30,
+            'B' => 25,
+            'C' => 15,
+            'D' => 5,
+            'E' => -10,
+        ];
+
+        $score3 = [
+            'A' => 65,
+            'B' => 40,
+            'C' => 25,
+            'D' => 10,
+            'E' => 0,
+        ];
+
+        $score4 = [
+            'A' => 100,
+            'B' => 50,
+            'C' => 35,
+            'D' => 15,
+            'E' => 0,
+        ];
+
+        switch($type) {
+            case 'score1': 
+                return $score1[$code];
+            case 'score2': 
+                return $score2[$code];
+            case 'score3': 
+                return $score3[$code];
+            case 'score4': 
+                return $score4[$code];
+            default:
+                return 0;
+        }
+    }
+
     public function updateAhrefData($publisher)
     {
         $priceCollection = Pricelist::all();
@@ -1299,11 +1346,20 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
             $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
             $combineALl = $codeCombiURDR . $codeCombiBlRD . $codeCombiOrgKW . $codeCombiOrgT;
+            
 
-            $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
+            // $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
+
+            $score1 = $this->priceList($codeCombiURDR, 'score1');
+            $score2 = $this->priceList($codeCombiBlRD, 'score2');
+            $score3 = $this->priceList($codeCombiOrgKW, 'score3');
+            $score4 = $this->priceList($codeCombiOrgT, 'score4');
+
+            $cons = 4.25;
 
             $value['code_combination'] = $combineALl;
-            $value['code_price'] = (isset($price_list->price) && !empty($price_list->price)) ? $price_list->price : 0;
+            // $value['code_price'] = (isset($price_list->price) && !empty($price_list->price)) ? $price_list->price : 0;
+            $value['code_price'] = (($score1 + $score2 + $score3 + $score4) / 4) * $cons;
 
             // Price Basis
             $result_1 = 0;
