@@ -179,12 +179,12 @@
                                     :class="{
                                         'text-muted': $route.name != 'Trash'
                                             ? inbox.thread
-                                                ? !checkIsViewedForThreads(inbox.thread)
+                                                ? !checkIsViewedForThreads(inbox.thread, inbox)
                                                 : false
                                             : inbox.is_viewed == 1,
                                         'font-weight-bold': $route.name != 'Trash'
                                             ? inbox.thread
-                                                ? checkIsViewedForThreads(inbox.thread)
+                                                ? checkIsViewedForThreads(inbox.thread, inbox)
                                                 : false
                                             : inbox.is_viewed == 0,
                                         'active': viewContent.id == inbox.id,
@@ -2195,8 +2195,8 @@ export default {
             }
         },
 
-        checkIsViewedForThreads(thread) {
-            return thread.some(el => (el.is_sent === 0 && el.is_viewed === 0));
+        checkIsViewedForThreads(thread, inbox) {
+            return inbox.is_viewed === 0 || thread.some(el => (el.is_sent === 0 && el.is_viewed === 0));
         },
 
         checkIsStarredForThreads(thread) {
