@@ -849,8 +849,8 @@ class BuyController extends Controller
 
                 if( $score >= 0.99 && $score <= 5){  $val = 'A'; }
                 else if( $score >= 6 && $score <= 16){ $val = 'B'; }
-                else if( $score >= 17 && $score <= 22){ $val = 'D'; }
-                else if( $score >= 23 && $score <= 60){ $val = 'C'; }
+                else if( $score >= 17 && $score <= 22){ $val = 'C'; }
+                else if( $score >= 23 && $score <= 60){ $val = 'D'; }
                 else if( $score >= 61 ){ $val = 'E'; }
                 else if( $score < 0.99 ){ $val = 'E'; }
 
