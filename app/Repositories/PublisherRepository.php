@@ -470,7 +470,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
                 if( $a == 0 || $b == 0){
                     $score = 0;
-                    $val = 'A';
+                    $val = 'E';
                 }else{
                     $score = number_format( floatVal($a / $b) , 0, '.', '');
                 }
@@ -480,7 +480,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 else if( $score >= 17 && $score <= 22){ $val = 'D'; }
                 else if( $score >= 23 && $score <= 60){ $val = 'C'; }
                 else if( $score >= 61 ){ $val = 'E'; }
-                else if( $score < 0.99 ){ $val = 'E'; }
+                else if( $score < 0.99 ){ $val = 'C'; }
 
                 return $val;
 
