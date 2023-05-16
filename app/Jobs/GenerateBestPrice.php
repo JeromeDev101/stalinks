@@ -247,7 +247,7 @@ class GenerateBestPrice implements ShouldQueue
             }
 
             if ($publisher &&
-                $publisher->valid == 'invalid' &&
+                in_array($publisher->qc_validation, ['yes', 'Yes']) &&
                 $publisher->user &&
                 $publisher->user->registration &&
                 $publisher->user->registration->account_validation == 'valid') {
@@ -263,7 +263,7 @@ class GenerateBestPrice implements ShouldQueue
             if (in_array_custom($publisher->user->registration->account_validation, [
                 'valid',
                 'processing'
-            ])) {
+            ]) && in_array($publisher->qc_validation, ['yes', 'Yes'])) {
                 $publisher->update([
                     'valid' => 'valid'
                 ]);
