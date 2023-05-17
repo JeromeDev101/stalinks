@@ -461,7 +461,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
                 }
 
                 $val = $this->checkCombination($comb1.$comb2.$comb3);
-                
+
                 return $val;
 
             case "value2":
@@ -1323,13 +1323,13 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
         ];
 
         switch($type) {
-            case 'score1': 
+            case 'score1':
                 return $score1[$code];
-            case 'score2': 
+            case 'score2':
                 return $score2[$code];
-            case 'score3': 
+            case 'score3':
                 return $score3[$code];
-            case 'score4': 
+            case 'score4':
                 return $score4[$code];
             default:
                 return 0;
@@ -1346,7 +1346,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
             $codeCombiOrgKW = $this->getCodeCombination($value->org_keywords, 0, 'value3');
             $codeCombiOrgT = $this->getCodeCombination($value->org_traffic, 0, 'value4');
             $combineALl = $codeCombiURDR . $codeCombiBlRD . $codeCombiOrgKW . $codeCombiOrgT;
-            
+
 
             // $price_list = Pricelist::where('code', strtoupper($combineALl))->first();
 

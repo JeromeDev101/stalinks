@@ -101,7 +101,8 @@ class BuyController extends Controller
                     ->where('buyer_purchased.user_id_buyer', $user->id);
                 }
             })
-            ->whereNotNull('users.id') // to remove all seller's URL that deleted
+            // ->whereNotNull('users.id') // to remove all seller's URL that deleted
+            ->has('user')
             ->where('registration.account_validation', 'valid')
             ->where('publisher.valid', 'valid')
             ->where('publisher.qc_validation', 'yes')
@@ -315,10 +316,6 @@ class BuyController extends Controller
         } else {
             $list->orderBy('created_at', 'desc');
         }
-
-        // $sql = str_replace_array('?', $list->getBindings(), $list->toSql());
-
-        // dd($sql);
 
         if (isset($filter['paginate']) && !empty($filter['paginate']) && $filter['paginate'] == 'All') {
             $result = $list->orderBy('id', 'desc')->get();
@@ -833,7 +830,7 @@ class BuyController extends Controller
                 }
 
                 $val = $this->checkCombination($comb1.$comb2.$comb3);
-                
+
                 return $val;
 
             case "value2":
