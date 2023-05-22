@@ -101,4 +101,7 @@ class Publisher extends Model
         return $this->hasMany('App\Models\Backlink', 'publisher_id', 'id');
     }
 
+    public function backlinks_interested() {
+        return $this->hasMany('App\Models\BacklinksInterested', 'publisher_id', 'id');
+    }
 }

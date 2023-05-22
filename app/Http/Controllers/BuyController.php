@@ -63,6 +63,21 @@ class BuyController extends Controller
         ];
 
         $list = Publisher::select($columns)
+            ->with(['backlinks_interested' => function ($query) use ($user) {
+                $user_id = $user->id;
+
+                // check if sub account
+                $registered = Registration::where('email', Auth::user()->email)->first();
+                if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
+                    if (isset($registered->team_in_charge)) {
+                        $user_model = User::where('id', $registered->team_in_charge)->first();
+                        $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+                    }
+                }
+
+                // dd($user_id);
+                $query->where('user_id', $user_id);
+            }])
             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
             ->leftJoin('registration', 'users.email', '=', 'registration.email')
             ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')

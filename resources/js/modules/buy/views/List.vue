@@ -537,6 +537,22 @@
 
                             <template
                                 slot-scope="scope"
+                                slot="interestedDomainName">
+                                <div v-if="scope.row.backlinks_interested.length">
+                                    <a :href="'//' + scope.row.backlinks_interested[0].url_advertiser" target="_blank">
+                                        {{ scope.row.backlinks_interested[0].url_advertiser }}
+                                    </a>
+                                </div>
+
+                                <div v-else>
+                                    <span class="badge badge-pill badge-secondary">
+                                        N/A
+                                    </span>
+                                </div>
+                            </template>
+
+                            <template
+                                slot-scope="scope"
                                 slot="orgKeywordData">
                                 {{
                                     formatPrice(scope.row.org_keywords)
@@ -651,11 +667,11 @@
 
         <!-- Modal Buy -->
         <div class="modal fade"
-             id="modal-buy-update"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="modelTitleId"
-             aria-hidden="true">
+            id="modal-buy-update"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modelTitleId"
+            aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -663,7 +679,7 @@
                         <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
 
                         <span v-if="messageForms.message != '' && !isPopupLoading"
-                              :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
+                            :class="'text-' + ((Object.keys(messageForms.errors).length > 0) ? 'danger' : 'success')">
                             {{ messageForms.message }}
                         </span>
                     </div>
@@ -673,12 +689,12 @@
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.t_url') }}</label>
                                     <input type="text"
-                                           class="form-control"
-                                           v-model="updateModel.url"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           placeholder=""
-                                           disabled>
+                                        class="form-control"
+                                        v-model="updateModel.url"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder=""
+                                        disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -693,12 +709,12 @@
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
                                         <input type="number"
-                                           class="form-control"
-                                           v-model="updateModel.price"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           placeholder=""
-                                           disabled>
+                                            class="form-control"
+                                            v-model="updateModel.price"
+                                            name=""
+                                            aria-describedby="helpId"
+                                            placeholder=""
+                                            disabled>
                                     </div>
 
 
@@ -708,33 +724,33 @@
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
                                     <input type="text"
-                                           class="form-control"
-                                           v-model="updateModel.anchor_text"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           placeholder="">
+                                        class="form-control"
+                                        v-model="updateModel.anchor_text"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
                                     <input type="text"
-                                           class="form-control"
-                                           v-model="updateModel.link"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           placeholder="">
+                                        class="form-control"
+                                        v-model="updateModel.link"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
                                     <input type="text"
-                                           class="form-control"
-                                           v-model="updateModel.url_advertiser"
-                                           name=""
-                                           aria-describedby="helpId"
-                                           placeholder="">
+                                        class="form-control"
+                                        v-model="updateModel.url_advertiser"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
                                 </div>
                             </div>
                             <!-- <div class="col-md-6">
@@ -747,31 +763,46 @@
                             </div> -->
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            {{ $t('message.list_backlinks.close') }}
-                        </button>
+                    <div class="modal-footer custom-footer">
+                        <div class="pull-left">
+                            <button
+                                v-if="updateModel.status_purchased === 'Interested' && (user.role_id == 5 && user.sub_buyers_count > 0)"
+                                type="button"
+                                class="btn btn-info"
+                                :disabled="btnBuy"
 
-                        <button
-                            v-if="updateModel.status_purchased === 'Interested'"
-                            type="button"
-                            class="btn btn-danger"
-                            :disabled="btnBuy"
+                                @click="saveInterestedDetails(updateModel)">
 
-                            @click="doUninterested(updateModel.id)">
+                                {{ $t('message.list_backlinks.save') }}
+                            </button>
+                        </div>
 
-                            {{ $t('message.list_backlinks.uninterested') }}
-                        </button>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                {{ $t('message.list_backlinks.close') }}
+                            </button>
 
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            :disabled="btnBuy"
+                            <button
+                                v-if="updateModel.status_purchased === 'Interested'"
+                                type="button"
+                                class="btn btn-danger"
+                                :disabled="btnBuy"
 
-                            @click="submitBuy">
+                                @click="doUninterested(updateModel.id)">
 
-                            {{ $t('message.list_backlinks.t_buy') }}
-                        </button>
+                                {{ $t('message.list_backlinks.uninterested') }}
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                :disabled="btnBuy"
+
+                                @click="submitBuy">
+
+                                {{ $t('message.list_backlinks.t_buy') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1036,6 +1067,14 @@
                                     :checked="tblBuyOptions.url ? 'checked':''"
                                     v-model="tblBuyOptions.url">
                                     {{ $t('message.list_backlinks.t_url') }}
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input
+                                    type="checkbox"
+                                    :checked="tblBuyOptions.interested_domain_name ? 'checked':''"
+                                    v-model="tblBuyOptions.interested_domain_name">
+                                    Interested Domain Name
                                 </label>
                             </div>
                             <div class="checkbox col-md-6">
@@ -1653,6 +1692,13 @@ export default {
                     isHidden : !this.tblBuyOptions.url
                 },
                 {
+                    prop : '_action',
+                    name : 'Interested Domain Name',
+                    actionName : 'interestedDomainName',
+                    width : 175,
+                    isHidden : !this.tblBuyOptions.interested_domain_name
+                },
+                {
                     prop : 'is_https',
                     name : this.$t('message.list_backlinks.t_https'),
                     // sortable : true,
@@ -2198,6 +2244,13 @@ export default {
                 this.updateModel.price = this.computePrice(that.price, that.inc_article, 'yes');
                 this.updateModel.prices = this.updateModel.price
 
+                // display interested details if any
+                if(buy.status_purchased == 'Interested') {
+                    this.updateModel.link = buy.backlinks_interested.length ? buy.backlinks_interested[0].link : null;
+                    this.updateModel.url_advertiser = buy.backlinks_interested.length ? buy.backlinks_interested[0].url_advertiser : null;
+                    this.updateModel.anchor_text = buy.backlinks_interested.length ? buy.backlinks_interested[0].anchor_text : null;
+                }
+
                 $('#modal-buy-update').modal({
                     show : true
                 });
@@ -2293,6 +2346,50 @@ export default {
                     this.getBuyList();
 
                     $("#modal-buy-update").modal('hide');
+                }
+            });
+        },
+
+        async saveInterestedDetails (data) {
+            let self = this;
+
+            swal.fire({
+                title : 'Save interested details?',
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then(async (result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show();
+                    $('#tbl_buy_backlink').DataTable().destroy();
+
+                    this.searchLoading = true;
+                    await this.$store.dispatch('saveInterestedDetails', this.updateModel)
+                    this.searchLoading = false;
+
+                    if (this.messageForms.action === 'saved') {
+                        this.getBuyList();
+
+                        $("#modal-buy-update").modal('hide');
+
+                        loader.hide();
+
+                        await swal.fire(
+                            self.$t('message.list_backlinks.alert_success'),
+                            'Interested details successfully saved',
+                            'success'
+                        )
+                    } else {
+                        loader.hide();
+
+                        await swal.fire(
+                            this.messageForms.message,
+                            '',
+                            'error'
+                        )
+                    }
                 }
             });
         },
@@ -2506,5 +2603,14 @@ export default {
         width: 1%;
         min-width: 0;
         margin-bottom: 0;
+    }
+
+    .custom-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .custom-footer .btn-info.pull-left {
+        order: -1;
     }
 </style>

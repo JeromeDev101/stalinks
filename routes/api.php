@@ -147,6 +147,8 @@ Route::middleware('auth:api')->group(function () {
 
     Route::name('update-buy-order-validate')->post('buy-order-validate','BuyController@validateOrder');
 
+    Route::name('save-interested-details')->post('save-interested-details','BacklinksInterestedController@store');
+
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
     Route::name('generate-list')->get('generate-list','GenerateListController@getList');
