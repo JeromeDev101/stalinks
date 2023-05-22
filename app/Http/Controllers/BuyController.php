@@ -59,25 +59,29 @@ class BuyController extends Controller
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased',
+            'backlinks_interesteds.url_advertiser as interested_domain_name',
             DB::raw('org_keywords/org_traffic as ratio_value')
         ];
 
+        $user_id = $user->id;
+
+        // check if sub account
+        $registered = Registration::where('email', Auth::user()->email)->first();
+        if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
+            if (isset($registered->team_in_charge)) {
+                $user_model = User::where('id', $registered->team_in_charge)->first();
+                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+            }
+        }
+
         $list = Publisher::select($columns)
-            ->with(['backlinks_interested' => function ($query) use ($user) {
-                $user_id = $user->id;
-
-                // check if sub account
-                $registered = Registration::where('email', Auth::user()->email)->first();
-                if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
-                    if (isset($registered->team_in_charge)) {
-                        $user_model = User::where('id', $registered->team_in_charge)->first();
-                        $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
-                    }
-                }
-
-                // dd($user_id);
+            ->with(['backlinks_interested' => function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             }])
+            ->leftJoin('backlinks_interesteds', function ($q) use ($user_id) {
+                $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
+                    ->where('backlinks_interesteds.user_id', $user_id);
+            })
             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
             ->leftJoin('registration', 'users.email', '=', 'registration.email')
             ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
@@ -326,7 +330,11 @@ class BuyController extends Controller
         if (isset($filter['sort']) && !empty($filter['sort'])) {
             foreach ($filter['sort'] as &$sort) {
                 $sort = \GuzzleHttp\json_decode($sort);
-                $list = $list->orderByRaw("$sort->column $sort->sort");
+                if ($sort->column === 'interested_domain_name') {
+                    $list = $list->orderBy('interested_domain_name', $sort->sort);
+                } else {
+                    $list = $list->orderByRaw("$sort->column $sort->sort");
+                }
             }
         } else {
             $list->orderBy('created_at', 'desc');

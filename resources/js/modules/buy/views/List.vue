@@ -1623,6 +1623,12 @@ export default {
                     column: 'price_basis',
                     hidden: !(this.user.isAdmin || this.user.isOurs !== 1 || this.isShowPriceBasis(this.user)) || !this.tblBuyOptions.price_basis
                 },
+                {
+                    name: 'Interested Domain Name',
+                    sort: '',
+                    column: 'interested_domain_name',
+                    hidden : !this.tblBuyOptions.interested_domain_name
+                },
             ]
         },
 
