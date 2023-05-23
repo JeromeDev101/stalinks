@@ -396,15 +396,23 @@
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $t('message.list_backlinks.bb_title') }}</h3>
-                        <div class="card-tools">
+                        <div class="card-title text-primary">
+                            <span>
+                                {{ $t('message.list_backlinks.bb_title') }}
+                            </span>
+
+                            <span v-if="user.role_id == 5 && isInterestedFiltered" class="ml-3" style="font-size: 1rem !important">
+                                | Estimation purchases: <b>${{ estimationPurchases }}</b>
+                            </span>
+                        </div>
+
+                        <div class="card-tools mr-2">
+                            <span class="text-primary" v-show="[5, 14].includes(user.role_id)">
+                                {{ $t('message.list_backlinks.bb_credit') }} <b>${{listBuy.credit }}</b>
+                            </span>
                         </div>
                     </div>
                     <div class="card-body">
-                        <span class="text-primary" v-show="[5, 14].includes(user.role_id)">
-                            {{ $t('message.list_backlinks.bb_credit') }} <b>${{listBuy.credit }}</b>
-                        </span>
-
                         <div class="row mb-2">
                             <div class="col-md-12 mt-0 pt-0">
                                 <div v-if="isCreditAuth" class="alert alert-warning">
@@ -1406,6 +1414,9 @@ export default {
 
             currentWindowWidth: window.innerWidth,
             isBuyerHasDiscount: false,
+
+            estimationPurchases: 0,
+            isInterestedFiltered: false,
         }
     },
 
@@ -2060,6 +2071,13 @@ export default {
 
             this.btnBuy = false;
             loader.hide();
+            this.calculateEstimationPurchases();
+
+            if (this.filterModel.status_purchase == 'Interested') {
+                this.isInterestedFiltered = true;
+            } else {
+                this.isInterestedFiltered = false;
+            }
         },
 
         async getListSeller(params) {
@@ -2635,6 +2653,28 @@ export default {
             } else {
                 this.allSelected = false;
             }
+        },
+
+        calculateEstimationPurchases() {
+            let list = this.listBuy.data
+            let total_price = [];
+            let total = 0;
+
+            list.forEach(function(item, index){
+                if (item.computed_price !== null && typeof item.computed_price !== 'undefined') {
+                    total_price.push( parseFloat(item.computed_price))
+                }
+            })
+
+            if( total_price.length > 0 ){
+                total = total_price.reduce(this.calcSum)
+            }
+
+            this.estimationPurchases = total.toFixed(2);
+        },
+
+        calcSum(total, num) {
+            return total + num
         },
     },
 }

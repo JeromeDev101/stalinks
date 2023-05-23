@@ -2,28 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Article;
 use App\Events\BuyEvent;
+use App\Models\Backlink;
+use App\Models\Publisher;
+use App\Models\Registration;
+use App\Services\HttpClient;
+use Illuminate\Http\Request;
+use App\Models\BuyerPurchased;
+use App\Events\NotificationEvent;
+use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
+use App\PublisherWithComputedPrice;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use App\Repositories\Traits\BuyTrait;
 use App\Events\SellerConfirmationEvent;
 use App\Events\SellerReceivesOrderEvent;
 use App\Events\BacklinkStatusChangedEvent;
-use App\Models\BuyerPurchased;
-use App\Repositories\Contracts\BackLinkRepositoryInterface;
-use App\Repositories\Contracts\NotificationInterface;
-use App\Repositories\Contracts\PublisherRepositoryInterface;
-use App\Repositories\Traits\BuyTrait;
 use App\Repositories\Traits\NotificationTrait;
-use App\Services\HttpClient;
-use Illuminate\Http\Request;
-use App\Models\Publisher;
-use App\Models\Backlink;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Article;
-use App\Models\Registration;
-use App\Models\WalletTransaction;
-use App\Models\User;
-use App\Events\NotificationEvent;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
+use App\Repositories\Contracts\NotificationInterface;
+use App\Repositories\Contracts\BackLinkRepositoryInterface;
+use App\Repositories\Contracts\PublisherRepositoryInterface;
 
 class BuyController extends Controller
 {
@@ -46,6 +47,32 @@ class BuyController extends Controller
 
         $credit = 0;
 
+        // get the necessary values to calculate the computed price
+        $formulaData = $this->getFormulaData();
+
+        $percent = $formulaData->percentage;
+        $additional = $formulaData->additional;
+        $commission = 'yes';
+        $buyer_type_basic = $formulaData->basic;
+        $buyer_type_medium = $formulaData->medium;
+        $buyer_type_premium = $formulaData->premium;
+        $buyer_type = null;
+
+        $registration = Auth::user()->registration;
+
+        if ($registration) {
+            $buyer_type = $registration->buyer_type;
+            $commission = strtolower($registration->commission);
+
+            if ($buyer_type == 'Basic') {
+                $percent = $buyer_type_basic;
+            } else if ($buyer_type == 'Medium') {
+                $percent = $buyer_type_medium;
+            } else {
+                $percent = $buyer_type_premium;
+            }
+        }
+
         $columns = [
             'publisher.*',
             'registration.username',
@@ -60,7 +87,14 @@ class BuyController extends Controller
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased',
             'backlinks_interesteds.url_advertiser as interested_domain_name',
-            DB::raw('org_keywords/org_traffic as ratio_value')
+            DB::raw('org_keywords/org_traffic as ratio_value'),
+            DB::raw('ROUND(CASE
+                WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
+                WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
+                WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$additional.'
+                WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$additional.'
+                ELSE price
+            END) AS computed_price')
         ];
 
         $user_id = $user->id;
@@ -276,9 +310,29 @@ class BuyController extends Controller
 
         if (isset($filter['price']) && !empty($filter['price'])) {
             if ($filter['price_direction'] === 'Above') {
-                $list->where('publisher.price', '>=', intval($filter['price']));
+                if (Auth::user()->role_id == 5) {
+                    $list->whereRaw('ROUND(CASE
+                        WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
+                        WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
+                        WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$formulaData->additional.'
+                        WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$formulaData->additional.'
+                        ELSE price
+                    END) >= ?', [intval($filter['price'])]);
+                } else {
+                    $list->where('publisher.price', '>=', intval($filter['price']));
+                }
             } else {
-                $list->where('publisher.price', '<=', intval($filter['price']));
+                if (Auth::user()->role_id == 5) {
+                    $list->whereRaw('ROUND(CASE
+                        WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
+                        WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
+                        WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$formulaData->additional.'
+                        WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$formulaData->additional.'
+                        ELSE price
+                    END) <= ?', [intval($filter['price'])]);
+                } else {
+                    $list->where('publisher.price', '<=', intval($filter['price']));
+                }
             }
         }
 
@@ -926,4 +980,12 @@ class BuyController extends Controller
 
     }
 
+    protected function percentage($percent, $total) {
+        return number_format(($percent / 100) * $total, 2);
+    }
+
+    protected function getFormulaData()
+    {
+        return DB::table('formula')->first();
+    }
 }

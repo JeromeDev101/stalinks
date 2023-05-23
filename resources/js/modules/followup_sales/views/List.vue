@@ -238,7 +238,7 @@
                                         </select>
                                     </div>
 
-                                    <button 
+                                    <button
                                         data-toggle="modal"
                                         data-target="#modal-setting"
                                         class="btn btn-default float-right mr-2">
@@ -1848,8 +1848,8 @@
                             'Artc': item.article_id === null ? 'N/A' : item.article_id,
                             'Country': item.publisher === null ? 'N/A' : (item.publisher.country === null ? 'N/A' : item.publisher.country.name),
                             'In-charge': item.in_charge === null ? 'N/A' : item.in_charge,
-                            'Seller': item.publisher === null 
-                                ? 'N/A' 
+                            'Seller': item.publisher === null
+                                ? 'N/A'
                                 : (item.publisher.user == null
                                     ? 'N/A'
                                     : (item.publisher.user.username == null

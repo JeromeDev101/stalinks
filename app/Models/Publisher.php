@@ -2,20 +2,23 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use App\Models\Formula;
+use App\Models\Registration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Repositories\Traits\Loggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Formula;
-use App\Models\Registration;
 
 class Publisher extends Model
 {
     use SoftDeletes, Loggable;
 
+    private static $formulaData = null;
     protected $guarded = [];
     protected $table = 'publisher';
+
 //    protected $appends = [
 //        'custom_created',
 //        'custom_updated',
@@ -103,5 +106,121 @@ class Publisher extends Model
 
     public function backlinks_interested() {
         return $this->hasMany('App\Models\BacklinksInterested', 'publisher_id', 'id');
+    }
+
+    public function getComputedPriceAttribute() {
+        $price = $this->attributes['price'];
+        $article = $this->attributes['inc_article'];
+
+        $formulaData = $this->getFormulaData();
+
+        $sellingPrice = $price;
+        $percent = $formulaData->percentage;
+        $additional = $formulaData->additional;
+        $commission = 'yes';
+        $buyer_type_basic = $formulaData->basic;
+        $buyer_type_medium = $formulaData->medium;
+        $buyer_type_premium = $formulaData->premium;
+        $type = null;
+        $buyer_type = null;
+
+        $registration = Auth::user()->registration;
+
+        if ($registration) {
+            $type = $registration->type;
+            $buyer_type = $registration->buyer_type;
+            $commission = strtolower($registration->commission);
+
+            if ($buyer_type == 'Basic') {
+                $percent = $buyer_type_basic;
+            } else if ($buyer_type == 'Medium') {
+                $percent = $buyer_type_medium;
+            } else {
+                $percent = $buyer_type_premium;
+            }
+
+            if (!empty($price)) {
+                if ($type == 'Buyer') {
+                    if ($article) {
+                        if (strtolower($article) == 'yes') {
+                            if ($commission == 'no') {
+                                $sellingPrice = $price;
+                            }
+
+                            if ($commission == 'yes') {
+                                $percentage = $this->percentage($percent, $price);
+                                $sellingPrice = $percentage + $price;
+                            }
+                        }
+
+                        if (strtolower($article) == 'no') {
+                            if ($commission == 'no') {
+                                $sellingPrice = $price + $additional;
+                            }
+
+                            if ($commission == 'yes') {
+                                $percentage = $this->percentage($percent, $price);
+                                $sellingPrice = $percentage + $price + $additional;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return round($sellingPrice);
+    }
+
+    public function getComputedPriceStalinksAttribute() {
+        $price = $this->attributes['price'];
+        $article = $this->attributes['inc_article'];
+
+        $sellingPrice = $price;
+        $percent = null;
+        $additional = null;
+        $commission = 'yes';
+
+        if (!empty($price)) { // check if price has a value
+            if ($article) {
+                if (strtolower($article) == 'yes') { // check if with article
+                    if ($commission == 'yes') {
+                        $formulaData = $this->getFormulaData();
+                        if ($formulaData) {
+                            $percent = $formulaData->percentage;
+                            $additional = $formulaData->additional;
+                            $percentage = $this->percentage($percent, $price);
+                            $sellingPrice = $percentage + $price;
+                        }
+                    }
+                }
+
+                if (strtolower($article) == 'no') { // check if without article
+                    if ($commission == 'yes') {
+                        $formulaData = $this->getFormulaData();
+                        if ($formulaData) {
+                            $percent = $formulaData->percentage;
+                            $additional = $formulaData->additional;
+                            $percentage = $this->percentage($percent, $price);
+                            $sellingPrice = $percentage + $price + $additional;
+                        }
+                    }
+                }
+            }
+        }
+
+        return round($sellingPrice);
+    }
+
+    protected function percentage($percent, $total) {
+        return number_format(($percent / 100) * $total, 2);
+    }
+
+    protected function getFormulaData()
+    {
+        if (self::$formulaData === null) {
+            self::$formulaData = DB::table('formula')->first();
+        }
+
+        return self::$formulaData;
     }
 }
