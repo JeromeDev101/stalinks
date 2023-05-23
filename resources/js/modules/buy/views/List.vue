@@ -361,7 +361,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div v-if="user.isAdmin || user.role_id == 5" class="col-md-2">
                                 <div class="form-group">
                                     <label>Search Interested Domain Name</label>
                                     <input
