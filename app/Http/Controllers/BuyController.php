@@ -144,7 +144,25 @@ class BuyController extends Controller
         }
 
         if (isset($filter['search']) && !empty($filter['search'])) {
-            $list->where('publisher.url', 'like', '%' . $filter['search'] . '%');
+            // remove http
+            $url = remove_http($filter['search']);
+            // remove space
+            $url = trim($url, " ");
+            // remove /
+            $url = rtrim($url,"/");
+
+            $list->where('publisher.url', 'like', '%' . $url . '%');
+        }
+
+        if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
+            // remove http
+            $url = remove_http($filter['interested_domain_name']);
+            // remove space
+            $url = trim($url, " ");
+            // remove /
+            $url = rtrim($url,"/");
+
+            $list->where('backlinks_interesteds.url_advertiser', 'like', '%' . $url . '%');
         }
 
         if (isset($filter['language_id']) && !empty($filter['language_id'])) {

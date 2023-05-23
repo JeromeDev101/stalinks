@@ -361,6 +361,19 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Search Interested Domain Name</label>
+                                    <input
+                                        v-model="filterModel.interested_domain_name"
+                                        name=""
+                                        type="text"
+                                        class="form-control"
+                                        aria-describedby="helpId"
+                                        :placeholder="$t('message.list_backlinks.type')">
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="row mb-3">
@@ -407,6 +420,13 @@
                         <div class="row mb-3">
                             <div class="col-md-8 mb-2">
                                 <div v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')" class="input-group">
+                                    <button
+                                        class="btn btn-default mr-2"
+                                        @click="selectAll">
+                                        {{ allSelected ? $t('message.publisher.ab_deselect') : $t('message.publisher.ab_select') }}
+                                        {{ $t('message.publisher.all') }}
+                                    </button>
+
                                     <div class="dropdown">
                                         <button class="btn btn-default dropdown-toggle"
                                                 :disabled="isDisabled"
@@ -1282,6 +1302,7 @@ export default {
                         : [parseInt(this.$route.query.country_id)]
                     : '',
                 search : this.$route.query.search || '',
+                interested_domain_name : this.$route.query.interested_domain_name || '',
                 language_id : '',
                 status_purchase : this.$route.query.status_purchase || '',
                 seller : this.$route.query.seller || '',
@@ -2003,6 +2024,7 @@ export default {
                     continent_id : this.filterModel.continent_id,
                     country_id : this.filterModel.country_id,
                     search : this.filterModel.search,
+                    interested_domain_name : this.filterModel.interested_domain_name,
                     language_id : this.filterModel.language_id,
                     status_purchase : this.filterModel.status_purchase,
                     status_purchase_mode : this.buttonState.status_purchase,
@@ -2080,6 +2102,7 @@ export default {
                 continent_id : '',
                 country_id : '',
                 search : '',
+                interested_domain_name : '',
                 language_id : '',
                 status_purchase : '',
                 seller : '',
@@ -2185,6 +2208,7 @@ export default {
                     continent_id : this.filterModel.continent_id,
                     country_id : this.filterModel.country_id,
                     search : this.filterModel.search,
+                    interested_domain_name : this.filterModel.interested_domain_name,
                     language_id : this.filterModel.language_id,
                     status_purchase : this.filterModel.status_purchase,
                     status_purchase_mode : this.buttonState.status_purchase,
@@ -2318,12 +2342,12 @@ export default {
                 confirmButtonText : self.$t('message.article.yes'),
                 cancelButtonText : self.$t('message.article.no')
             })
-            .then((result) => {
+            .then(async (result) => {
                 if (result.isConfirmed) {
                     $('#tbl_buy_backlink').DataTable().destroy();
 
                     this.searchLoading = true;
-                    this.$store.dispatch('actionLike', {id : id})
+                    await this.$store.dispatch('actionLike', {id : id})
                     this.searchLoading = false;
 
                     this.getBuyList();
@@ -2598,7 +2622,20 @@ export default {
 
         setSelectedOption(options, value) {
             console.log(value);
-        }
+        },
+
+        selectAll: function() {
+            this.checkIds = [];
+            if (!this.allSelected) {
+                for (let buy in this.listBuy.data) {
+                    this.checkIds.push(this.listBuy.data[buy]);
+                }
+                this.isDisabled = false;
+                this.allSelected = true;
+            } else {
+                this.allSelected = false;
+            }
+        },
     },
 }
 </script>
