@@ -284,8 +284,8 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-md-12"
-                                 v-if="updateModel.payment_type != 1">
+                            <!-- <div class="col-md-12" v-if="updateModel.payment_type != 1"> -->
+                            <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
                                     <label>{{ $t('message.wallet_transaction.wt_proof_of_documents') }}</label>
                                     <input
@@ -413,7 +413,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12">
+                            <!-- <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.amount_usd}">
                                     <label></label>
                                     <input
@@ -421,7 +421,7 @@
                                         class="form-control"
                                         name="">
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-md-12">
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.file}">
@@ -737,19 +737,19 @@ export default {
             this.formData.append('amount_usd', this.updateModel.amount_usd);
             this.formData.append('user_id_buyer', this.updateModel.user_id_buyer);
 
-            if (this.updateModel.payment_type !== 1) {
+            // if (this.updateModel.payment_type !== 1) {
                 this.formData.append('file', this.$refs.proof.files[0]);
-            }
+            // }
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionAddWallet', this.formData)
             this.isPopupLoading = false;
 
             if (this.messageForms.action == 'success') {
-                if (this.updateModel.payment_type === 1) {
-                    this.walletStep = 1;
-                    this.initPaypalButtons();
-                } else {
+                // if (this.updateModel.payment_type === 1) {
+                //     this.walletStep = 1;
+                //     this.initPaypalButtons();
+                // } else {
                     $("#modal-add-wallet").modal('hide');
                     this.updateModel = {
                         user_id_buyer : '',
@@ -766,7 +766,7 @@ export default {
                     )
 
                     this.getWalletTransactionList();
-                }
+                // }
             } else {
                 await swal.fire(
                     self.$t('message.draft.error'),
