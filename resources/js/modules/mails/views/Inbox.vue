@@ -2985,8 +2985,11 @@ export default {
             let self = this;
             let viewed = mode === 'decrement' ? 1 : 0;
 
+            console.log(ids);
+
             self.records.data.forEach(function(record, index) {
                 if (ids.includes(record.id)) {
+                    self.records.data[index].is_viewed = viewed;
                     self.records.data[index].thread.map(item => {
                         item.is_viewed = viewed;
                     })
