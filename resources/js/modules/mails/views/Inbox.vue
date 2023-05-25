@@ -206,11 +206,18 @@
                                     </td>
 
                                     <td @click="viewMessage(inbox, index, $route.name)">
-                                        <i
+                                        <!-- <i
                                             v-show="inbox.label_id != 0"
                                             :style="{'color': inbox.label_color}"
                                             class="fa fa-tag mr-3">
+                                        </i> -->
+
+                                        <i
+                                            v-if="checkLabelIdThread(inbox.thread) != 0"
+                                            :style="{'color': getThreadLabelDetails(checkLabelIdThread(inbox.thread))}"
+                                            class="fa fa-tag mr-3">
                                         </i>
+
                                         {{
                                             $route.name != 'Trash'
                                                 ? inbox.thread
@@ -2646,6 +2653,23 @@ export default {
             return result;
         },
 
+        getThreadIdsLabel(thread, mod) {
+            let result = [];
+            let self = this
+
+            if (mod === 'single') {
+                result = thread.map(a => a.id);
+            } else {
+                self.checkIds.forEach(function (item) {
+                    let ids = item.thread.map(a => a.id)
+                    result = result.concat(ids);
+                    result = result.concat(item.id);
+                })
+            }
+
+            return result;
+        },
+
         selectAll() {
             this.checkIds = [];
             if (!this.allSelected) {
@@ -2693,16 +2717,17 @@ export default {
             if (self.$route.name === 'Trash') {
                 self.submitLabel()
             } else {
-                let ids = self.getThreadIds(null, 'all')
+                let ids = self.getThreadIdsLabel(null, 'all')
 
                 axios.post('/api/mail/labeling-thread', {
                     ids : ids,
                     label_id : this.updateModel.label_id
                 })
-                    .then((res) => {
-                        self.getInbox(this.paginate.current)
-                        $("#modal-label-selection").modal('hide')
-                    })
+                .then((res) => {
+                    self.checkIds = [];
+                    self.getInbox(this.paginate.current)
+                    $("#modal-label-selection").modal('hide')
+                })
             }
         },
 
@@ -3132,6 +3157,7 @@ export default {
             });
 
             if (self.viewContentThread.inbox.is_viewed === 0) {
+                self.viewContentThread.inbox.is_viewed = 1;
                 viewed_emails.push(self.viewContentThread.inbox.id)
             }
 
@@ -3680,6 +3706,18 @@ export default {
 
             return finalArray.join(',');
         },
+
+        checkLabelIdThread (threads) {
+            const result = threads.find(obj => obj.label_id !== 0);
+
+            return result ? result.label_id : 0;
+        },
+
+        getThreadLabelDetails (id) {
+            const result = this.$parent._data.listLabel.find(obj => obj.id === id);
+
+            return result.color;
+        }
     }
 }
 </script>
