@@ -233,12 +233,30 @@
                                 <div :class="{'form-group': true, 'has-error': messageForms.errors.user_id_buyer}">
                                     <label>{{ $t('message.wallet_transaction.awt_user_buyer') }}</label>
 
-                                    <select name="" class="form-control" v-model="updateModel.user_id_buyer">
+                                    <!-- <select name="" class="form-control" v-model="updateModel.user_id_buyer">
                                         <option value="">{{ $t('message.wallet_transaction.awt_select_buyer') }}</option>
                                         <option v-for="option in listBuyer.data" v-bind:value="option.id">
                                             {{ 'ID: ' + option.id + ' - Name: ' + option.name }}
                                         </option>
-                                    </select>
+                                    </select> -->
+
+                                    <v-select
+                                            v-model="updateModel.user_id_buyer"
+                                            label="username"
+                                            :placeholder="$t('message.wallet_transaction.awt_user_buyer')"
+                                            :options="listBuyer.data"
+                                            :searchable="true"
+                                            :reduce="buyer => buyer.id"
+                                            >
+
+                                            <template slot="selected-option" slot-scope="option">
+                                                ID: {{ option.id }} - Username: {{ option.username ? option.username:option.name }}
+                                            </template>
+
+                                            <template slot="option" slot-scope="option">
+                                                ID: {{ option.id }} - Username: {{ option.username ? option.username:option.name }}
+                                            </template>
+                                        </v-select>
 
                                     <span
                                         v-if="messageForms.errors.user_id_buyer"
