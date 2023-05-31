@@ -62,6 +62,12 @@ export default {
     banner4_text3: 'Theo dõi thu nhập của bạn',
     banner4_text4: 'Bắt đầu kiếm tiền',
 
+    // update
+    new_buyer_banner: 'Tiết kiệm thời gian và công sức – Hãy để chúng tôi xử lý chiến lược liên kết ngược của bạn!',
+    new_buyer_sub_banner: 'Xây dựng một chiến lược backlink hiệu quả đòi hỏi phải nghiên cứu sâu rộng, tiếp cận cộng đồng và giám sát liên tục. Tại sao phải tốn vô số thời gian khi bạn có thể giao việc đó cho các chuyên gia? Đội ngũ chuyên gia giàu kinh nghiệm của chúng tôi sẽ xử lý chiến lược liên kết ngược của bạn, đảm bảo bạn nhận được các liên kết ngược chất lượng hàng đầu mang lại kết quả. Tập trung vào hoạt động kinh doanh cốt lõi của bạn trong khi chúng tôi chăm sóc SEO cho trang web của bạn.',
+    new_buyer_form_banner: 'Là trang web của bạn đấu tranh để xếp hạng cao hơn trong kết quả công cụ tìm kiếm?',
+    new_buyer_form_sub_banner: 'Chúng tôi có giải pháp cho bạn – các liên kết ngược chất lượng cao có thể tăng vọt thứ hạng trang web của bạn.',
+
     // account types
     seller: 'Người bán',
     buyer: 'Người mua',

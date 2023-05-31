@@ -88,8 +88,12 @@
 
         <div class="row px-5">
             <div class="col-md-8 d-none d-lg-block d-xl-block align-middle pl-5">
+                <div class="pr-5 mb-4">
+                    <img style="height: auto; width: 50%;" src="../../../../images/stalinks2.png" alt="User Image"></img>
+                </div>
+
                 <div class="pr-5" v-if="RegisterModel.type == '' || RegisterModel.type == 'Affiliate'">
-                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_1') }}</h1>
+                    <h1 class="display-4 font-weight-bold" style="color: #FEA02F">{{ $t('message.registration.banner_1') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
                         {{ $t('message.registration.banner1_text1') }}
@@ -100,7 +104,7 @@
                 </div>
 
                 <div class="pr-5" v-if="RegisterModel.type == 'Seller'">
-                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_2') }}</h1>
+                    <h1 class="display-4 font-weight-bold" style="color: #FEA02F">{{ $t('message.registration.banner_2') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
                         <img src="/images/icon_registration/register-new.png" alt="">
@@ -125,15 +129,22 @@
                 </div>
 
                 <div class="pr-5" v-if="RegisterModel.type == 'Buyer'">
-                    <h1 class="text-yellow display-4 font-weight-bold">
-<!--                        {{ $t('message.registration.banner_3') }}-->
-
+                    <!-- <h1 class="text-yellow display-4 font-weight-bold">
                         {{ $t('message.registration.u_banner_3') }}
+                    </h1> -->
+
+                    <h1 class="display-4 font-weight-bold" style="color: #FEA02F">
+                        {{ $t('message.registration.new_buyer_banner') }}
                     </h1>
 
-                    <h5 class="mt-4" style="color: #E6E6E6">
+                    <!-- <h5 class="mt-4" style="color: #E6E6E6">
                         {{ $t('message.registration.banner_3') }}
+                    </h5> -->
+
+                    <h5 class="mt-4" style="color: #E6E6E6">
+                        {{ $t('message.registration.new_buyer_sub_banner') }}
                     </h5>
+
 <!--                    <br>-->
 <!--                    <p class="text-white lead custom-text">-->
 <!--                        <img src="/images/icon_registration/register-new.png" alt="">-->
@@ -152,7 +163,7 @@
 <!--                    <br>-->
 
                     <div class="row my-5">
-                        <div style="width: 75% !important;">
+                        <div style="width: 85% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -162,14 +173,16 @@
                                     </div>
 
                                     <div class="text-box">
-                                        <div class="text-box-title">
-                                            <h4>{{ $t('message.registration.u_banner3_text1') }}</h4>
+                                        <div class="font-weight-bold">
+                                            <h2 style="color: #FEA02F !important; font-weight: 700 !important;">
+                                                {{ $t('message.registration.u_banner3_text1') }}
+                                            </h2>
                                         </div>
 
                                         <div class="text-box-content">
-                                            <p>
+                                            <h5>
                                                 {{ $t('message.registration.u_banner3_sub1') }}
-                                            </p>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -178,7 +191,7 @@
                     </div>
 
                     <div class="row mb-5 justify-content-end">
-                        <div style="width: 75% !important;">
+                        <div style="width: 85% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
@@ -189,13 +202,15 @@
 
                                     <div class="text-box">
                                         <div class="text-box-title">
-                                            <h4>{{ $t('message.registration.u_banner3_text2') }}</h4>
+                                            <h2 style="color: #FEA02F !important; font-weight: 700 !important;">
+                                                {{ $t('message.registration.u_banner3_text2') }}
+                                            </h2>
                                         </div>
 
                                         <div class="text-box-content">
-                                            <p>
+                                            <h5>
                                                 {{ $t('message.registration.u_banner3_sub2') }}
-                                            </p>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -204,7 +219,7 @@
                     </div>
 
                     <div class="row mb-5">
-                        <div style="width: 75% !important;">
+                        <div style="width: 85% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -215,13 +230,15 @@
 
                                     <div class="text-box">
                                         <div class="text-box-title">
-                                            <h4>{{ $t('message.registration.u_banner3_text3') }}</h4>
+                                            <h2 style="color: #FEA02F !important; font-weight: 700 !important;">
+                                                {{ $t('message.registration.u_banner3_text3') }}
+                                            </h2>
                                         </div>
 
                                         <div class="text-box-content">
-                                            <p>
+                                            <h5>
                                                 {{ $t('message.registration.u_banner3_sub3') }}
-                                            </p>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -230,7 +247,7 @@
                     </div>
 
                     <div class="row mb-5 justify-content-end">
-                        <div style="width: 75% !important;">
+                        <div style="width: 85% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper-right">
                                     <div class="icon-box">
@@ -241,13 +258,15 @@
 
                                     <div class="text-box">
                                         <div class="text-box-title">
-                                            <h4>{{ $t('message.registration.u_banner3_text4') }}</h4>
+                                            <h2 style="color: #FEA02F !important; font-weight: 700 !important;">
+                                                {{ $t('message.registration.u_banner3_text4') }}
+                                            </h2>
                                         </div>
 
                                         <div class="text-box-content">
-                                            <p>
+                                            <h5>
                                                 {{ $t('message.registration.u_banner3_sub4') }}
-                                            </p>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -256,7 +275,7 @@
                     </div>
 
                     <div class="row mb-5">
-                        <div style="width: 75% !important;">
+                        <div style="width: 85% !important;">
                             <div class="subtitle-container">
                                 <div class="box-icon-wrapper">
                                     <div class="icon-box">
@@ -267,13 +286,15 @@
 
                                     <div class="text-box">
                                         <div class="text-box-title">
-                                            <h4>{{ $t('message.registration.u_banner3_text5') }}</h4>
+                                            <h2 style="color: #FEA02F !important; font-weight: 700 !important;">
+                                                {{ $t('message.registration.u_banner3_text5') }}
+                                            </h2>
                                         </div>
 
                                         <div class="text-box-content">
-                                            <p>
+                                            <h5>
                                                 {{ $t('message.registration.u_banner3_sub5') }}
-                                            </p>
+                                            </h5>
                                         </div>
                                     </div>
                                 </div>
@@ -283,7 +304,7 @@
                 </div>
 
                 <div class="pr-5" v-if="RegisterModel.type == 'Writer'">
-                    <h1 class="text-yellow display-4 font-weight-bold">{{ $t('message.registration.banner_4') }}</h1>
+                    <h1 class="display-4 font-weight-bold" style="color: #FEA02F">{{ $t('message.registration.banner_4') }}</h1>
                     <br>
                     <p class="text-white lead custom-text">
                         <img src="/images/icon_registration/register-new.png" alt="">
@@ -308,11 +329,25 @@
                 </div>
             </div>
 
-            <div class="col-md-4 pr-5">
+            <div class="col-md-4 pr-5 sticky-form">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card pb-3 px-2 custom-card">
                             <div class="card-body">
+                                <div v-if="RegisterModel.type == 'Buyer'">
+                                    <div class="text-center">
+                                        <h3 style="color: #006A82; font-weight: 800;">
+                                            {{ $t('message.registration.new_buyer_form_banner') }}
+                                        </h3>
+                                    </div>
+
+                                    <div class="mt-3 p-2">
+                                        <p style="color: #6A6B6F; font-size: 20px; font-weight: 600; text-align: left;">
+                                            {{ $t('message.registration.new_buyer_form_sub_banner') }}
+                                        </p>
+                                    </div>
+                                </div>
+
                                 <h4>{{ $t('message.registration.title') }}</h4>
                                 <hr class="mb-4"/>
 
@@ -523,7 +558,6 @@
     }
 
     .text-box-title {
-        font-weight: 600;
         color: white;
     }
 
@@ -534,6 +568,13 @@
 
     .text-box-content p {
         margin-bottom: 0;
+    }
+    .sticky-form {
+        position: sticky;
+        top: 20px;
+        bottom: 20px;
+        height: calc(100% - 40px);
+        margin-bottom: 20px;
     }
 </style>
 

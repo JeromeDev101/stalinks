@@ -62,6 +62,12 @@ export default {
     banner4_text3: 'Follow-up your Incomes',
     banner4_text4: 'Start Earning',
 
+    // update
+    new_buyer_banner: 'Save Time and Effort – Let Us Handle Your Backlink Strategy!',
+    new_buyer_sub_banner: 'Crafting an effective backlink strategy requires extensive research, outreach, and continuous monitoring. Why spend countless hours when you can leave it to the experts? Our team of experienced professionals will handle your backlink strategy, ensuring you receive top-quality backlinks that drive results. Focus on your core business while we take care of your website’s SEO.',
+    new_buyer_form_banner: 'Is your website struggling to rank higher in search engine results?',
+    new_buyer_form_sub_banner: 'We have a solution for you – high-quality backlinks that can skyrocket your website’s ranking.',
+
     // account types
     seller: 'Seller',
     buyer: 'Buyer',

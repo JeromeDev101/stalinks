@@ -62,6 +62,12 @@ export default {
     banner4_text3: 'Tindak Lanjuti Penghasilan Anda',
     banner4_text4: 'Mulai Menghasilkan',
 
+    // update
+    new_buyer_banner: 'Hemat Waktu dan Tenaga – Biarkan Kami Menangani Strategi Backlink Anda!',
+    new_buyer_sub_banner: 'Membuat strategi backlink yang efektif membutuhkan penelitian ekstensif, penjangkauan, dan pemantauan berkelanjutan. Mengapa menghabiskan waktu berjam-jam jika Anda bisa menyerahkannya kepada ahlinya? Tim profesional berpengalaman kami akan menangani strategi backlink Anda, memastikan Anda menerima backlink berkualitas tinggi yang mendorong hasil. Fokus pada bisnis inti Anda sementara kami menangani SEO situs web Anda.',
+    new_buyer_form_banner: 'Apakah situs web Anda berjuang untuk mendapat peringkat lebih tinggi dalam hasil mesin pencari?',
+    new_buyer_form_sub_banner: 'Kami memiliki solusi untuk Anda – backlink berkualitas tinggi yang dapat meroketkan peringkat situs web Anda.',
+
     // account types
     seller: 'Penjual',
     buyer: 'Pembeli',
