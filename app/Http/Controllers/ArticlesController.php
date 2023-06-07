@@ -395,14 +395,14 @@ class ArticlesController extends Controller
                     return response()->json(['message'=> 'Minimum words must be 1000.'], 422);
                 }
 
-                // validate title and meta description 
+                // validate title and meta description
                 if($request->get('content')['title'] == '') {
                     return response()->json(['message'=> 'Please provide title.'], 422);
-                } 
+                }
 
                 if($request->get('content')['meta_description'] == '') {
                     return response()->json(['message'=> 'Please provide meta description.'], 422);
-                } 
+                }
 
                 // check if writer is external
                 if ($article->user->isOurs === 1) {
@@ -490,6 +490,10 @@ class ArticlesController extends Controller
         }
 
         if( $request->content['status'] == 'Content Validated' ){
+            if ((Auth::user()->role_id != 13 && !Auth::user()->isAdmin()) && $article->status_writer !== 'Content Validated') {
+                return response()->json(['message'=> 'Only internal writers can validate the content of the article.'], 422);
+            }
+
             if ($backlink->status != 'Live') {
                 // update backlink status
                 $backlink->update(['status' => 'Content Done']);
