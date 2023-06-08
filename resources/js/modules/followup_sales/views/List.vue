@@ -506,7 +506,7 @@
                                 <div class="form-group">
                                     <div>
                                         <label style="color: #333">{{ $t('message.follow.fus_link_to') }}</label>
-                                        <input type="text" class="form-control" :disabled="true" v-model="updateModel.link" required="required" >
+                                        <input type="text" class="form-control" :disabled="!user.isAdmin && user.role_id !== 8" v-model="updateModel.link" required="required" >
                                     </div>
                                 </div>
                             </div>
