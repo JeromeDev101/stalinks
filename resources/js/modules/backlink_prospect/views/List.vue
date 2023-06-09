@@ -935,19 +935,19 @@ export default {
 
             return [
                 {
-                    text: self.$t('message.url_prospect.s_new'),
-                    total: self.backlinkProspectTotals['New'],
-                    badge: 'bg-primary',
-                    icon: 'fas fa-asterisk',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['New'], self.backlinkProspectTotals['Total'])
-                },
-
-                {
                     text: self.$t('message.url_prospect.s_qualified'),
                     total: self.backlinkProspectTotals['Qualified'],
                     badge: 'bg-olive',
                     icon: 'fas fa-certificate',
                     percentage: self.calculatePercentage(self.backlinkProspectTotals['Qualified'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
+                    text: 'Free Submission',
+                    total: self.backlinkProspectTotals['Free'],
+                    badge: 'bg-gradient-teal',
+                    icon: 'fas fa-box-open',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Free'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -959,11 +959,11 @@ export default {
                 },
 
                 {
-                    text: self.$t('message.url_prospect.s_refused'),
-                    total: self.backlinkProspectTotals['Refused'],
-                    badge: 'bg-maroon',
-                    icon: 'fas fa-handshake-alt-slash',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Refused'], self.backlinkProspectTotals['Total'])
+                    text: self.$t('message.url_prospect.s_new'),
+                    total: self.backlinkProspectTotals['New'],
+                    badge: 'bg-primary',
+                    icon: 'fas fa-asterisk',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['New'], self.backlinkProspectTotals['Total'])
                 },
 
                 {
@@ -991,6 +991,14 @@ export default {
                 },
 
                 {
+                    text: self.$t('message.url_prospect.s_refused'),
+                    total: self.backlinkProspectTotals['Refused'],
+                    badge: 'bg-maroon',
+                    icon: 'fas fa-handshake-alt-slash',
+                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Refused'], self.backlinkProspectTotals['Total'])
+                },
+
+                {
                     text: self.$t('message.url_prospect.s_no_answer'),
                     total: self.backlinkProspectTotals['NoAnswer'],
                     badge: 'bg-orange',
@@ -1012,14 +1020,6 @@ export default {
                     badge: 'bg-danger',
                     icon: 'fas fa-hourglass-end',
                     percentage: self.calculatePercentage(self.backlinkProspectTotals['Hosting'], self.backlinkProspectTotals['Total'])
-                },
-
-                {
-                    text: 'Free Submission',
-                    total: self.backlinkProspectTotals['Free'],
-                    badge: 'bg-gradient-teal',
-                    icon: 'fas fa-box-open',
-                    percentage: self.calculatePercentage(self.backlinkProspectTotals['Free'], self.backlinkProspectTotals['Total'])
                 },
             ];
         },
