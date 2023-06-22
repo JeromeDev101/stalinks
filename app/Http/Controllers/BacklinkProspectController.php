@@ -65,7 +65,11 @@ class BacklinkProspectController extends Controller
         }
 
         if (isset($filter['status']) && !empty($filter['status'])) {
-            $backlink_prospects->where('status', $filter['status']);
+            if (is_array($filter['status'])) {
+                $backlink_prospects->whereIn('status', $filter['status']);
+            } else {
+                $backlink_prospects->where('status', $filter['status']);
+            }
         }
 
         if (isset($filter['is_moved']) && !empty($filter['is_moved'])) {
@@ -75,12 +79,26 @@ class BacklinkProspectController extends Controller
         }
 
         if (isset($filter['status2'])) {
-            if ($filter['status2'] === 'null') {
-                $backlink_prospects->has('prospect', '<', 1);
+            if (is_array($filter['status2'])) {
+                if (in_array('null', $filter['status2'])) {
+                    $backlink_prospects->where(function ($query) use ($filter) {
+                        $query->doesntHave('prospect')->orWhereHas('prospect', function ($q) use ($filter) {
+                            $q->whereIn('status', $filter['status2']);
+                        });
+                    });
+                } else {
+                    $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
+                        $q->whereIn('status', $filter['status2']);
+                    });
+                }
             } else {
-                $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
-                    $q->where('status', $filter['status2']);
-                });
+                if ($filter['status2'] === 'null') {
+                    $backlink_prospects->has('prospect', '<', 1);
+                } else {
+                    $backlink_prospects->whereHas('prospect', function($q) use ($filter) {
+                        $q->where('status', $filter['status2']);
+                    });
+                }
             }
         }
 

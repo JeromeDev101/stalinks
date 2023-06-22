@@ -10,6 +10,98 @@
             </div><!-- /.container-fluid -->
         </div>
 
+        <!-- 3rd party totals -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.third_party_totals') }}</h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div v-if="Object.keys(backlinkProspectTotals).length !== 0" class="row">
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box rounded bg-aqua">
+                                    <div class="inner">
+                                        <h3>{{ backlinkProspectTotals.Total }}</h3>
+                                        <p>{{ $t('message.url_prospect.s_total') }}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-for="total in status1Totals" class="col-lg-3 col-6">
+                                <div class="small-box rounded" :class="total.badge">
+                                    <div class="inner">
+                                        <h3>{{ total.total }}</h3>
+                                        <p>
+                                            {{ total.text }}
+
+                                            <span>
+                                                ({{ total.percentage }}%)
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="icon">
+                                        <i :class="total.icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- StaLinks URL prospect status totals -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.stalinks_totals') }}</h3>
+                        <div class="card-tools">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div v-if="Object.keys(backlinkProspectTotalsStatus2).length !== 0" class="row">
+                            <div class="col-lg-3 col-6">
+                                <div class="small-box rounded bg-aqua">
+                                    <div class="inner">
+                                        <h3>{{ calculateStatusTotal(backlinkProspectTotalsStatus2) }}</h3>
+                                        <p>{{ $t('message.url_prospect.s_total') }}</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div v-for="total in status2Totals" class="col-lg-3 col-6">
+                                <div class="small-box rounded" :class="total.badge">
+                                    <div class="inner">
+                                        <h3>{{ total.total }}</h3>
+                                        <p>
+                                            {{ total.text }}
+
+                                            <span>
+                                                ({{ total.percentage }}%)
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="icon">
+                                        <i :class="total.icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-outline card-secondary">
@@ -129,24 +221,44 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.status_third_party') }}</label>
-                                    <select class="form-control" v-model="filterModel.status">
+                                    <!-- <select class="form-control" v-model="filterModel.status">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status1" v-bind:value="option.value" :key="option.value">
                                             {{ option.text }}
                                         </option>
-                                    </select>
+                                    </select> -->
+
+                                    <v-select
+                                        multiple
+                                        class="style-chooser"
+                                        v-model="filterModel.status"
+                                        label="text"
+                                        :options="status1"
+                                        :reduce="status1 => status1.value"
+                                        :searchable="false"
+                                        :placeholder="$t('message.backlink_prospect.choose_status')"/>
                                 </div>
                             </div>
 
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.backlink_prospect.status_stalinks') }}</label>
-                                    <select class="form-control" v-model="filterModel.status2">
+                                    <!-- <select class="form-control" v-model="filterModel.status2">
                                         <option value="">{{ $t('message.backlink_prospect.choose_status') }}</option>
                                         <option v-for="option in status2" v-bind:value="option.value" :key="option.value">
                                             {{ option.text }}
                                         </option>
-                                    </select>
+                                    </select> -->
+
+                                    <v-select
+                                        multiple
+                                        class="style-chooser"
+                                        v-model="filterModel.status2"
+                                        label="text"
+                                        :options="status2"
+                                        :reduce="status2 => status2.value"
+                                        :searchable="false"
+                                        :placeholder="$t('message.backlink_prospect.choose_status')"/>
                                 </div>
                             </div>
 
@@ -189,98 +301,6 @@
                                     {{ $t('message.backlink_prospect.search') }}
                                     <i v-if="false" class="fa fa-refresh fa-spin"></i>
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3rd party totals -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.third_party_totals') }}</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="Object.keys(backlinkProspectTotals).length !== 0" class="row">
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box rounded bg-aqua">
-                                    <div class="inner">
-                                        <h3>{{ backlinkProspectTotals.Total }}</h3>
-                                        <p>{{ $t('message.url_prospect.s_total') }}</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-link"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-for="total in status1Totals" class="col-lg-3 col-6">
-                                <div class="small-box rounded" :class="total.badge">
-                                    <div class="inner">
-                                        <h3>{{ total.total }}</h3>
-                                        <p>
-                                            {{ total.text }}
-
-                                            <span>
-                                                ({{ total.percentage }}%)
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div class="icon">
-                                        <i :class="total.icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- StaLinks URL prospect status totals -->
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card card-outline card-secondary">
-                    <div class="card-header">
-                        <h3 class="card-title text-primary">{{ $t('message.backlink_prospect.stalinks_totals') }}</h3>
-                        <div class="card-tools">
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div v-if="Object.keys(backlinkProspectTotalsStatus2).length !== 0" class="row">
-                            <div class="col-lg-3 col-6">
-                                <div class="small-box rounded bg-aqua">
-                                    <div class="inner">
-                                        <h3>{{ calculateStatusTotal(backlinkProspectTotalsStatus2) }}</h3>
-                                        <p>{{ $t('message.url_prospect.s_total') }}</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-link"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div v-for="total in status2Totals" class="col-lg-3 col-6">
-                                <div class="small-box rounded" :class="total.badge">
-                                    <div class="inner">
-                                        <h3>{{ total.total }}</h3>
-                                        <p>
-                                            {{ total.text }}
-
-                                            <span>
-                                                ({{ total.percentage }}%)
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div class="icon">
-                                        <i :class="total.icon"></i>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
