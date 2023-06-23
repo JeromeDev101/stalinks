@@ -176,46 +176,46 @@ class WalletTransactionController extends Controller
         $image = $request->file;
         $paymentType = $request->get('payment_type');
 
-        // $fileName = $paymentType != 1 ? $this->moveFileToStorage($image) : '';
-        $fileName = $this->moveFileToStorage($image);
+        $fileName = $paymentType != 1 ? $this->moveFileToStorage($image) : '';
+        // $fileName = $this->moveFileToStorage($image);
 
         // If payment type is paypal dont insert proof_doc field
-        // $data = $paymentType == 1 ? [
-        //     'user_id' => $request->user_id_buyer,
-        //     'payment_via_id' => $request->payment_type,
-        //     'amount_usd' => $request->amount_usd,
-        //     'date' => date('Y-m-d'),
-        //     'proof_doc' => '/',
-        //     'admin_confirmation' => 'Paid',
-        // ] : [
-        //     'user_id' => $request->user_id_buyer,
-        //     'payment_via_id' => $request->payment_type,
-        //     'amount_usd' => $request->amount_usd,
-        //     'date' => date('Y-m-d'),
-        //     'proof_doc' => '/images/wallet_transaction/'.$fileName,
-        //     'admin_confirmation' => 'Not Paid',
-        // ];
-
-        $data = [
+        $data = $paymentType == 1 ? [
+            'user_id' => $request->user_id_buyer,
+            'payment_via_id' => $request->payment_type,
+            'amount_usd' => $request->amount_usd,
+            'date' => date('Y-m-d'),
+            'proof_doc' => '/',
+            'admin_confirmation' => 'Paid',
+        ] : [
             'user_id' => $request->user_id_buyer,
             'payment_via_id' => $request->payment_type,
             'amount_usd' => $request->amount_usd,
             'date' => date('Y-m-d'),
             'proof_doc' => '/images/wallet_transaction/'.$fileName,
-            'admin_confirmation' => 'Paid',
+            'admin_confirmation' => 'Not Paid',
         ];
+
+        // $data = [
+        //     'user_id' => $request->user_id_buyer,
+        //     'payment_via_id' => $request->payment_type,
+        //     'amount_usd' => $request->amount_usd,
+        //     'date' => date('Y-m-d'),
+        //     'proof_doc' => '/images/wallet_transaction/'.$fileName,
+        //     'admin_confirmation' => 'Paid',
+        // ];
 
         $wallet = WalletTransaction::create($data);
 
-        // if ($paymentType == 1) {
-        //     $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
-        //     $payload->invoice_id = $wallet->id;
-        //     $wallet->update([
-        //         'invoice' => '/storage/app/STAL-' . $wallet->id . '.pdf'
-        //     ]);
+        if ($paymentType == 1) {
+            $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
+            $payload->invoice_id = $wallet->id;
+            $wallet->update([
+                'invoice' => '/storage/app/STAL-' . $wallet->id . '.pdf'
+            ]);
 
-        //     $invoice->generateCreditInvoice($payload);
-        // }
+            $invoice->generateCreditInvoice($payload);
+        }
 
         // add subscription code then send email
         $this->addUserSubscriptionCode($wallet->user, $wallet->amount_usd);
