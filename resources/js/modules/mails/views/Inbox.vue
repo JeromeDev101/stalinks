@@ -2481,7 +2481,7 @@ export default {
 
         createForwardHeader(info) {
             return "<<< Forwarded message >>>"
-                + "<div> <span>From: " + info.from_mail + "</span> <br>"
+                + "<div> <span>From: " + info.from_mail + " (" + info.sender + ")" + "</span> <br>"
                 + "<span>Date: " + info.full_clean_date + "</span> <br>"
                 + "<span>Subject: " + info.subject + "</span> <br>"
                 + "<span>To: " + info.received + "</span>"
