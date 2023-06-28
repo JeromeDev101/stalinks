@@ -38,6 +38,12 @@ export default class BuyService {
             .catch(error => error);
     }
 
+    static updateInterested(params) {
+        return axios.post('api/buy-interested-new', params)
+            .then(response => response)
+            .catch(error => error);
+    }
+
     static saveInterestedDetails(params) {
         return axios.post('api/save-interested-details', params)
             .then(response => response)

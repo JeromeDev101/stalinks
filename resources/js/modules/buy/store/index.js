@@ -142,6 +142,27 @@ const actions = {
         }
     },
 
+    async actionInterested({ commit }, params) {
+        try{
+            let response = await BuyService.updateInterested(params);
+
+            if (response.status === 200 && response.data.success === true) {
+                commit(MESSAGE_FORMS, { action: 'updated', message: 'Saved !', errors: {} });
+            }
+            else if (response.response.status === 422) {
+                commit(MESSAGE_FORMS, response.response.data);
+            }
+        }catch( e ) {
+            let errors = e.response.data.errors;
+            if (errors) {
+                commit(SET_ERROR, errors);
+            } else {
+                commit(SET_ERROR, e.response.data);
+            }
+        }
+    },
+
+
     async actionDislike({ commit }, params) {
         try{
             let response = await BuyService.updateDislike(params);

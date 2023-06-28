@@ -8,6 +8,7 @@ use App\Events\BuyEvent;
 use App\Models\Backlink;
 use App\Models\Publisher;
 use App\Models\Registration;
+use App\Models\BacklinksInterested;
 use App\Services\HttpClient;
 use Illuminate\Http\Request;
 use App\Models\BuyerPurchased;
@@ -733,6 +734,49 @@ class BuyController extends Controller
 //                'int_domain_id' => 0,
 //                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
 //            ]);
+        }
+
+        return response()->json(['success' => true], 200);
+    }
+
+    public function updateInterestedNew (Request $request) {
+        $user = auth()->user();
+
+        $buyer_purchased = BuyerPurchased::where([
+                        'user_id_buyer' => $user->id,
+                        'publisher_id' => $request->id
+                    ]);
+
+        if($buyer_purchased->count() > 0) {
+            $buyer_purchased->update([
+                'status' => 'Interested'
+            ]);
+        } else {
+            BuyerPurchased::create([
+                'user_id_buyer' => $user->id,
+                'publisher_id' => $request->id,
+                'status' => 'Interested'
+            ]);
+        }
+
+        $interested = BacklinksInterested::where('publisher_id', $request->id)->first();
+
+        if ($interested) {
+            $interested->update([
+                'link' => $request->link,
+                'anchor_text' => $request->anchor_text,
+                'url_advertiser' => $request->url_advertiser,
+            ]);
+        } else {
+            $new = new BacklinksInterested();
+
+            $new->user_id = Auth::user()->id;
+            $new->publisher_id = $request->id;
+            $new->link = $request->link;
+            $new->anchor_text = $request->anchor_text;
+            $new->url_advertiser = isset($request->url_advertiser) ? $request->url_advertiser : null;
+
+            $new->save();
         }
 
         return response()->json(['success' => true], 200);

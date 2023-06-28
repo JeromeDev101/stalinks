@@ -822,6 +822,17 @@
                             </button>
 
                             <button
+                                v-if="updateModel.status_purchased === 'Not interested' || !updateModel.status_purchased"
+                                type="button"
+                                class="btn btn-success"
+                                :disabled="btnBuy"
+
+                                @click="doInterested(updateModel)">
+
+                                Interested
+                            </button>
+
+                            <button
                                 type="button"
                                 class="btn btn-primary"
                                 :disabled="btnBuy"
@@ -2292,6 +2303,8 @@ export default {
                 this.updateModel.price = this.computePrice(that.price, that.inc_article, 'yes');
                 this.updateModel.prices = this.updateModel.price
 
+                console.log(that)
+
                 // display interested details if any
                 if(buy.status_purchased == 'Interested') {
                     this.updateModel.link = buy.backlinks_interested.length ? buy.backlinks_interested[0].link : null;
@@ -2369,6 +2382,31 @@ export default {
                     this.searchLoading = false;
 
                     this.getBuyList();
+                }
+            });
+        },
+
+        async doInterested (data) {
+            let self = this;
+
+            swal.fire({
+                title : self.$t('message.list_backlinks.mark_interested'),
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    $('#tbl_buy_backlink').DataTable().destroy();
+
+                    this.searchLoading = true;
+                    this.$store.dispatch('actionInterested', data)
+                    this.searchLoading = false;
+
+                    this.getBuyList();
+
+                    $("#modal-buy-update").modal('hide');
                 }
             });
         },
