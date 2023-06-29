@@ -204,6 +204,21 @@
                                         class="text-danger">{{ err }}</span>
                                 </div>
                             </div>
+
+                            <div class="col-sm-6">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.with_image}"
+                                    class="form-group">
+                                    <label>With Image</label>
+                                    <select name="" class="form-control" v-model="paymentUpdate.with_image">
+                                        <option value="1">{{ $t('message.finance.yes') }}</option>
+                                        <option value="0">{{ $t('message.finance.no') }}</option>
+                                    </select>
+                                    <span
+                                        v-if="messageForms.errors.with_image"
+                                        v-for="err in messageForms.errors.with_image"
+                                        class="text-danger">{{ err }}</span>
+                                </div>
+                            </div>
                         </div>
 
                         <hr/>

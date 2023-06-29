@@ -29,7 +29,8 @@ class PaymentType extends Model
         'account_holder',
         'account_type',
         'routing_num',
-        'wire_routing_num'
+        'wire_routing_num',
+        'with_image',
     ];
 
     public function payment_type_image() {

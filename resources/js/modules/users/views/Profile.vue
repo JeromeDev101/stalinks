@@ -17,7 +17,7 @@
                                 <h3>{{ user.username }}</h3>
                             </li>
                             <li>
-                                <input 
+                                <input
                                     type="file"
                                     class="form-control mb-2"
                                     enctype="multipart/form-data"
@@ -74,9 +74,9 @@
                                 <tr v-if="user.isOurs === 0">
                                     <td><b>Email Display Name</b></td>
                                     <td>
-                                        <input 
-                                            v-model="user.work_mail_display_name" 
-                                            type="text" 
+                                        <input
+                                            v-model="user.work_mail_display_name"
+                                            type="text"
                                             class="form-control"
                                             :placeholder="'Type Email Display Name'">
                                     </td>
@@ -286,6 +286,27 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" v-model="billing.payment_type[payment_method.id]">
+
+                                            <div v-if="payment_method.with_image" class="form-group mt-2 p-2">
+                                                <label>QR Code / Image</label>
+                                                <div class="row">
+                                                    <input type="file" class="form-control col mr-2" enctype="multipart/form-data" :ref="'qr-image' + payment_method.id">
+
+                                                    <button type="button" class="btn btn-primary col-2" @click="uploadAccountImage(payment_method.id)"><i class="fas fa-upload"></i></button>
+                                                </div>
+                                            </div>
+
+                                            <div v-if="paymentTypeImages[payment_method.id]" class="form-group mt-2 p-2">
+                                                <div class="row">
+                                                    <div class="image-container rounded mx-auto d-block">
+                                                        <img
+                                                            :src="'/storage/' + paymentTypeImages[payment_method.id]"
+                                                            class="img-thumbnail"
+                                                            alt="..."
+                                                            style="height: 250px; width: 250px;">
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                             <span
                                                 v-if="messageForms.errors.hasOwnProperty('payment_type.'+ payment_method.id)"
@@ -769,6 +790,7 @@ export default {
                 account_type: [],
                 routing_num: [],
                 wire_routing_num: [],
+                img_paths: [],
             },
             new_password: '',
             c_password: '',
@@ -829,6 +851,10 @@ export default {
             listUser: state => state.storeUser.listUser,
             summaryPublish: state => state.storePublisher.summaryPublish,
         }),
+
+        paymentTypeImages: function() {
+            return this.billing.img_paths;
+        },
 
         paymentMethodListSendPayment: function() {
             return this.paymentMethodList.filter(i => i.send_payment === 'yes')
@@ -905,6 +931,99 @@ export default {
         ...mapActions({
             getAffiliateCodeSet : "getAffiliateCodeSet",
         }),
+
+        uploadAccountImage (payment_id) {
+            let self = this;
+            let formData = new FormData();
+
+            if (!self.billing.payment_type[payment_id]) {
+                swal.fire('Error', 'Please input an account value for the image/qr code', 'error');
+                return;
+            } else if (!self.$refs['qr-image' + payment_id][0].files[0]) {
+                swal.fire('Error', 'Please input an image', 'error');
+                return;
+            } else {
+                formData.append('file', self.$refs['qr-image' + payment_id][0].files[0]);
+                formData.append('payment_id', payment_id);
+                formData.append('account', self.billing.payment_type[payment_id]);
+                formData.append('user_id', self.user.id);
+                formData.append('payment_default', self.billing.payment_default);
+
+                for (let value of self.billing.bank_name) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('bank_name[]', value);
+                }
+
+                for (let value of self.billing.account_name) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_name[]', value);
+                }
+
+                for (let value of self.billing.account_iban) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_iban[]', value);
+                }
+
+                for (let value of self.billing.swift_code) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('swift_code[]', value);
+                }
+
+                for (let value of self.billing.beneficiary_add) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('beneficiary_add[]', value);
+                }
+
+                for (let value of self.billing.account_holder) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_holder[]', value);
+                }
+
+                for (let value of self.billing.account_type) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_type[]', value);
+                }
+
+                for (let value of self.billing.routing_num) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('routing_num[]', value);
+                }
+
+                for (let value of self.billing.wire_routing_num) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('wire_routing_num[]', value);
+                }
+
+                axios.post('/api/admin/update-user-payment-type-image', formData)
+                    .then((response) => {
+                        this.$set(this.billing.img_paths, payment_id, response.data.data);
+
+                        swal.fire(
+                            self.$t('message.finance.alert_success'),
+                            self.$t('message.finance.alert_image_uploaded'),
+                            'success'
+                        )
+                    });
+            }
+        },
 
         getListPaymentMethod() {
             axios.get('/api/payment-list-registration')
@@ -995,8 +1114,6 @@ export default {
                         $("#modalRefundReq").modal('hide')
                     }
                 })
-
-            console.log(this.user)
         },
 
         submitUpload() {
@@ -1178,6 +1295,7 @@ export default {
                             var wire_routing_num = this.currentUser.user_payment_types[index].wire_routing_num == null ? '':JSON.parse(this.currentUser.user_payment_types[index].wire_routing_num)
 
                             this.billing.payment_type[payment_id] = this.currentUser.user_payment_types[index].account
+                            this.billing.img_paths[payment_id] = this.currentUser.user_payment_types[index].img_path
 
                             this.billing.bank_name[payment_id] = bank_name[payment_id] == null ? '':bank_name[payment_id];
                             this.billing.account_name[payment_id] = account_name[payment_id] == null ? '':account_name[payment_id];
@@ -1250,6 +1368,8 @@ export default {
                 this.user.id_payment_type = this.billing.payment_default;
                 this.user.user_type.company_type = this.company_type;
                 this.user.user_type.country_id = this.country_id;
+
+                this.user.img_paths = this.billing.img_paths;
 
                 if (this.billing.payment_default) {
                     if(!this.user.payment_type[this.billing.payment_default]) {

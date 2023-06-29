@@ -962,7 +962,7 @@
 
 
                                             <div class="px-5"
-                                                 v-show="payment_method.account_name ||
+                                                v-show="payment_method.account_name ||
                                                 payment_method.bank_name ||
                                                 payment_method.swift_code ||
                                                 payment_method.beneficiary_add ||
@@ -1773,6 +1773,27 @@
                                                 <input type="text" role="presentation" autocomplete="off" class="form-control" v-model="accountUpdate.update_method_payment_type[payment_method.id]">
                                             </div>
 
+                                            <div v-if="payment_method.with_image == 1" class="form-group mt-2 p-2">
+                                                <label>QR Code / Image</label>
+                                                <div class="row">
+                                                    <input type="file" class="form-control col mr-2" enctype="multipart/form-data" :ref="'qr-image' + payment_method.id" :disabled="!isVerified">
+
+                                                    <button type="button" class="btn btn-primary col-2" @click="uploadAccountImage(payment_method.id)" :disabled="!isVerified"><i class="fas fa-upload"></i></button>
+                                                </div>
+                                            </div>
+
+                                            <div v-if="paymentTypeImagesRegistration[payment_method.id]" class="form-group mt-2 p-2">
+                                                <div class="row">
+                                                    <div class="image-container rounded mx-auto d-block">
+                                                        <img
+                                                            :src="'/storage/' + paymentTypeImagesRegistration[payment_method.id]"
+                                                            class="img-thumbnail"
+                                                            alt="..."
+                                                            style="height: 250px; width: 250px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <span
                                                 v-if="messageForms.errors.hasOwnProperty('update_method_payment_type.'+ payment_method.id)"
                                                 v-for="err in messageForms.errors['update_method_payment_type.'+ payment_method.id]"
@@ -2293,6 +2314,7 @@ export default {
             },
 
             accountUpdate : {
+                user_id: '',
                 id : '',
                 name : '',
                 email : '',
@@ -2323,6 +2345,7 @@ export default {
                 rate_type : '',
                 is_show_price_basis : '',
                 update_method_payment_type: [],
+                img_paths: [],
                 is_sub_account: '',
                 bank_name: [],
                 account_name: [],
@@ -2454,6 +2477,10 @@ export default {
             listLanguages : state => state.storePublisher.listLanguages,
             listMailTemplate : state => state.storeExtDomain.listMailTemplate,
         }),
+
+        paymentTypeImagesRegistration: function() {
+            return this.accountUpdate.img_paths;
+        },
 
         paymentMethodListSendPayment: function() {
             return this.paymentMethodList.filter(i => i.send_payment === 'yes')
@@ -3809,6 +3836,7 @@ export default {
             let self = this;
             let that = JSON.parse(JSON.stringify(account))
 
+            this.accountUpdate.user_id = account.user == null ? null : account.user.id;
             this.accountUpdate.id = that.id
             this.accountUpdate.type = that.type
             this.accountUpdate.username = that.username
@@ -3859,6 +3887,7 @@ export default {
                         var acc_wire_routing_num = JSON.parse(account.user.user_payment_types[index].wire_routing_num)
 
                         this.accountUpdate.update_method_payment_type[payment_id] = account.user.user_payment_types[index].account
+                        this.accountUpdate.img_paths[payment_id] = account.user.user_payment_types[index].img_path
                         this.accountUpdate.bank_name[payment_id] = account.user.user_payment_types[index].bank_name == null ? '':acc_bank_name[payment_id]
                         this.accountUpdate.account_name[payment_id] = account.user.user_payment_types[index].account_name == null ? '':acc_account_name[payment_id]
                         this.accountUpdate.account_iban[payment_id] = account.user.user_payment_types[index].account_iban == null ? '':acc_account_iban[payment_id]
@@ -4152,6 +4181,99 @@ export default {
             });
 
             return values;
+        },
+
+        uploadAccountImage (payment_id) {
+            let self = this;
+            let formData = new FormData();
+
+            if (!self.accountUpdate.update_method_payment_type[payment_id]) {
+                swal.fire('Error', 'Please input an account value for the image/qr code', 'error');
+                return;
+            } else if (!self.$refs['qr-image' + payment_id][0].files[0]) {
+                swal.fire('Error', 'Please input an image', 'error');
+                return;
+            } else {
+                formData.append('file', self.$refs['qr-image' + payment_id][0].files[0]);
+                formData.append('payment_id', payment_id);
+                formData.append('account', self.accountUpdate.update_method_payment_type[payment_id]);
+                formData.append('user_id', self.accountUpdate.user_id);
+                formData.append('payment_default', self.accountUpdate.id_payment_type);
+
+                for (let value of self.accountUpdate.bank_name) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('bank_name[]', value);
+                }
+
+                for (let value of self.accountUpdate.account_name) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_name[]', value);
+                }
+
+                for (let value of self.accountUpdate.account_iban) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_iban[]', value);
+                }
+
+                for (let value of self.accountUpdate.swift_code) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('swift_code[]', value);
+                }
+
+                for (let value of self.accountUpdate.beneficiary_add) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('beneficiary_add[]', value);
+                }
+
+                for (let value of self.accountUpdate.account_holder) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_holder[]', value);
+                }
+
+                for (let value of self.accountUpdate.account_type) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('account_type[]', value);
+                }
+
+                for (let value of self.accountUpdate.routing_num) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('routing_num[]', value);
+                }
+
+                for (let value of self.accountUpdate.wire_routing_num) {
+                    if (typeof value === 'undefined' || value === '') {
+                        value = '';
+                    }
+                    formData.append('wire_routing_num[]', value);
+                }
+
+                axios.post('/api/admin/update-user-payment-type-image', formData)
+                    .then((response) => {
+                        this.$set(this.accountUpdate.img_paths, payment_id, response.data.data);
+
+                        swal.fire(
+                            self.$t('message.finance.alert_success'),
+                            self.$t('message.finance.alert_image_uploaded'),
+                            'success'
+                        )
+                    });
+            }
         },
 
         advanceSearch: __.debounce(function () {

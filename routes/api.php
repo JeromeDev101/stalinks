@@ -82,6 +82,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-unread-emails')->get('/get-unread-emails/{email}', 'UserController@getUnreadEmails');
     Route::name('get-unread-emails-list')->get('/get-unread-emails-list/{email}/{all}', 'UserController@getUnreadEmailList');
     Route::name('get-user-drafts')->get('/get-user-drafts', 'UserController@getUserDrafts');
+    Route::name('update-user-payment-type-image')->post('/admin/update-user-payment-type-image', 'AuthController@updateUserPaymentTypeImage');
 
     //Article
     Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');

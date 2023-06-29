@@ -110,9 +110,10 @@ class AuthController extends Controller
             'account_type',
             'routing_num',
             'wire_routing_num',
-            'languages'
+            'languages',
+            'sub_buyers_count',
+            'img_paths',
         );
-
 
         unset($input['c_password']);
         unset($input['role']);
@@ -206,6 +207,8 @@ class AuthController extends Controller
             if(is_array($input_2['payment_type'])) {
                 foreach($input_2['payment_type'] as $key => $types) {
                     if($types != '') {
+                        $img_path = $request->img_paths[$key];
+
                         array_push($insert_input_users_payment_type, [
                             'user_id' => $input['id'],
                             'payment_id' => $key,
@@ -220,6 +223,7 @@ class AuthController extends Controller
                             'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num): null,
                             'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num): null,
                             'is_default' => $key == $input['id_payment_type'] ? 1:0,
+                            'img_path' => $img_path,
                         ]);
                     }
                 }
@@ -262,6 +266,52 @@ class AuthController extends Controller
 
         $response['success'] = true;
         return response()->json($response);
+    }
+
+    public function updateUserPaymentTypeImage (Request $request) {
+        $file = $request->file('file');
+
+        // check if payment method already exist
+        $payment_type = UsersPaymentType::where('user_id', $request->user_id)
+            ->where('account', $request->account)
+            ->where('payment_id', $request->payment_id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        // save image
+        $folder = 'user_payment_images';
+
+        $extension = $file->getClientOriginalExtension();
+        $fileName = 'image_' . date('Ymd_His') . '_' . uniqid() . '.' . $extension;
+
+        $path = $file->storeAs($folder, $fileName, 'public');
+
+        if ($payment_type) {
+            // update payment type
+            $payment_type->update(['img_path' => $path]);
+        } else {
+            // add payment type
+            $payment_type_insert = [
+                'user_id' => $request->user_id,
+                'payment_id' => $request->payment_id,
+                'account' => $request->account,
+                'bank_name' => count($request->bank_name) > 0 ? json_encode($request->bank_name) : null,
+                'account_name' => count($request->account_name) > 0 ? json_encode($request->account_name) : null,
+                'account_iban' => count($request->account_iban) > 0 ? json_encode($request->account_iban): null,
+                'swift_code' => count($request->swift_code) > 0 ? json_encode($request->swift_code): null,
+                'beneficiary_add' => count($request->beneficiary_add) > 0 ? json_encode($request->beneficiary_add): null,
+                'account_holder' => count($request->account_holder) > 0 ? json_encode($request->account_holder): null,
+                'account_type' => count($request->account_type) > 0 ? json_encode($request->account_type): null,
+                'routing_num' => count($request->routing_num) > 0 ? json_encode($request->routing_num): null,
+                'wire_routing_num' => count($request->wire_routing_num) > 0 ? json_encode($request->wire_routing_num): null,
+                'is_default' => $request->payment_id == $request->payment_default ? 1 : 0,
+                'img_path' => $path
+            ];
+
+            UsersPaymentType::create($payment_type_insert);
+        }
+
+        return response()->json(['success' => true, 'data' => $path]);
     }
 
     /**

@@ -251,6 +251,8 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             if(is_array($input_2['update_method_payment_type'])) {
                 foreach($input_2['update_method_payment_type'] as $key => $types) {
                     if($types != '') {
+                        $img_path = count($data['img_paths']) ? $data['img_paths'][$key] : null;
+
                         array_push($insert_input_users_payment_type, [
                             'user_id' => $user->id,
                             'payment_id' => $key,
@@ -265,6 +267,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
                             'routing_num' => count($data['routing_num']) > 0 ? json_encode($data['routing_num']) : null,
                             'wire_routing_num' => count($data['wire_routing_num']) > 0 ? json_encode($data['wire_routing_num']) : null,
                             'is_default' => $key == $input['id_payment_type'] ? 1:0,
+                            'img_path' => $img_path,
                         ]);
                     }
                 }

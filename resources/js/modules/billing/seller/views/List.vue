@@ -331,11 +331,21 @@
                                             <b :class="{ 'text-danger' : info.account == 'Not yet setup' }">
                                                 {{ info.account }}
                                             </b>
+
+                                            <div class="row my-3">
+                                                <div class="image-container rounded mx-auto d-block">
+                                                    <img
+                                                        :src="'/storage/' + info.img_path"
+                                                        class="img-thumbnail"
+                                                        alt="..."
+                                                        style="width: 100%">
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            STALINKS ID 
+                                            STALINKS ID
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
@@ -563,6 +573,7 @@ export default {
                 account_iban: '',
                 swift_code: '',
                 beneficiary_add: '',
+                img_path: '',
             },
             isDisabledPay : true,
             isDisabledReupload: false,
@@ -710,7 +721,7 @@ export default {
 
                     if (paymentType) {
                         account = paymentType.account;
-
+                        this.info.img_path = paymentType.img_path;
                         this.info.bank_name = paymentType.bank_name == null ? '':JSON.parse(paymentType.bank_name)[data.id_payment_type];
                         this.info.account_name = paymentType.account_name == null ? '':JSON.parse(paymentType.account_name)[data.id_payment_type];
                         this.info.account_iban = paymentType.account_iban == null ? '':JSON.parse(paymentType.account_iban)[data.id_payment_type];
