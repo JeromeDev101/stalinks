@@ -759,7 +759,9 @@ class BuyController extends Controller
             ]);
         }
 
-        $interested = BacklinksInterested::where('publisher_id', $request->id)->first();
+        $interested = BacklinksInterested::where('publisher_id', $request->id)
+            ->where('user_id', $user->id)
+            ->first();
 
         if ($interested) {
             $interested->update([
