@@ -251,6 +251,8 @@ class ArticlesController extends Controller
     private function getArticleStatusSummaryTotals () {
         $user = Auth::user();
         $isExtWriter = Auth::user()->role_id == 4 && Auth::user()->isOurs == 1;
+        $user = Auth::user();
+        $registration = Registration::where('email', $user->email)->first();
 
         $columns = [
             DB::raw('SUM(CASE WHEN article.status_writer is null and backlinks.status not in ("Issue", "Canceled") THEN 1 ELSE 0 END) AS total_queue'),
@@ -261,7 +263,7 @@ class ArticlesController extends Controller
             DB::raw('SUM(CASE WHEN exists (select * from backlinks where article.id_backlink = backlinks.id and status = "Issue" and backlinks.deleted_at is null) AND article.status_writer is null OR article.status_writer = "Issue" THEN 1 ELSE 0 END) AS total_issue'),
         ];
 
-        return Article::select($columns)
+        $list = Article::select($columns)
             ->leftJoin('backlinks', 'article.id_backlink', '=', 'backlinks.id')
             ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
             ->leftJoin('users', 'article.id_writer', '=', 'users.id')
@@ -275,7 +277,21 @@ class ArticlesController extends Controller
                     })->orWhere('id_writer', $user->id);
                 })->whereIn('article.id_language', json_decode($user->registration->language_id))
                 ->where('article.is_confirmed', 1);
-            })->first();
+            });
+
+        if ($user->isOurs == 1 && isset($registration->type) && $registration->type == 'Seller') {
+            $backlinks_ids = $this->getBacklinksForSeller();
+
+            $list->whereIn('article.id_backlink', $backlinks_ids);
+        }
+
+        if ($user->isOurs == 1 && isset($registration->type) && $registration->type == 'Buyer') {
+            $backlinks_ids = $this->getBacklinksForBuyer();
+
+            $list->whereIn('article.id_backlink', $backlinks_ids);
+        }
+
+        return $list->first();
     }
 
     private function getBacklinksForSeller() {
