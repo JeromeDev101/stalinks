@@ -99,19 +99,34 @@ class BuyController extends Controller
         ];
 
         $user_id = $user->id;
+        $backlink_interested_user = [];
+
+        $backlink_interested_user[] = $user_id;
+
+        // check sub buyers
+        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
+        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
+
+        if (count($sub_buyer_ids)) {
+            $backlink_interested_user = array_merge($backlink_interested_user, $sub_buyer_ids->toArray());
+        }
 
         // check if sub account
         $registered = Registration::where('email', Auth::user()->email)->first();
         if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
             if (isset($registered->team_in_charge)) {
+                $backlink_interested_user = [];
                 $user_model = User::where('id', $registered->team_in_charge)->first();
-                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+                $backlink_interested_user[] = isset($user_model->id) ? $user_model->id : Auth::user()->id;
+                $backlink_interested_user[] = $user_id;
             }
         }
 
         $list = Publisher::select($columns)
-            ->with(['backlinks_interested' => function ($query) use ($user_id) {
-                $query->where('user_id', $user_id);
+            ->with(['backlinks_interested' => function ($query) use ($backlink_interested_user) {
+                $orderedUserIds = implode(',', $backlink_interested_user);
+                $query->whereIn('user_id', $backlink_interested_user)
+                    ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id) {
                 $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
