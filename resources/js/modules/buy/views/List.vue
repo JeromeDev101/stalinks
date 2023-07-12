@@ -794,7 +794,7 @@
                     <div class="modal-footer custom-footer">
                         <div class="pull-left">
                             <button
-                                v-if="updateModel.status_purchased === 'Interested' && (user.role_id == 5 && user.sub_buyers_count > 0)"
+                                v-if="updateModel.status_purchased === 'Interested' && user.role_id == 5"
                                 type="button"
                                 class="btn btn-info"
                                 :disabled="btnBuy"
