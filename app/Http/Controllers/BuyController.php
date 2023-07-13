@@ -128,9 +128,14 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
-            ->leftJoin('backlinks_interesteds', function ($q) use ($user_id) {
-                $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
+            ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user) {
+                if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
+                    $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
+                    ->whereIn('backlinks_interesteds.user_id', $backlink_interested_user);
+                } else {
+                    $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
                     ->where('backlinks_interesteds.user_id', $user_id);
+                }
             })
             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
             ->leftJoin('registration', 'users.email', '=', 'registration.email')
