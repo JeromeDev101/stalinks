@@ -46,7 +46,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 svg {
   position: absolute;
   top: 50%;
@@ -54,4 +54,4 @@ svg {
   margin-top: -250px;
   margin-left: -400px;
 }
-</style>
+</style> -->

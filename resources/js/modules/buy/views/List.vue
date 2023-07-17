@@ -32,7 +32,7 @@
                     </div>
                     <div class="card-body collapse" id="collapseExample">
                         <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_search_url') }}</label>
                                     <input
@@ -45,7 +45,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_status_purchased') }}</label>
 
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_lang') }}</label>
                                     <v-select
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_continent') }}</label>
                                     <v-select
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_country') }}</label>
                                     <v-select
@@ -139,7 +139,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2"
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3"
                                  v-if="user.isAdmin || (user.isOurs == 0 && [7, 14].includes(user.role_id))">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_seller') }}</label>
@@ -152,7 +152,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_accept_cb') }}</label>
                                     <select name="" class="form-control" v-model="filterModel.casino_sites">
@@ -163,7 +163,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_topic') }}</label>
                                     <!-- <select name="" class="form-control" v-model="filterModel.topic">
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_dz') }}</label>
                                     <v-select
@@ -197,7 +197,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_https') }}</label>
                                     <select
@@ -210,7 +210,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_ur') }}</label>
                                     <div class="input-group mb-3">
@@ -231,7 +231,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_dr') }}</label>
                                     <div class="input-group mb-3">
@@ -252,7 +252,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_org_kw') }}</label>
                                     <div class="input-group mb-3">
@@ -273,7 +273,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_org_traffic') }}</label>
                                     <div class="input-group mb-3">
@@ -294,7 +294,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_price') }}</label>
                                     <div class="input-group mb-3">
@@ -320,7 +320,7 @@
 <!--                                class="col-md-2"-->
 <!--                                v-if="user.isAdmin || (user.isOurs == 0 && user.role_id == 7) || user.role_id === 5">-->
 
-                            <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
 
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_code') }}</label>
@@ -342,7 +342,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3" v-if="user.isAdmin || user.isOurs !== 1 || isShowPriceBasis(user)">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.filter_price_basis') }}</label>
                                     <v-select
@@ -361,9 +361,9 @@
                                 </div>
                             </div>
 
-                            <div v-if="user.isAdmin || user.role_id == 5" class="col-md-2">
+                            <div v-if="user.isAdmin || user.role_id == 5" class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="form-group">
-                                    <label>Search Interested Domain Name</label>
+                                    <label>Interested Domain Name</label>
                                     <input
                                         v-model="filterModel.interested_domain_name"
                                         name=""
@@ -377,7 +377,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-2">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-4 col-xl-3">
                                 <button class="btn btn-default" @click="clearSearch" :disabled="isSearching">
                                     {{ $t('message.list_backlinks.clear') }}
                                 </button>
