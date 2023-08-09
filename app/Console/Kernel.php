@@ -39,6 +39,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('email_attachments:delete')->daily();
         $schedule->command('health:check')->everyFiveMinutes();
         $schedule->command('alexa:reset')->monthly();
+        $schedule->command('ahref:monthly')->monthlyOn(22, '00:00');
     }
 
     /**
