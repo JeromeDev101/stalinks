@@ -1016,7 +1016,7 @@ class BuyController extends Controller
 
             case "value3":
 
-                $val = '';
+                $val = 'E';
 
                 if( $a >= 500){ $val = 'A'; }
                 else if( $a >= 200 && $a < 500){ $val = 'B'; }
@@ -1028,7 +1028,7 @@ class BuyController extends Controller
 
             case "value4":
 
-                $val = '';
+                $val = 'E';
 
                 if( $a >= 10000){ $val = 'A'; }
                 else if( $a >= 5000 && $a < 10000){ $val = 'B'; }

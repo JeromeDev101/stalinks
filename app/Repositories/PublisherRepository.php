@@ -486,7 +486,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             case "value3":
 
-                $val = '';
+                $val = 'E';
 
                 if( $a >= 1000){ $val = 'A'; }
                 else if( $a > 501 && $a < 1000){ $val = 'B'; }
@@ -498,7 +498,7 @@ class PublisherRepository extends BaseRepository implements PublisherRepositoryI
 
             case "value4":
 
-                $val = '';
+                $val = 'E';
 
                 if( $a >= 10000){ $val = 'A'; }
                 else if( $a >= 3501 && $a < 10000){ $val = 'B'; }
