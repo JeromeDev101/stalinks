@@ -66,7 +66,7 @@ class IncomesAdminController extends Controller
 
         $temp = $list->get();
 
-        $sellerPrice = $list->sum('price');
+        $sellerPrice = $list->sum('backlinks.price');
         $buyerPrice = $list->sum('prices');
         $billingCount = $temp->sum('billing_count');
         $affiliateCommission = $temp->sum('affiliate_com');
