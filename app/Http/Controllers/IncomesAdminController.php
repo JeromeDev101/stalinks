@@ -180,7 +180,7 @@ class IncomesAdminController extends Controller
             END as fee,
 
             @content_charge := CASE
-              WHEN price.price IS NULL OR article.id IS NULL THEN 0
+              WHEN price.price IS NULL OR article.id IS NULL OR article.status_writer != 'Content Validated' OR article.payment_status IS NULL THEN 0
               ELSE
                 price.price
             END as 'content_charge',
