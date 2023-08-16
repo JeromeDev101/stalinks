@@ -180,12 +180,9 @@ class IncomesAdminController extends Controller
             END as fee,
 
             @content_charge := CASE
-              WHEN registration.writer_price IS NULL OR article.id IS NULL THEN 0
+              WHEN price.price IS NULL OR article.id IS NULL THEN 0
               ELSE
-                CASE
-                    WHEN @rate_type = 'ppw' THEN (@writer_price * article.num_words)
-                    ELSE @writer_price
-                END
+                price.price
             END as 'content_charge',
 
             @net_income := backlinks.prices - backlinks.price - @content_charge - @fee as 'net_income',
@@ -197,6 +194,7 @@ class IncomesAdminController extends Controller
         ")
         ->where('backlinks.status', 'Live')
         ->leftJoin('article', 'backlinks.id', '=', 'article.id_backlink')
+        ->leftJoin('price', 'article.id', '=', 'price.id_article')
         ->leftJoin('users', 'article.id_writer', '=', 'users.id')
         ->leftjoin('registration', 'users.email', '=' , 'registration.email')
         ->with(['user' => function($sub) {
