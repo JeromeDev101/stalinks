@@ -73,6 +73,17 @@ class WalletSummaryController extends Controller
 
         }
 
+        $user_buyers = $user_buyers->toArray();
+
+        $user_buyers['data'] = $user_buyers;
+        $user_buyers['total_deposit'] = array_sum(array_column($user_buyers, 'deposit'));;
+        $user_buyers['total_orders'] = array_sum(array_column($user_buyers, 'orders'));;
+        $user_buyers['total_orders_cancelled'] = array_sum(array_column($user_buyers, 'order_cancel'));;
+        $user_buyers['total_valid_orders'] = array_sum(array_column($user_buyers, 'valid_orders'));;
+        $user_buyers['total_purchase'] = array_sum(array_column($user_buyers, 'order_live'));;
+        $user_buyers['total_refund_orders'] = array_sum(array_column($user_buyers, 'order_refund'));;
+        $user_buyers['total_wallet'] = array_sum(array_column($user_buyers, 'wallet'));;
+
         return $user_buyers;
     }
 

@@ -110,6 +110,37 @@
                         <h3 class="card-title text-primary">{{ $t('message.wallet_summary.ws_title') }}</h3>
                     </div>
 
+                    <div class="d-flex justify-content-center mx-3 mt-3">
+                        <div class="col">
+                            <h6>Deposit: $ {{ total_deposit.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Orders: $ {{ total_orders.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Orders Cancelled: $ {{ total_orders_cancelled.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Valid Orders: $ {{ total_valid_orders.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Purchase: $ {{ total_purchase.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Refund Orders: $ {{ total_refund_orders.toFixed(2) }}</h6>
+                        </div>
+
+                        <div class="col">
+                            <h6>Wallet: $ {{ total_wallet.toFixed(2) }}</h6>
+                        </div>
+
+                    </div>
+
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="tbl_wallet_transaction" class="table table-hover table-bordered table-striped rlink-table">
@@ -213,6 +244,13 @@
                     },
                 ],
                 dateTemp: '',
+                total_deposit: 0,
+                total_orders: 0,
+                total_orders_cancelled: 0,
+                total_valid_orders: 0,
+                total_purchase: 0,
+                total_refund_orders: 0,
+                total_wallet: 0,
                 filterModel: {
                     buyer: this.$route.query.buyer || '',
                     month: this.$route.query.month || '',
@@ -250,7 +288,14 @@
                 axios.get('/api/wallet-summary',{
                     params: this.filterModel
                 }).then((res) => {
-                    this.summaryData = res.data
+                    this.summaryData = res.data.data
+                    this.total_deposit = res.data.total_deposit
+                    this.total_orders = res.data.total_orders
+                    this.total_orders_cancelled = res.data.total_orders_cancelled
+                    this.total_valid_orders = res.data.total_valid_orders
+                    this.total_purchase = res.data.total_purchase
+                    this.total_refund_orders = res.data.total_refund_orders
+                    this.total_wallet = res.data.total_wallet
                     loader.hide();
                 })
             },
