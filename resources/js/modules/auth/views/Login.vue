@@ -171,7 +171,19 @@
                                             <i class="fa fa-lock"></i>
                                         </span>
                                     </div>
-                                    <input v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}" :placeholder="$t('message.login.l2')" v-model="credentials.password" type="password" id="user-password" class="form-control">
+                                    <input
+                                        v-model="credentials.password"
+                                        v-bind:class="{ 'is-invalid': error && objectNotEmpty(error.password)}"
+                                        id="user-password"
+                                        class="form-control"
+                                        :placeholder="$t('message.login.l2')"
+                                        :type="passwordVisible ? 'text' : 'password'"
+                                    >
+                                    <div class="input-group-append">
+                                        <button @click="togglePasswordVisibility" class="btn btn-outline-secondary" type="button">
+                                            <i v-bind:class="passwordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-4">
@@ -236,6 +248,8 @@ export default {
                 'password': '',
             },
 
+            passwordVisible: false,
+
             pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
         };
     },
@@ -279,6 +293,10 @@ export default {
 
         objectNotEmpty(object) {
             return !_.isEmpty(object);
+        },
+
+        togglePasswordVisibility() {
+            this.passwordVisible = !this.passwordVisible; // Toggle password visibility
         },
     },
 }
