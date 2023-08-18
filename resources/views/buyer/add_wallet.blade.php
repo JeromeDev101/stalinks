@@ -152,21 +152,24 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
     <!-- LOGO -->
     @component('components.email_header')
-    Wallet Credited
+    Thank You for Trusting Stalinks for Quality Backlinks!
     @endcomponent
 
     <tr>
         <td align="center" class="main-td" style="padding: 0 15%">
             @component('components.email_body')
                 @slot('main')
-                    <p style="margin: 0;">Hello {{ $user->name }},</p> <br />
+                    <p style="margin: 0;">Dear {{ $user->name }},</p> <br />
                     <p style="margin: 0;">
-                        Your wallet has been credited with the amount of ${{$amount}}.
-                        Thank you for trusting StaLinks!
+                        You have successfully added ${{$amount}} on your Buyer account wallet. We wanted to take a moment to express our sincere
+                        gratitude for choosing Stalinks as your trusted platform for quality backlinks. Your trust in our system means a lot to us.
                     </p> <br />
                     <p style="margin: 0;">
-                        We would love to hear your feedback, as it helps us to serve you better! If it won't take too
-                        much of your time, please share us your thoughts by answering our surveys below:
+                        We're thrilled to see that you're now able to take advantage of our advanced features to select the best quality
+                        backlinks for your needs. Our team is committed to continuously enhancing our services to provide you with the most
+                        effective solutions for your online success. Your feedback and insights are invaluable to us, as they guide us
+                        towards making Stalinks even more user-friendly and effective. If it won't take much of your time please share us
+                        your thought by filling our survey below:
                     </p> <br/>
                 @endslot
 
@@ -180,7 +183,7 @@
                                             <table border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
                                                     <td align="center" style="border-radius: 3px;">
-                                                        <a 
+                                                        <a
                                                             href="{{ url('/survey/a/' . $user->registration->survey_code) }}"
                                                             target="_blank" class="button-text"
                                                             style="background-color: #FF9B00; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey A
@@ -188,7 +191,7 @@
 
                                                         <br/>
 
-                                                        <a 
+                                                        <a
                                                             href="{{ url('/survey/b/' . $user->registration->survey_code) }}"
                                                             target="_blank" class="button-text"
                                                             style="background-color: #FF9B00; margin-top: 10px !important; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey B
@@ -233,7 +236,11 @@
                 @endslot
 
                 @slot('closing')
-                    <p style="margin: 0;">Cheers,<br>StaLinks Team</p>
+                    <p style="margin: 0;">
+                        If you have any questions or need assistance, feel free to reach out. Thank you once again for being a valued member of the Stalinks community.
+                    </p> <br> <br>
+
+                    <p style="margin: 0;">Best regards,<br>StaLinks Team</p>
                 @endslot
 
                 <!-- email body slot -->
