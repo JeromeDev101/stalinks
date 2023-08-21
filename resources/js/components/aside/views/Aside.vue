@@ -438,10 +438,12 @@
                             active:
                                 $route.name == 'publisher' ||
                                 $route.name == 'followup-sales' ||
+                                $route.name == 'injection-requests' ||
                                 $route.name == 'incomes',
                             'menu-open':
                                 $route.name == 'publisher' ||
                                 $route.name == 'followup-sales' ||
+                                $route.name == 'injection-requests' ||
                                 $route.name == 'incomes'
                         }">
                         <a href="#" class="nav-link">
@@ -480,6 +482,16 @@
 
                                     <i class="fas fa-dollar-sign nav-icon"></i>
                                     <p>{{ $t('message.sidebar.incomes') }}</p>
+                                </router-link>
+                            </li>
+                            <li v-if="user.permission_list.includes('view-seller-injection-requests')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/injection-requests' }"
+                                    :class="{ active: $route.name == 'injection-requests' }">
+
+                                    <i class="fas fa-link nav-icon"></i>
+                                    <p>Injection Requests</p>
                                 </router-link>
                             </li>
                         </ul>
@@ -536,6 +548,16 @@
 
                                     <i class="fab fa-btc nav-icon"></i>
                                     <p>{{ $t('message.sidebar.purchase') }}</p>
+                                </router-link>
+                            </li>
+                            <li v-if="user.permission_list.includes('view-buyer-follow-up-injection')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/followup-injection' }"
+                                    :class="{ active: $route.name == 'followup-injection' }">
+
+                                    <i class="fas fa-link nav-icon"></i>
+                                    <p>Follow Up Injection</p>
                                 </router-link>
                             </li>
                         </ul>

@@ -26,6 +26,8 @@ import Publisher from '@/modules/publisher/views/List.vue'
 import FollowupSales from '@/modules/followup_sales/views/List.vue'
 import Purchase from '@/modules/purchase/views/List.vue'
 import Incomes from '@/modules/incomes/views/List.vue'
+import InjectionRequests from '@/modules/injection_requests/views/InjectionRequests.vue'
+import FollowupInjections from '@/modules/injection_requests/views/FollowupInjections.vue'
 import BillingBuyer from '@/modules/billing/buyer/views/List.vue'
 import BillingSeller from '@/modules/billing/seller/views/List.vue'
 import BillingWriter from '@/modules/billing/writer/views/List.vue'
@@ -426,6 +428,30 @@ const routes = [
                 component : FollowupSales,
                 beforeEnter: (to, from, next) => {
                     if(store.state.storeAuth.currentUser.permission_list.includes('view-seller-follow-up-sale')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/injection-requests',
+                name : 'injection-requests',
+                component : InjectionRequests,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-seller-injection-requests')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/followup-injection',
+                name : 'followup-injection',
+                component : FollowupInjections,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-buyer-follow-up-injection')) {
                         next();
                     } else {
                         next('*');

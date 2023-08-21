@@ -508,11 +508,11 @@
                                 slot-scope="scope"
                                 slot="actionSelectRow">
                                 <input type="checkbox"
-                                       class="custom-checkbox"
-                                       @change="checkSelected"
-                                       :id="scope.row"
-                                       :value="scope.row"
-                                       v-model="checkIds">
+                                    class="custom-checkbox"
+                                    @change="checkSelected"
+                                    :id="scope.row"
+                                    :value="scope.row"
+                                    v-model="checkIds">
                             </template>
 
                             <template
@@ -652,42 +652,57 @@
                             <template
                                 slot-scope="scope"
                                 slot="actionButtons">
-                                <div class="btn-group" ref="text">
-                                    <button
-                                        v-if="(scope.row.price != '' && scope.row.price != null) && user.permission_list.includes('create-buyer-list-backlinks-to-buy')"
-                                        class="btn btn-default"
-                                        data-toggle="modal"
-                                        data-target="#modal-buy-update"
-                                        :disabled="isCreditAuth"
-                                        :title="$t('message.list_backlinks.t_buy')"
+                                    <div>
+                                        <button
+                                            v-if="(scope.row.price != '' && scope.row.price != null) && user.permission_list.includes('create-buyer-list-backlinks-to-buy')"
+                                            class="btn btn-default action-btns"
+                                            data-toggle="modal"
+                                            data-target="#modal-buy-update"
+                                            :disabled="isCreditAuth"
+                                            :title="$t('message.list_backlinks.t_buy')"
 
-                                        @click="doUpdate(scope.row)">
+                                            @click="doUpdate(scope.row)">
 
-                                        <i class="fas fa-dollar-sign"></i>
-                                    </button>
+                                            <i class="fas fa-dollar-sign"></i>
+                                        </button>
 
-                                    <button
-                                        v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
-                                        class="btn btn-default"
-                                        :title="$t('message.list_backlinks.bb_interested')"
-                                        :disabled="scope.row.status_purchased == 'Interested' || scope.row.status_purchased == 'Purchased'"
+                                        <button
+                                            class="btn btn-default action-btns"
+                                            data-toggle="modal"
+                                            data-target="#modal-link-injection"
+                                            :disabled="isCreditAuth"
+                                            title="Link Injection Request"
 
-                                        @click="doLike(scope.row.id)">
+                                            @click="doLinkInjection(scope.row)">
 
-                                        <i class="fa fa-fw fa-thumbs-up"></i>
-                                    </button>
+                                            <i class="fas fa-link"></i>
+                                        </button>
+                                    </div>
 
-                                    <button
-                                        v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
-                                        class="btn btn-default"
-                                        :title="$t('message.list_backlinks.bb_not_interested')"
-                                        :disabled="scope.row.status_purchased == 'Not interested' || scope.row.status_purchased == 'Purchased'"
+                                    <div>
+                                        <button
+                                            v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
+                                            class="btn btn-default action-btns"
+                                            :title="$t('message.list_backlinks.bb_interested')"
+                                            :disabled="scope.row.status_purchased == 'Interested' || scope.row.status_purchased == 'Purchased'"
 
-                                        @click="doDislike(scope.row.id)"><i class="fa fa-fw fa-thumbs-down"></i></button>
-                                </div>
+                                            @click="doLike(scope.row.id)">
+
+                                            <i class="fa fa-fw fa-thumbs-up"></i>
+                                        </button>
+
+                                        <button
+                                            v-if="user.permission_list.includes('update-buyer-list-backlinks-to-buy')"
+                                            class="btn btn-default action-btns"
+                                            :title="$t('message.list_backlinks.bb_not_interested')"
+                                            :disabled="scope.row.status_purchased == 'Not interested' || scope.row.status_purchased == 'Purchased'"
+
+                                            @click="doDislike(scope.row.id)"><i class="fa fa-fw fa-thumbs-down"></i>
+                                        </button>
+                                    </div>
                             </template>
                         </vue-virtual-table>
-                        <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="8"></pagination>
+                        <pagination :data="listBuy" @pagination-change-page="getBuyList" :limit="5"></pagination>
                     </div>
                 </div>
             </div>
@@ -847,6 +862,142 @@
             </div>
         </div>
         <!-- End of Modal Buy -->
+
+        <!-- Modal Link Injection -->
+        <div class="modal fade"
+            id="modal-link-injection"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="modelTitleId"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Link Injection Request</h5>
+                        <i class="fa fa-refresh fa-spin" v-if="isPopupLoading"></i>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ $t('message.list_backlinks.t_url') }}</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        v-model="linkInjectionModel.url"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder=""
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>
+                                        Price for Injection
+                                    </label>
+
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number"
+                                            class="form-control"
+                                            v-model="linkInjectionModel.injection_price"
+                                            name=""
+                                            disabled
+                                            aria-describedby="helpId"
+                                            placeholder=""
+                                            min="0">
+                                    </div>
+
+                                    <span
+                                        v-if="errorMessages.injection_price"
+                                        v-for="err in errorMessages.injection_price"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>URL Article</label>
+                                    <input
+                                        v-model="linkInjectionModel.url_article"
+                                        type="text"
+                                        class="form-control"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
+
+                                    <span
+                                        v-if="errorMessages.url_article"
+                                        v-for="err in errorMessages.url_article"
+                                        class="text-danger">
+
+                                        {{ err }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        v-model="linkInjectionModel.anchor_text"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        v-model="linkInjectionModel.link"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        v-model="linkInjectionModel.url_advertiser"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer custom-footer">
+                        <div class="pull-left">
+                        </div>
+
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                {{ $t('message.list_backlinks.close') }}
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-success"
+                                :disabled="btnLinkInjection"
+
+                                @click="submitLinkInjection()">
+
+                                Request
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Link Injection -->
 
         <!-- Modal Interested -->
         <div class="modal fade"
@@ -1271,6 +1422,21 @@
 .box-body.no-padding.relative {
     overflow: scroll;
 }
+
+.item-line {
+    height: auto !important;
+}
+
+.item-line .action-column .item-cell-inner {
+    height: auto !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.action-btns {
+    width: 50px;
+    margin: 2px;
+}
 </style>
 
 <script>
@@ -1302,6 +1468,16 @@ export default {
                 anchor_text : '',
                 link : '',
                 url_advertiser : '',
+            },
+            linkInjectionModel : {
+                id : '',
+                url : '',
+                price : '',
+                anchor_text : '',
+                link : '',
+                url_advertiser : '',
+                url_article: '',
+                injection_price: '',
             },
             tableLoading : false,
             isPopupLoading : false,
@@ -1422,12 +1598,15 @@ export default {
             country_continent_filter_info : '',
             sort_options: [],
             btnBuy: false,
+            btnLinkInjection: false,
 
             currentWindowWidth: window.innerWidth,
             isBuyerHasDiscount: false,
 
             estimationPurchases: 0,
             isInterestedFiltered: false,
+
+            errorMessages: [],
         }
     },
 
@@ -1855,8 +2034,9 @@ export default {
                     prop : '_action',
                     name : this.$t('message.list_backlinks.t_action'),
                     actionName : 'actionButtons',
-                    width : '200',
-                    isHidden : false
+                    width : 300,
+                    isHidden : false,
+                    eClass: {'action-column': 'true'}
                 },
             ];
         }
@@ -2303,8 +2483,6 @@ export default {
                 this.updateModel.price = this.computePrice(that.price, that.inc_article, 'yes');
                 this.updateModel.prices = this.updateModel.price
 
-                console.log(that)
-
                 // display interested details if any
                 if(buy.status_purchased == 'Interested') {
                     this.updateModel.link = buy.backlinks_interested.length ? buy.backlinks_interested[0].link : null;
@@ -2317,6 +2495,29 @@ export default {
                 });
             }
 
+        },
+
+        doLinkInjection (data) {
+            let self = this;
+            self.clearMessageform();
+
+            let temp = JSON.parse(JSON.stringify(data));
+
+            self.linkInjectionModel = temp;
+            self.linkInjectionModel.seller_price = temp.price;
+            self.linkInjectionModel.price = self.computePrice(temp.price, temp.inc_article, 'yes');
+            self.linkInjectionModel.prices = self.linkInjectionModel.price;
+
+            // display interested details if any
+            if(data.status_purchased == 'Interested') {
+                this.linkInjectionModel.link = data.backlinks_interested.length ? data.backlinks_interested[0].link : null;
+                this.linkInjectionModel.url_advertiser = data.backlinks_interested.length ? data.backlinks_interested[0].url_advertiser : null;
+                this.linkInjectionModel.anchor_text = data.backlinks_interested.length ? data.backlinks_interested[0].anchor_text : null;
+            }
+
+            $('#modal-link-injection').modal({
+                show : true
+            });
         },
 
         async doDislike(id) {
@@ -2657,6 +2858,38 @@ export default {
             }
 
             loader.hide();
+        },
+
+        submitLinkInjection () {
+            let self = this;
+            let loader = self.$loading.show();
+            self.btnLinkInjection = true;
+
+            axios.post('/api/link-injection-request', self.linkInjectionModel)
+            .then((res) => {
+                loader.hide();
+
+                swal.fire(
+                    self.$t('message.registration_accounts.alert_success'),
+                    self.$t('message.registration_accounts.alert_updated_successfully'),
+                    'success'
+                )
+
+                self.btnLinkInjection = false;
+            })
+            .catch(err => {
+                loader.hide();
+
+                swal.fire(
+                    self.$t('message.draft.error'),
+                    err.response.data.message,
+                    'error'
+                )
+
+                self.errorMessages = err.response.data.errors
+
+                self.btnLinkInjection = false;
+            })
         },
 
         async submitInterest(params) {

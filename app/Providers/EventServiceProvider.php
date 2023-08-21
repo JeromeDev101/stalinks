@@ -2,58 +2,60 @@
 
 namespace App\Providers;
 
-use App\Events\AddWalletEvent;
-use App\Events\ArticleCreatedEvent;
-use App\Events\ArticleDoneEvent;
-use App\Events\BacklinkLiveEvent;
-use App\Events\BacklinkLiveSellerEvent;
-use App\Events\BacklinkLiveWriterEvent;
-use App\Events\BacklinkStatusChangedEvent;
-use App\Events\BillingReuploadDocEvent;
-use App\Events\BuyerDebitedEvent;
+use App\Models\User;
 use App\Events\BuyEvent;
-use App\Events\NewArticleEvent;
-use App\Events\RefundRequestProcessedEvent;
-use App\Events\SellerConfirmedPendingOrderEvent;
-use App\Events\SellerPaidEvent;
-use App\Events\SellerReceivesOrderEvent;
-use App\Events\UserUnvalidatedEvent;
-use App\Events\UserValidateEvent;
-use App\Events\WriterExamProcessedEvent;
-use App\Events\WriterPaidEvent;
-use App\Events\SellerConfirmationEvent;
-use App\Events\TeamInChargeUpdatedEvent;
-use App\Listeners\ArticleCreatedListener;
-use App\Listeners\BillingReuploadDocListener;
-use App\Listeners\RefundRequestProcessedListener;
-use App\Listeners\SellerConfirmationListener;
-use App\Listeners\AddwalletListener;
-use App\Listeners\ArticleDoneListener;
-use App\Listeners\BacklinkLiveListener;
-use App\Listeners\BacklinkLiveSellerListener;
-use App\Listeners\BacklinkLiveWriterListener;
-use App\Listeners\BacklinkStatusChangedListener;
-use App\Listeners\BuyerDebittedListener;
-use App\Listeners\BuyListener;
-use App\Listeners\NewArticleListener;
-use App\Listeners\SellerConfirmedPendingOrderListener;
-use App\Listeners\SellerPaidListener;
-use App\Listeners\SellerReceivesOrderListener;
-use App\Listeners\UserUnvalidatedListener;
-use App\Listeners\UserValidateListener;
-use App\Listeners\WriterExamProcessedListener;
-use App\Listeners\WriterPaidListener;
-use App\Listeners\TeamInChargeUpdatedListener;
 use App\Models\Backlink;
 use App\Models\ExtDomain;
 use App\Models\Registration;
-use App\Models\User;
-use App\Observers\BacklinkObserver;
-use App\Observers\ExtDomainObserver;
-use App\Observers\RegistrationObserver;
+use App\Events\AddWalletEvent;
+use App\Listeners\BuyListener;
+use App\Events\NewArticleEvent;
+use App\Events\SellerPaidEvent;
+use App\Events\WriterPaidEvent;
 use App\Observers\UserObserver;
+use App\Events\ArticleDoneEvent;
+use App\Events\BacklinkLiveEvent;
+use App\Events\BuyerDebitedEvent;
+use App\Events\UserValidateEvent;
+use App\Events\ArticleCreatedEvent;
+use App\Observers\BacklinkObserver;
+use App\Events\UserUnvalidatedEvent;
+use App\Listeners\AddwalletListener;
+use App\Observers\ExtDomainObserver;
+use App\Listeners\NewArticleListener;
+use App\Listeners\SellerPaidListener;
+use App\Listeners\WriterPaidListener;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\ArticleDoneListener;
 use Illuminate\Auth\Events\Registered;
+use App\Events\BacklinkLiveSellerEvent;
+use App\Events\BacklinkLiveWriterEvent;
+use App\Events\BillingReuploadDocEvent;
+use App\Events\SellerConfirmationEvent;
+use App\Listeners\BacklinkLiveListener;
+use App\Listeners\UserValidateListener;
+use App\Observers\RegistrationObserver;
+use App\Events\SellerReceivesOrderEvent;
+use App\Events\TeamInChargeUpdatedEvent;
+use App\Events\WriterExamProcessedEvent;
+use App\Listeners\BuyerDebittedListener;
+use App\Events\LinkInjectionRequestEvent;
+use App\Listeners\ArticleCreatedListener;
+use App\Events\BacklinkStatusChangedEvent;
+use App\Listeners\UserUnvalidatedListener;
+use App\Events\RefundRequestProcessedEvent;
+use App\Listeners\BacklinkLiveSellerListener;
+use App\Listeners\BacklinkLiveWriterListener;
+use App\Listeners\BillingReuploadDocListener;
+use App\Listeners\SellerConfirmationListener;
+use App\Listeners\SellerReceivesOrderListener;
+use App\Listeners\TeamInChargeUpdatedListener;
+use App\Listeners\WriterExamProcessedListener;
+use App\Listeners\LinkInjectionRequestListener;
+use App\Events\SellerConfirmedPendingOrderEvent;
+use App\Listeners\BacklinkStatusChangedListener;
+use App\Listeners\RefundRequestProcessedListener;
+use App\Listeners\SellerConfirmedPendingOrderListener;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -162,6 +164,10 @@ class EventServiceProvider extends ServiceProvider
 
         ArticleCreatedEvent::class => [
             ArticleCreatedListener::class
+        ],
+
+        LinkInjectionRequestEvent::class => [
+            LinkInjectionRequestListener::class
         ],
     ];
 

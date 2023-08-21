@@ -151,6 +151,13 @@ Route::middleware('auth:api')->group(function () {
 
     Route::name('save-interested-details')->post('save-interested-details','BacklinksInterestedController@store');
 
+    //Link Injection
+    Route::name('link-injection-request')->post('link-injection-request','LinkInjectionController@request');
+    Route::name('get-link-injections')->get('get-link-injections','LinkInjectionController@index');
+    Route::name('update-link-injections')->post('update-link-injections','LinkInjectionController@update');
+    Route::name('approve-link-injections')->post('approve-link-injections','LinkInjectionController@approve');
+    Route::name('purchase-link-injections')->post('purchase-link-injections','LinkInjectionController@purchase');
+
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
     Route::name('generate-list')->get('generate-list','GenerateListController@getList');

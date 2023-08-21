@@ -2,39 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TeamInChargeUpdatedEvent;
-use App\Mail\SendResetPasswordEmail;
-use App\Models\AffiliateCode;
-use App\Models\Language;
-use App\Repositories\Contracts\AccountRepositoryInterface;
-use App\Rules\PaymentInfoExists;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Requests\AccountRequest;
-use App\Http\Requests\UpdateAccountRequest;
-use App\Http\Requests\AddSubAccountRequest;
-use App\Http\Requests\RegistrationAccountRequest;
-use App\Http\Requests\UpdateSetPasswordRequest;
-use App\Models\Registration;
 use App\Models\User;
+use App\Models\Backlink;
+use App\Models\Language;
+use App\Models\Publisher;
+use App\Models\PaymentType;
+use Illuminate\Support\Str;
+use App\Models\Registration;
+use Illuminate\Http\Request;
+use App\Models\AffiliateCode;
+use App\Models\LinkInjection;
+use App\Models\BuyerPurchased;
+use Illuminate\Validation\Rule;
+use App\Models\UsersPaymentType;
+use App\Rules\PaymentInfoExists;
+use App\Models\WalletTransaction;
+use Illuminate\Support\Facades\DB;
+use App\Jobs\SendEmailVerification;
+use Illuminate\Support\Facades\App;
+use App\Mail\SendResetPasswordEmail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
-use App\Jobs\SendEmailVerification;
-use App\Models\BuyerPurchased;
-use Illuminate\Support\Facades\App;
-use App\Models\Publisher;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Backlink;
-use App\Models\PaymentType;
-use App\Models\UsersPaymentType;
-use App\Models\WalletTransaction;
-use App\Notifications\BuyerRegistered;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\AccountRequest;
+use App\Notifications\BuyerRegistered;
+use Illuminate\Support\Facades\Config;
+use App\Events\TeamInChargeUpdatedEvent;
+use App\Http\Requests\AddSubAccountRequest;
+use App\Http\Requests\UpdateAccountRequest;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\UpdateSetPasswordRequest;
+use App\Http\Requests\RegistrationAccountRequest;
+use App\Repositories\Contracts\AccountRepositoryInterface;
 
 class AccountController extends Controller
 {
@@ -908,6 +909,22 @@ class AccountController extends Controller
                                 })
                                 ->get();
 
+        $total_link_injection = LinkInjection::selectRaw('SUM(buyer_injection_price) as total_link_injection')
+            ->whereIn('status', [
+                'Live',
+                'Processing',
+                'Live in Process',
+                'Issue',
+            ])
+            ->where(function($query) use ($sub_buyer_ids, $UserId){
+                if(count($sub_buyer_ids) > 0) {
+                    return $query->whereIn('buyer_id', array_merge($sub_buyer_ids->toArray(),$UserId));
+                } else{
+                    return $query->whereIn('buyer_id', $UserId);
+                }
+            })
+            ->get();
+
         $total_purchased_paid = Backlink::selectRaw('SUM(prices) as total_purchased_paid')
                                 ->where('status', 'Live')
                                 ->where('payment_status', 'Paid')
@@ -941,6 +958,10 @@ class AccountController extends Controller
                 $credit = floatval($wallet_transaction[0]['amount_usd']) - floatval($total_purchased[0]['total_purchased']);
             } else {
                 $credit = floatval($wallet_transaction[0]['amount_usd']);
+            }
+
+            if ( isset($total_link_injection[0]['total_link_injection']) ) {
+                $credit = $credit - floatval($total_link_injection[0]['total_link_injection']);
             }
         } else {
             if ( isset($total_purchased[0]['total_purchased']) ) {

@@ -148,6 +148,10 @@ export const Constants = {
             path: '/incomes',
         },
         {
+            name: 'Seller - Injection Requests',
+            path: '/injection-requests',
+        },
+        {
             name: 'Buyer - List Backlinks to Buy',
             path: '/list-backlinks',
         },
@@ -158,6 +162,10 @@ export const Constants = {
         {
             name: 'Buyer - Purchase',
             path: '/purchase',
+        },
+        {
+            name: 'Buyer - Follow up Injection',
+            path: '/followup-injection',
         },
         {
             name: 'Purchases - Config',
@@ -250,12 +258,14 @@ export const Constants = {
         'Seller': [
             'List Publisher',
             'Follow up Sale',
-            'Incomes'
+            'Incomes',
+            'Injection Requests'
         ],
         'Buyer': [
             'List Backlinks to Buy',
             'Follow up Backlinks',
-            'Purchase'
+            'Purchase',
+            'Follow up Injection'
         ],
         'Purchases': [
             'Config',
