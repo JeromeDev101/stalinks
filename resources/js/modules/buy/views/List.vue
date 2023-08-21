@@ -499,9 +499,9 @@
                         <vue-virtual-table
                             v-if="!tableLoading"
                             width="100%"
-                            :height="600"
+                            :height="800"
                             :bordered="true"
-                            :item-height="60"
+                            :item-height="100"
                             :config="tableConfig"
                             :data="listBuy.data">
                             <template
@@ -1423,9 +1423,9 @@
     overflow: scroll;
 }
 
-.item-line {
+/** .item-line {
     height: auto !important;
-}
+} **/
 
 .item-line .action-column .item-cell-inner {
     height: auto !important;
