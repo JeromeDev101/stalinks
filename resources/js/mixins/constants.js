@@ -80,6 +80,10 @@ export const Constants = {
             path: '/writer-billing',
         },
         {
+            name: 'Billing - Injection Billing',
+            path: '/injection-billing',
+        },
+        {
             name: 'Billing - Wallet Transaction',
             path: '/wallet-transaction',
         },
@@ -230,6 +234,7 @@ export const Constants = {
         'Billing': [
             'Seller Billing',
             'Writer Billing',
+            'Injection Billing',
             'Wallet Transaction',
             'Wallet Summary'
         ],

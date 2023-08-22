@@ -29,6 +29,7 @@ export default {
     // billing
     billing: 'Billing',
     seller_billing: 'Seller Billing',
+    injection_billing: 'Injection Billing',
     writer_billing: 'Writer Billing',
     wallet_trans: 'Wallet Transaction',
     wallet_summary: 'Wallet Summary',

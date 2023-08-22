@@ -22,4 +22,10 @@ class LinkInjection extends Model
     {
         return $this->belongsTo('App\Models\User', 'buyer_id');
     }
+
+    public function billing() 
+    {
+        return $this->hasOne('App\Models\BillingInjection', 'id_injection');
+    }
+
 }

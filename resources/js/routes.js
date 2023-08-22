@@ -30,6 +30,7 @@ import InjectionRequests from '@/modules/injection_requests/views/InjectionReque
 import FollowupInjections from '@/modules/injection_requests/views/FollowupInjections.vue'
 import BillingBuyer from '@/modules/billing/buyer/views/List.vue'
 import BillingSeller from '@/modules/billing/seller/views/List.vue'
+import BillingInjection from '@/modules/billing/injection/views/List.vue'
 import BillingWriter from '@/modules/billing/writer/views/List.vue'
 import Registration from '@/modules/registration/views/List.vue'
 import ForgotPassword from '@/modules/registration/views/ForgotPassword.vue'
@@ -524,6 +525,18 @@ const routes = [
                 component : BillingSeller,
                 beforeEnter: (to, from, next) => {
                     if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-seller-billing')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/injection-billing',
+                name : 'injection-billing',
+                component : BillingInjection,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-billing-injection-billing')) {
                         next();
                     } else {
                         next('*');

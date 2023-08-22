@@ -30,6 +30,7 @@ export default {
     billing: 'การเรียกเก็บเงิน',
     seller_billing: 'การเรียกเก็บเงินของผู้ขาย',
     writer_billing: 'การเรียกเก็บเงินของนักเขียน',
+    injection_billing: 'การเรียกเก็บเงินการฉีด',
     wallet_trans: 'ธุรกรรมกระเป๋าเงิน',
     wallet_summary: 'ยอดสุทธิกระเป๋าเงิน',
 

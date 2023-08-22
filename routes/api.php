@@ -98,6 +98,10 @@ Route::middleware('auth:api')->group(function () {
     Route::name('delete-article-internal')->post('delete-article-internal', 'ArticlesController@deleteArticleInternal');
 
     //Billing
+    Route::name('get-injection-billing')->get('injection-billing', 'InjectionBillingController@getList');
+    Route::name('get-injection-billing-seller')->get('injection-billing-seller', 'InjectionBillingController@sellerListInjection');
+    Route::name('get-injection-billing-seller-info')->get('injection-billing-seller-info', 'InjectionBillingController@sellerInfoInjection');
+    Route::name('pay-seller-billing-injection')->post('pay-seller-billing-injection', 'InjectionBillingController@paySellerInjection');
     Route::name('get-buyer-billing')->get('buyer-billing', 'BuyerBillingController@getList');
     Route::name('get-seller-billing')->get('seller-billing', 'SellerBillingController@getList');
     Route::name('pay-seller-billing')->post('seller-billing', 'SellerBillingController@payBilling');

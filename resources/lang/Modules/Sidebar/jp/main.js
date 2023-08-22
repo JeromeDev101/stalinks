@@ -30,6 +30,7 @@ export default {
     billing: '課金',
     seller_billing: 'セーラー課金',
     writer_billing: 'ライター課金',
+    injection_billing: 'インジェクション請求',
     wallet_trans: 'ウォレット決済',
     wallet_summary: 'ウォレット概要',
 

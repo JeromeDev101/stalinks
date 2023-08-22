@@ -30,6 +30,7 @@ export default {
     billing: 'Penagihan',
     seller_billing: 'Tagihan Penjual',
     writer_billing: 'Tagihan Penulis',
+    injection_billing: 'Penagihan injeksi',
     wallet_trans: 'Dompet transaksi',
     wallet_summary: 'ringkasan dompet',
 

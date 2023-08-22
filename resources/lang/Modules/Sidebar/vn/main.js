@@ -30,6 +30,7 @@ export default {
     billing: 'Thanh toán',
     seller_billing: 'Thanh toán cho người bán',
     writer_billing: 'Thanh toán cho người viết',
+    injection_billing: 'Thanh toán tiêm',
     wallet_trans: 'Giao dịch trên Ví',
     wallet_summary: 'Tóm tắt ví',
 

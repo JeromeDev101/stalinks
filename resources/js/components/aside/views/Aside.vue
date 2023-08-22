@@ -319,6 +319,16 @@
                                     <p>{{ $t('message.sidebar.writer_billing') }}</p>
                                 </router-link>
                             </li>
+                            <li v-if="user.permission_list.includes('view-billing-injection-billing')" class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    :to="{ path: '/injection-billing' }"
+                                    :class="{ active: $route.name == 'injection-billing' }">
+
+                                    <i class="fas fa-link nav-icon"></i>
+                                    <p>{{ $t('message.sidebar.injection_billing') }}</p>
+                                </router-link>
+                            </li>
                             <li v-if="user.permission_list.includes('view-billing-wallet-transaction')" class="nav-item">
                                 <router-link
                                     class="nav-link"

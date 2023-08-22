@@ -30,6 +30,7 @@ export default {
     billing: 'बिलिंग',
     seller_billing: 'विक्रेता बिलिंग',
     writer_billing: 'लेखक बिलिंग',
+    injection_billing: 'इंजेक्शन बिलिंग',
     wallet_trans: 'वॉलेट लेनदेन',
     wallet_summary: 'वॉलेट सारांश',
 
