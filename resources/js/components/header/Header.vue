@@ -785,7 +785,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <!-- SURVEY A -->
-                            <div class="col-6">
+                            <div class="col-12">
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <h3
@@ -825,7 +825,7 @@
                             </div>
 
                             <!-- SURVEY B -->
-                            <div class="col-6">
+                            <!-- <div class="col-6">
                                 <div class="card">
                                     <div class="card-body text-center">
                                         <h3
@@ -862,7 +862,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="modal-footer">

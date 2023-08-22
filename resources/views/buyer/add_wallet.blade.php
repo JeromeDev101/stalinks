@@ -189,13 +189,13 @@
                                                             style="background-color: #FF9B00; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey A
                                                         </a>
 
-                                                        <br/>
+                                                        {{-- <br/>
 
                                                         <a
                                                             href="{{ url('/survey/b/' . $user->registration->survey_code) }}"
                                                             target="_blank" class="button-text"
                                                             style="background-color: #FF9B00; margin-top: 10px !important; font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;">Survey B
-                                                        </a>
+                                                        </a> --}}
                                                     </td>
                                                 </tr>
                                             </table>
@@ -223,13 +223,13 @@
                                     </a>
                                 </p>
 
-                                <p style="margin: 0; margin-top: 10px !important;">
+                                {{-- <p style="margin: 0; margin-top: 10px !important;">
                                     Survey B:
                                     <a href="#" target="_blank" style="color: #FF9B00;">
                                         {{ url('/survey/b/' . $user->registration->survey_code) }}
                                     </a>
                                 </p>
-                                <br/>
+                                <br/> --}}
                             </td>
                         </tr>
                     @endif

@@ -143,7 +143,7 @@
 
                                     </textarea>
                                 </div>
-                                
+
                                 <template v-if="surveyErrors.errors.one">
                                     <span
                                         v-for="err in surveyErrors.errors.one"
@@ -153,7 +153,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
 
                                 <template v-if="surveyErrors.errors.one_other">
                                     <span
@@ -412,7 +412,7 @@
 
                                     </textarea>
                                 </div>
-                                
+
                                 <template v-if="surveyErrors.errors.five">
                                     <span
                                         v-for="err in surveyErrors.errors.five"
@@ -425,7 +425,7 @@
 
                                 <template v-if="surveyErrors.errors.five_other">
                                     <span
-                                        
+
                                         v-for="err in surveyErrors.errors.five_other"
                                         class="text-danger"
                                         :key="err">
@@ -454,7 +454,7 @@
 
                                 <template v-if="surveyErrors.errors.comment">
                                     <span
-                                        
+
                                         v-for="err in surveyErrors.errors.comment"
                                         class="text-danger"
                                         :key="err">
@@ -539,7 +539,7 @@
 
                                     </textarea>
                                 </div>
-                                
+
                                 <template v-if="surveyErrors.errors.one">
                                     <span
                                         v-for="err in surveyErrors.errors.one"
@@ -566,8 +566,8 @@
                             <div class="col-12">
                                 <p class="font-weight-bold">{{ $t('message.buyer_survey.buyer_survey_b_q_2') }}</p>
                                 <div class="form-group">
-                                    <div 
-                                        v-for="answer in surveyBTwoThreeOptions('two')" 
+                                    <div
+                                        v-for="answer in surveyBTwoThreeOptions('two')"
                                         class="custom-control custom-radio"
                                         :key="answer.id">
 
@@ -606,7 +606,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
                                 <template v-if="surveyErrors.errors.two_other">
                                     <span
                                         v-for="err in surveyErrors.errors.two_other"
@@ -664,7 +664,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
                                 <template v-if="surveyErrors.errors.three_other">
                                     <span
                                         v-for="err in surveyErrors.errors.three_other"
@@ -746,7 +746,7 @@
 
                                     </textarea>
                                 </div>
-                                
+
                                 <template v-if="surveyErrors.errors.three">
                                     <span
                                         v-for="err in surveyErrors.errors.three"
@@ -756,7 +756,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
                                 <template v-if="surveyErrors.errors.three_other">
                                     <span
                                         v-for="err in surveyErrors.errors.three_other"
@@ -822,7 +822,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
                                 <template v-if="surveyErrors.errors.four_other">
                                     <span
                                         v-for="err in surveyErrors.errors.four_other"
@@ -901,7 +901,7 @@
                                         {{ err }}
                                     </span>
                                 </template>
-                                
+
                                 <template v-if="surveyErrors.errors.five_other">
                                     <span
                                         v-for="err in surveyErrors.errors.five_other"
@@ -932,7 +932,7 @@
 
                                 <template v-if="surveyErrors.errors.comment">
                                     <span
-                                        
+
                                         v-for="err in surveyErrors.errors.comment"
                                         class="text-danger"
                                         :key="err">
@@ -949,7 +949,13 @@
                                 class="btn btn-primary"
 
                                 @click="submitSurvey">
-                                {{ $t('message.buyer_survey.submit') }}
+                                <span v-if="survey.answers.set == 'a'">
+                                    Next
+                                </span>
+
+                                <span v-else>
+                                    {{ $t('message.buyer_survey.submit') }}
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -1036,7 +1042,7 @@ export default {
         },
     },
 
-    created() {
+    mounted() {
         this.checkRouteParams();
     },
 
@@ -1099,6 +1105,7 @@ export default {
 
         checkRouteParams () {
             this.survey.answers.set = this.$route.params.set;
+            console.log('mounted');
 
             if (this.$route.params.code) {
                 this.survey.answers.code = this.$route.params.code;
@@ -1116,14 +1123,23 @@ export default {
 
             axios.post(path, this.survey.answers)
                 .then((response) => {
+                    if (self.survey.answers.set == 'a') {
+                        // Redirect to the next route with preserved code parameter
+                        const nextRoute = this.survey.answers.code ? `/survey/b/${this.survey.answers.code}` : `/survey/b`;
+                        // const nextRoute = `/survey/b/${this.survey.answers.code}`;
+                        console.log(nextRoute);
 
-                    swal.fire(
-                        self.$t('message.buyer_survey.alert_success'),
-                        self.$t('message.buyer_survey.alert_success_text'),
-                        'success',
-                    )
+                        this.$router.push(nextRoute);
+                        location.reload();
+                    } else {
+                        swal.fire(
+                            self.$t('message.buyer_survey.alert_success'),
+                            self.$t('message.buyer_survey.alert_success_text'),
+                            'success',
+                        )
 
-                    this.hasUserAnsweredSurveySet();
+                        this.hasUserAnsweredSurveySet();
+                    }
                 })
                 .catch((err) => {
                     swal.fire(
