@@ -24,7 +24,8 @@ class LinkInjectionController extends Controller
         $injections = LinkInjection::select('link_injections.*', 'publisher.url as publisher_url')
         ->leftJoin('publisher', 'link_injections.publisher_id', '=', 'publisher.id')
         ->orderBy('created_at', 'desc')
-        ->with('buyer.UserType');
+        ->with('buyer.UserType')
+        ->with('publisher.user');
 
         if (Auth::user()->role_id == 6) {
             $injections = $injections->where('publisher.user_id', Auth::user()->id);

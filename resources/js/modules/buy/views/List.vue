@@ -2876,6 +2876,7 @@ export default {
                 )
 
                 self.btnLinkInjection = false;
+                $('#modal-link-injection').modal('hide');
             })
             .catch(err => {
                 loader.hide();

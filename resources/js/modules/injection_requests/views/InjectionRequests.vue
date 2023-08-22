@@ -196,6 +196,19 @@
                                             <div>
                                                 {{ injection.publisher_url }}
                                             </div>
+                                            <div v-if="user.isAdmin || [15, 8].includes(user.role_id)">
+                                                <small class="font-italic">
+                                                    <i class="fa fa-shopping-basket text-primary" aria-hidden="true"></i>
+                                                    {{ injection.publisher
+                                                        ? injection.publisher.user
+                                                            ? injection.publisher.user.username
+                                                                ? injection.publisher.user.username
+                                                                : injection.publisher.user.name
+                                                            : 'N/A'
+                                                        : 'N/A'
+                                                    }}
+                                                </small>
+                                            </div>
                                         </td>
                                         <td>
                                             <span v-if="injection.injection_price == null" class="badge badge-info">
