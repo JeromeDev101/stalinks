@@ -156,6 +156,7 @@
                                     <th>{{ $t('message.wallet_summary.ws_credit_left') }} <span class="fa fa-exclamation-circle text-primary" title="Credit Left - (Deposit - Valid Orders + Refund Orders)"></span></th>
                                     <th>{{ $t('message.wallet_summary.ws_purchase') }} <span class="fa fa-exclamation-circle text-primary" title="Purchase is only LIVE status"></span></th>
                                     <th>Refund Orders</th>
+                                    <th>Refund Request</th>
                                     <th>{{ $t('message.wallet_summary.ws_wallet') }} <span class="fa fa-exclamation-circle text-primary" title="Wallet - (Deposit - Purchase + Refund Orders)"></span></th>
                                 </tr>
                                 </thead>
@@ -171,6 +172,7 @@
                                     <td>{{ '$ ' + (summary.credit_left).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.order_live).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.order_refund).toFixed(0) }}</td>
+                                    <td>{{ summary.refund_request == null ? '$ 0' : '$ ' + summary.refund_request }}</td>
                                     <td>{{ '$ ' + (summary.wallet).toFixed(0) }}</td>
                                 </tr>
                                 </tbody>

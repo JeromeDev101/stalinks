@@ -70,6 +70,7 @@ class WalletSummaryController extends Controller
             $user_buyers[$key]['wallet'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'order_live', $request->year, $request->month) + $this->getTotalPurchase($user_buyer->id, 'order_refund', $request->year, $request->month);
             $user_buyers[$key]['credit_left'] = $user_buyer->deposit == null ? 0:$user_buyer->deposit - $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month) - $this->getTotalRefunded($user_buyer->id) + $this->getTotalPurchase($user_buyer->id, 'order_refund', $request->year, $request->month);
             $user_buyers[$key]['valid_orders'] = $this->getTotalPurchase($user_buyer->id, 'valid_orders', $request->year, $request->month);
+            $user_buyers[$key]['refund_request'] = $this->getTotalRefunded($user_buyer->id);
 
         }
 
