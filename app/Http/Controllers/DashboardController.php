@@ -177,6 +177,7 @@ class DashboardController extends Controller
         $user_id = Auth::user()->id;
         $columns = [
             'users.username',
+            DB::raw('SUM(CASE WHEN backlinks.status = "Pending" THEN 1 ELSE 0 END) AS num_pending'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
@@ -191,6 +192,7 @@ class DashboardController extends Controller
                 OR backlinks.status = "Content Done"
                 OR backlinks.status = "Content Writing"
                 OR backlinks.status = "Processing"
+                OR backlinks.status = "Pending"
                 OR backlinks.status = "Canceled"
                 OR backlinks.status = "Issue"
                 OR backlinks.status = "Live in Process"
@@ -237,6 +239,7 @@ class DashboardController extends Controller
             'A.name',
             'B.username as under_name',
             'registration.is_sub_account',
+            DB::raw('SUM(CASE WHEN backlinks.status = "Pending" THEN 1 ELSE 0 END) AS num_pending'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Processing" THEN 1 ELSE 0 END) AS num_processing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content In Writing" THEN 1 ELSE 0 END) AS writing'),
             DB::raw('SUM(CASE WHEN backlinks.status = "Content Done" THEN 1 ELSE 0 END) AS num_done'),
@@ -247,6 +250,7 @@ class DashboardController extends Controller
             DB::raw('SUM(CASE WHEN backlinks.status = "Issue" THEN 1 ELSE 0 END) AS num_issue'),
             DB::raw('
                 SUM(CASE WHEN backlinks.status = "Live"
+                OR backlinks.status = "Pending"
                 OR backlinks.status = "Processing"
                 OR backlinks.status = "Content In Writing"
                 OR backlinks.status = "Content Done"

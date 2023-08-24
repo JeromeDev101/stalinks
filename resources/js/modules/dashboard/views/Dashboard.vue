@@ -236,6 +236,10 @@
                                                     <span class="text-primary">({{ backlink_seller.num_total }})</span>
                                                 </th>
                                                 <th>
+                                                    Pending
+                                                    <span class="text-primary">({{ backlink_seller.num_pending }})</span>
+                                                </th>
+                                                <th>
                                                     {{ $t('message.dashboard.tbs_processing') }}
                                                     <span class="text-primary">({{ backlink_seller.num_processing }})</span>
                                                 </th>
@@ -275,6 +279,7 @@
                                             <tr v-if="!isExtWriter" v-for="(seller, index) in listData.backlink_seller" :key="index">
                                                 <td v-if="!isExtWriter">{{ upperCase(seller.username) }}</td>
                                                 <td v-if="!isExtWriter">{{ seller.num_total }}</td>
+                                                <td>{{ seller.num_pending }}</td>
                                                 <td>{{ seller.num_processing }}</td>
                                                 <td>{{ seller.writing }}</td>
                                                 <td>{{ seller.num_done }}</td>
@@ -285,6 +290,7 @@
                                                 <td>{{ seller.num_canceled }}</td>
                                             </tr>
                                             <tr v-if="isExtWriter">
+                                                <td>{{ extWriterTotals.num_pending }}</td>
                                                 <td>{{ extWriterTotals.num_processing }}</td>
                                                 <td>{{ extWriterTotals.writing }}</td>
                                                 <td>{{ extWriterTotals.num_done }}</td>
@@ -432,6 +438,10 @@
                                                 <span class="text-primary">({{ backlink_buyer.num_total }})</span>
                                             </th>
                                             <th>
+                                                Pending
+                                                <span class="text-primary">({{ backlink_buyer.num_pending }})</span>
+                                            </th>
+                                            <th>
                                                 {{ $t('message.dashboard.tbs_processing') }}
                                                 <span class="text-primary">({{ backlink_buyer.num_processing }})</span>
                                             </th>
@@ -480,6 +490,7 @@
                                                 </span>
                                             </td>
                                             <td>{{ buyer.num_total }}</td>
+                                            <td>{{ buyer.num_pending }}</td>
                                             <td>{{ buyer.num_processing }}</td>
                                             <td>{{ buyer.writing }}</td>
                                             <td>{{ buyer.num_done }}</td>
@@ -616,6 +627,7 @@ export default {
 
             backlink_seller : {
                 total : 0,
+                num_pending: 0,
                 num_total : 0,
                 num_processing : 0,
                 writing : 0,
@@ -629,6 +641,7 @@ export default {
 
             backlink_buyer : {
                 total : 0,
+                num_pending: 0,
                 num_processing : 0,
                 writing : 0,
                 num_done : 0,
@@ -809,6 +822,7 @@ export default {
             this.purchase.total = purchase_ctr;
 
             for (var index in backlink_seller) {
+                this.backlink_seller.num_pending += parseInt(backlink_seller[index].num_pending);
                 this.backlink_seller.num_processing += parseInt(backlink_seller[index].num_processing);
                 this.backlink_seller.writing += parseInt(backlink_seller[index].writing);
                 this.backlink_seller.num_done += parseInt(backlink_seller[index].num_done);
@@ -820,9 +834,11 @@ export default {
                 this.backlink_seller.num_total += parseInt(backlink_seller[index].num_total);
                 backlink_seller_ctr++;
             }
+
             this.backlink_seller.total = backlink_seller_ctr;
 
             for (var index in backlink_buyer) {
+                this.backlink_buyer.num_pending += parseInt(backlink_buyer[index].num_pending);
                 this.backlink_buyer.num_processing += parseInt(backlink_buyer[index].num_processing);
                 this.backlink_buyer.writing += parseInt(backlink_buyer[index].writing);
                 this.backlink_buyer.num_done += parseInt(backlink_buyer[index].num_done);
