@@ -178,13 +178,23 @@
                                                 <button
                                                     v-if="user.permission_list.includes('update-seller-injection-requests')"
                                                     title="Edit"
-                                                    class="btn btn-default"
+                                                    class="btn btn-default action-btns"
                                                     data-toggle="modal"
                                                     data-target="#modal-update-injection"
 
                                                     @click="doUpdate(injection)">
 
                                                     <i class="fa fa-fw fa-edit"></i>
+                                                </button>
+
+                                                <button
+                                                    v-if="injection.status == 'Pending' && (user.isAdmin || [15, 8].includes(user.role_id))"
+                                                    title="Update seller"
+                                                    class="btn btn-default action-btns"
+
+                                                    @click="updateSeller(injection)">
+
+                                                    <i class="fa fa-user" aria-hidden="true"></i>
                                                 </button>
                                             </div>
                                         </td>
@@ -423,7 +433,7 @@
                                             v-model="linkInjectionModel.status"
                                             class="form-control pull-right"
                                             style="height: 37px;"
-                                            :disabled="(linkInjectionModel.status == 'Pending' && (user.role_id != 8 || ![6, 15].includes(user.role_id)) && !user.isAdmin) || linkInjectionModel.status == 'Live'"
+                                            :disabled="(linkInjectionModel.status == 'Pending' && (user.role_id != 8 || ![6, 15].includes(user.role_id)) && !user.isAdmin) || linkInjectionModel.status == 'Live' || linkInjectionModel.status == 'Canceled'"
 
                                             @change="checkStatus()"
                                         >
@@ -549,6 +559,63 @@
             </div>
         </div>
         <!-- End of Modal View Issue File -->
+
+        <!-- Modal Update Seller -->
+        <div class="modal fade" id="modal-update-seller" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Update Seller for Link Injection Request #{{ updateSellerModel.link_injection_id }}</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div v-if="otherSellers.length === 0">
+                            <div class="alert alert-danger mb-0" role="alert">
+                                There are no other sellers associated with the url.
+                            </div>
+                        </div>
+
+                        <div v-else class="row">
+                            <div class="col-12 mb-3">
+                                <div class="alert alert-info mb-0" role="alert">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                    Updating the seller will cancel the current order and create a new one.
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label>Seller</label>
+
+                                    <v-select
+                                        v-model="updateSellerModel.publisher_id"
+                                        placeholder="Select Seller"
+                                        label="name"
+                                        :options="otherSellers"
+                                        :reduce="otherSellers => otherSellers.id"
+                                        :searchable="true"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{ $t('message.follow.close') }}</button>
+
+                        <button
+                            v-if="linkInjectionModel.status == 'Pending' || (user.isAdmin || [15, 8].includes(user.role_id))"
+                            type="button"
+                            class="btn btn-primary"
+                            :disabled="otherSellers.length === 0"
+
+                            @click="submitUpdateSeller()">
+
+                            {{ $t('message.publisher.update') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Update Seller -->
     </div>
 </template>
 
@@ -623,6 +690,12 @@ export default {
             ],
             listReason: [],
             issueCancelFilePreview: '',
+
+            otherSellers: [],
+            updateSellerModel: {
+                link_injection_id: '',
+                publisher_id: '',
+            }
         }
     },
 
@@ -726,6 +799,7 @@ export default {
             axios.post('/api/update-link-injections', form_data)
             .then((res) => {
                 loader.hide();
+                $('#modal-update-injection').modal('hide');
 
                 swal.fire(
                     self.$t('message.article.alert_updated'),
@@ -759,6 +833,8 @@ export default {
             .then((res) => {
                 loader.hide();
 
+                $('#modal-update-injection').modal('hide');
+
                 swal.fire(
                     self.$t('message.article.alert_updated'),
                     '',
@@ -777,6 +853,62 @@ export default {
 
                 self.linkInjectionErrors = err.response.data.errors
             })
+        },
+
+        updateSeller (data) {
+            let self = this;
+            let loader = this.$loading.show();
+
+            self.updateSellerModel.link_injection_id = data.id;
+
+            axios.post('/api/check-publisher-sellers', {
+                publisher_id: data.publisher_id
+            })
+            .then((res) => {
+                loader.hide();
+
+                self.otherSellers = Object.entries(res.data.data).map(([id, name]) => ({ id, name }));
+
+                $('#modal-update-seller').modal('show');
+            })
+            .catch((err) => {
+                loader.hide();
+            })
+        },
+
+        submitUpdateSeller () {
+            let self = this;
+
+            swal.fire({
+                title : 'Are you sure that you want to update the seller for this link injection request?',
+                text : 'A notification will be sent to the buyer and seller',
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show();
+
+                    axios.post('/api/update-injection-seller', self.updateSellerModel)
+                    .then((res) => {
+                        loader.hide();
+                        $('#modal-update-seller').modal('hide');
+
+                        swal.fire(
+                            'New link injection for new seller requested',
+                            '',
+                            'success'
+                        )
+
+                        self.getLinkInjections(this.$route.query.page);
+                    })
+                    .catch((err) => {
+                        loader.hide();
+                    })
+                }
+            });
         },
 
         doSearch () {
@@ -900,3 +1032,10 @@ export default {
     },
 }
 </script>
+
+<style>
+    .action-btns {
+        width: 50px;
+        margin: 2px;
+    }
+</style>

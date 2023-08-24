@@ -689,6 +689,7 @@ export default {
             axios.post('/api/update-link-injections', self.linkInjectionModel)
             .then((res) => {
                 loader.hide();
+                $('#modal-update-injection').modal('hide');
 
                 swal.fire(
                     self.$t('message.article.alert_updated'),
@@ -705,30 +706,44 @@ export default {
 
         purchaseLinkInjection () {
             let self = this;
-            let loader = this.$loading.show();
 
-            axios.post('/api/purchase-link-injections', self.linkInjectionModel)
-            .then((res) => {
-                loader.hide();
-
-                this.$root.$refs.AppHeader.liveGetWallet()
-
-                swal.fire(
-                    'Link injection purchase is now in process',
-                    '',
-                    'success'
-                )
-
-                self.getLinkInjections(this.$route.query.page);
+            swal.fire({
+                title : 'Are you sure that you want to purchase the link injection?',
+                text : '',
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
             })
-            .catch((err) => {
-                loader.hide();
-                swal.fire(
-                    self.$t('message.draft.error'),
-                    err.response.data.message,
-                    'error'
-                )
-            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show();
+
+                    axios.post('/api/purchase-link-injections', self.linkInjectionModel)
+                    .then((res) => {
+                        loader.hide();
+                        $('#modal-update-injection').modal('hide');
+
+                        this.$root.$refs.AppHeader.liveGetWallet()
+
+                        swal.fire(
+                            'Link injection purchase is now in process',
+                            '',
+                            'success'
+                        )
+
+                        self.getLinkInjections(this.$route.query.page);
+                    })
+                    .catch((err) => {
+                        loader.hide();
+                        swal.fire(
+                            self.$t('message.draft.error'),
+                            err.response.data.message,
+                            'error'
+                        )
+                    })
+                }
+            });
         },
 
         doSearch () {

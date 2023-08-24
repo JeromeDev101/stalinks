@@ -14,6 +14,7 @@ use App\Notifications\LinkInjectionChecked;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\LinkInjectionPurchased;
 use App\Http\Requests\LinkInjectionRequestSeller;
+use App\Notifications\LinkInjectionSellerUpdated;
 use App\Notifications\LinkInjectionStatusChanged;
 
 class LinkInjectionController extends Controller
@@ -186,5 +187,72 @@ class LinkInjectionController extends Controller
         Notification::send($team, new LinkInjectionPurchased($seller_account, $injection, 'team'));
 
         return response()->json(['success' => true], 200);
+    }
+
+    public function CheckPublisherSellers (Request $request) {
+        // get url of publisher data
+        $publisher = Publisher::findOrFail($request->publisher_id);
+
+        // get sellers
+        $seller_ids = Publisher::leftJoin('users', 'publisher.user_id', '=', 'users.id')
+            ->where('url', $publisher->url)
+            ->where('publisher.id', '!=' , $request->publisher_id)
+            ->pluck('users.username', 'publisher.id');
+
+        return response()->json(['data' => $seller_ids], 200);
+    }
+
+    public function UpdateInjectionSeller (Request $request) {
+        // get new publisher data
+        $new_publisher = Publisher::findOrFail($request->publisher_id);
+
+        // get old injection data
+        $old_injection_request = LinkInjection::findOrFail($request->link_injection_id);
+
+        if ($new_publisher) {
+            // create new injection request
+            $new_injection_request = LinkInjection::create([
+                'url_article' => $old_injection_request->url_article,
+                'url_advertiser' => $old_injection_request->url_advertiser,
+                'link' => $old_injection_request->link,
+                'anchor_text' => $old_injection_request->anchor_text,
+                'publisher_id' => $new_publisher->id,
+                'buyer_id' => $old_injection_request->buyer_id,
+                'status' => 'Pending',
+                'date_requested' => date('Y-m-d'),
+            ]);
+
+            // cancel old injection request
+            $old_injection_request->update([
+                'status' => 'Canceled',
+                'reason' => 'Other',
+                'reason_detailed' => 'Unable to contact seller, new injection request for new seller requested. Injection Request ID# ' . $new_injection_request->id . '.'
+            ]);
+
+            // notify new seller
+            $seller_account = null;
+
+            if ($new_injection_request->publisher) {
+                $seller_account = $new_injection_request->publisher->user ?: null;
+            }
+
+            if ($seller_account) {
+                event(new LinkInjectionRequestEvent($new_injection_request, $seller_account));
+            }
+
+            // notify old seller
+            $old_seller_account = null;
+
+            if ($old_injection_request->publisher) {
+                $old_seller_account = $old_injection_request->publisher->user ?: null;
+            }
+
+            if ($old_seller_account) {
+                $old_seller_account->notify(new LinkInjectionSellerUpdated($old_seller_account, $old_injection_request, $new_injection_request, 'seller'));
+            }
+
+            // notify buyer
+            $new_injection_request->buyer->notify(new LinkInjectionSellerUpdated($new_injection_request->buyer, $old_injection_request, $new_injection_request, 'buyer'));
+        }
     }
 }
