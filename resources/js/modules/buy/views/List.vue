@@ -796,6 +796,17 @@
                                         placeholder="">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Idea for Title</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        v-model="updateModel.idea_for_title"
+                                        name=""
+                                        aria-describedby="helpId"
+                                        placeholder="">
+                                </div>
+                            </div>
                             <!-- <div class="col-md-6">
                                 <div class="form-group">
                                     <label>You Provide Article?</label>
@@ -1468,6 +1479,7 @@ export default {
                 anchor_text : '',
                 link : '',
                 url_advertiser : '',
+                idea_for_title: '',
             },
             linkInjectionModel : {
                 id : '',

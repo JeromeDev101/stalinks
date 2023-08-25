@@ -583,6 +583,7 @@ class BuyController extends Controller
             $backlink = Backlink::create([
                 'prices' => $request->prices,
                 'price' => $request->seller_price,
+                'idea_for_title' => $request->idea_for_title,
                 'url_advertiser' => $url_advertiser,
                 'anchor_text' => $request->anchor_text,
                 'link' => $request->link,

@@ -492,14 +492,21 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group">
+                            <div class="col-md-6 mb-2">
+                                <div :class="{'form-group': true, 'has-error': messageForms.errors.title}" class="form-group mb-1">
                                     <div>
                                         <label style="color: #333">{{ $t('message.follow.si_ip_title') }}</label>
                                         <input type="text" class="form-control" v-model="updateModel.title" required="required" :disabled="isLive">
                                         <span v-if="messageForms.errors.title" v-for="err in messageForms.errors.title" class="text-danger">{{ err }}</span>
                                     </div>
                                 </div>
+
+                                <small class="text-primary">
+                                    <span class="font-weight-bold">Title idea from buyer:</span>
+                                    <span class="font-italic">
+                                        {{ updateModel.idea_for_title ? updateModel.idea_for_title : 'N/A' }}
+                                    </span>
+                                </small>
                             </div>
 
                             <div class="col-md-6">
