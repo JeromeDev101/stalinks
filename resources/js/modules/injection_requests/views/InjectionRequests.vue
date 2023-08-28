@@ -85,6 +85,76 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Status</label>
+
+                                    <v-select
+                                        v-model="filterModel.status"
+                                        multiple
+                                        label="name"
+                                        class="style-chooser"
+                                        placeholder="Select Status"
+                                        :searchable="true"
+                                        :options="linkInjectionStatus"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Date Requested</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            v-model="filterModel.date_requested"
+                                            ref="picker"
+                                            opens="left"
+                                            style="width: 100%"
+                                            :linkedCalendars="true"
+                                            :ranges="generateDefaultDateRange()"
+                                            :dateRange="filterModel.date_requested"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Date Processed</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            v-model="filterModel.date_process"
+                                            ref="picker"
+                                            opens="left"
+                                            style="width: 100%"
+                                            :linkedCalendars="true"
+                                            :ranges="generateDefaultDateRange()"
+                                            :dateRange="filterModel.date_process"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>Date Completed</label>
+                                    <div class="input-group">
+                                        <date-range-picker
+                                            v-model="filterModel.live_date"
+                                            ref="picker"
+                                            opens="right"
+                                            style="width: 100%"
+                                            :linkedCalendars="true"
+                                            :ranges="generateDefaultDateRange()"
+                                            :dateRange="filterModel.live_date"
+                                            :locale-data="{ firstDay: 1, format: 'mm/dd/yyyy' }"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- <div class="col-md-3">
                                 <div class="form-group">
                                     <label>{{ $t('message.generate_list.filter_code') }}</label>
@@ -622,10 +692,11 @@
 <script>
 import {mapActions, mapState} from "vuex";
 import axios from "axios";
+import {dateRange} from "../../../mixins/dateRange";
 
 export default {
     props: [],
-
+    mixins: [dateRange],
     data() {
         return {
             linkInjections: {
@@ -634,12 +705,25 @@ export default {
 
             filterModel: {
                 page : this.$route.query.page || 1,
+                status : this.$route.query.status || '',
                 link_to: this.$route.query.link_to || '',
                 paginate : this.$route.query.paginate || 10,
                 anchor_text: this.$route.query.anchor_text || '',
                 url_article: this.$route.query.url_article || '',
                 url_publisher: this.$route.query.url_publisher || '',
                 url_advertiser: this.$route.query.url_advertiser || '',
+                live_date : {
+                    startDate : '',
+                    endDate: ''
+                },
+                date_process : {
+                    startDate : '',
+                    endDate: ''
+                },
+                date_requested : {
+                    startDate : '',
+                    endDate: ''
+                },
             },
 
             linkInjectionModel: {
@@ -921,12 +1005,25 @@ export default {
 
         clearFilter () {
             this.filterModel = {
-                url_publisher: '',
-                url_article: '',
-                url_advertiser: '',
+                status: '',
                 link_to: '',
+                url_article: '',
                 anchor_text: '',
+                url_publisher: '',
+                url_advertiser: '',
                 page : 1,
+                live_date : {
+                    startDate :null,
+                    endDate:null
+                },
+                date_process : {
+                    startDate :null,
+                    endDate:null
+                },
+                date_requested : {
+                    startDate :null,
+                    endDate:null
+                },
             }
 
             this.$router.replace({'query': null});

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Publisher;
 use Illuminate\Http\Request;
@@ -55,6 +56,34 @@ class LinkInjectionController extends Controller
 
         if (isset($filter['anchor_text']) && !empty($filter['anchor_text'])) {
             $injections = $injections->where('link_injections.anchor_text', 'LIKE', '%'. $filter['anchor_text'] .'%');
+        }
+
+        if (isset($filter['status']) && !empty($filter['status'])) {
+            $injections = $injections->whereIn('link_injections.status', $filter['status']);
+        }
+
+        if (isset($filter['date_requested'])) {
+            $filter['date_requested'] = \GuzzleHttp\json_decode($filter['date_requested'], true);
+            if (!empty($filter['date_requested']) && $filter['date_requested']['startDate'] != null) {
+                $injections = $injections->whereDate('date_requested', '>=', Carbon::create($filter['date_requested']['startDate'])->format('Y-m-d'));
+                $injections = $injections->whereDate('date_requested', '<=', Carbon::create($filter['date_requested']['endDate'])->format('Y-m-d'));
+            }
+        }
+
+        if (isset($filter['date_process'])) {
+            $filter['date_process'] = \GuzzleHttp\json_decode($filter['date_process'], true);
+            if (!empty($filter['date_process']) && $filter['date_process']['startDate'] != null) {
+                $injections = $injections->whereDate('date_process', '>=', Carbon::create($filter['date_process']['startDate'])->format('Y-m-d'));
+                $injections = $injections->whereDate('date_process', '<=', Carbon::create($filter['date_process']['endDate'])->format('Y-m-d'));
+            }
+        }
+
+        if (isset($filter['live_date'])) {
+            $filter['live_date'] = \GuzzleHttp\json_decode($filter['live_date'], true);
+            if (!empty($filter['live_date']) && $filter['live_date']['startDate'] != null) {
+                $injections = $injections->whereDate('live_date', '>=', Carbon::create($filter['live_date']['startDate'])->format('Y-m-d'));
+                $injections = $injections->whereDate('live_date', '<=', Carbon::create($filter['live_date']['endDate'])->format('Y-m-d'));
+            }
         }
 
         if( isset($request->paginate) && $request->paginate == 'All' ){
