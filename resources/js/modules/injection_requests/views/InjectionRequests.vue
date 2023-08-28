@@ -188,7 +188,7 @@
                                                 </button>
 
                                                 <button
-                                                    v-if="injection.status == 'Pending' && (user.isAdmin || [15, 8].includes(user.role_id))"
+                                                    v-if="injection.status != 'Canceled' && (user.isAdmin || [15, 8].includes(user.role_id))"
                                                     title="Update seller"
                                                     class="btn btn-default action-btns"
 
