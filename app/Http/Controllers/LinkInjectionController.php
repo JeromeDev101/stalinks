@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\LinkInjectionRequestEvent;
 use App\Http\Requests\LinkInjectionRequest;
 use App\Notifications\LinkInjectionChecked;
+use App\Notifications\LinkInjectionDeclined;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\LinkInjectionPurchased;
 use App\Http\Requests\LinkInjectionRequestSeller;
@@ -254,5 +255,31 @@ class LinkInjectionController extends Controller
             // notify buyer
             $new_injection_request->buyer->notify(new LinkInjectionSellerUpdated($new_injection_request->buyer, $old_injection_request, $new_injection_request, 'buyer'));
         }
+    }
+
+    public function DeclineLinkInjection (Request $request) {
+        $injection = LinkInjection::where('id', $request->id)->first();
+
+        $injection->update([
+            'status' => 'Canceled',
+            'reason' => 'Other',
+            'reason_detailed' => 'Buyer declined the injection price'
+        ]);
+
+        // notify seller
+        $seller_account = null;
+
+        if ($injection->publisher) {
+            $seller_account = $injection->publisher->user ?: null;
+        }
+
+        if ($seller_account) {
+            $seller_account->notify(new LinkInjectionDeclined($seller_account, $injection, 'seller'));
+        }
+
+        // notify team
+        $team = User::whereIn('role_id', [8,1])->where('isOurs', 0)->where('status', 'active')->get();
+
+        Notification::send($team, new LinkInjectionDeclined($seller_account, $injection, 'team'));
     }
 }

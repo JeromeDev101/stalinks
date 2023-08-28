@@ -176,7 +176,7 @@
                                         <td>
                                             <div class="text-center">
                                                 <button
-                                                    v-if="user.permission_list.includes('update-buyer-follow-up-injection')"
+                                                    v-if="injection.status == 'Checked' && user.permission_list.includes('update-buyer-follow-up-injection')"
                                                     title="Purchase Injection"
                                                     class="btn btn-default action-btns"
                                                     data-toggle="modal"
@@ -223,7 +223,17 @@
                                                 </small>
                                             </div>
                                         </td>
-                                        <td>{{ injection.buyer_injection_price == null ? '' : '$ ' + injection.buyer_injection_price }}</td>
+                                        <td>
+                                            <span v-if="injection.buyer_injection_price == null" class="badge badge-info">
+                                                <small>
+                                                    INJECTION PRICE NOT SET
+                                                </small>
+                                            </span>
+
+                                            <span v-else>
+                                                $ {{ injection.buyer_injection_price }}
+                                            </span>
+                                        </td>
                                         <td>{{ injection.url_article }}</td>
                                         <td>{{ injection.url_advertiser }}</td>
                                         <td>{{ injection.link }}</td>
@@ -497,13 +507,21 @@
                             {{ $t('message.publisher.close') }}
                         </button>
 
-                        <button v-if="updateMode == 'update'" type="button" class="btn btn-primary" @click="submitUpdate()">
-                            {{ $t('message.publisher.update') }}
-                        </button>
+                        <div v-if="updateMode == 'update'">
+                            <button  type="button" class="btn btn-primary" @click="submitUpdate()">
+                                {{ $t('message.publisher.update') }}
+                            </button>
+                        </div>
 
-                        <button v-else type="button" class="btn btn-success" @click="purchaseLinkInjection()">
-                            Purchase
-                        </button>
+                        <div v-else>
+                            <button type="button" class="btn btn-success" @click="purchaseLinkInjection()">
+                                Purchase
+                            </button>
+
+                            <button type="button" class="btn btn-danger" @click="declineLinkInjection()">
+                                Decline
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -728,6 +746,48 @@ export default {
 
                         swal.fire(
                             'Link injection purchase is now in process',
+                            '',
+                            'success'
+                        )
+
+                        self.getLinkInjections(this.$route.query.page);
+                    })
+                    .catch((err) => {
+                        loader.hide();
+                        swal.fire(
+                            self.$t('message.draft.error'),
+                            err.response.data.message,
+                            'error'
+                        )
+                    })
+                }
+            });
+        },
+
+        declineLinkInjection () {
+            let self = this;
+
+            swal.fire({
+                title : 'Are you sure that you want to decline the approved link injection price?',
+                text : 'Declining will automatically cancel the request',
+                icon : "question",
+                showCancelButton : true,
+                confirmButtonText : self.$t('message.article.yes'),
+                cancelButtonText : self.$t('message.article.no')
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    let loader = this.$loading.show();
+
+                    axios.post('/api/decline-link-injection', self.linkInjectionModel)
+                    .then((res) => {
+                        loader.hide();
+                        $('#modal-update-injection').modal('hide');
+
+                        this.$root.$refs.AppHeader.liveGetWallet()
+
+                        swal.fire(
+                            'Link injection declined',
                             '',
                             'success'
                         )

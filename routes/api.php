@@ -163,6 +163,7 @@ Route::middleware('auth:api')->group(function () {
     Route::name('purchase-link-injections')->post('purchase-link-injections','LinkInjectionController@purchase');
     Route::name('check-publisher-sellers')->post('check-publisher-sellers','LinkInjectionController@CheckPublisherSellers');
     Route::name('update-injection-seller')->post('update-injection-seller','LinkInjectionController@UpdateInjectionSeller');
+    Route::name('decline-link-injection')->post('decline-link-injection','LinkInjectionController@DeclineLinkInjection');
 
     //Generate List
     Route::name('generate-list-upload-csv')->post('generate-list-upload-csv','GenerateListController@importCsv');
