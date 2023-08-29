@@ -270,6 +270,10 @@
                             {{ $t('message.registration_accounts.r_input_selected') }}
                         </span>
 
+                        <span v-if="hasYesPayment" class="text-danger mx-2">
+                            Some payment method has invalid input like 'Yes'. Please update the payment method accordingly.
+                        </span>
+
                         <div class="table-responsive">
 
                             <!-- payment for seller and writer -->
@@ -836,6 +840,7 @@ export default {
             },
 
             validate_error_type: false,
+            hasYesPayment: false,
         };
     },
 
@@ -1386,6 +1391,20 @@ export default {
                     }
                 }
 
+                // check if payment method has 'yes' value
+                this.hasYesPayment = this.user.payment_type.some(
+                    (value) => value.toLowerCase() === "yes"
+                );
+
+                if (this.hasYesPayment) {
+                    await swal.fire(
+                        self.$t('message.registration_accounts.alert_error'),
+                        self.$t('message.registration_accounts.alert_error_update'),
+                        'error'
+                    );
+
+                    return false;
+                }
             }
 
             this.user.password = this.new_password;

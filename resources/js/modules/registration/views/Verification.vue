@@ -248,6 +248,12 @@
                                     </span>
                                 </div>
 
+                                <div v-if="hasYesPayment" class="col-md-12">
+                                    <span class="text-danger">
+                                        Some payment method has invalid input like 'Yes'. Please update the payment method accordingly.
+                                    </span>
+                                </div>
+
                                 <div class="col-md-12">
                                     <span v-show="errorMessage.hasOwnProperty('payment_type')" class="text-danger">
                                         {{ $t('message.verification.e11') }}
@@ -449,6 +455,7 @@
                 validate_error_type: false,
 
                 pageLanguage : this.$i18n.locale ? this.$i18n.locale : 'en',
+                hasYesPayment: false,
             }
         },
 
@@ -606,6 +613,21 @@
                             return false;
                         }
                     }
+                }
+
+                // check if payment method has 'yes' value
+                this.hasYesPayment = this.regModel.payment_type.some(
+                    (value) => value.toLowerCase() === "yes"
+                );
+
+                if (this.hasYesPayment) {
+                    swal.fire(
+                        self.$t('message.registration_accounts.alert_error'),
+                        self.$t('message.registration_accounts.alert_error_update'),
+                        'error'
+                    );
+
+                    return false;
                 }
 
                 //TODO: REMOVED VALIDATION FOR PAYMENT INFO - MIGHT CHANGE ACCORDING TO BOSS WHEN WE HAVE BUYERS

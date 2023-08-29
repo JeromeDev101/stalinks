@@ -207,7 +207,7 @@ class AuthController extends Controller
             if(is_array($input_2['payment_type'])) {
                 foreach($input_2['payment_type'] as $key => $types) {
                     if($types != '') {
-                        $img_path = $request->img_paths[$key];
+                        $img_path = array_key_exists($key, $request->img_paths) ? $request->img_paths[$key] : null;
 
                         array_push($insert_input_users_payment_type, [
                             'user_id' => $input['id'],
