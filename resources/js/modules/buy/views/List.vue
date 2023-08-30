@@ -1827,6 +1827,13 @@ export default {
                     column: [5, 14].includes(self.user.role_id) ? 'computed_price' : 'cast(price as unsigned)',
                     hidden: !this.tblBuyOptions.price
                 },
+                // buyer price sort for internal users
+                {
+                    name: self.$t('message.list_backlinks.t_prices'),
+                    sort: '',
+                    column: 'computed_price',
+                    hidden: !(this.user.isAdmin || this.user.isOurs !== 1)
+                },
                 // {
                 //     name: 'Prices',
                 //     sort: '',
