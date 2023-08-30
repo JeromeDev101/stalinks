@@ -2495,12 +2495,14 @@
 <style>
 .custom-checkbox {
     /* Double-sized Checkboxes */
-    -ms-transform: scale(2); /* IE */
-    -moz-transform: scale(2); /* FF */
-    -webkit-transform: scale(2); /* Safari and Chrome */
-    -o-transform: scale(2); /* Opera */
-    transform: scale(2);
+    /* -ms-transform: scale(2); /* IE */
+    /* -moz-transform: scale(2); /* FF */
+    /* -webkit-transform: scale(2); /* Safari and Chrome */
+    /* -o-transform: scale(2); /* Opera */
+    /* transform: scale(2); */
     padding: 10px;
+    height: 25px;
+    width: 25px;
 }
 </style>
 <script>
