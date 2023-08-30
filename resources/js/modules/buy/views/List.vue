@@ -1822,9 +1822,9 @@ export default {
                     hidden: !this.tblBuyOptions.org_traffic
                 },
                 {
-                    name: self.$t('message.list_backlinks.t_price'),
+                    name: [5, 14].includes(self.user.role_id) ? self.$t('message.list_backlinks.t_prices') : self.$t('message.list_backlinks.t_price'),
                     sort: '',
-                    column: 'cast(price as unsigned)',
+                    column: [5, 14].includes(self.user.role_id) ? 'computed_price' : 'cast(price as unsigned)',
                     hidden: !this.tblBuyOptions.price
                 },
                 // {

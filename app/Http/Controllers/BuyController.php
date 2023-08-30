@@ -425,6 +425,8 @@ class BuyController extends Controller
                 $sort = \GuzzleHttp\json_decode($sort);
                 if ($sort->column === 'interested_domain_name') {
                     $list = $list->orderBy('interested_domain_name', $sort->sort);
+                } else if ($sort->column === 'computed_price') {
+                    $list = $list->orderBy('computed_price', $sort->sort);
                 } else {
                     $list = $list->orderByRaw("$sort->column $sort->sort");
                 }
