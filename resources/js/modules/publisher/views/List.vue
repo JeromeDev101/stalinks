@@ -562,7 +562,7 @@
                                     v-model="checkIds">
                             </template>
 
-                            <!-- <template
+                            <template
                                 slot-scope="scope"
                                 slot="createdData">
                                 {{
@@ -574,7 +574,7 @@
                                 slot="updatedData">
                                 {{
                                 displayDate(scope.row.updated_at) }}
-                            </template> -->
+                            </template>
 
                             <template
                                 slot-scope="scope"
@@ -1096,13 +1096,13 @@
                     </div>
                     <div class="modal-body relative">
                         <div class="form-group row">
-                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
+                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0 || user.isOurs == 1">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(2,
                                 tblPublisherOpt.created)"  :checked="tblPublisherOpt.created ? 'checked':''" v-model="tblPublisherOpt.created">{{ $t('message.publisher.filter_uploaded') }}</label>
                             </div>
-                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0">
+                            <div class="checkbox col-md-6" v-if="user.isAdmin || user.isOurs == 0 || user.isOurs == 1">
                                 <label><input
                                     type="checkbox"
                                     @click="toggleColumn(3,
@@ -2069,6 +2069,12 @@
     .form-divider span {
         margin-bottom: 5px;
     }
+
+    .header-line .header-cell .header-cell-inner {
+        word-break: break-word !important;
+        text-align: center !important;
+        font-weight: bold;
+    }
 </style>
 
 <script>
@@ -2688,9 +2694,9 @@ export default {
             tableConfig() {
                 return [
                     {
-                        prop : '_index',
+                        prop : 'id',
                         name : '#',
-                        width : '50',
+                        width : '70',
                         isHidden: false
                     },
                     {
@@ -2701,22 +2707,21 @@ export default {
                         isHidden: false
                     },
                     {
-                        prop : 'created_at',
+                        prop : '_action',
                         name : this.$t('message.publisher.filter_uploaded'),
-                        // actionName : 'createdData',
-                        width: 100,
+                        actionName : 'createdData',
+                        width: 95,
                         // sortable: true,
                         isHidden:
                             !this.tblPublisherOpt.created
                     },
                     {
-                        prop : 'updated_at',
+                        prop : '_action',
                         name : this.$t('message.publisher.filter_updated'),
-                        // actionName : 'updatedData',
-                        width: 100,
+                        actionName : 'updatedData',
+                        width: 95,
                         // sortable: true,
-                        isHidden: !this.user.isAdmin ||
-                            this.user.isOurs != 0 || !this.tblPublisherOpt.uploaded
+                        isHidden: !this.tblPublisherOpt.uploaded
                     },
                     {
                         prop : 'language_name',
@@ -2784,7 +2789,7 @@ export default {
                         prop : 'qc_validation',
                         name : this.$t('message.publisher.t_qc_valid'),
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden: !this.tblPublisherOpt.qc_validation
                     },
                     {
@@ -2799,14 +2804,14 @@ export default {
                         prop : 'is_https',
                         name : this.$t('message.publisher.t_https'),
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden: false
                     },
                     {
                         prop : '_action',
                         name : this.$t('message.publisher.t_price'),
                         actionName : 'priceData',
-                        width: 100,
+                        width: 80,
                         // sortable: true,
                         // prefix: '$ ',
                         isHidden: !this.tblPublisherOpt.price
@@ -2815,14 +2820,14 @@ export default {
                         prop : '_action',
                         name : this.$t('message.publisher.t_prices'),
                         actionName : 'pricesData',
-                        width: 100,
+                        width: 80,
                         isHidden: !this.tblPublisherOpt.prices
                     },
                     {
                         prop : '_action',
                         name : this.$t('message.publisher.filter_price_basis'),
                         actionName : 'priceBasisData',
-                        width: 100,
+                        width: 50,
                         isHidden:
                             !this.tblPublisherOpt.price_basis
                     },
@@ -2830,7 +2835,7 @@ export default {
                         prop : 'inc_article',
                         name : this.$t('message.publisher.t_inc_article'),
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden:
                             !this.tblPublisherOpt.inc_article
                     },
@@ -2838,21 +2843,21 @@ export default {
                         prop : 'kw_anchor',
                         name : this.$t('message.publisher.t_kw_anchor'),
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden: !this.tblPublisherOpt.kw_anchor
                     },
                     {
                         prop : 'ur',
                         name : 'UR',
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden: !this.tblPublisherOpt.ur
                     },
                     {
                         prop : 'dr',
                         name : 'DR',
                         // sortable: true,
-                        width: 100,
+                        width: 60,
                         isHidden: !this.tblPublisherOpt.dr
                     },
                     {
@@ -2874,7 +2879,7 @@ export default {
                         prop : '_action',
                         name : this.$t('message.publisher.t_org_keywords'),
                         actionName : 'orgKeywordData',
-                        width: 120,
+                        width: 100,
                         isHidden: !this.tblPublisherOpt.org_keywords
                     },
                     {
@@ -2895,7 +2900,7 @@ export default {
                         prop : '_action',
                         name : this.$t('message.publisher.t_action'),
                         actionName : 'actionButtons',
-                        width : '150',
+                        width : '100',
                         isHidden: false
                     },
                 ];
@@ -3062,9 +3067,11 @@ export default {
                 }
 
                 if (this.user.role_id == 6 || this.user.role_id == 15){
-                    this.tblPublisherOpt.uploaded = false;
+                    this.tblPublisherOpt.created = false;
+                    this.tblPublisherOpt.uploaded = true;
                     this.tblPublisherOpt.topic = false;
                     this.tblPublisherOpt.casino_sites = false;
+                    this.tblPublisherOpt.ref_domain = false;
                     this.tblPublisherOpt.in_charge = true;
                 }
 

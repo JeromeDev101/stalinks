@@ -1482,6 +1482,12 @@
     flex-direction: column;
 }
 
+.header-line .header-cell .header-cell-inner {
+    word-break: break-word !important;
+    text-align: center !important;
+    font-weight: bold;
+}
+
 .action-btns {
     width: 50px;
     margin: 2px;
