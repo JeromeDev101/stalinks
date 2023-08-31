@@ -549,16 +549,17 @@
                             :bordered="true"
                             :item-height="60"
                             :config="tableConfig"
+                            :min-width="1500"
                             :data="listPublish.data">
                             <template
                                 slot-scope="scope"
                                 slot="actionSelectRow">
                                 <input type="checkbox"
-                                       class="custom-checkbox"
-                                       @change="checkSelected"
-                                       :id="scope.row.id"
-                                       :value="scope.row.id"
-                                       v-model="checkIds">
+                                    class="custom-checkbox"
+                                    @change="checkSelected"
+                                    :id="scope.row.id"
+                                    :value="scope.row.id"
+                                    v-model="checkIds">
                             </template>
 
                             <!-- <template
@@ -599,6 +600,25 @@
                                 slot="inChargeData">
                                 {{ scope.row.in_charge == null ?
                                 'N/A':scope.row.in_charge }}
+                            </template>
+
+                            <template
+                                slot-scope="scope"
+                                slot="topicData">
+                                <div
+                                    style="cursor: pointer"
+                                    data-toggle="modal"
+                                    data-target="#modal-view-topic-list"
+                                    @click="showTopicList(scope.row.id, scope.row.topic)"
+                                >
+                                    <span class="badge badge-pill badge-info">
+                                        {{ splitCommaSeparated(scope.row.topic)[0] }}
+                                    </span>
+
+                                    <span v-if="splitCommaSeparated(scope.row.topic).length > 1" class="badge badge-pill badge-info ml-1">
+                                        +{{ splitCommaSeparated(scope.row.topic).length - 1 }}
+                                    </span>
+                                </div>
                             </template>
 
                             <template
@@ -1990,6 +2010,34 @@
             </div>
         </div>
         <!-- End of Modal View CSV Uploads -->
+
+        <!-- Modal View Topics -->
+        <div class="modal fade" id="modal-view-topic-list">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Topic list for  ID# {{ topicModel.publisher_id }}</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="list-group">
+                                    <li v-for="(topic, index) in topicModel.topics" :key="index" class="list-group-item p-2">{{ topic }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">
+                            {{ $t('message.publisher.close') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal View Topics -->
     </div>
 </template>
 
@@ -2030,6 +2078,7 @@ import VueVirtualTable from 'vue-virtual-table';
 import {csvTemplateMixin} from "../../../mixins/csvTemplateMixin";
 import Sort from '@/components/sort/Sort';
 import {dateRange} from "../../../mixins/dateRange";
+import {splitList} from "../../../mixins/splitList";
 
 export default {
         components: {
@@ -2037,7 +2086,7 @@ export default {
             Sort,
         },
         name: '',
-        mixins: [csvTemplateMixin, dateRange],
+        mixins: [csvTemplateMixin, dateRange, splitList],
         data(){
             return {
                 paginate: [50,150,250,350,'All'],
@@ -2241,6 +2290,11 @@ export default {
                 },
 
                 isCsvUploading: false,
+
+                topicModel: {
+                    publisher_id: '',
+                    topics: []
+                }
             }
         },
 
@@ -2688,11 +2742,12 @@ export default {
                         isHidden: !this.tblPublisherOpt.continent
                     },
                     {
-                        prop : 'topic',
+                        prop : '_action',
                         name : this.$t('message.publisher.filter_topic'),
                         // actionName : 'topicData',
                         // sortable: true,
-                        width: 100,
+                        actionName : 'topicData',
+                        width: 150,
                         isHidden: !this.tblPublisherOpt.topic
                     },
                     {
@@ -3951,7 +4006,16 @@ export default {
                     });
                 }
             },
-        }
 
+            showTopicList (publisher_id, topics) {
+                let self = this;
+                self.topicModel.publisher_id = publisher_id;
+                self.topicModel.topics = self.splitCommaSeparated(topics);
+
+                $('#modal-view-topic-list').modal({
+                    show: true
+                });
+            },
+        }
     }
 </script>
