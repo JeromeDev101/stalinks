@@ -165,14 +165,17 @@ class BuyController extends Controller
                             ->where(function($query) use ($user_id, $sub_buyer_ids) {
                                 $query->where('buyer_purchased.user_id_buyer', $user_id)
                                 ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-                            });
+                            })
+                            ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                     } else {
                         $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user->id);
+                        ->where('buyer_purchased.user_id_buyer', $user->id)
+                        ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                     }
                 } else {
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                    ->where('buyer_purchased.user_id_buyer', $user->id);
+                    ->where('buyer_purchased.user_id_buyer', $user->id)
+                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                 }
             })
             // ->whereNotNull('users.id') // to remove all seller's URL that deleted
