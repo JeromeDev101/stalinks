@@ -87,7 +87,7 @@ class BuyController extends Controller
             'publisher_continent.name AS publisher_continent',
             'languages.name AS language_name',
             'buyer_purchased.status as status_purchased',
-            // 'backlinks_interesteds.url_advertiser as interested_domain_name',
+            'backlinks_interesteds.url_advertiser as interested_domain_name',
             DB::raw('org_keywords/org_traffic as ratio_value'),
             DB::raw('ROUND(CASE
                 WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
@@ -128,15 +128,15 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
-            // ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
-            //     if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
-            //         $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
-            //         ->whereIn('backlinks_interesteds.user_id', $backlink_interested_user);
-            //     } else {
-            //         $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
-            //         ->where('backlinks_interesteds.user_id', $user_id);
-            //     }
-            // })
+            ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
+                if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
+                    $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
+                    ->whereIn('backlinks_interesteds.user_id', $backlink_interested_user);
+                } else {
+                    $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
+                    ->where('backlinks_interesteds.user_id', $user_id);
+                }
+            })
             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
             ->leftJoin('registration', 'users.email', '=', 'registration.email')
             ->leftJoin('countries', 'publisher.country_id', '=', 'countries.id')
