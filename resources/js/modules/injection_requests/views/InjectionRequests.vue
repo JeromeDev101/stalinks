@@ -301,9 +301,21 @@
                                                 $ {{ injection.injection_price }}
                                             </span>
                                         </td>
-                                        <td>{{ injection.url_article }}</td>
-                                        <td>{{ injection.url_advertiser }}</td>
-                                        <td>{{ injection.link }}</td>
+                                        <td>
+                                            <a :href="'//' + replaceCharacters(injection.url_article)" target="_blank">
+                                                {{ replaceCharacters(injection.url_article) }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a :href="'//' + replaceCharacters(injection.url_advertiser)" target="_blank">
+                                                {{ replaceCharacters(injection.url_advertiser) }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a :href="'//' + replaceCharacters(injection.link)" target="_blank">
+                                                {{ replaceCharacters(injection.link) }}
+                                            </a>
+                                        </td>
                                         <td>{{ injection.anchor_text }}</td>
                                         <td>
                                             <span v-if="injection.date_requested != null" class="badge badge-pill badge-warning">
@@ -1125,6 +1137,14 @@ export default {
 
         doShowIssueCancelFile(src) {
             this.issueCancelFilePreview = src;
+        },
+
+        replaceCharacters(str) {
+            let char1 = str.replace("http://", "");
+            let char2 = char1.replace("https://", "");
+            let char3 = char2.replace("www.", "");
+
+            return char3;
         },
     },
 }
