@@ -305,19 +305,43 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a :href="'//' + replaceCharacters(injection.url_article)" target="_blank">
-                                                {{ replaceCharacters(injection.url_article) }}
-                                            </a>
+                                            <div v-if="injection.url_article">
+                                                <a :href="'//' + replaceCharacters(injection.url_article)" target="_blank">
+                                                    {{ replaceCharacters(injection.url_article) }}
+                                                </a>
+                                            </div>
+
+                                            <div v-else>
+                                                <span class="badge badge-pill badge-secondary">
+                                                    N/A
+                                                </span>
+                                            </div>
                                         </td>
                                         <td>
-                                            <a :href="'//' + replaceCharacters(injection.url_advertiser)" target="_blank">
-                                                {{ replaceCharacters(injection.url_advertiser) }}
-                                            </a>
+                                            <div v-if="injection.url_advertiser">
+                                                <a :href="'//' + replaceCharacters(injection.url_advertiser)" target="_blank">
+                                                    {{ replaceCharacters(injection.url_advertiser) }}
+                                                </a>
+                                            </div>
+
+                                            <div v-else>
+                                                <span class="badge badge-pill badge-secondary">
+                                                    N/A
+                                                </span>
+                                            </div>
                                         </td>
                                         <td>
-                                            <a :href="'//' + replaceCharacters(injection.link)" target="_blank">
-                                                {{ replaceCharacters(injection.link) }}
-                                            </a>
+                                            <div v-if="injection.link">
+                                                <a :href="'//' + replaceCharacters(injection.link)" target="_blank">
+                                                    {{ replaceCharacters(injection.link) }}
+                                                </a>
+                                            </div>
+
+                                            <div v-else>
+                                                <span class="badge badge-pill badge-secondary">
+                                                    N/A
+                                                </span>
+                                            </div>
                                         </td>
                                         <td>{{ injection.anchor_text }}</td>
                                         <td>
