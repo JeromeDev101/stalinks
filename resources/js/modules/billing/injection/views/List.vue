@@ -280,7 +280,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            STALINKS ID
+                                            INJECTION ID: 
                                             <b>{{ info.ids }}</b>
                                         </td>
                                     </tr>
