@@ -1217,7 +1217,10 @@ class AccountController extends Controller
 //                'writer_price' => 'required_if:type,==,Writer',
                 'language_id' => 'required_if:type,==,Writer',
                 'rate_type' => 'required_if:type,==,Writer',
-                'id_payment_type' => 'required',
+                'id_payment_type' => [
+                    Rule::requiredIf($request->is_sub_account == 0 && $request->status == 'active' && $request->type !== 'Affiliate' && $request->type !== 'Buyer' && $request->isVerified),
+
+                ],
                 'company_name' => 'required_if:company_type,==,Company',
                 'writer_language_price_rates.*.rate' => 'required_if:type,==,Writer',
             ], [
@@ -1245,6 +1248,10 @@ class AccountController extends Controller
 
         if( $registered->type == 'Writer' ){
             $role_id = 4;
+        }
+
+        if( $registered->type == 'Affiliate' ){
+            $role_id = 11;
         }
 
         $data['name'] = $registered->name;

@@ -32,7 +32,6 @@ class UpdateAccountRequest extends FormRequest
         $type = $this->type;
         $verified = $this->isVerified;
 
-
         return [
             'name' => [ 'required' ],
             'username' => [
