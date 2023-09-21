@@ -767,6 +767,7 @@ export default {
         },
 
         async getData() {
+            let loader = this.$loading.show();
             await this.$store.dispatch('actionGetData');
 
             $(".tbl-custom").DataTable({
@@ -778,6 +779,7 @@ export default {
             })
 
             this.displayTotal();
+            loader.hide();
         },
 
         displayTotal() {
