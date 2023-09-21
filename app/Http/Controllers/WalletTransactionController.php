@@ -175,12 +175,13 @@ class WalletTransactionController extends Controller
     public function addWallet(AddWalletRequest $request, InvoiceService $invoice) {
         $image = $request->file;
         $paymentType = $request->get('payment_type');
+        $mode = $request->get('mode');
 
-        $fileName = $paymentType != 1 ? $this->moveFileToStorage($image) : '';
+        $fileName = ($paymentType != 1 || $mode === 'manual') ? $this->moveFileToStorage($image) : '';
         // $fileName = $this->moveFileToStorage($image);
 
         // If payment type is paypal dont insert proof_doc field
-        $data = $paymentType == 1 ? [
+        $data = ($paymentType == 1 && $mode !== 'manual') ? [
             'user_id' => $request->user_id_buyer,
             'payment_via_id' => $request->payment_type,
             'amount_usd' => $request->amount_usd,
@@ -207,7 +208,7 @@ class WalletTransactionController extends Controller
 
         $wallet = WalletTransaction::create($data);
 
-        if ($paymentType == 1) {
+        if ($paymentType == 1 && $mode !== 'manual') {
             $payload = \GuzzleHttp\json_decode($request->get('payload'))->data->result;
             $payload->invoice_id = $wallet->id;
             $wallet->update([

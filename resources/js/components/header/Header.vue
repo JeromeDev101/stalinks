@@ -1268,8 +1268,8 @@ export default {
             this.formData = new FormData();
             this.formData.append('payment_type', this.updateModel.payment_type);
             this.formData.append('amount_usd', this.updateModel.amount_usd);
-            this.formData.append('user_id_buyer',
-                this.user.id);
+            this.formData.append('user_id_buyer', this.user.id);
+            this.formData.append('mode', 'auto');
 
             if (this.updateModel.payment_type !== 1) {
                 this.formData.append('file', this.$refs.proof.files[0]);
