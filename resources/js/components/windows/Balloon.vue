@@ -206,14 +206,16 @@ export default {
 
 .bln-maximized .bln-content {
     height: auto;
+    max-height: 80vh;
     min-height: 10px;
     width: 100%;
-    overflow: hidden;
+    overflow-y: scroll;
     position: relative;
     /*background: #eceae8;*/
 }
 
 .bln-minimized .bln-content {
+    max-height: 80vh;
     position: relative;
     width: 650px;
     height: 700px;
