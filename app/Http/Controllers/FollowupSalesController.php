@@ -213,6 +213,7 @@ class FollowupSalesController extends Controller
         }
 
         $backlink = Backlink::findOrFail($request->id);
+        $admin = User::findOrFail(21); // boss id
 
         $input['payment_status'] = 'Not Paid';
         if ($input['status'] == 'Live') {
@@ -244,6 +245,9 @@ class FollowupSalesController extends Controller
 
                 // notify buyer
                 event(new BacklinkLiveEvent($backlink->unsetRelation('article'), $backlink->user));
+
+                // notify admin
+                event(new BacklinkLiveEvent($backlink->unsetRelation('article'), $admin));
 
                 // notify seller
                 $seller = null;
