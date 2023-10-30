@@ -1338,6 +1338,7 @@
                 axios.get('/api/get-status-summary-followup-sales')
                 .then((res)=> {
                     let _res = res.data
+                    console.log(_res)
                     for(let index in this.statusBacklinkQcAfterLive) {
                         let _result = _res.find( ({ status }) => status === this.statusBacklinkQcAfterLive[index] );
                         let data = {

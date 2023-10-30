@@ -858,8 +858,8 @@ export default {
             axios.get('/api/get-link-injection-status-summary')
             .then((res)=> {
 
-                // console.log(res)
                 let _res = res.data
+                console.log(_res)
                 for(let index in this.statuses) {
                     let _result = _res.find( ({ status }) => status === this.statuses[index] );
                     let data = {
