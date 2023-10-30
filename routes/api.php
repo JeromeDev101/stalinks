@@ -158,6 +158,7 @@ Route::middleware('auth:api')->group(function () {
     //Link Injection
     Route::name('link-injection-request')->post('link-injection-request','LinkInjectionController@request');
     Route::name('get-link-injections')->get('get-link-injections','LinkInjectionController@index');
+    Route::name('get-link-injection-status-summary')->get('get-link-injection-status-summary','LinkInjectionController@statusSummary');
     Route::name('update-link-injections')->post('update-link-injections','LinkInjectionController@update');
     Route::name('approve-link-injections')->post('approve-link-injections','LinkInjectionController@approve');
     Route::name('purchase-link-injections')->post('purchase-link-injections','LinkInjectionController@purchase');
@@ -268,6 +269,7 @@ Route::middleware('auth:api')->group(function () {
 
     // Followup Sales
     Route::name('get-sales')->get('sales', 'FollowupSalesController@getList');
+    Route::name('get-status-summary-followup-sales')->get('get-status-summary-followup-sales', 'FollowupSalesController@statusSummary');
     Route::name('update-sales')->post('sales', 'FollowupSalesController@update');
     Route::name('process-pending-order')->post('process-pending-order', 'FollowupSalesController@processPendingOrder');
 

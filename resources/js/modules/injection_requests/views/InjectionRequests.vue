@@ -199,6 +199,14 @@
                         </div>
                     </div>
                     <div class="card-body">
+
+                        <div class="d-flex flex-row flex-nowrap overflow-auto bg-info mb-4 text-center rounded">
+                            <div v-for="stat in statusSummary" class="col p-3">
+                                {{ stat.status }}
+                                <b>{{' ('+ stat.total +')' }}</b>
+                            </div>
+                        </div>
+
                         <div class="row mb-2 align-items-center">
                             <div class="col-12">
                                 <div class="card">
@@ -738,6 +746,7 @@ export default {
             linkInjections: {
                 data: []
             },
+            statusSummary: [],
 
             filterModel: {
                 page : this.$route.query.page || 1,
@@ -815,7 +824,13 @@ export default {
             updateSellerModel: {
                 link_injection_id: '',
                 publisher_id: '',
-            }
+            },
+            statuses: [
+                'Pending',
+                'Checked',
+                'Live',
+                'Canceled'
+            ]
         }
     },
 
@@ -830,12 +845,31 @@ export default {
     async mounted () {
         this.getFormula();
         this.getLinkInjections();
+        this.getSummaryStatus();
     },
 
     methods: {
         async getFormula() {
             await this.$store.dispatch('actionGetFormula');
             this.updateFormula = this.formula.data[0];
+        },
+
+        getSummaryStatus() {
+            axios.get('/api/get-link-injection-status-summary')
+            .then((res)=> {
+
+                // console.log(res)
+                let _res = res.data
+                for(let index in this.statuses) {
+                    let _result = _res.find( ({ status }) => status === this.statuses[index] );
+                    let data = {
+                        "status": this.statuses[index],
+                        "total": (typeof(_result) != "undefined") ? _result.total:0
+                    }
+
+                    this.statusSummary.push(data)
+                }
+            })
         },
 
         getLinkInjections (page = 1) {

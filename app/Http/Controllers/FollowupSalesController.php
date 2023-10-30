@@ -175,6 +175,21 @@ class FollowupSalesController extends Controller
         return $data;
     }
 
+    public function statusSummary() {
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        $statuses = Backlink::select('backlinks.*')
+                                ->leftJoin('publisher', 'backlinks.publisher_id', '=', 'publisher.id')
+                                ->when($user->role_id == 6, function($query) use ($user){
+                                    return $query->where('publisher.user_id', $user);
+                                })
+                                ->selectRaw('count(*) as total')
+                                ->groupBy('status')
+                                ->get();
+
+        return $statuses;
+    }
+
     public function update(Request $request, NotificationInterface $notification)
     {
         if (Gate::denies('update-seller-follow-up-sale')) {
@@ -313,7 +328,7 @@ class FollowupSalesController extends Controller
         if ($backlink->article) {
             $article = Article::where('id_backlink', $backlink->id)->first();
             if ($backlink->article->user) {
-                
+
                 $backlink->article->user->notify(new NotifyWriterCancelIssueOrder($article));
             }
             $internal_writers = User::whereIn('role_id', [13])->where('isOurs', 0)->where('status', 'active')->get();

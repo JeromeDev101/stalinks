@@ -100,6 +100,21 @@ class LinkInjectionController extends Controller
         }
     }
 
+    public function statusSummary() {
+        $user = \Illuminate\Support\Facades\Auth::user();
+
+        $statuses = LinkInjection::select('link_injections.*')
+                                ->leftJoin('publisher', 'link_injections.publisher_id', '=', 'publisher.id')
+                                ->when($user->role_id == 6, function($query) use ($user){
+                                    return $query->where('publisher.user_id', $user);
+                                })
+                                ->selectRaw('count(*) as total')
+                                ->groupBy('status')
+                                ->get();
+
+        return $statuses;
+    }
+
     public function request (LinkInjectionRequest $request) {
         $publisher = Publisher::find($request->publisher_id ? $request->publisher_id : $request->id);
 

@@ -221,6 +221,14 @@
                         </div>
                     </div>
                     <div class="card-body">
+
+                        <div class="d-flex flex-row flex-nowrap overflow-auto bg-info mb-4 text-center rounded">
+                            <div v-for="stat in statusSummary" class="col p-3">
+                                {{ stat.status }}
+                                <b>{{' ('+ stat.total +')' }}</b>
+                            </div>
+                        </div>
+
                         <h5 class="d-inline pull-right">{{ $t('message.follow.fus_amount') }} $ {{ totalAmount }}</h5>
 
                         <table width="100%">
@@ -1118,6 +1126,7 @@
         data() {
             return {
                 paginate: [50,150,250,350,'All'],
+                statusSummary: [],
                 statusBacklink: [
                     'Processing',
                     'Content In Writing',
@@ -1245,6 +1254,7 @@
             this.getListSales();
             this.getListSeller();
             this.getListBuyer();
+            this.getSummaryStatus();
 
             let countries = this.listCountryAll.data;
             if( countries.length === 0 ){
@@ -1273,6 +1283,22 @@
                 let disabled = ['Canceled', 'Issue']
 
                 return disabled.includes(this.updateModel.status) && this.user.isOurs === 1;
+            },
+
+            getSummaryStatus() {
+                axios.get('/api/get-status-summary-followup-sales')
+                .then((res)=> {
+                    let _res = res.data
+                    for(let index in this.statusBacklinkQcAfterLive) {
+                        let _result = _res.find( ({ status }) => status === this.statusBacklinkQcAfterLive[index] );
+                        let data = {
+                            "status": this.statusBacklinkQcAfterLive[index],
+                            "total": (typeof(_result) != "undefined") ? _result.total:0
+                        }
+
+                        this.statusSummary.push(data)
+                    }
+                })
             },
 
             isShowConfirmButtonOrders() {
