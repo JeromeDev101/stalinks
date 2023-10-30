@@ -1285,22 +1285,6 @@
                 return disabled.includes(this.updateModel.status) && this.user.isOurs === 1;
             },
 
-            getSummaryStatus() {
-                axios.get('/api/get-status-summary-followup-sales')
-                .then((res)=> {
-                    let _res = res.data
-                    for(let index in this.statusBacklinkQcAfterLive) {
-                        let _result = _res.find( ({ status }) => status === this.statusBacklinkQcAfterLive[index] );
-                        let data = {
-                            "status": this.statusBacklinkQcAfterLive[index],
-                            "total": (typeof(_result) != "undefined") ? _result.total:0
-                        }
-
-                        this.statusSummary.push(data)
-                    }
-                })
-            },
-
             isShowConfirmButtonOrders() {
                 let obj = this.sellerConfirmationValues
                 let confirm = true;
@@ -1348,6 +1332,22 @@
             onChange(event) {
                 var data = event.target.value;
                 this.isIncArticleNo = JSON.parse(data)
+            },
+
+            getSummaryStatus() {
+                axios.get('/api/get-status-summary-followup-sales')
+                .then((res)=> {
+                    let _res = res.data
+                    for(let index in this.statusBacklinkQcAfterLive) {
+                        let _result = _res.find( ({ status }) => status === this.statusBacklinkQcAfterLive[index] );
+                        let data = {
+                            "status": this.statusBacklinkQcAfterLive[index],
+                            "total": (typeof(_result) != "undefined") ? _result.total:0
+                        }
+
+                        this.statusSummary.push(data)
+                    }
+                })
             },
 
             checkReason() {
