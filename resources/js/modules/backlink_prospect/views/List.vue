@@ -462,6 +462,12 @@
 
                             <template
                                 slot-scope="scope"
+                                slot="actionRefDomain">
+                                <a :href="'//'+ scope.row.referring_domain" target="_blank">{{ scope.row.referring_domain  }}</a>
+                            </template>
+
+                            <template
+                                slot-scope="scope"
                                 slot="actionButtons">
                                 <div class="btn-group">
                                     <button
@@ -757,9 +763,10 @@ export default {
                     isHidden : false
                 },
                 {
-                    prop : 'referring_domain',
+                    prop : '_action',
                     name : self.$t('message.backlink_prospect.t_ref_domain'),
                     sortable : true,
+                    actionName: 'actionRefDomain',
                     isHidden : false
                 },
                 {

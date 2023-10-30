@@ -268,6 +268,7 @@
                                     <th v-show="tblFollowupBacklinksOpt.seller" v-if="(user.isOurs == 0 && !user.isAdmin) || user.isAdmin">{{ $t('message.follow_backlinks.filter_seller') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.buyer">{{ $t('message.follow_backlinks.filter_user_buyer') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.follow_backlinks.t_url_pub') }}</th>
+                                    <th v-show="tblFollowupBacklinksOpt.url_publisher">{{ $t('message.url_prospect.up_inc_article') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || [5, 8, 14].includes(user.role_id)">{{ $t('message.follow_backlinks.t_url_ad') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.link_from">{{ $t('message.follow_backlinks.t_link_from') }}</th>
                                     <th v-show="tblFollowupBacklinksOpt.link_to">{{ $t('message.follow_backlinks.t_link_to') }}</th>
@@ -334,6 +335,9 @@
                                                 {{ replaceCharacters(backLink.publisher.url) }}
                                             </a>
                                         </span>
+                                        </td>
+                                        <td>
+                                            {{ backLink.publisher.inc_article }}
                                         </td>
                                         <td v-show="tblFollowupBacklinksOpt.url_advertiser" v-if="user.isAdmin || [5, 8, 14].includes(user.role_id)">
                                             <!--                                    {{ backLink.url_advertiser }}-->
