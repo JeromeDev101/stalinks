@@ -187,7 +187,7 @@ class FollowupSalesController extends Controller
                                 ->groupBy('status')
                                 ->get();
 
-        return $statuses;
+        return response()->json($statuses);
     }
 
     public function update(Request $request, NotificationInterface $notification)

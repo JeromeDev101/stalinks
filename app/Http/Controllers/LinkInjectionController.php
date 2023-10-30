@@ -112,7 +112,7 @@ class LinkInjectionController extends Controller
                                 ->groupBy('status')
                                 ->get();
 
-        return $statuses;
+        return response()->json($statuses);
     }
 
     public function request (LinkInjectionRequest $request) {
