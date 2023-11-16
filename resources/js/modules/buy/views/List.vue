@@ -446,7 +446,6 @@
                                             {{ $t('message.list_backlinks.bb_selected_action') }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <!-- <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a> -->
                                             <a class="dropdown-item " @click="interestedSelected">
                                                 {{ $t('message.list_backlinks.bb_interested') }}
                                             </a>
@@ -456,6 +455,7 @@
                                             <a class="dropdown-item " @click="notInterestedSelected">
                                                 {{ $t('message.list_backlinks.bb_not_interested') }}
                                             </a>
+                                            <a class="dropdown-item" @click="buySelected" data-target="#modal-buy-selected" data-toggle="modal">Buy</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1143,7 +1143,7 @@
                                            disabled>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>{{ $t('message.list_backlinks.t_price') }}</label>
                                     <input type="number"
@@ -1154,48 +1154,52 @@
                                            disabled>
                                 </div>
                             </div>
-                            <div class="col-md-2 my-auto">
-                                <button type="button"
-                                        class="btn btn-link"
-                                        data-toggle="collapse"
-                                        :data-target="'#collapseExample'+index">
-                                    {{ $t('message.list_backlinks.bs_view_more') }}
-                                </button>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="collapse" :id="'collapseExample'+index">
-                                    <div class="card card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           name=""
-                                                           aria-describedby="helpId"
-                                                           placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           name=""
-                                                           aria-describedby="helpId"
-                                                           placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
-                                                    <input type="text"
-                                                           class="form-control"
-                                                           name=""
-                                                           aria-describedby="helpId"
-                                                           placeholder="">
-                                                </div>
-                                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ $t('message.list_backlinks.b_anchor_text') }}</label>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    name=""
+                                                    v-model="buySelectedModel.anchor_text"
+                                                    aria-describedby="helpId"
+                                                    placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ $t('message.list_backlinks.b_link_to') }}</label>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    name=""
+                                                    v-model="buySelectedModel.link"
+                                                    aria-describedby="helpId"
+                                                    placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>{{ $t('message.list_backlinks.b_url_advertiser') }}</label>
+                                            <input type="text"
+                                                    class="form-control"
+                                                    name=""
+                                                    v-model="buySelectedModel.url_advertiser"
+                                                    aria-describedby="helpId"
+                                                    placeholder="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Idea for Title</label>
+                                            <input type="text"
+                                                class="form-control"
+                                                name=""
+                                                v-model="buySelectedModel.idea_for_title"
+                                                aria-describedby="helpId"
+                                                placeholder="">
                                         </div>
                                     </div>
                                 </div>
@@ -1207,7 +1211,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             {{ $t('message.list_backlinks.close') }}
                         </button>
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary" :disabled="btnBuySelected" @click="submitBuySelected">
                             {{ $t('message.list_backlinks.bs_buy_all') }}
                         </button>
                     </div>
@@ -1526,6 +1530,12 @@ export default {
                 url_advertiser : '',
                 idea_for_title: '',
             },
+            buySelectedModel : {
+                anchor_text : '',
+                link : '',
+                url_advertiser : '',
+                idea_for_title: '',
+            },
             linkInjectionModel : {
                 id : '',
                 url : '',
@@ -1656,6 +1666,8 @@ export default {
             sort_options: [],
             btnBuy: false,
             btnLinkInjection: false,
+
+            btnBuySelected: false,
 
             currentWindowWidth: window.innerWidth,
             isBuyerHasDiscount: false,
@@ -2403,7 +2415,7 @@ export default {
         },
 
         buySelected() {
-            let ids = this.checkIds;
+            let ids = this.checkIds.map(a => a.id);
             this.buyData = [];
             for (var id in ids) {
                 for (var buy in this.listBuy.data) {
@@ -2416,6 +2428,8 @@ export default {
                     }
                 }
             }
+
+            // console.log(this.buyData, this.listBuy.data, ids)
         },
 
         interestedSelected() {
@@ -2879,6 +2893,71 @@ export default {
             await this.$store.dispatch('actionGetListContinents', params);
         },
 
+        async submitBuySelected() {
+
+            let self = this;
+            let loader = this.$loading.show();
+            let credit_left = parseInt(this.listBuy.credit);
+            let anchor_text = this.buySelectedModel.anchor_text
+            let link = this.buySelectedModel.link
+            let url_advertiser = this.buySelectedModel.url_advertiser
+            let idea_for_title = this.buySelectedModel.idea_for_title
+            $('#tbl_buy_backlink').DataTable().destroy();
+
+            this.btnBuySelected = true;
+
+            let datas = this.checkIds
+            for (var data in datas) {
+                let that = datas[data];
+                this.buySelectedModel = datas[data]
+                this.buySelectedModel.credit_left = credit_left;
+                this.buySelectedModel.anchor_text = anchor_text;
+                this.buySelectedModel.link = link;
+                this.buySelectedModel.url_advertiser = url_advertiser;
+                this.buySelectedModel.idea_for_title = idea_for_title;
+
+                this.buySelectedModel.seller_price = that.price;
+                this.buySelectedModel.price = this.computePrice(that.price, that.inc_article, 'yes');
+                this.buySelectedModel.prices = this.buySelectedModel.price
+
+                this.isPopupLoading = true;
+                await this.$store.dispatch('actionUpdateBuy', this.buySelectedModel);
+                this.isPopupLoading = false;
+            }
+
+            if (this.messageForms.action === 'updated') {
+                this.getBuyList();
+                this.$root.$refs.AppHeader.liveGetWallet()
+
+                $("#modal-buy-selected").modal('hide');
+
+                loader.hide();
+
+                await swal.fire(
+                    self.$t('message.list_backlinks.alert_success'),
+                    self.$t('message.list_backlinks.alert_order'),
+                    'success'
+                )
+            } else {
+                loader.hide();
+
+                await swal.fire(
+                    this.messageForms.message,
+                    '',
+                    'error'
+                )
+            }
+
+            this.checkIds = [];
+
+            if(this.messageForms.errors) {
+                this.btnBuySelected = false;
+            }
+
+            loader.hide();
+
+        },
+
         async submitBuy(params) {
             let self = this;
             let loader = this.$loading.show();
@@ -2894,6 +2973,10 @@ export default {
 
             this.updateModel.credit_left = credit_left;
             this.btnBuy = true;
+
+            console.log(this.updateModel)
+
+            return false
 
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateBuy', this.updateModel);
