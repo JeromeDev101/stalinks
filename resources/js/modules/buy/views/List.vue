@@ -2974,10 +2974,6 @@ export default {
             this.updateModel.credit_left = credit_left;
             this.btnBuy = true;
 
-            console.log(this.updateModel)
-
-            return false
-
             this.isPopupLoading = true;
             await this.$store.dispatch('actionUpdateBuy', this.updateModel);
             this.isPopupLoading = false;
