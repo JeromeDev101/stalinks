@@ -164,7 +164,10 @@
                                 <tr v-for="(summary, index) in summaryData" :key="index">
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ summary.id }}</td>
-                                    <td>{{ summary.username == null ? summary.name : summary.username }}</td>
+                                    <td>
+                                        {{ summary.username == null ? summary.name : summary.username }}
+                                        <span v-if="summary.status == 'inactive'" class="badge badge-danger">Inactive</span>
+                                    </td>
                                     <td>{{ summary.deposit == null ? 0 : '$ ' + summary.deposit  }}</td>
                                     <td>{{ '$ ' + (summary.orders).toFixed(0) }}</td>
                                     <td>{{ '$ ' + (summary.order_cancel).toFixed(0) }}</td>
