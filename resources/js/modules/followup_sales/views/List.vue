@@ -285,6 +285,7 @@
                                     </th>
                                     <th v-show="tblOptions.blink_id">{{ $t('message.follow.fus_blink') }}</th>
                                     <th v-show="tblOptions.arc_id">{{ $t('message.follow.fus_artc') }}</th>
+                                    <th v-show="tblOptions.inc_art">Inc Article</th>
                                     <th v-show="tblOptions.country">{{ $t('message.follow.filter_country') }}</th>
                                     <th v-show="tblOptions.in_charge">{{ $t('message.follow.filter_in_charge') }}</th>
                                     <th v-show="tblOptions.seller" v-if="user.isOurs != 1">{{ $t('message.follow.filter_seller') }}</th>
@@ -370,6 +371,7 @@
                                             </button>
                                         </div>
                                     </td>
+                                    <td v-show="tblOptions.inc_art">{{ sales.publisher == null ? 'N/A' : (sales.publisher.inc_article == null ? 'N/A' : sales.publisher.inc_article)}}</td>
                                     <td
                                         v-show="tblOptions.country">{{ sales.publisher == null ? 'N/A' : (sales.publisher.country == null ? 'N/A' : sales.publisher.country.name) }}</td>
                                     <td v-show="tblOptions.in_charge">{{ sales.in_charge == null ? 'N/A':sales.in_charge }}</td>
@@ -710,6 +712,9 @@
                             </div>
                             <div class="checkbox col-md-4">
                                 <label><input type="checkbox" :checked="tblOptions.url ? 'checked':''" v-model="tblOptions.url">{{ $t('message.follow.fus_url_pub') }}</label>
+                            </div>
+                            <div class="checkbox col-md-4">
+                                <label><input type="checkbox" :checked="tblOptions.inc_art ? 'checked':''" v-model="tblOptions.inc_art">Inc Article</label>
                             </div>
                             <div class="checkbox col-md-4" v-if="user.isOurs !== 1 || ![4, 13].includes(user.role_id)">
                                 <label><input type="checkbox" :checked="tblOptions.price ? 'checked':''" v-model="tblOptions.price">{{ $t('message.follow.fus_price') }}</label>
