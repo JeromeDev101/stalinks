@@ -345,7 +345,7 @@ class ArticlesController extends Controller
     }
 
     public function store(Request $request, NotificationInterface $notification) {
-        if (Gate::denies('create-article-article')) {
+        if (Gate::denies('create-content-article')) {
             abort(422, 'Unauthorized Access');
         }
 
@@ -374,7 +374,7 @@ class ArticlesController extends Controller
     }
 
     public function updateContent(Request $request, NotificationInterface $notification){
-        if (Gate::denies('update-article-article')) {
+        if (Gate::denies('update-content-article')) {
             abort(422, 'Unauthorized Access');
         }
 
@@ -557,7 +557,7 @@ class ArticlesController extends Controller
     }
 
     public function deleteArticleInternal(Request $request) {
-        if (Gate::denies('delete-article-article')) {
+        if (Gate::denies('delete-content-article')) {
             abort(422, 'Unauthorized Access');
         }
 

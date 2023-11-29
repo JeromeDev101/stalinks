@@ -103,6 +103,9 @@ import PurchaseTools from '@/modules/purchases/views/Tools.vue'
 // campaign setup
 import CampaignSetup from '@/modules/campaign/views/CampaignSetup.vue'
 
+// setup chathpt
+import SetupChatGpt from '@/modules/setup_chatgpt/views/SetupChatGpt.vue'
+
 import store from './store';
 
 // CHECK MIXINS > CONSTANTS, ADD NEW ROUTES THERE FOR SYSTEM LOGS
@@ -412,11 +415,23 @@ const routes = [
             //     component: DeleteMails,
             // },
             {
-                path : '/articles',
+                path : '/content/articles',
                 name : 'articles',
                 component : Article,
                 beforeEnter: (to, from, next) => {
-                    if(store.state.storeAuth.currentUser.permission_list.includes('view-article-article')) {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-content-article')) {
+                        next();
+                    } else {
+                        next('*');
+                    }
+                }
+            },
+            {
+                path : '/content/setup-chatgpt',
+                name : 'setup-chatgpt',
+                component : SetupChatGpt,
+                beforeEnter: (to, from, next) => {
+                    if(store.state.storeAuth.currentUser.permission_list.includes('view-content-setup-chat-gpt')) {
                         next();
                     } else {
                         next('*');

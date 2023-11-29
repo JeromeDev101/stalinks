@@ -361,7 +361,7 @@
                                                 v-if="(sales.article_id == null
                                                 && sales.status === 'Processing'
                                                 && (user.isAdmin || user.role_id === 8))
-                                                && user.permission_list.includes('create-article-article')"
+                                                && user.permission_list.includes('create-content-article')"
                                                 title="Generate Article"
                                                 class="btn btn-primary ml-2"
 
