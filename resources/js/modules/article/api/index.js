@@ -15,7 +15,7 @@ export default class ArticleService {
     }
 
     static getListArticle(params) {
-        return axios.get('/api/article-list', params)
+        return axios.get('api/article-list', params)
             .then(response => response)
             .catch(error => error)
     }

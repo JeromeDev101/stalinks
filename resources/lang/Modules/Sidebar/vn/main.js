@@ -45,8 +45,6 @@ export default {
     mails: 'Mail',
 
     articles: 'Bài viết',
-    content: 'Nội dung',
-    setup_gpt: 'Cài đặt Chatgpt',
 
     // seller
     seller: 'Người bán',

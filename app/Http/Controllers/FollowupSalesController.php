@@ -340,7 +340,7 @@ class FollowupSalesController extends Controller
     }
 
     public function generateArticle (Request $request) {
-        if (Gate::denies('create-content-article')) {
+        if (Gate::denies('create-article-article')) {
             return response()->json([
                 "message" => 'Unauthorized Access',
                 "errors" => [

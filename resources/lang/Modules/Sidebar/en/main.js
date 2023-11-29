@@ -45,8 +45,6 @@ export default {
     mails: 'Mails',
 
     articles: 'Article',
-    content: 'Content',
-    setup_gpt: 'Setup ChatGPT',
 
     // seller
     seller: 'Seller',

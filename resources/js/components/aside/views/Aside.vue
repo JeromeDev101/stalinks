@@ -429,7 +429,7 @@
                     </li>
 
                     <!-- Article -->
-                    <!-- <li v-if="user.permission_list.includes('view-content-article')" class="nav-item">
+                    <li v-if="user.permission_list.includes('view-article-article')" class="nav-item">
                         <router-link
                             class="nav-link"
                             :to="{ path: '/articles' }"
@@ -438,49 +438,7 @@
                             <img src="../../../../images/article.png"/>
                             <p>{{ $t('message.sidebar.articles') }}</p>
                         </router-link>
-                    </li> -->
-
-                    <!-- Content -->
-                    <li
-                        v-if="user.permission_list.includes('view-content-article') || user.permission_list.includes('view-content-setup-chat-gpt')"
-                        class="nav-item"
-                        :class="{
-                            active:
-                                $route.name == 'articles' ||
-                                $route.name == 'setup-chatgpt',
-                            'menu-open':
-                                $route.name == 'articles' ||
-                                $route.name == 'setup-chatgpt'
-                        }">
-                        <a href="#" class="nav-link">
-                            <img src="../../../../images/article.png"/>
-                            <p>
-                                {{ $t('message.sidebar.content') }}
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li v-if="user.permission_list.includes('view-content-setup-chat-gpt')" class="nav-item">
-                                <router-link
-                                    class="nav-link"
-                                    :to="{ path: '/content/setup-chatgpt' }"
-                                    :class="{ active: $route.name == 'setup-chatgpt' }">
-
-                                    <i class="fas fa-cog nav-icon"></i>
-                                    <p>{{ $t('message.sidebar.setup_gpt') }}</p>
-                                </router-link>
-                            </li>
-                            <li v-if="user.permission_list.includes('view-content-article')" class="nav-item">
-                                <router-link
-                                    class="nav-link"
-                                    :to="{ path: '/content/articles' }"
-                                    :class="{ active: $route.name == 'articles' }">
-
-                                    <i class="fas fa-bars nav-icon"></i>
-                                    <p>{{ $t('message.sidebar.articles') }}</p>
-                                </router-link>
-                            </li>
-                        </ul>
+                    </li>
 
                     <!-- Seller -->
                     <li

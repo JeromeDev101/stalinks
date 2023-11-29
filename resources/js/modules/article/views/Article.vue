@@ -90,7 +90,7 @@
                                             {{ option.username }}
                                         </option>
                                     </select>
-                                </div>
+                                </div> 
                             </div>
 
                             <div class="col-md-3">
@@ -175,6 +175,30 @@
                     </div>
 
                     <div class="card-body">
+<!--                        <table class="mb-3 bg-info">-->
+<!--                            <tr>-->
+<!--                                <td class="p-3">-->
+<!--                                    Queue-->
+<!--                                    <b>{{' ('+ statusSummary.total_queue +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    In Writing-->
+<!--                                    <b>{{' ('+ statusSummary.total_in_writing +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Done-->
+<!--                                    <b>{{' ('+ statusSummary.total_done +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Canceled-->
+<!--                                    <b>{{' ('+ statusSummary.total_cancelled +')' }}</b>-->
+<!--                                </td>-->
+<!--                                <td class="p-3">-->
+<!--                                    Issue-->
+<!--                                    <b>{{' ('+ statusSummary.total_issue +')' }}</b>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
 
                         <div class="d-flex flex-row flex-nowrap overflow-auto bg-info mb-4 text-center rounded">
                             <div class="col p-3">
@@ -233,7 +257,7 @@
                         </div>
 
                         <button
-                            v-if="isTeam && user.permission_list.includes('create-content-article')"
+                            v-if="isTeam && user.permission_list.includes('create-article-article')"
                             class="btn btn-success float-right mr-2 mb-2"
                             data-toggle="modal"
                             data-target="#modal-add-article"
@@ -263,23 +287,23 @@
                                 <div :class="scope.row.is_confirmed === 0 ? 'badge badge-danger' : ''">
                                     {{ scope.row.id }}
                                 </div>
-
+                                
                                 <div v-if="scope.row.is_confirmed === 0" class="ml-2">
-                                    <button
-                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('update-content-article'))"
+                                    <button 
+                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('update-article-article'))"
                                         class="btn btn-success"
                                         title="Confirm Article"
-
+                                        
                                         @click="confirmArticle(scope.row.id)">
 
                                         <i class="fas fa-check-circle"></i>
                                     </button>
 
-                                    <button
-                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('delete-content-article'))"
+                                    <button 
+                                        v-if="user.isAdmin || (user.isOurs === 0 && user.role_id === 13 && user.permission_list.includes('delete-article-article'))"
                                         class="btn btn-danger"
                                         title="Delete Article"
-
+                                        
                                         @click="deleteArticle(scope.row.id)">
 
                                         <i class="fas fa-trash"></i>
@@ -293,7 +317,7 @@
                                 <div class="btn-group">
                                     <button
                                         v-if="(user.role_id === 4 || user.role_id === 13)
-                                        && user.permission_list.includes('create-content-article')"
+                                        && user.permission_list.includes('create-article-article')"
                                         :disabled="!isStatusOnQueue(scope.row) || isProcessing"
                                         :id="'accept-article-' + scope.row.id"
                                         class="btn btn-default"
@@ -307,7 +331,7 @@
                                     <button
                                         v-if="((user.isOurs === 0
                                         || (user.isOurs === 1 && !isStatusOnQueue(scope.row))))
-                                        && user.permission_list.includes('update-content-article')"
+                                        && user.permission_list.includes('update-article-article')"
                                         :id="'article-' + scope.row.id"
                                         :disabled="isProcessing"
                                         class="btn btn-default"
@@ -323,7 +347,7 @@
                                         v-if="(scope.row.status_writer === 'Done'
                                         || scope.row.status_writer === 'Content Validated')
                                         && scope.row.backlink_status != 'Canceled'
-                                        && user.permission_list.includes('export-content-article')"
+                                        && user.permission_list.includes('export-article-article')"
                                         class="btn btn-default"
                                         title="Export to document"
                                         @click="Export2Word(scope.row, scope.row.title)"
@@ -565,11 +589,11 @@
                             <div class="col-sm-6" v-if="(user.isOurs == '0' || user.role_id == 4) && contentModel.backlink_status != 'Canceled' && contentModel.backlink_status != 'Issue' && contentModel.status != 'Issue'">
                                 <div class="form-group">
                                     <label>{{ $t('message.article.ec_status_writer') }}</label>
-                                    <select
+                                    <select 
                                         v-model="contentModel.status"
                                         class="form-control"
                                         :disabled="user.role_id === 15 || user.isOurs === 1 && (contentModel.status === 'Content Validated' || contentModel.backlink_status === 'Live')"
-
+                                        
                                         @change="checkStat($event)">
 
                                         <option value="">{{ $t('message.article.ec_select_status') }}</option>
@@ -661,7 +685,6 @@
                     </div>
                     <div class="modal-footer">
 <!--                        <span class="text-primary mr-auto">Press 'Ctrl + Shift + F' for full screen</span>-->
-                        <button class="btn btn-success float-left" data-target="#modalGenerateChatGpt" data-toggle="modal"><span class="fa fa-cycle"></span> Generate ChatGPT</button>
                         <button @click="clearQuery" type="button" class="btn btn-default">
                             {{ $t('message.article.close') }}
                         </button>
@@ -810,45 +833,6 @@
             </div>
         </div>
         <!-- End of Modal View Issue File -->
-
-        <!-- Modal -->
-        <div class="modal fade" id="modalGenerateChatGpt" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Choose Prompt</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Name</label>
-                                    <select class="form-control" @change="selectPromptName" >
-                                        <option value="">Choose Name</option>
-                                        <option v-for="option in listPrompt" v-bind:value="option.id">
-                                            {{ option.name }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="">Prompt</label>
-                                    <textarea class="form-control" v-model="prompt" rows="3"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success">Generate</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -868,7 +852,6 @@
             return {
                 paginate: ['50','150','250','350','All'],
                 data: '',
-                prompt: '',
                 options: {
                     height: 500,
                     // target_list: false,
@@ -985,7 +968,6 @@
                 },
 
                 externalWriters: [],
-                listPrompt: [],
                 isReedit: false,
             }
         },
@@ -998,7 +980,6 @@
             this.checkTeam();
             this.getListLanguages();
             this.getValidExternalWriters();
-            this.getListPrompt();
         },
 
         computed: {
@@ -1013,7 +994,7 @@
             }),
 
             writerStatus() {
-                return this.user.isOurs == 0  ? this.writer_status_internal:this.writer_status;
+                return this.user.isOurs == 0  ? this.writer_status_internal:this.writer_status;        
             },
 
             isProcessing() {
@@ -1119,7 +1100,7 @@
             },
 
             validWriters () {
-                return this.listWriter.data ? this.listWriter.data.concat(this.externalWriters):null;
+                return this.listWriter.data.concat(this.externalWriters)
             },
 
             validWritersWithLanguage () {
@@ -1134,21 +1115,6 @@
         },
 
         methods: {
-            getListPrompt() {
-                axios.get('/api/show-prompt')
-                    .then(res => {
-                        this.listPrompt = res.data;
-                    }).catch((error) => {
-                        console.log('display: ' + error)
-                    });
-            },
-
-            selectPromptName() {
-                // let data = this.listPrompt.filter(item => item.id === this.selectedPrompt)
-                // this.prompt = data.prompt
-                console.log(this.listPrompt, event)
-            },
-
             checkStat(event) {
                 var data = event.target.value;
 
@@ -1586,7 +1552,7 @@
 
             doUpdate(backlink, article){
 
-                console.log(article)
+                // console.log(article)
 
                 this.clearIssue();
 
@@ -1781,5 +1747,5 @@
 </script>
 
 <style>
-
+    
 </style>

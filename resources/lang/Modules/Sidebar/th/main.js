@@ -45,8 +45,6 @@ export default {
     mails: 'จดหมาย',
 
     articles: 'บทความ',
-    content: 'เนื้อหา',
-    setup_gpt: 'ตั้งค่า chatgpt',
 
     // seller
     seller: 'ผู้ขาย',

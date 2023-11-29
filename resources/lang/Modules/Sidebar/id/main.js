@@ -45,8 +45,6 @@ export default {
     mails: 'Surel',
 
     articles: 'Artikel',
-    content: 'Isi',
-    setup_gpt: 'Siapkan ChatGPT',
 
     // seller
     seller: 'Penjual',

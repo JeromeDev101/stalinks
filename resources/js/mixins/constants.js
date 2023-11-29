@@ -137,11 +137,7 @@ export const Constants = {
         },
         {
             name: 'Article',
-            path: '/content/articles',
-        },
-        {
-            name: 'Setup ChatGpt',
-            path: '/content/setup-chatgpt',
+            path: '/articles',
         },
         {
             name: 'Seller - List Publisher',
@@ -261,8 +257,7 @@ export const Constants = {
             'Signatures',
             'Auto Replies'
         ],
-        'Content': [
-            'Setup ChatGpt',
+        'Article': [
             'Article'
         ],
         'Seller': [

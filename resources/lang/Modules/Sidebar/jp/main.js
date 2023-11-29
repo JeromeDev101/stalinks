@@ -45,8 +45,6 @@ export default {
     mails: 'メール',
 
     articles: '記事',
-    content: 'コンテンツ',
-    setup_gpt: 'チャットグポイントのセットアップ',
 
     // seller
     seller: 'セーラー',
