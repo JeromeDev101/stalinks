@@ -45,6 +45,8 @@ export default {
     mails: 'मेल',
 
     articles: 'लेख',
+    content: 'सामग्री',
+    setup_gpt: 'चैटजीपीटी सेटअप करें',
 
     // seller
     seller: 'विक्रेता',

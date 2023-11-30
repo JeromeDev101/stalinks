@@ -84,6 +84,15 @@ Route::middleware('auth:api')->group(function () {
     Route::name('get-user-drafts')->get('/get-user-drafts', 'UserController@getUserDrafts');
     Route::name('update-user-payment-type-image')->post('/admin/update-user-payment-type-image', 'AuthController@updateUserPaymentTypeImage');
 
+    //setup chatgpt
+    Route::name('add-prompt')->post('add-prompt', 'ChatGptSetupController@addPrompt');
+    Route::name('generate-gpt')->post('generate-gpt', 'ChatGptSetupController@generateGpt');
+    Route::name('update-prompt')->post('update-prompt', 'ChatGptSetupController@updatePrompt');
+    Route::name('setup-chat-gpt')->get('setup-chat-gpt', 'ChatGptSetupController@index');
+    Route::name('delete-prompt')->get('delete-prompt', 'ChatGptSetupController@deletePrompt');
+    Route::name('edit-prompt')->get('edit-prompt/{id}/edit', 'ChatGptSetupController@edit');
+    Route::name('show-prompt')->get('show-prompt', 'ChatGptSetupController@showPrompt');
+
     //Article
     Route::name('get-backlinks-list')->get('backlinks-list', 'ArticlesController@getList');
     Route::name('get-article-list')->get('article-list', 'ArticlesController@getArticleList');
