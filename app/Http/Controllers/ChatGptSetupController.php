@@ -44,6 +44,10 @@ class ChatGptSetupController extends Controller
     public function generateGpt(Request $request) {
         $prompt = $request->input('prompt');
         $values = $request->input('values');
+        $inputs = $request->input('inputs');
+
+        // Decode JSON string to get inputs
+        $input_data = json_decode($inputs, true);
 
         // Decode JSON string to get values as an associative array
         $data = json_decode($values, true);
@@ -58,6 +62,12 @@ class ChatGptSetupController extends Controller
             }
         }
 
+        // Replace placeholders in the prompt with actual values
+        foreach ($input_data as $key => $value) {
+            $placeholder = '"' . $key . '"';
+            $prompt = str_replace($placeholder, $value, $prompt);
+        }
+
         $messages = [];
         $messages[] = ['role' => 'system', 'content' => 'You are an experienced writer specializing in articles.'];
         $messages[] = ['role' => 'user', 'content' => $prompt];
@@ -68,13 +78,15 @@ class ChatGptSetupController extends Controller
             $response = $client->post('https://api.openai.com/v1/chat/completions', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer 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',
+                    // 'Authorization' => 'Bearer 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',
+                    'Authorization' => 'Bearer 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',
                 ],
                 'json' => [
-                    'model' => 'gpt-3.5-turbo-16k',
+                    // 'model' => 'gpt-3.5-turbo-16k',
+                    'model' => 'gpt-4',
                     'messages' => $messages,
                     'temperature' => 1,
-                    'max_tokens' => 8000,
+                    'max_tokens' => 6000,
                     'top_p' => 1,
                     'frequency_penalty' => 0,
                     'presence_penalty' => 0

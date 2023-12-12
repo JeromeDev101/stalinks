@@ -844,6 +844,9 @@
                         <div class="row" id="FormPromptOption">
 
                         </div>
+                        <div class="row" id="FormPromptInput">
+
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="closeModalGpt" data-dismiss="modal">Close</button>
@@ -1162,6 +1165,9 @@
                 let frm = new FormData()
                 frm.append('prompt', this.prompt)
                 frm.append('values', JSON.stringify(this.getFormValues()))
+                frm.append('inputs', JSON.stringify(this.getFormInputs()))
+
+                console.log(this.getFormInputs())
 
                 swal.fire({
                     title: "Generating article ...",
@@ -1200,6 +1206,19 @@
                 return formValues;
             },
 
+            getFormInputs() {
+                let formInputs = {};
+
+                $('#FormPromptInput .form-group').each(function () {
+                    let label = $(this).find('label').text();
+                    let select = $(this).find('input');
+                    let value = select.val();
+
+                    formInputs[label] = value;
+                });
+                return formInputs;
+            },
+
             getListPrompt() {
                 axios.get('/api/show-prompt')
                     .then(res => {
@@ -1227,12 +1246,40 @@
                     });
                 }
 
+                // Clear the existing content in #FormPromptInput
+                $('#FormPromptInput').empty();
+
+                this.updateInputs();
+
             },
 
             closeModalGpt() {
                 this.selectedPrompt = '';
                 this.prompt = '';
                 $('#FormPromptOption').empty();
+                $('#FormPromptInput').empty();
+            },
+
+            updateInputs() {
+                var textareaContent = this.prompt
+                var formContent = '';
+
+                // Use regular expression to match content inside double quotes
+                var matches = textareaContent.match(/"(.*?)"/g);
+
+                if (matches) {
+
+
+                    $.each(matches, function(index, match) {
+                        var labelText = match.replace(/"/g, '');
+                        formContent += '<div class="col-md-12"><div class="form-group">';
+                        formContent += '<label>' + labelText + '</label>';
+                        formContent += '<input type="text" class="form-control" value="">';
+                        formContent += '</div></div>';
+                    });
+
+                    $('#FormPromptInput').html(formContent);
+                }
             },
 
             renderOptions(name, values) {
