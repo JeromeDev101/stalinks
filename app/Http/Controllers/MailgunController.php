@@ -1058,6 +1058,7 @@ class MailgunController extends Controller
 
         $user_email = User::selectRaw('id, role_id, work_mail')
             ->where('work_mail', '!=', '')
+            ->where('status', 'active')
             ->with('role')
             ->orderBy('work_mail', 'asc')
             ->groupBy('work_mail')
