@@ -2,30 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Article;
+use App\Events\BacklinkStatusChangedEvent;
 use App\Events\BuyEvent;
-use App\Models\Backlink;
-use App\Models\Publisher;
-use App\Models\Registration;
-use App\Models\BacklinksInterested;
-use App\Services\HttpClient;
-use Illuminate\Http\Request;
-use App\Models\BuyerPurchased;
-use App\Events\NotificationEvent;
-use App\Models\WalletTransaction;
-use Illuminate\Support\Facades\DB;
-use App\PublisherWithComputedPrice;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
-use App\Repositories\Traits\BuyTrait;
 use App\Events\SellerConfirmationEvent;
 use App\Events\SellerReceivesOrderEvent;
-use App\Events\BacklinkStatusChangedEvent;
-use App\Repositories\Traits\NotificationTrait;
-use App\Repositories\Contracts\NotificationInterface;
+use App\Models\Backlink;
+use App\Models\BacklinksInterested;
+use App\Models\BuyerPurchased;
+use App\Models\Publisher;
+use App\Models\Registration;
+use App\Models\User;
+use App\Models\WalletTransaction;
 use App\Repositories\Contracts\BackLinkRepositoryInterface;
+use App\Repositories\Contracts\NotificationInterface;
 use App\Repositories\Contracts\PublisherRepositoryInterface;
+use App\Repositories\Traits\BuyTrait;
+use App\Repositories\Traits\NotificationTrait;
+use App\Services\HttpClient;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class BuyController extends Controller
 {
@@ -90,12 +87,12 @@ class BuyController extends Controller
             'backlinks_interesteds.url_advertiser as interested_domain_name',
             DB::raw('org_keywords/org_traffic as ratio_value'),
             DB::raw('ROUND(CASE
-                WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
-                WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
-                WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$additional.'
-                WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$additional.'
+                WHEN inc_article = "yes" AND "' . $commission . '" = "no" THEN price
+                WHEN inc_article = "yes" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price)
+                WHEN inc_article = "no" AND "' . $commission . '" = "no" THEN price + ' . $additional . '
+                WHEN inc_article = "no" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price) + ' . $additional . '
                 ELSE price
-            END) AS computed_price')
+            END) AS computed_price'),
         ];
 
         $user_id = $user->id;
@@ -128,41 +125,18 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
-            ->with(['buyer_purchased.buyer.registration' => function ($q) use ($user, $filter){
-                if (isset($filter['status_purchase_mode']) && !empty($filter['status_purchase_mode'])) {
-                    if ($filter['status_purchase_mode'] === 'Team') {
-                        $user_id = $user->id;
-
-                        // check if sub account
-                        $registered = Registration::where('email', Auth::user()->email)->first();
-                        if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
-                            if (isset($registered->team_in_charge)) {
-                                $user_model = User::where('id', $registered->team_in_charge)->first();
-                                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
-                            }
-                        }
-
-                        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
-                        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
-
-                        $q->where(function($query) use ($user_id, $sub_buyer_ids) {
-                            $query->where('buyer_purchased.user_id_buyer', $user_id)
-                            ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-                        });
-                    } else {
-                        $q->where('buyer_purchased.user_id_buyer', $user->id);
-                    }
-                } else {
-                    $q->where('buyer_purchased.user_id_buyer', $user->id);
-                }
+            ->with(['buyer_purchased.buyer.registration' => function ($q) use ($user, $filter) {
+                $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
+                    ->where('buyer_purchased.user_id_buyer', $user->id)
+                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
             }])
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
                 if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
                     $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
-                    ->whereIn('backlinks_interesteds.user_id', $backlink_interested_user);
+                        ->whereIn('backlinks_interesteds.user_id', $backlink_interested_user);
                 } else {
                     $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
-                    ->where('backlinks_interesteds.user_id', $user_id);
+                        ->where('backlinks_interesteds.user_id', $user_id);
                 }
             })
             ->leftJoin('users', 'publisher.user_id', '=', 'users.id')
@@ -190,23 +164,23 @@ class BuyController extends Controller
                         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
                         $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                            ->where(function($query) use ($user_id, $sub_buyer_ids) {
+                            ->where(function ($query) use ($user_id, $sub_buyer_ids) {
                                 $query->where('buyer_purchased.user_id_buyer', $user_id)
-                                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+                                    ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
                             })
                             ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                     } else {
                         $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user->id)
-                        ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
+                            ->where('buyer_purchased.user_id_buyer', $user->id)
+                            ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                     }
                 } else {
                     $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                    ->where('buyer_purchased.user_id_buyer', $user->id)
-                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
+                        ->where('buyer_purchased.user_id_buyer', $user->id)
+                        ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
                 }
             })
-            // ->whereNotNull('users.id') // to remove all seller's URL that deleted
+        // ->whereNotNull('users.id') // to remove all seller's URL that deleted
             ->has('user')
             ->where('registration.account_validation', 'valid')
             ->where('publisher.valid', 'valid')
@@ -235,7 +209,7 @@ class BuyController extends Controller
             // remove space
             $url = trim($url, " ");
             // remove /
-            $url = rtrim($url,"/");
+            $url = rtrim($url, "/");
 
             $list->where('publisher.url', 'like', '%' . $url . '%');
         }
@@ -246,7 +220,7 @@ class BuyController extends Controller
             // remove space
             $url = trim($url, " ");
             // remove /
-            $url = rtrim($url,"/");
+            $url = rtrim($url, "/");
 
             $list->where('backlinks_interesteds.url_advertiser', 'like', '%' . $url . '%');
         }
@@ -364,10 +338,10 @@ class BuyController extends Controller
             if ($filter['price_direction'] === 'Above') {
                 if (Auth::user()->role_id == 5) {
                     $list->whereRaw('ROUND(CASE
-                        WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
-                        WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
-                        WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$formulaData->additional.'
-                        WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$formulaData->additional.'
+                        WHEN inc_article = "yes" AND "' . $commission . '" = "no" THEN price
+                        WHEN inc_article = "yes" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price)
+                        WHEN inc_article = "no" AND "' . $commission . '" = "no" THEN price + ' . $formulaData->additional . '
+                        WHEN inc_article = "no" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price) + ' . $formulaData->additional . '
                         ELSE price
                     END) >= ?', [intval($filter['price'])]);
                 } else {
@@ -376,10 +350,10 @@ class BuyController extends Controller
             } else {
                 if (Auth::user()->role_id == 5) {
                     $list->whereRaw('ROUND(CASE
-                        WHEN inc_article = "yes" AND "'.$commission.'" = "no" THEN price
-                        WHEN inc_article = "yes" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price)
-                        WHEN inc_article = "no" AND "'.$commission.'" = "no" THEN price + '.$formulaData->additional.'
-                        WHEN inc_article = "no" AND "'.$commission.'" = "yes" THEN price + ROUND(('.$percent.' / 100) * price) + '.$formulaData->additional.'
+                        WHEN inc_article = "yes" AND "' . $commission . '" = "no" THEN price
+                        WHEN inc_article = "yes" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price)
+                        WHEN inc_article = "no" AND "' . $commission . '" = "no" THEN price + ' . $formulaData->additional . '
+                        WHEN inc_article = "no" AND "' . $commission . '" = "yes" THEN price + ROUND((' . $percent . ' / 100) * price) + ' . $formulaData->additional . '
                         ELSE price
                     END) <= ?', [intval($filter['price'])]);
                 } else {
@@ -531,7 +505,7 @@ class BuyController extends Controller
             }
         }
 
-        if( isset($wallet_transaction_refunded[0]['amount_usd']) ) {
+        if (isset($wallet_transaction_refunded[0]['amount_usd'])) {
             $credit = $credit - floatval($wallet_transaction_refunded[0]['amount_usd']);
         }
         // End of Getting credit left
@@ -541,10 +515,10 @@ class BuyController extends Controller
                 'data' => $result,
                 'total' => $result->count(),
                 'credit' => round($credit),
-                'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd):0,
+                'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd) : 0,
             ], 200);
         } else {
-            $custom_credit = collect(['credit' => round($credit), 'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd):0]);
+            $custom_credit = collect(['credit' => round($credit), 'deposited' => isset($deposited->amount_usd) ? intval($deposited->amount_usd) : 0]);
             $result = $custom_credit->merge($result);
 
             return $result;
@@ -566,7 +540,7 @@ class BuyController extends Controller
                 "errors" => [
                     "access" => 'Unauthorized Access',
                 ],
-            ],422);
+            ], 422);
         }
 
         $status = 'Pending';
@@ -578,8 +552,8 @@ class BuyController extends Controller
             return response()->json([
                 'message' => 'Insufficient Credits',
                 'errors' => [
-                    'insufficent_credits'
-                ]
+                    'insufficent_credits',
+                ],
             ], 422);
         }
 
@@ -608,7 +582,7 @@ class BuyController extends Controller
             $backlink = Backlink::find($request->id);
 
             $backlink->update([
-                'status' => 'Pending'
+                'status' => 'Pending',
             ]);
 
             $status = 'Pending';
@@ -627,7 +601,7 @@ class BuyController extends Controller
                 'date_process' => date('Y-m-d'),
                 'ext_domain_id' => 0,
                 'int_domain_id' => 0,
-                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no'
+                'is_https' => $this->httpClient->getProtocol($request->url_advertiser) == 'https' ? 'yes' : 'no',
             ]);
         }
 
@@ -635,7 +609,7 @@ class BuyController extends Controller
 
         if ($user->isOurs === 1 && $user->registration->survey_code === null) {
             $user->registration->update([
-                'survey_code' => md5(uniqid(rand(), true))
+                'survey_code' => md5(uniqid(rand(), true)),
             ]);
         }
 
@@ -646,7 +620,6 @@ class BuyController extends Controller
         }
 
         event(new BacklinkStatusChangedEvent($backlink, $backlink->publisher->user));
-
 
         if ($status === 'Pending') {
             // seller confirmation email
@@ -660,7 +633,7 @@ class BuyController extends Controller
 
                 if ($seller_account->registration->survey_code === null) {
                     $seller_account->registration->update([
-                        'survey_code' => md5(uniqid(rand(), true))
+                        'survey_code' => md5(uniqid(rand(), true)),
                     ]);
                 }
 
@@ -682,7 +655,7 @@ class BuyController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function validateOrder (Request $request)
+    public function validateOrder(Request $request)
     {
         if (isset($request->ids)) {
             foreach ($request->ids as $id) {
@@ -694,12 +667,12 @@ class BuyController extends Controller
                         return response()->json([
                             'message' => 'Insufficient Credits',
                             'errors' => [
-                                'insufficient_credits'
-                            ]
+                                'insufficient_credits',
+                            ],
                         ], 422);
                     } else {
                         $backlink->update([
-                            'status' => 'Pending'
+                            'status' => 'Pending',
                         ]);
 
                         // notify seller
@@ -719,7 +692,7 @@ class BuyController extends Controller
 
                             if ($seller_account->registration->survey_code === null) {
                                 $seller_account->registration->update([
-                                    'survey_code' => md5(uniqid(rand(), true))
+                                    'survey_code' => md5(uniqid(rand(), true)),
                                 ]);
                             }
 
@@ -793,23 +766,24 @@ class BuyController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function updateInterestedNew (Request $request) {
+    public function updateInterestedNew(Request $request)
+    {
         $user = auth()->user();
 
         $buyer_purchased = BuyerPurchased::where([
-                        'user_id_buyer' => $user->id,
-                        'publisher_id' => $request->id
-                    ]);
+            'user_id_buyer' => $user->id,
+            'publisher_id' => $request->id,
+        ]);
 
-        if($buyer_purchased->count() > 0) {
+        if ($buyer_purchased->count() > 0) {
             $buyer_purchased->update([
-                'status' => 'Interested'
+                'status' => 'Interested',
             ]);
         } else {
             BuyerPurchased::create([
                 'user_id_buyer' => $user->id,
                 'publisher_id' => $request->id,
-                'status' => 'Interested'
+                'status' => 'Interested',
             ]);
         }
 
@@ -838,7 +812,8 @@ class BuyController extends Controller
         return response()->json(['success' => true], 200);
     }
 
-    public function updateUninterestedNew (Request $request) {
+    public function updateUninterestedNew(Request $request)
+    {
         $user = auth()->user();
 
         if (is_array($request->id)) {
@@ -846,7 +821,7 @@ class BuyController extends Controller
                 $buyerPurchasedIds = BuyerPurchased::where([
                     'user_id_buyer' => $user->id,
                     'status' => 'Interested',
-                    'publisher_id' => $id
+                    'publisher_id' => $id,
                 ])->get()->pluck('id');
 
                 BuyerPurchased::destroy($buyerPurchasedIds);
@@ -855,7 +830,7 @@ class BuyController extends Controller
             $buyerPurchasedIds = BuyerPurchased::where([
                 'user_id_buyer' => $user->id,
                 'status' => 'Interested',
-                'publisher_id' => $request->id
+                'publisher_id' => $request->id,
             ])->get()->pluck('id');
 
             BuyerPurchased::destroy($buyerPurchasedIds);
@@ -870,7 +845,7 @@ class BuyController extends Controller
 
         $buyerPurchasedIds = BuyerPurchased::where([
             'user_id_buyer' => $backlink->user_id,
-            'publisher_id' => $request->publisher_id
+            'publisher_id' => $request->publisher_id,
         ])->get()->pluck('id');
 
         Backlink::destroy($backlink->id);
@@ -879,13 +854,13 @@ class BuyController extends Controller
         return 'OK';
     }
 
-    public function UpdateMultipleUninterested(Request $request) {
+    public function UpdateMultipleUninterested(Request $request)
+    {
         $ids = $request->ids;
         $backlinks = Backlink::whereIn('id', $ids);
         $buyerPurchasedIds = BuyerPurchased::whereIn('user_id_buyer', $backlinks->pluck('user_id'))
-                ->whereIn('publisher_id', $backlinks->pluck('publisher_id'))
-                ->get()->pluck('id');
-
+            ->whereIn('publisher_id', $backlinks->pluck('publisher_id'))
+            ->get()->pluck('id');
 
         $backlinks->delete();
         BuyerPurchased::destroy($buyerPurchasedIds);
@@ -899,11 +874,12 @@ class BuyController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $data
+            'data' => $data,
         ], 200);
     }
 
-    private function checkCombination($val) {
+    private function checkCombination($val)
+    {
         $combination = [
             'AAA' => 'A',
             'AAB' => 'A',
@@ -963,20 +939,20 @@ class BuyController extends Controller
             'DBC' => 'D',
             'DCA' => 'D',
             'DCB' => 'D',
-            'DCC' => 'E'
+            'DCC' => 'E',
         ];
 
-        if(array_key_exists($val , $combination)) {
+        if (array_key_exists($val, $combination)) {
             return $combination[$val];
         } else {
             return 'E';
         }
     }
 
-    private function getCodeCombination( $a , $b, $type )
+    private function getCodeCombination($a, $b, $type)
     {
 
-        switch ( $type ) {
+        switch ($type) {
 
             case "value1":
                 $val = 'E';
@@ -985,46 +961,46 @@ class BuyController extends Controller
                 $comb3 = ''; // Condition 2
 
                 // UR
-                if($a >= 50 && $a <= 100) {
+                if ($a >= 50 && $a <= 100) {
                     $comb1 = 'A';
-                } else if($a >= 26 && $a <= 49) {
+                } else if ($a >= 26 && $a <= 49) {
                     $comb1 = 'B';
-                } else if($a >= 10 && $a <= 25) {
+                } else if ($a >= 10 && $a <= 25) {
                     $comb1 = 'C';
-                } else if($a >= 6 && $a <= 9) {
+                } else if ($a >= 6 && $a <= 9) {
                     $comb1 = 'D';
-                } else if($a >= 0 && $a <= 5) {
+                } else if ($a >= 0 && $a <= 5) {
                     $comb1 = 'E';
                 }
 
                 // DR
-                if($b >= 50 && $b <= 100) {
+                if ($b >= 50 && $b <= 100) {
                     $comb2 = 'A';
-                } else if($b >= 26 && $b <= 49) {
+                } else if ($b >= 26 && $b <= 49) {
                     $comb2 = 'B';
-                } else if($b >= 10 && $b <= 25) {
+                } else if ($b >= 10 && $b <= 25) {
                     $comb2 = 'C';
-                } else if($b >= 6 && $b <= 9) {
+                } else if ($b >= 6 && $b <= 9) {
                     $comb2 = 'D';
-                } else if($b == 0 && $b <= 5) {
+                } else if ($b == 0 && $b <= 5) {
                     $comb2 = 'E';
                 }
 
                 $score = $b - $a;
                 //condition 2
-                if($score >= 0 && $score <= 7) {
+                if ($score >= 0 && $score <= 7) {
                     $comb3 = 'A';
-                } else if($score >= 8 && $score <= 15) {
+                } else if ($score >= 8 && $score <= 15) {
                     $comb3 = 'B';
-                } else if( ($score >= 16 && $score <= 21) || ($score >= -5 && $score <= -1) ) {
+                } else if (($score >= 16 && $score <= 21) || ($score >= -5 && $score <= -1)) {
                     $comb3 = 'C';
-                } else if( ($score >= 22 ) || ($score >= -10 && $score <= -6) ) {
+                } else if (($score >= 22) || ($score >= -10 && $score <= -6)) {
                     $comb3 = 'D';
-                } else if ($score <= -11){
+                } else if ($score <= -11) {
                     $comb3 = 'E';
                 }
 
-                $val = $this->checkCombination($comb1.$comb2.$comb3);
+                $val = $this->checkCombination($comb1 . $comb2 . $comb3);
 
                 return $val;
 
@@ -1032,19 +1008,14 @@ class BuyController extends Controller
 
                 $val = '';
 
-                if( $a == 0 || $b == 0){
+                if ($a == 0 || $b == 0) {
                     $score = 0;
                     $val = 'A';
-                }else{
-                    $score = number_format( floatVal($a / $b) , 0, '.', '');
+                } else {
+                    $score = number_format(floatVal($a / $b), 0, '.', '');
                 }
 
-                if( $score >= 0.99 && $score <= 5){  $val = 'A'; }
-                else if( $score >= 6 && $score <= 16){ $val = 'B'; }
-                else if( $score >= 17 && $score <= 22){ $val = 'C'; }
-                else if( $score >= 23 && $score <= 60){ $val = 'D'; }
-                else if( $score >= 61 ){ $val = 'E'; }
-                else if( $score < 0.99 ){ $val = 'E'; }
+                if ($score >= 0.99 && $score <= 5) {$val = 'A';} else if ($score >= 6 && $score <= 16) {$val = 'B';} else if ($score >= 17 && $score <= 22) {$val = 'C';} else if ($score >= 23 && $score <= 60) {$val = 'D';} else if ($score >= 61) {$val = 'E';} else if ($score < 0.99) {$val = 'E';}
 
                 return $val;
 
@@ -1052,11 +1023,7 @@ class BuyController extends Controller
 
                 $val = 'E';
 
-                if( $a >= 500){ $val = 'A'; }
-                else if( $a >= 200 && $a < 500){ $val = 'B'; }
-                else if( $a >= 100 && $a < 200){ $val = 'C'; }
-                else if( $a >= 50 && $a < 100){ $val = 'D'; }
-                else if( $a < 50 ){ $val = 'E'; }
+                if ($a >= 500) {$val = 'A';} else if ($a >= 200 && $a < 500) {$val = 'B';} else if ($a >= 100 && $a < 200) {$val = 'C';} else if ($a >= 50 && $a < 100) {$val = 'D';} else if ($a < 50) {$val = 'E';}
 
                 return $val;
 
@@ -1064,11 +1031,7 @@ class BuyController extends Controller
 
                 $val = 'E';
 
-                if( $a >= 10000){ $val = 'A'; }
-                else if( $a >= 5000 && $a < 10000){ $val = 'B'; }
-                else if( $a >= 1000 && $a < 5000){ $val = 'C'; }
-                else if( $a >= 500 && $a < 1000){ $val = 'D'; }
-                else if( $a < 500 ){ $val = 'E'; }
+                if ($a >= 10000) {$val = 'A';} else if ($a >= 5000 && $a < 10000) {$val = 'B';} else if ($a >= 1000 && $a < 5000) {$val = 'C';} else if ($a >= 500 && $a < 1000) {$val = 'D';} else if ($a < 500) {$val = 'E';}
 
                 return $val;
 
@@ -1080,7 +1043,8 @@ class BuyController extends Controller
 
     }
 
-    protected function percentage($percent, $total) {
+    protected function percentage($percent, $total)
+    {
         return number_format(($percent / 100) * $total, 2);
     }
 
