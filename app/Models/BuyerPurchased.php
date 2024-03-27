@@ -23,7 +23,7 @@ class BuyerPurchased extends Model
     }
 
     public function buyer() {
-        return $this->hasMany('App\Models\Buyer', 'id', 'user_id_buyer');
+        return $this->hasMany('App\Models\User', 'id', 'user_id_buyer');
     }
 
 }
