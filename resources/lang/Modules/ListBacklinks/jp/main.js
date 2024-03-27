@@ -8,6 +8,7 @@ export default {
     filter_continent: '大陸別',
     filter_country: '国',
     filter_seller: 'セーラー',
+    filter_username: 'ユーザー名',
     filter_accept_cb: 'カジノとベッティングサイトの受け入れ',
     filter_topic: 'トピック',
     filter_dz: 'ドメイン範囲',

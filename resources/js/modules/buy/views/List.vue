@@ -563,6 +563,12 @@
                                 </span>
                             </template>
 
+                            <template slot-scope="scope" slot="usernameData">
+                                <span>
+                                    {{ scope.row.user_name }}
+                                </span>
+                            </template>
+
                             <template
                                 slot-scope="scope"
                                 slot="urlData">
@@ -1239,6 +1245,13 @@
                             <div class="checkbox col-md-6">
                                 <label><input
                                     type="checkbox"
+                                    :checked="tblBuyOptions.username ? 'checked':''" v-model="tblBuyOptions.username">
+                                    {{ $t('message.list_backlinks.filter_username') }}
+                                </label>
+                            </div>
+                            <div class="checkbox col-md-6">
+                                <label><input
+                                    type="checkbox"
                                     :checked="tblBuyOptions.topic ? 'checked':''"
                                     v-model="tblBuyOptions.topic">
                                     {{ $t('message.list_backlinks.filter_topic') }}
@@ -1800,6 +1813,12 @@ export default {
                     hidden: !this.tblBuyOptions.seller
                 },
                 {
+                    name: self.$t('message.list_backlinks.filter_username'),
+                    sort: '',
+                    column: 'users.username',
+                    hidden: !this.tblBuyOptions.username
+                },
+                {
                     name: self.$t('message.list_backlinks.filter_topic'),
                     sort: '',
                     column: 'topic',
@@ -1957,6 +1976,14 @@ export default {
                     actionName : 'sellerData',
                     width : 160,
                     isHidden : (this.user.role_id == 5 && this.user.isOurs == 1) || !this.tblBuyOptions.seller
+                },
+                {
+                    prop : '_action',
+                    name : this.$t('message.list_backlinks.filter_username'),
+                    // sortable : true,
+                    actionName : 'usernameData',
+                    width : 160,
+                    isHidden : !this.tblBuyOptions.username
                 },
                 {
                     prop : '_action',

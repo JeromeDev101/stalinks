@@ -8,6 +8,7 @@ export default {
     filter_continent: 'Continent',
     filter_country: 'Country',
     filter_seller: 'Seller',
+    filter_username: 'Username',
     filter_accept_cb: 'Accept Casino & Betting Sites',
     filter_topic: 'Topic',
     filter_dz: 'Domain Zone',

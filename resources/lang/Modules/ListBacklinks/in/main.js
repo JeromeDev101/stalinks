@@ -8,6 +8,7 @@ export default {
     filter_continent: 'महाद्वीप',
     filter_country: 'देश',
     filter_seller: 'विक्रेता',
+    filter_username: 'उपयोगकर्ता नाम',
     filter_accept_cb: 'कैसीनो और सट्टेबाजी साइटों को स्वीकार करें',
     filter_topic: 'विषय',
     filter_dz: 'डोमेन जोन',

@@ -8,6 +8,7 @@ export default {
     filter_continent: 'Châu lục',
     filter_country: 'Quốc gia',
     filter_seller: 'Người bán',
+    filter_username: 'Tên người dùng',
     filter_accept_cb: 'Chấp nhận các trang web cá cược & Casino',
     filter_topic: 'Chủ đề',
     filter_dz: 'Vùng miền',

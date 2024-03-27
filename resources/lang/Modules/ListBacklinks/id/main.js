@@ -8,6 +8,7 @@ export default {
     filter_continent: 'Benua',
     filter_country: 'Negara',
     filter_seller: 'Penjual',
+    filter_username: 'Nama Pengguna',
     filter_accept_cb: 'Menerima situs kasino & taruhan online',
     filter_topic: 'Topik',
     filter_dz: 'Zona Domain',

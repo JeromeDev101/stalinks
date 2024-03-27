@@ -8,6 +8,7 @@ export default {
     filter_continent: 'ทวีป',
     filter_country: 'ประเทศ',
     filter_seller: 'ผู้ขาย',
+    filter_username: 'ชื่อผู้ใช้',
     filter_accept_cb: 'ยอมรับคาสิโน & เว็บไซต์เดิมพัน',
     filter_topic: 'หัวข้อ',
     filter_dz: 'โซนโดเมน',
