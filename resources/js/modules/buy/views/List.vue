@@ -564,9 +564,17 @@
                             </template>
 
                             <template slot-scope="scope" slot="usernameData">
-                                <span>
-                                    {{ scope.row.user_name }}
-                                </span>
+                                <div v-if="scope.row.buyer_purchased.length">
+                                    <span v-for="item in scope.row.buyer_purchased" :key="item.id">
+                                        {{ item.buyer[0].username }}
+                                    </span>
+                                </div>
+
+                                <div v-else>
+                                    <span class="badge badge-pill badge-secondary">
+                                        N/A
+                                    </span>
+                                </div>
                             </template>
 
                             <template
