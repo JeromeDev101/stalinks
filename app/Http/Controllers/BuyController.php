@@ -125,11 +125,7 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
-            ->with(['buyer_purchased.buyer.registration' => function ($q) use ($user, $filter) {
-                $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                    ->where('buyer_purchased.user_id_buyer', $user->id)
-                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
-            }])
+            ->with(['buyer_purchased.buyer.registration'])
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
                 if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
                     $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
