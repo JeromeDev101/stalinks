@@ -22,4 +22,8 @@ class BuyerPurchased extends Model
         return $this->hasMany('App\Models\Publisher', 'id', 'publisher_id');
     }
 
+    public function buyer() {
+        return $this->hasMany('App\Models\Buyer', 'id', 'user_id_buyer');
+    }
+
 }
