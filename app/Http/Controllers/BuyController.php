@@ -128,40 +128,7 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
-            ->with(['buyer_purchased.buyer.user.registration' => function ($q) use ($user, $filter) {
-                if (isset($filter['status_purchase_mode']) && !empty($filter['status_purchase_mode'])) {
-                    if ($filter['status_purchase_mode'] === 'Team') {
-                        $user_id = $user->id;
-
-                        // check if sub account
-                        $registered = Registration::where('email', Auth::user()->email)->first();
-                        if (isset($registered->is_sub_account) && $registered->is_sub_account == 1) {
-                            if (isset($registered->team_in_charge)) {
-                                $user_model = User::where('id', $registered->team_in_charge)->first();
-                                $user_id = isset($user_model->id) ? $user_model->id : Auth::user()->id;
-                            }
-                        }
-
-                        $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
-                        $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
-
-                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                            ->where(function($query) use ($user_id, $sub_buyer_ids) {
-                                $query->where('buyer_purchased.user_id_buyer', $user_id)
-                                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-                            })
-                            ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
-                    } else {
-                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user->id)
-                        ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
-                    }
-                } else {
-                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                    ->where('buyer_purchased.user_id_buyer', $user->id)
-                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
-                }
-            }])
+            ->with(['buyer_purchased.buyer.user.registration'])
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
                 if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
                     $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
