@@ -145,21 +145,15 @@ class BuyController extends Controller
                         $sub_buyer_emails = Registration::where('is_sub_account', 1)->where('team_in_charge', $user_id)->pluck('email');
                         $sub_buyer_ids = User::whereIn('email', $sub_buyer_emails)->pluck('id');
 
-                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                            ->where(function($query) use ($user_id, $sub_buyer_ids) {
-                                $query->where('buyer_purchased.user_id_buyer', $user_id)
-                                ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
-                            })
-                            ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
+                        $q->where(function($query) use ($user_id, $sub_buyer_ids) {
+                            $query->where('buyer_purchased.user_id_buyer', $user_id)
+                            ->orWhereIn('buyer_purchased.user_id_buyer', $sub_buyer_ids);
+                        });
                     } else {
-                        $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                        ->where('buyer_purchased.user_id_buyer', $user->id)
-                        ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
+                        $q->where('buyer_purchased.user_id_buyer', $user->id);
                     }
                 } else {
-                    $q->on('publisher.id', '=', 'buyer_purchased.publisher_id')
-                    ->where('buyer_purchased.user_id_buyer', $user->id)
-                    ->where('buyer_purchased.id', '=', DB::raw('(SELECT MAX(id) FROM buyer_purchased AS bp WHERE bp.publisher_id = buyer_purchased.publisher_id)'));
+                    $q->where('buyer_purchased.user_id_buyer', $user->id);
                 }
             }])
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
