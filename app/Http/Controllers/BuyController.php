@@ -128,6 +128,7 @@ class BuyController extends Controller
                 $query->whereIn('user_id', $backlink_interested_user)
                     ->orderByRaw("FIELD(user_id, $orderedUserIds)");
             }])
+            ->with('buyer_purchased')
             ->leftJoin('backlinks_interesteds', function ($q) use ($user_id, $backlink_interested_user, $filter) {
                 if (isset($filter['interested_domain_name']) && !empty($filter['interested_domain_name'])) {
                     $q->on('publisher.id', '=', 'backlinks_interesteds.publisher_id')
@@ -143,7 +144,7 @@ class BuyController extends Controller
             ->leftJoin('continents as country_continent', 'countries.continent_id', '=', 'country_continent.id')
             ->leftJoin('continents as publisher_continent', 'publisher.continent_id', '=', 'publisher_continent.id')
             ->leftJoin('languages', 'publisher.language_id', '=', 'languages.id')
-            ->leftJoin('buyer_purchased as buyer_purchased', function ($q) use ($user, $filter) {
+            ->leftJoin('buyer_purchased', function ($q) use ($user, $filter) {
 
                 if (isset($filter['status_purchase_mode']) && !empty($filter['status_purchase_mode'])) {
                     if ($filter['status_purchase_mode'] === 'Team') {
