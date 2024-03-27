@@ -565,9 +565,11 @@
 
                             <template slot-scope="scope" slot="usernameData">
                                 <div v-if="scope.row.buyer_purchased.length">
-                                    <li v-for="item in scope.row.buyer_purchased" :key="item.id">
-                                        {{ item.buyer[0].username }}
-                                    </li>
+                                    <ul>
+                                        <li v-for="item in scope.row.buyer_purchased" :key="item.id">
+                                            {{ item.buyer[0].username }}
+                                        </li>
+                                    </ul>
                                 </div>
 
                                 <div v-else>
