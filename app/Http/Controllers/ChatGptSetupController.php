@@ -78,8 +78,7 @@ class ChatGptSetupController extends Controller
             $response = $client->post('https://api.openai.com/v1/chat/completions', [
                 'headers' => [
                     'Content-Type' => 'application/json',
-                    // 'Authorization' => 'Bearer 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',
-                    'Authorization' => 'Bearer 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',
+                    'Authorization' => 'Bearer '. env('OPEN_AI_SK'),
                 ],
                 'json' => [
                     // 'model' => 'gpt-3.5-turbo-16k',
